@@ -3,6 +3,8 @@ import 'package:intl/intl.dart';
 import 'package:greenzone_medical/src/app_pkg.dart';
 
 class BookingCalendar extends StatefulWidget {
+  const BookingCalendar({super.key});
+
   @override
   _BookingCalendarState createState() => _BookingCalendarState();
 }
@@ -16,17 +18,30 @@ class _BookingCalendarState extends State<BookingCalendar> {
         7, (index) => DateTime.now().add(Duration(days: index)));
   }
 
-  List<String> availableTimes = [
-    "09:00 AM",
-    "09:30 AM",
-    "10:00 AM",
-    "10:30 AM",
-    "11:00 AM",
-    "11:30 AM",
-    "12:00 PM",
-    "03:00 PM",
-    "04:00 PM"
-  ];
+  List<String> getAvailableTimes() {
+    List<String> times = [];
+    DateTime now = DateTime.now();
+    DateTime startTime =
+        DateTime(selectedDate.year, selectedDate.month, selectedDate.day, 9, 0);
+    DateTime endTime = DateTime(
+        selectedDate.year, selectedDate.month, selectedDate.day, 18, 0);
+
+    while (startTime.isBefore(endTime)) {
+      // Skip past times if selected date is today
+      if (selectedDate.day == now.day &&
+          selectedDate.month == now.month &&
+          selectedDate.year == now.year &&
+          startTime.isBefore(now)) {
+        startTime = startTime.add(Duration(hours: 1));
+        continue;
+      }
+
+      times.add(DateFormat("hh:mm a").format(startTime));
+      startTime = startTime.add(Duration(hours: 1));
+    }
+
+    return times;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +60,7 @@ class _BookingCalendarState extends State<BookingCalendar> {
                 onTap: () {
                   setState(() {
                     selectedDate = date;
+                    selectedTime = ''; // Reset time selection
                   });
                 },
                 child: Container(
@@ -98,7 +114,7 @@ class _BookingCalendarState extends State<BookingCalendar> {
         Wrap(
           spacing: 8,
           runSpacing: 8,
-          children: availableTimes.map((time) {
+          children: getAvailableTimes().map((time) {
             return GestureDetector(
               onTap: () {
                 setState(() {

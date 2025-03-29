@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:greenzone_medical/src/app_pkg.dart';
 
 import '../../../constants/helper.dart';
-import '../../../routes/routes.dart';
 import '../../../utils/custom_header.dart';
 
 class NewPasswordPage extends StatefulWidget {
@@ -15,7 +13,9 @@ class NewPasswordPage extends StatefulWidget {
 
 class _NewPasswordPageState extends State<NewPasswordPage> {
   String password = "";
-
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
+  bool _passwordsMatch = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -83,8 +83,17 @@ class _NewPasswordPageState extends State<NewPasswordPage> {
               const SizedBox(height: 20),
               ConfirmPasswordTextField(
                 label: "Confirm Password",
-                password: password,
+                password: _confirmPasswordController.text,
+                onMatchChanged: (isMatching) {
+                  setState(() {
+                    _passwordsMatch = isMatching;
+                  });
+                },
               ),
+              // ConfirmPasswordTextField(
+              //   label: "Confirm Password",
+              //   password: password,
+              // ),
 
               mediumSpace(),
               smallSpace(),

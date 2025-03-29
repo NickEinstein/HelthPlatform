@@ -4,11 +4,19 @@ import 'package:greenzone_medical/src/constants/color_constant.dart';
 class CustomTextField extends StatefulWidget {
   final String label;
   final String hint;
+  final TextEditingController? controller;
+  final String? Function(String?)? validator;
+  final ValueChanged<String>? onChanged;
+  final bool obscureText; // Added for password fields
 
   const CustomTextField({
     Key? key,
     required this.label,
     required this.hint,
+    this.controller,
+    this.validator,
+    this.onChanged,
+    this.obscureText = false, // Default to false
   }) : super(key: key);
 
   @override
@@ -16,22 +24,44 @@ class CustomTextField extends StatefulWidget {
 }
 
 class _CustomTextFieldState extends State<CustomTextField> {
-  final TextEditingController _controller = TextEditingController();
+  late TextEditingController _controller;
   bool _hasText = false;
+  String? _errorText;
+  bool _isInternalController = false; // Track ownership
 
   @override
   void initState() {
     super.initState();
+    // Use provided controller or create one internally
+    if (widget.controller != null) {
+      _controller = widget.controller!;
+    } else {
+      _controller = TextEditingController();
+      _isInternalController = true; // Mark internal controller
+    }
+
     _controller.addListener(() {
-      setState(() {
-        _hasText = _controller.text.isNotEmpty;
-      });
+      final text = _controller.text;
+      if (mounted) {
+        setState(() {
+          _hasText = text.isNotEmpty;
+        });
+      }
+      widget.onChanged?.call(text);
+    });
+  }
+
+  void _validate() {
+    setState(() {
+      _errorText = widget.validator?.call(_controller.text);
     });
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    if (_isInternalController) {
+      _controller.dispose(); // Dispose only if created internally
+    }
     super.dispose();
   }
 
@@ -40,9 +70,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Label
         Padding(
-          padding: const EdgeInsets.only(bottom: 10),
+          padding: const EdgeInsets.only(bottom: 8),
           child: Text(
             widget.label,
             style: const TextStyle(
@@ -52,9 +81,14 @@ class _CustomTextFieldState extends State<CustomTextField> {
             ),
           ),
         ),
-        // Custom TextField with Dynamic Background
-        TextField(
+        TextFormField(
           controller: _controller,
+          obscureText: widget.obscureText,
+          validator: widget.validator,
+          onChanged: (value) => setState(() {
+            _hasText = value.isNotEmpty;
+          }),
+          onFieldSubmitted: (_) => _validate(),
           decoration: InputDecoration(
             hintText: widget.hint,
             hintStyle: const TextStyle(
@@ -62,26 +96,26 @@ class _CustomTextFieldState extends State<CustomTextField> {
               fontWeight: FontWeight.w400,
               fontSize: 14,
             ),
-            contentPadding:
-                const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(3),
               borderSide: const BorderSide(
                 color: Color(0xffB3B3B3),
-                width: 0.8, // Tiny green border
+                width: 0.8,
               ),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(3),
               borderSide: const BorderSide(
                 color: Color(0xffB3B3B3),
-                width: 0.8, // Thicker when focused
+                width: 1.2,
               ),
             ),
-            filled: true, // Enable background color
+            filled: true,
             fillColor: _hasText
                 ? ColorConstant.primaryLightColor.withOpacity(0.3)
-                : Colors.transparent, // Background color
+                : Colors.transparent,
+            errorText: _errorText,
           ),
         ),
       ],
@@ -183,6 +217,8 @@ class CustomDropdown extends StatefulWidget {
   final List<String> options;
   final String hint;
   final ValueChanged<String?>? onChanged;
+  final String? Function(String?)? validator;
+  final TextEditingController? controller; // Added controller
 
   const CustomDropdown({
     super.key,
@@ -190,6 +226,8 @@ class CustomDropdown extends StatefulWidget {
     required this.options,
     this.hint = "Select an option",
     this.onChanged,
+    this.validator,
+    this.controller, // Accept controller
   });
 
   @override
@@ -200,11 +238,26 @@ class _CustomDropdownState extends State<CustomDropdown> {
   String? _selectedValue;
 
   @override
+  void initState() {
+    super.initState();
+    _setInitialValue();
+  }
+
+  void _setInitialValue() {
+    if (widget.controller != null && widget.controller!.text.isNotEmpty) {
+      if (widget.options.contains(widget.controller!.text)) {
+        _selectedValue = widget.controller!.text;
+      } else {
+        _selectedValue = null; // Avoid invalid selection error
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Persistent label
         Padding(
           padding: const EdgeInsets.only(bottom: 10),
           child: Text(
@@ -216,13 +269,9 @@ class _CustomDropdownState extends State<CustomDropdown> {
             ),
           ),
         ),
-        // Dropdown field with dynamic background
         DropdownButtonFormField<String>(
           value: _selectedValue,
-          icon: const Icon(
-            Icons.keyboard_arrow_down_rounded,
-            size: 18,
-          ),
+          icon: const Icon(Icons.keyboard_arrow_down_rounded, size: 18),
           decoration: InputDecoration(
             hintText: widget.hint,
             hintStyle: const TextStyle(
@@ -230,48 +279,47 @@ class _CustomDropdownState extends State<CustomDropdown> {
               fontWeight: FontWeight.w400,
               fontSize: 14,
             ),
-            isDense: true, // Keeps field compact
-            alignLabelWithHint: true, // Aligns hint correctly
-            contentPadding: const EdgeInsets.symmetric(
-              vertical: 14,
-              horizontal: 16,
-            ), // Ensures correct padding
+            isDense: true,
+            contentPadding:
+                const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(3),
-              borderSide: const BorderSide(
-                color: Color(0xffB3B3B3),
-                width: 0.8,
-              ),
+              borderSide:
+                  const BorderSide(color: Color(0xffB3B3B3), width: 0.8),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(3),
-              borderSide: const BorderSide(
-                color: Color(0xffB3B3B3),
-                width: 0.8,
-              ),
+              borderSide:
+                  const BorderSide(color: Color(0xffB3B3B3), width: 0.8),
             ),
-            filled: true, // Enables background color
+            filled: true,
             fillColor: _selectedValue != null
                 ? ColorConstant.primaryLightColor.withOpacity(0.3)
-                : Colors.transparent, // Background color change
+                : Colors.transparent,
           ),
           items: widget.options
               .map((e) => DropdownMenuItem(
                     value: e,
-                    child: Text(
-                      e,
-                      style: const TextStyle(fontSize: 14),
-                    ),
+                    child: Text(e, style: const TextStyle(fontSize: 14)),
                   ))
               .toList(),
           onChanged: (value) {
             setState(() {
               _selectedValue = value;
             });
-            if (widget.onChanged != null) {
-              widget.onChanged!(value);
+            if (widget.controller != null) {
+              widget.controller!.text = value ?? '';
             }
+            widget.onChanged?.call(value);
           },
+          validator: widget.validator ??
+              (value) {
+                if (value == null || value.isEmpty) {
+                  return "Please select an option";
+                }
+                return null;
+              },
         ),
       ],
     );
@@ -281,43 +329,69 @@ class _CustomDropdownState extends State<CustomDropdown> {
 class PasswordTextField extends StatefulWidget {
   final String label;
   final Function(String) onChanged;
+  final TextEditingController? controller;
 
   const PasswordTextField({
     Key? key,
     required this.label,
     required this.onChanged,
+    this.controller,
   }) : super(key: key);
 
   @override
-  // ignore: library_private_types_in_public_api
   _PasswordTextFieldState createState() => _PasswordTextFieldState();
 }
 
 class _PasswordTextFieldState extends State<PasswordTextField> {
   bool _isObscured = true;
-  final TextEditingController _controller = TextEditingController();
-  bool _hasText = false;
+  late TextEditingController _controller;
 
   final RegExp _uppercase = RegExp(r'[A-Z]');
   final RegExp _lowercase = RegExp(r'[a-z]');
   final RegExp _number = RegExp(r'[0-9]');
   final RegExp _specialChar = RegExp(r'[!@#\$&*~]');
 
-  bool hasUppercase = false;
-  bool hasLowercase = false;
-  bool hasNumber = false;
-  bool hasSpecialChar = false;
+  late ValueNotifier<bool> hasUppercase;
+  late ValueNotifier<bool> hasLowercase;
+  late ValueNotifier<bool> hasNumber;
+  late ValueNotifier<bool> hasSpecialChar;
+  late ValueNotifier<bool> hasText;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = widget.controller ?? TextEditingController();
+
+    hasUppercase = ValueNotifier(false);
+    hasLowercase = ValueNotifier(false);
+    hasNumber = ValueNotifier(false);
+    hasSpecialChar = ValueNotifier(false);
+    hasText = ValueNotifier(false);
+
+    _controller.addListener(() => _validatePassword(_controller.text));
+  }
 
   void _validatePassword(String value) {
-    setState(() {
-      _hasText = value.isNotEmpty; // Check if text field has input
-      hasUppercase = _uppercase.hasMatch(value);
-      hasLowercase = _lowercase.hasMatch(value);
-      hasNumber = _number.hasMatch(value);
-      hasSpecialChar = _specialChar.hasMatch(value);
-    });
+    hasText.value = value.isNotEmpty;
+    hasUppercase.value = _uppercase.hasMatch(value);
+    hasLowercase.value = _lowercase.hasMatch(value);
+    hasNumber.value = _number.hasMatch(value);
+    hasSpecialChar.value = _specialChar.hasMatch(value);
 
     widget.onChanged(value);
+  }
+
+  @override
+  void dispose() {
+    if (widget.controller == null) {
+      _controller.dispose();
+    }
+    hasUppercase.dispose();
+    hasLowercase.dispose();
+    hasNumber.dispose();
+    hasSpecialChar.dispose();
+    hasText.dispose();
+    super.dispose();
   }
 
   @override
@@ -342,26 +416,29 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
           onChanged: _validatePassword,
           decoration: InputDecoration(
             filled: true,
-            fillColor: _hasText
+            fillColor: hasText.value
                 ? ColorConstant.primaryLightColor.withOpacity(0.3)
-                : Colors.white, // Background color changes
+                : Colors.white,
             hintText: "Enter Password",
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
             hintStyle: const TextStyle(
               color: Color(0xffB3B3B3),
               fontWeight: FontWeight.w400,
               fontSize: 14,
             ),
-            contentPadding:
-                const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(3),
-              borderSide:
-                  const BorderSide(color: Color(0xffB3B3B3), width: 0.8),
+              borderSide: const BorderSide(
+                color: Color(0xffB3B3B3),
+                width: 0.8,
+              ),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(3),
-              borderSide:
-                  const BorderSide(color: Color(0xffB3B3B3), width: 0.8),
+              borderSide: const BorderSide(
+                color: Color(0xffB3B3B3),
+                width: 0.8,
+              ),
             ),
             suffixIcon: IconButton(
               icon: Icon(
@@ -378,36 +455,39 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
         ),
         const SizedBox(height: 10),
         _buildValidationItem("Password must contain Uppercase", hasUppercase),
-        _buildValidationItem("Password must contain lowercase", hasLowercase),
-        _buildValidationItem("Password must contain a number", hasNumber),
+        _buildValidationItem("Password must contain Lowercase", hasLowercase),
+        _buildValidationItem("Password must contain a Number", hasNumber),
         _buildValidationItem(
-            "Password must contain special character !@#\$&*~", hasSpecialChar),
+            "Password must contain a Special Character (!@#\$&*~)",
+            hasSpecialChar),
       ],
     );
   }
 
-  Widget _buildValidationItem(String text, bool isValid) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 4),
-      child: Row(
-        children: [
-          Icon(
-            isValid ? Icons.check_box : Icons.check_box_outline_blank,
-            color: isValid ? Colors.green : Colors.grey,
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Text(
-              text,
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-                color: isValid ? Colors.green : Color(0xff3C3B3B),
+  Widget _buildValidationItem(String text, ValueNotifier<bool> isValid) {
+    return ValueListenableBuilder<bool>(
+      valueListenable: isValid,
+      builder: (context, valid, child) {
+        return Padding(
+          padding: const EdgeInsets.only(top: 4),
+          child: Row(
+            children: [
+              Icon(valid ? Icons.check_circle : Icons.cancel,
+                  color: valid ? Colors.green : Colors.red),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  text,
+                  style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                      color: valid ? Colors.green : Colors.red),
+                ),
               ),
-            ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
@@ -415,11 +495,15 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
 class ConfirmPasswordTextField extends StatefulWidget {
   final String label;
   final String password;
+  final Function(bool) onMatchChanged;
+  final TextEditingController? controller;
 
   const ConfirmPasswordTextField({
     Key? key,
     required this.label,
     required this.password,
+    required this.onMatchChanged,
+    this.controller,
   }) : super(key: key);
 
   @override
@@ -428,16 +512,44 @@ class ConfirmPasswordTextField extends StatefulWidget {
 }
 
 class _ConfirmPasswordTextFieldState extends State<ConfirmPasswordTextField> {
+  late TextEditingController _controller;
   bool _isObscured = true;
-  final TextEditingController _controller = TextEditingController();
   bool isMatching = false;
   bool hasText = false;
 
+  @override
+  void initState() {
+    super.initState();
+    _controller = widget.controller ?? TextEditingController();
+    _controller.addListener(() => _checkMatch(_controller.text));
+  }
+
+  @override
+  void didUpdateWidget(covariant ConfirmPasswordTextField oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.password != widget.password) {
+      _checkMatch(_controller.text);
+    }
+  }
+
   void _checkMatch(String value) {
-    setState(() {
-      isMatching = value == widget.password;
-      hasText = value.isNotEmpty;
-    });
+    bool match = value == widget.password;
+
+    if (match != isMatching) {
+      setState(() {
+        isMatching = match;
+        hasText = value.isNotEmpty;
+      });
+    }
+    widget.onMatchChanged(isMatching);
+  }
+
+  @override
+  void dispose() {
+    if (widget.controller == null) {
+      _controller.dispose();
+    }
+    super.dispose();
   }
 
   @override
@@ -450,21 +562,21 @@ class _ConfirmPasswordTextFieldState extends State<ConfirmPasswordTextField> {
           style: const TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w400,
-            color: Color(0xff3C3B3B), // Adjust label color
+            color: Color(0xff3C3B3B),
           ),
         ),
         const SizedBox(height: 8),
         TextField(
           controller: _controller,
           obscureText: _isObscured,
-          onChanged: _checkMatch,
           decoration: InputDecoration(
             hintText: 'Enter Confirm password',
-            hintStyle: TextStyle(
-              color: ColorConstant.primaryLightColor.withOpacity(0.3),
+            hintStyle: const TextStyle(
+              color: Color(0xffB3B3B3),
               fontWeight: FontWeight.w400,
               fontSize: 14,
             ),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
             contentPadding:
                 const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
             filled: true,
@@ -498,16 +610,16 @@ class _ConfirmPasswordTextFieldState extends State<ConfirmPasswordTextField> {
         Row(
           children: [
             Icon(
-              isMatching ? Icons.check_box : Icons.check_box_outline_blank,
-              color: isMatching ? Colors.green : Colors.grey,
+              isMatching ? Icons.check_circle : Icons.cancel,
+              color: isMatching ? Colors.green : Colors.red,
             ),
             const SizedBox(width: 8),
             Text(
-              "Passwords match",
+              isMatching ? "Passwords match" : "Passwords do not match",
               style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w500,
-                color: isMatching ? Colors.green : const Color(0xff3C3B3B),
+                color: isMatching ? Colors.green : Colors.red,
               ),
             ),
           ],
@@ -519,12 +631,16 @@ class _ConfirmPasswordTextFieldState extends State<ConfirmPasswordTextField> {
 
 class LoginPasswordTextField extends StatefulWidget {
   final String label;
-  final String password;
+  final TextEditingController controller;
+  final String? Function(String?)? validator;
+  final void Function(String)? onChanged; // Add onChanged
 
   const LoginPasswordTextField({
     Key? key,
     required this.label,
-    required this.password,
+    required this.controller,
+    this.validator,
+    this.onChanged, // Accept onChanged
   }) : super(key: key);
 
   @override
@@ -533,18 +649,6 @@ class LoginPasswordTextField extends StatefulWidget {
 
 class _LoginPasswordTextFieldState extends State<LoginPasswordTextField> {
   bool _isObscured = true;
-  final TextEditingController _controller = TextEditingController();
-  bool hasText = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller.addListener(() {
-      setState(() {
-        hasText = _controller.text.isNotEmpty;
-      });
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -556,16 +660,18 @@ class _LoginPasswordTextFieldState extends State<LoginPasswordTextField> {
           style: const TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w400,
-            color: Color(0xff3C3B3B), // Adjust label color
+            color: Color(0xff3C3B3B),
           ),
         ),
         const SizedBox(height: 8),
-        TextField(
-          controller: _controller,
+        TextFormField(
+          controller: widget.controller,
           obscureText: _isObscured,
+          validator: widget.validator,
+          onChanged: widget.onChanged, // Call the parent's onChanged
           decoration: InputDecoration(
             filled: true,
-            fillColor: hasText
+            fillColor: widget.controller.text.isNotEmpty
                 ? ColorConstant.primaryLightColor.withOpacity(0.3)
                 : Colors.transparent,
             hintText: 'Enter password',
@@ -609,15 +715,20 @@ class _LoginPasswordTextFieldState extends State<LoginPasswordTextField> {
 
 class DateOfBirthField extends StatefulWidget {
   final String label;
-  const DateOfBirthField({super.key, required this.label});
+  final TextEditingController controller; // Pass controller for validation
+
+  const DateOfBirthField({
+    super.key,
+    required this.label,
+    required this.controller,
+  });
 
   @override
   State<DateOfBirthField> createState() => _DateOfBirthFieldState();
 }
 
 class _DateOfBirthFieldState extends State<DateOfBirthField> {
-  final TextEditingController _controller = TextEditingController();
-  bool _hasDate = false; // Track if a date is selected
+  bool _hasDate = false;
 
   Future<void> _selectDate(BuildContext context) async {
     DateTime? picked = await showDatePicker(
@@ -629,8 +740,8 @@ class _DateOfBirthFieldState extends State<DateOfBirthField> {
 
     if (picked != null) {
       setState(() {
-        _controller.text = "${picked.month}/${picked.day}/${picked.year}";
-        _hasDate = true; // Update background color condition
+        widget.controller.text = "${picked.month}/${picked.day}/${picked.year}";
+        _hasDate = true;
       });
     }
   }
@@ -640,7 +751,6 @@ class _DateOfBirthFieldState extends State<DateOfBirthField> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Persistent label
         Padding(
           padding: const EdgeInsets.only(bottom: 10),
           child: Text(
@@ -652,11 +762,16 @@ class _DateOfBirthFieldState extends State<DateOfBirthField> {
             ),
           ),
         ),
-        // TextField with date picker
-        TextField(
-          controller: _controller,
-          readOnly: true, // Prevent manual input
+        TextFormField(
+          controller: widget.controller,
+          readOnly: true,
           onTap: () => _selectDate(context),
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Please select your date of birth';
+            }
+            return null;
+          },
           decoration: InputDecoration(
             hintText: "mm/dd/yy",
             hintStyle: const TextStyle(
@@ -678,6 +793,7 @@ class _DateOfBirthFieldState extends State<DateOfBirthField> {
                 width: 0.8,
               ),
             ),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(3),
               borderSide: const BorderSide(
@@ -685,13 +801,27 @@ class _DateOfBirthFieldState extends State<DateOfBirthField> {
                 width: 0.8,
               ),
             ),
-            filled: true, // Enables background color
+            filled: true,
             fillColor: _hasDate
                 ? ColorConstant.primaryLightColor.withOpacity(0.3)
-                : Colors.transparent, // Background color change
+                : Colors.transparent,
           ),
         ),
       ],
     );
   }
+}
+
+String maskEmail(String email) {
+  final parts = email.split('@');
+  if (parts.length != 2) return email; // Return original if format is incorrect
+
+  final username = parts[0];
+  final domain = parts[1];
+
+  String maskedUsername = username.length > 4
+      ? '${username.substring(0, 4)}****'
+      : '${username[0]}****';
+
+  return '$maskedUsername@$domain';
 }

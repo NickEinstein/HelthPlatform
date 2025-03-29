@@ -8,4 +8,7 @@ class StorageConstants {
   static const String languageCode = 'LANGUAGE_CODE';
   static const String countryId = 'COUNTRY_ID';
   static const String addToCartDb = "addToCart";
+  static const String loginData = "loginData";
+  static const String articleData = "articleData";
+  static const String bannerData = "bannerData";
 }

@@ -11,13 +11,13 @@ import 'package:greenzone_medical/src/features/doctors/presentation/book_appoint
 import 'package:greenzone_medical/src/features/doctors/presentation/doctor_listing.dart';
 import 'package:greenzone_medical/src/features/healthgoal/presentation/healthgoal_page.dart';
 import 'package:greenzone_medical/src/features/home/home.dart';
-import 'package:greenzone_medical/src/features/onboarding/onboarding.dart';
 
 import '../app_pkg.dart';
 import '../features/article/presentation/article_screen.dart';
 import '../features/community/presentation/search_community.dart';
 import '../features/healthgoal/presentation/about_health.dart';
 import '../features/home/presentation/widget/custom_bottom_navbar.dart';
+import '../features/onboarding/onboarding.dart';
 
 part 'app_routes.dart';
 
@@ -40,6 +40,7 @@ final routerProvider = Provider<GoRouter>((ref) {
     routes: [
       GoRoute(
         path: _Paths.SPLASH,
+
         // name: SplashPage.routeName,
         builder: (context, state) {
           return const SplashPage();
@@ -47,9 +48,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: _Paths.ONBOARDING,
+
         // name: SplashPage.routeName,
         builder: (context, state) {
-          return const OnboardingPage();
+          return const OnBoardingPage();
         },
       ),
       GoRoute(
@@ -182,7 +184,12 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: _Paths.ARTICLEDETAILS,
         name: _Paths.ARTICLEDETAILS,
         builder: (context, state) {
-          return const ArticleDetails();
+          final article = state.extra as Map<String, String>;
+          return ArticleDetails(
+            title: article["title"]!,
+            description: article["description"]!,
+            imageUrl: article["imageUrl"]!,
+          );
         },
       ),
     ],
