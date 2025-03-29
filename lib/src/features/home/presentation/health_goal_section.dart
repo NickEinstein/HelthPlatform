@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:greenzone_medical/src/constants/color_constant.dart';
 import 'package:greenzone_medical/src/constants/dimens.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HealthGoalsPager extends StatefulWidget {
   final List<HealthGoalModel> goals;
@@ -56,68 +57,78 @@ class _HealthGoalsPagerState extends State<HealthGoalsPager> {
   }
 
   Widget _buildHealthGoalCard(HealthGoalModel goal) {
+    bool isAssetImage = goal.imagePath.contains("asset");
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 8),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: goal.backgroundColor,
+        color: goal.backgroundColor, // Fallback background color
         borderRadius: BorderRadius.circular(12),
+        image: isAssetImage
+            ? null // Skip loading if it's an asset image
+            : DecorationImage(
+                image: NetworkImage(goal.imagePath),
+                fit: BoxFit.cover,
+                colorFilter: ColorFilter.mode(
+                  Colors.black.withOpacity(0.3), // Dark overlay for readability
+                  BlendMode.darken,
+                ),
+              ),
       ),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  goal.title,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-                const SizedBox(height: 5),
-                Text(
-                  goal.description,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: Color(0xffF2F2F2),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                GestureDetector(
-                  onTap: goal.onTap,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 10),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(6),
-                      border: Border.all(color: Colors.white, width: 1.5),
-                    ),
-                    child: Text(
-                      goal.buttonText, // Dynamic button text
-                      style: const TextStyle(
-                        color: Color(0xff666666),
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+          Text(
+            goal.title,
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
             ),
           ),
-          const SizedBox(width: 10),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(8),
-            child: Image.asset(
-              goal.imagePath,
-              width: 100,
-              height: 100,
-              fit: BoxFit.cover,
+          const SizedBox(height: 5),
+          Text(
+            goal.description,
+            style: const TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              color: Color(0xffF2F2F2),
+            ),
+          ),
+          const SizedBox(height: 10),
+          GestureDetector(
+            onTap: () async {
+              if (goal.onTap != null) {
+                String onTapValue = goal.onTap.toString();
+
+                // Check if onTap contains a URL
+                if (Uri.tryParse(onTapValue)?.hasAbsolutePath == true) {
+                  // It's a valid URL, launch it
+                  if (await canLaunchUrl(Uri.parse(onTapValue))) {
+                    await launchUrl(Uri.parse(onTapValue));
+                  }
+                } else {
+                  // It's a function, call it normally
+                  goal.onTap();
+                }
+              }
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(6),
+                border: Border.all(color: Colors.white, width: 1.5),
+              ),
+              child: Text(
+                goal.buttonText,
+                style: const TextStyle(
+                  color: Color(0xff666666),
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
             ),
           ),
         ],

@@ -99,43 +99,60 @@ class SharedPreferencesService {
     _prefs = await SharedPreferences.getInstance();
   }
 
+  void _ensureInitialized() {
+    if (_prefs == null) {
+      throw Exception(
+          "SharedPreferences has not been initialized. Call init() first.");
+    }
+  }
+
   Future<void> setString(String key, String value) async {
-    await _prefs?.setString(key, value);
+    _ensureInitialized();
+    await _prefs!.setString(key, value);
   }
 
   String? getString(String key) {
-    return _prefs?.getString(key);
+    _ensureInitialized();
+    return _prefs!.getString(key);
   }
 
   Future<void> setInt(String key, int value) async {
-    await _prefs?.setInt(key, value);
+    _ensureInitialized();
+    await _prefs!.setInt(key, value);
   }
 
   int? getInt(String key) {
-    return _prefs?.getInt(key);
+    _ensureInitialized();
+    return _prefs!.getInt(key);
   }
 
   Future<void> setBool(String key, bool value) async {
-    await _prefs?.setBool(key, value);
+    _ensureInitialized();
+    await _prefs!.setBool(key, value);
   }
 
   bool? getBool(String key) {
-    return _prefs?.getBool(key);
+    _ensureInitialized();
+    return _prefs!.getBool(key);
   }
 
   Future<void> setDouble(String key, double value) async {
-    await _prefs?.setDouble(key, value);
+    _ensureInitialized();
+    await _prefs!.setDouble(key, value);
   }
 
   double? getDouble(String key) {
-    return _prefs?.getDouble(key);
+    _ensureInitialized();
+    return _prefs!.getDouble(key);
   }
 
   Future<void> remove(String key) async {
-    await _prefs?.remove(key);
+    _ensureInitialized();
+    await _prefs!.remove(key);
   }
 
   Future<void> clear() async {
-    await _prefs?.clear();
+    _ensureInitialized();
+    await _prefs!.clear();
   }
 }

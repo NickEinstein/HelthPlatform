@@ -1,22 +1,37 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../di.dart';
 import '../../../routes/app_pages.dart';
 
-class SplashPage extends StatefulWidget {
+class SplashPage extends ConsumerStatefulWidget {
   const SplashPage({super.key});
 
   @override
-  State<SplashPage> createState() => _SplashPageState();
+  ConsumerState<SplashPage> createState() => _SplashPageState();
 }
 
-class _SplashPageState extends State<SplashPage> {
+class _SplashPageState extends ConsumerState<SplashPage> {
   @override
   void initState() {
     super.initState();
+    _navigate();
+  }
+
+  Future<void> _navigate() async {
+    final authService =
+        ref.read(authServiceProvider); // Get AuthService instance
+    final isLoggedIn = await authService.isUserLoggedIn(); // Check login status
 
     Future.delayed(const Duration(seconds: 3), () {
-      context.pushReplacement(Routes.ONBOARDING);
+      if (!mounted) return;
+
+      if (isLoggedIn) {
+        context.pushReplacement(Routes.BOTTOMNAV);
+      } else {
+        context.pushReplacement(Routes.ONBOARDING);
+      }
     });
   }
 
@@ -52,21 +67,5 @@ class _SplashPageState extends State<SplashPage> {
         ],
       ),
     );
-    // Widget build(BuildContext context) {
-    //   return Scaffold(
-    //     appBar: AppBar(title: const Text('My Page')),
-    //     body: Column(
-    //       children: [
-    //         const Text('Splash screen'),
-    //         ElevatedButton(onPressed: (){
-    //           context.pushReplacement(Routes.SIGNIN);
-    //         }, child:const Text("SignIn")),
-
-    //         ElevatedButton(onPressed: (){
-    //           context.goNamed(Routes.SIGNUP);
-    //         }, child:const Text("SignUp")),
-    //       ],
-    //     ));
-    // }
   }
 }

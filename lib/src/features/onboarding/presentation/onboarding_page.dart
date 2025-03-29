@@ -1,164 +1,146 @@
-import 'dart:async';
-
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:greenzone_medical/src/app_pkg.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-import '../../../routes/app_pages.dart';
+import '../../../constants/color_constant.dart';
+import '../../../constants/style.dart';
+import '../../../routes/routes.dart';
+import '../model/onboarding_data.dart';
 
-class OnboardingPage extends StatefulWidget {
-  const OnboardingPage({super.key});
+class OnBoardingPage extends StatefulWidget {
+  const OnBoardingPage({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
-  _OnboardingPageState createState() => _OnboardingPageState();
+  State<OnBoardingPage> createState() => _OnBoardingPageState();
 }
 
-class _OnboardingPageState extends State<OnboardingPage> {
-  final PageController _controller = PageController(
-    viewportFraction: 1.0, // Ensure each page takes full width
-  );
-  int _currentIndex = 0;
-  Timer? _timer; // Timer for auto-transition
+class _OnBoardingPageState extends State<OnBoardingPage>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController animationController;
+  late final Animation<double> rotationAnimation;
+  late final PageController pageController;
+  static const viewportFraction = 0.7;
+  int activeIndex = 0;
+
   @override
   void initState() {
+    pageController = PageController(viewportFraction: viewportFraction);
+    animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
+    );
+    final curvedAnimation = CurvedAnimation(
+      parent: animationController,
+      curve: Curves.easeOut,
+    );
+    rotationAnimation =
+        Tween<double>(begin: 0, end: 30 * pi / 180).animate(curvedAnimation);
     super.initState();
-    _startAutoSlide();
-  }
-
-  void _startAutoSlide() {
-    _timer = Timer.periodic(const Duration(seconds: 3), (timer) {
-      if (_currentIndex < _onboardingData.length - 1) {
-        _currentIndex++;
-      } else {
-        _currentIndex = 0;
-      }
-      _controller.animateToPage(
-        _currentIndex,
-        duration: const Duration(milliseconds: 500),
-        curve: Curves.easeInOut,
-      );
-    });
   }
 
   @override
   void dispose() {
-    _timer?.cancel(); // Stop timer when widget is disposed
-    _controller.dispose();
+    animationController.dispose();
+    pageController.dispose(); // Don't forget to dispose it
+
     super.dispose();
   }
 
-  final List<Map<String, String>> _onboardingData = [
-    {
-      "image": "assets/images/doctor_1.png",
-      "title": "Better Health, Connected",
-      "description":
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt"
-    },
-    {
-      "image": "assets/images/doctor_2.png",
-      "title": "Get Medical Assistance Anytime",
-      "description":
-          "Access trusted medical help whenever you need it, from anywhere."
-    },
-    {
-      "image": "assets/images/doctor_3.png",
-      "title": "Book Appointments Easily",
-      "description":
-          "Schedule consultations with experienced doctors at your convenience."
-    },
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+    final itemWidth = screenSize.width * viewportFraction;
+
     return Scaffold(
-      body: Stack(
-        children: [
-          // Full-screen image
-          PageView.builder(
-            controller: _controller,
-            itemCount: _onboardingData.length,
-            onPageChanged: (index) {
-              setState(() {
-                _currentIndex = index;
-              });
-            },
-            itemBuilder: (context, index) {
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 230),
-                child: Image.asset(
-                  _onboardingData[index]["image"]!,
-                  fit: BoxFit.fill,
-                  width: MediaQuery.of(context).size.width, // Ensure full width
-                ),
-              );
-            },
-          ),
-
-          // Bottom white section with rounded corners
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              height: MediaQuery.of(context).size.height * 0.4,
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(30),
-                  topRight: Radius.circular(30),
+        body: SafeArea(
+            child: Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Expanded(
+          child: Stack(
+            clipBehavior: Clip.none,
+            alignment: Alignment.center,
+            children: [
+              Positioned.fill(
+                child: GestureDetector(
+                  onTapDown: (_) => animationController.forward(),
+                  onTapUp: (_) => animationController.reverse(),
+                  child: PageView.builder(
+                    controller: pageController, // Use the same controller
+                    itemCount: onBoardingItems.length,
+                    onPageChanged: (int index) {
+                      setState(() {
+                        activeIndex = index;
+                      });
+                      animationController.forward().then(
+                            (value) => animationController.reverse(),
+                          );
+                    },
+                    itemBuilder: (context, index) {
+                      final isActive = index == activeIndex;
+                      return Transform.translate(
+                        offset: Offset(0, isActive ? -150 : -40),
+                        child: AnimatedScale(
+                          duration: const Duration(milliseconds: 300),
+                          scale: isActive ? 1.1 : 0.9,
+                          curve: Curves.easeOut,
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 10),
+                            decoration: BoxDecoration(
+                              color: Colors.transparent,
+                              borderRadius: BorderRadius.circular(0),
+                              image: DecorationImage(
+                                image: AssetImage(
+                                  onBoardingItems[index].image,
+                                ),
+                                fit: BoxFit.fitWidth,
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ),
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // Page Indicator
-                  SmoothPageIndicator(
-                    controller: _controller,
-                    count: _onboardingData.length,
-                    effect: const ExpandingDotsEffect(
-                      activeDotColor: ColorConstant.primaryColor,
-                      dotColor: ColorConstant.primaryLightColor,
-                      dotHeight: 6,
-                      dotWidth: 6,
+              // Indicator, Info, and Button in One Positioned Widget
+              Positioned(
+                bottom: 30, // Aligns everything to the bottom
+                left: 20,
+                right: 20,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Center(
+                      child: SmoothPageIndicator(
+                        controller:
+                            pageController, // Ensure it's the same controller
+                        count: onBoardingItems.length,
+                        effect: const ExpandingDotsEffect(
+                          activeDotColor: Color(0xff109815),
+                          dotColor: Color(0xffD9D9D9),
+                          dotHeight: 6,
+                          dotWidth: 6,
+                        ),
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 20),
-
-                  // Title
-                  Text(
-                    _onboardingData[_currentIndex]["title"]!,
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      color: ColorConstant.primaryColor,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      child: Column(
+                        children: _buildItemInfo(activeIndex: activeIndex),
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 10),
-
-                  // Description
-                  Text(
-                    _onboardingData[_currentIndex]["description"]!,
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      color: ColorConstant.secondryColor,
-                    ),
-                  ),
-                  const SizedBox(
-                    height: Dimens.space26,
-                  ),
-
-                  // Buttons
-                  _buildButtons(),
-                ],
+                    _buildButtons(), // Button below the text
+                  ],
+                ),
               ),
-            ),
+            ],
           ),
-        ],
-      ),
-    );
+        ),
+      ],
+    )));
   }
 
   /// Buttons Section
@@ -169,7 +151,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
           width: double.infinity,
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: ColorConstant.primaryColor,
+              backgroundColor: Color(0xff109815),
               padding: const EdgeInsets.symmetric(vertical: 14),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8)),
@@ -190,7 +172,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
               padding: const EdgeInsets.symmetric(vertical: 14),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8)),
-              side: const BorderSide(color: ColorConstant.primaryColor),
+              side: const BorderSide(color: Color(0xff109815)),
             ),
             onPressed: () {
               // Navigate to login screen
@@ -202,6 +184,88 @@ class _OnboardingPageState extends State<OnboardingPage> {
           ),
         ),
       ],
+    );
+  }
+
+  List<Widget> _buildItemInfo({int activeIndex = 0}) {
+    return [
+      Center(
+        child: Text(
+          onBoardingItems[activeIndex].title,
+          textAlign: TextAlign.center,
+          style: const TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.w700,
+            color: ColorConstant.secondryColor,
+          ),
+        ),
+      ),
+      const SizedBox(height: 10),
+      Center(
+        child: Text(
+          onBoardingItems[activeIndex].subtitle,
+          textAlign: TextAlign.center,
+          style: const TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.w400,
+            color: Color(0xff616060),
+          ),
+        ),
+      ),
+      const SizedBox(height: 10),
+    ];
+  }
+}
+
+class PageIndicator extends StatelessWidget {
+  const PageIndicator({
+    super.key,
+    this.length = 1,
+    this.activeIndex = 0,
+    this.activeColor = AppColors.primary,
+  });
+
+  final int length;
+  final int activeIndex;
+  final Color activeColor;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 20),
+      child: SizedBox.fromSize(
+        size: const Size.fromHeight(8),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final size = constraints.smallest;
+            final activeWidth = size.width * 0.5;
+            final inActiveWidth =
+                (size.width - activeWidth - (2 * length * 2)) / (length - 1);
+
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(
+                length,
+                (index) => Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 2),
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeOut,
+                    height: index == activeIndex ? 8 : 5,
+                    width: index == activeIndex ? activeWidth : inActiveWidth,
+                    decoration: BoxDecoration(
+                      color: index == activeIndex
+                          ? activeColor
+                          : AppColors.onBlack,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
+      ),
     );
   }
 }

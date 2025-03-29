@@ -3,15 +3,16 @@ import 'package:greenzone_medical/src/app_pkg.dart';
 class ApiUrl {
   ApiUrl._();
 
-  static const String login = '/user/login/';
-  static const String googleSignInOrSignUpPostUrl = '/user/api/social/google/';
+  static const String login = '/auth/login';
   static const String registerUrl = '/customer/register/';
   static const String profileGetUrl = '/user/profile/';
   static const String changePasswordPostUrl = '/user/change-password/';
   static const String forgetPasswordPostUrl = '/user/forget-password/';
-  static const String newsLetterGetUrl = '/user/news-letter/';
-  static const String googleLoginPostUrl = '/sellers/google-login/';
-  static const String otpSendUrl = '/user/otp_login_save_data/';
+  static const String otpSendUrl = '/auth/forget-password/';
+  static const String allArticleUrl = '/Articles?page=1&pageSize=100000';
+  static const String allBannersUrl = '/Banners';
+  static const String allCategoriesUrl = '/Categories';
+
   static String verifyOTPPostUrlForAfterReg(String code, String userName) =>
       '/user/otp_login_match_data_return_token/?otp_code=$code&user_name=$userName';
   static const String resetPasswordPutUrl = '/user/reset_password_for_mobile/';
