@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:greenzone_medical/src/features/appointment/presentation/doctors_report.dart';
+import 'package:greenzone_medical/src/features/appointment/presentation/doctors_report_details.dart';
 import 'package:greenzone_medical/src/features/article/presentation/article_details.dart';
 import 'package:greenzone_medical/src/features/auth/presentation/new_password_page.dart';
 import 'package:greenzone_medical/src/features/community/community.dart';
@@ -9,6 +11,7 @@ import 'package:greenzone_medical/src/features/community/presentation/community_
 import 'package:greenzone_medical/src/features/doctors/doctors.dart';
 import 'package:greenzone_medical/src/features/doctors/presentation/book_appointment.dart';
 import 'package:greenzone_medical/src/features/doctors/presentation/doctor_listing.dart';
+import 'package:greenzone_medical/src/features/appointment/presentation/reschedule_appointments.dart';
 import 'package:greenzone_medical/src/features/healthgoal/presentation/healthgoal_page.dart';
 import 'package:greenzone_medical/src/features/home/home.dart';
 import 'package:greenzone_medical/src/features/onboarding/onboarding.dart';
@@ -164,6 +167,31 @@ final routerProvider = Provider<GoRouter>((ref) {
           return const BookAppointment();
         },
       ),
+      
+      
+       GoRoute(
+        path: _Paths.RESCHEDULEAPPOINTMENT,
+        name: _Paths.RESCHEDULEAPPOINTMENT,
+        builder: (context, state) {
+          return const RescheduleAppointmentPage();
+        },
+      ),
+
+       GoRoute(
+        path: _Paths.DOCTORSREPORT,
+        name: _Paths.DOCTORSREPORT,
+        builder: (context, state) {
+          return const DoctorsReportPage();
+        },
+      ),  GoRoute(
+        path: _Paths.DOCTORSREPORTDETAILS,
+        name: _Paths.DOCTORSREPORTDETAILS,
+        builder: (context, state) {
+          return const DoctorsReportDetails();
+        },
+      ),
+
+      
       GoRoute(
         path: _Paths.HEALTHGOAL,
         name: _Paths.HEALTHGOAL,
