@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:greenzone_medical/src/constants/color_constant.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 
 class CustomTextField extends StatefulWidget {
   final String label;
@@ -218,7 +219,8 @@ class CustomDropdown extends StatefulWidget {
   final String hint;
   final ValueChanged<String?>? onChanged;
   final String? Function(String?)? validator;
-  final TextEditingController? controller; // Added controller
+  final TextEditingController? controller;
+  final String? value;
 
   const CustomDropdown({
     super.key,
@@ -227,7 +229,8 @@ class CustomDropdown extends StatefulWidget {
     this.hint = "Select an option",
     this.onChanged,
     this.validator,
-    this.controller, // Accept controller
+    this.controller,
+    this.value,
   });
 
   @override
@@ -244,17 +247,26 @@ class _CustomDropdownState extends State<CustomDropdown> {
   }
 
   void _setInitialValue() {
-    if (widget.controller != null && widget.controller!.text.isNotEmpty) {
+    if (widget.value != null && widget.value!.isNotEmpty) {
+      if (widget.options.contains(widget.value)) {
+        _selectedValue = widget.value;
+      } else {
+        _selectedValue = null;
+      }
+    } else if (widget.controller != null &&
+        widget.controller!.text.isNotEmpty) {
       if (widget.options.contains(widget.controller!.text)) {
         _selectedValue = widget.controller!.text;
       } else {
-        _selectedValue = null; // Avoid invalid selection error
+        _selectedValue = null;
       }
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    List<String> uniqueOptions = widget.options.toSet().toList();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -269,41 +281,41 @@ class _CustomDropdownState extends State<CustomDropdown> {
             ),
           ),
         ),
-        DropdownButtonFormField<String>(
-          value: _selectedValue,
-          icon: const Icon(Icons.keyboard_arrow_down_rounded, size: 18),
-          decoration: InputDecoration(
-            hintText: widget.hint,
-            hintStyle: const TextStyle(
-              color: Color(0xffB3B3B3),
-              fontWeight: FontWeight.w400,
-              fontSize: 14,
+        DropdownSearch<String>(
+          selectedItem: _selectedValue,
+          popupProps: PopupProps.menu(
+            showSearchBox: true,
+            searchFieldProps: TextFieldProps(
+              decoration: InputDecoration(
+                hintText: "Search...",
+                contentPadding:
+                    const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
             ),
-            isDense: true,
-            contentPadding:
-                const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(3),
-              borderSide:
-                  const BorderSide(color: Color(0xffB3B3B3), width: 0.8),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(3),
-              borderSide:
-                  const BorderSide(color: Color(0xffB3B3B3), width: 0.8),
-            ),
-            filled: true,
-            fillColor: _selectedValue != null
-                ? ColorConstant.primaryLightColor.withOpacity(0.3)
-                : Colors.transparent,
           ),
-          items: widget.options
-              .map((e) => DropdownMenuItem(
-                    value: e,
-                    child: Text(e, style: const TextStyle(fontSize: 14)),
-                  ))
-              .toList(),
+          items: uniqueOptions,
+          dropdownDecoratorProps: DropDownDecoratorProps(
+            dropdownSearchDecoration: InputDecoration(
+              hintText: widget.hint,
+              contentPadding:
+                  const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(3),
+                borderSide:
+                    const BorderSide(color: Color(0xffB3B3B3), width: 0.8),
+              ),
+              filled: true,
+              fillColor: _selectedValue != null
+                  ? ColorConstant.primaryLightColor.withOpacity(0.3)
+                  : Colors.transparent,
+            ),
+          ),
           onChanged: (value) {
             setState(() {
               _selectedValue = value;
@@ -739,8 +751,12 @@ class _DateOfBirthFieldState extends State<DateOfBirthField> {
     );
 
     if (picked != null) {
+      // Convert the picked date to UTC and format it as YYYY-MM-DD
+      String formattedDate =
+          "${picked.toUtc().year.toString().padLeft(4, '0')}-${picked.toUtc().month.toString().padLeft(2, '0')}-${picked.toUtc().day.toString().padLeft(2, '0')}";
+
       setState(() {
-        widget.controller.text = "${picked.month}/${picked.day}/${picked.year}";
+        widget.controller.text = formattedDate; // Only date, no time
         _hasDate = true;
       });
     }
@@ -824,4 +840,40 @@ String maskEmail(String email) {
       : '${username[0]}****';
 
   return '$maskedUsername@$domain';
+}
+
+String timeAgo(String? createdAt) {
+  if (createdAt == null || createdAt.isEmpty)
+    return "Creation date unavailable";
+
+  try {
+    DateTime createdDate = DateTime.parse(createdAt).toLocal();
+    final now = DateTime.now();
+    final difference = now.difference(createdDate);
+
+    if (difference.inDays >= 7) {
+      int weeks = (difference.inDays / 7).floor();
+      return "Created about $weeks ${weeks == 1 ? 'week' : 'weeks'} ago";
+    } else if (difference.inDays > 0) {
+      return "Created about ${difference.inDays} ${difference.inDays == 1 ? 'day' : 'days'} ago";
+    } else if (difference.inHours > 0) {
+      return "Created about ${difference.inHours} ${difference.inHours == 1 ? 'hour' : 'hours'} ago";
+    } else {
+      return "Created just now";
+    }
+  } catch (e) {
+    return "Invalid date format";
+  }
+}
+
+String getGreeting() {
+  final hour = DateTime.now().hour;
+
+  if (hour >= 5 && hour < 12) {
+    return "Good morning! ";
+  } else if (hour >= 12 && hour < 18) {
+    return "Good afternoon! ";
+  } else {
+    return "Good evening! ";
+  }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:greenzone_medical/src/constants/color_constant.dart';
 
@@ -74,12 +75,11 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
                 ),
               ),
             ),
+
             IntlPhoneField(
-              controller: widget
-                  .controller.phoneController, // Use TextEditingController here
+              controller: widget.controller.phoneController,
               flagsButtonPadding: const EdgeInsets.all(8),
               dropdownIconPosition: IconPosition.trailing,
-
               decoration: InputDecoration(
                 filled: true,
                 fillColor: ColorConstant.primaryLightColor.withOpacity(0.3),
@@ -94,47 +94,45 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
                     const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(3),
-                  borderSide: const BorderSide(
-                    color: Color(0xffB3B3B3),
-                    width: 0.8,
-                  ),
+                  borderSide:
+                      const BorderSide(color: Color(0xffB3B3B3), width: 0.8),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(3),
-                  borderSide: const BorderSide(
-                    color: Color(0xffB3B3B3),
-                    width: 0.8,
-                  ),
+                  borderSide:
+                      const BorderSide(color: Color(0xffB3B3B3), width: 0.8),
                 ),
                 disabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(3),
-                  borderSide: const BorderSide(
-                    color: Color(0xffB3B3B3),
-                    width: 0.8,
-                  ),
+                  borderSide:
+                      const BorderSide(color: Color(0xffB3B3B3), width: 0.8),
                 ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(3),
-                  borderSide: const BorderSide(
-                    color: Color(0xffB3B3B3),
-                    width: 0.8,
-                  ),
+                  borderSide:
+                      const BorderSide(color: Color(0xffB3B3B3), width: 0.8),
                 ),
               ),
-
               initialCountryCode: 'NG',
               validator: (phone) {
                 if (phone == null || phone.number.isEmpty) {
                   return 'Phone number is required';
-                } else if (phone.number.length < 10) {
-                  // Adjust based on country requirements
-                  return 'Enter a valid phone number';
+                } else if (phone.number.length != 10) {
+                  return 'Enter a valid 10-digit phone number';
+                } else if (phone.number.startsWith('0')) {
+                  return 'Phone number cannot start with 0';
                 }
                 return null;
               },
               onChanged: (phone) {
                 print(phone.completeNumber);
               },
+              inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly, // ✅ Allow only numbers
+                LengthLimitingTextInputFormatter(10), // ✅ Limit to 10 digits
+                FilteringTextInputFormatter.allow(
+                    RegExp(r'^[1-9]\d*$')), // ✅ No leading "0"
+              ],
             ),
             smallSpace(),
             CustomTextField(

@@ -47,6 +47,10 @@ dependencies:
   flutter_launcher_icons: ^0.14.2
   intl:
   url_launcher:
+  dropdown_search: ^5.0.6
+  dio_smart_retry: ^6.0.0
+  duration: ^3.0.13
+  gap: ^3.0.1
 
 dev_dependencies:
   flutter_test:
@@ -73,8 +77,10 @@ flutter:
   assets:
     - .env
     - assets/svg/
+    - assets/svgs/
     - assets/images/
     - assets/icon/
+    - assets/json/
 
   #   - images/a_dot_ham.jpeg
 

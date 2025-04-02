@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:greenzone_medical/src/app_pkg.dart';
 
-import '../../../model/article_model.dart';
 import '../../../provider/all_providers.dart';
 import '../../../routes/routes.dart';
 import '../../../utils/custom_header.dart';
@@ -20,10 +19,13 @@ class ArticleScreen extends ConsumerStatefulWidget {
 
 class _ArticleScreenState extends ConsumerState<ArticleScreen> {
   int selectedIndex = 0; // Track selected category index
+  TextEditingController searchController = TextEditingController();
+  String searchQuery = "";
 
   @override
   Widget build(BuildContext context) {
     final categoryState = ref.watch(categoryProvider);
+    final articleState = ref.watch(articleProvider);
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -59,11 +61,17 @@ class _ArticleScreenState extends ConsumerState<ArticleScreen> {
                             width: 25,
                           ),
                           const SizedBox(width: 8),
-                          const Expanded(
+                          Expanded(
                             child: TextField(
-                              style: TextStyle(color: Colors.black),
-                              decoration: InputDecoration(
-                                hintText: "Search Group Name",
+                              controller: searchController,
+                              onChanged: (value) {
+                                setState(() {
+                                  searchQuery = value.toLowerCase().trim();
+                                });
+                              },
+                              style: const TextStyle(color: Colors.black),
+                              decoration: const InputDecoration(
+                                hintText: "Search Article",
                                 hintStyle: TextStyle(
                                     color: Color(0xff999999),
                                     fontSize: 14,
@@ -86,8 +94,6 @@ class _ArticleScreenState extends ConsumerState<ArticleScreen> {
                 ],
               ),
               smallSpace(),
-
-              // 🟢 Handle Categories State
               categoryState.when(
                 loading: () => const Center(child: CircularProgressIndicator()),
                 error: (err, stack) => const Center(
@@ -109,33 +115,86 @@ class _ArticleScreenState extends ConsumerState<ArticleScreen> {
                         },
                       ),
                       const SizedBox(height: 16),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10),
+                      const Padding(
+                        padding: EdgeInsets.only(left: 10),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Text("Popular Article",
+                            Text("Popular Article",
                                 style: TextStyle(
                                     color: ColorConstant.primaryColor,
                                     fontSize: 16,
                                     fontWeight: FontWeight.w700)),
-                            TextButton(
-                                onPressed: () {
-                                  context.push(Routes.ARTICLESCREEN);
-                                },
-                                child: const Text("See All",
-                                    style: TextStyle(
-                                        decoration: TextDecoration.underline,
-                                        color: ColorConstant.primaryColor,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w500)))
+                            // TextButton(
+                            //     onPressed: () {
+                            //       context.push(Routes.ARTICLESCREEN);
+                            //     },
+                            //     child: const Text("See All",
+                            //         style: TextStyle(
+                            //             decoration: TextDecoration.underline,
+                            //             color: ColorConstant.primaryColor,
+                            //             fontSize: 16,
+                            //             fontWeight: FontWeight.w500)))
                           ],
                         ),
                       ),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.28,
-                        child: ArticleList(), // 🛑 Replace with actual articles
+
+                      // ✅ Filter Articles based on Selected Category
+                      articleState.when(
+                        loading: () =>
+                            const Center(child: CircularProgressIndicator()),
+                        error: (error, stackTrace) =>
+                            Center(child: Text('Error: $error')),
+                        data: (articles) {
+                          final filteredArticles = articles.where((article) {
+                            final matchesCategory = selectedIndex == 0 ||
+                                article.category.name.trim().toLowerCase() ==
+                                    categories[selectedIndex]
+                                        .trim()
+                                        .toLowerCase();
+
+                            final matchesSearch = searchQuery.isEmpty ||
+                                article.title
+                                    .toLowerCase()
+                                    .contains(searchQuery) ||
+                                article.shortDescription
+                                    .toLowerCase()
+                                    .contains(searchQuery) ||
+                                article.slug
+                                    .toLowerCase()
+                                    .contains(searchQuery) ||
+                                article.category.name
+                                    .toLowerCase()
+                                    .contains(searchQuery) ||
+                                article.category.description
+                                    .toLowerCase()
+                                    .contains(searchQuery) ||
+                                article.fullDescription
+                                    .toLowerCase()
+                                    .contains(searchQuery);
+
+                            return matchesCategory && matchesSearch;
+                          }).toList();
+
+                          // final filteredArticles = selectedIndex == 0
+                          //     ? articles
+                          //     : articles
+                          //         .where((article) =>
+                          //             article.category.name
+                          //                 .trim()
+                          //                 .toLowerCase() ==
+                          //             categories[selectedIndex]
+                          //                 .trim()
+                          //                 .toLowerCase())
+                          //         .toList();
+
+                          return SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.28,
+                            child: ArticleList(articles: filteredArticles),
+                          );
+                        },
                       ),
+
                       const Padding(
                         padding: EdgeInsets.symmetric(horizontal: 5),
                         child: ArticlesSection(),

@@ -41,12 +41,27 @@ class DoctorCard extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(10),
-                child: Image.asset(
-                  imageUrl,
-                  width: 80,
-                  height: 100,
-                  fit: BoxFit.cover,
-                ),
+                child: (imageUrl.isNotEmpty &&
+                        Uri.tryParse(imageUrl)?.hasAbsolutePath == true)
+                    ? Image.network(
+                        imageUrl,
+                        width: 80,
+                        height: 100,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) =>
+                            Image.asset(
+                          'assets/images/doctor1.png', // 🔥 Default fallback asset
+                          width: 80,
+                          height: 100,
+                          fit: BoxFit.cover,
+                        ),
+                      )
+                    : Image.asset(
+                        imageUrl, // 🔥 Ensure a valid asset is used
+                        width: 80,
+                        height: 100,
+                        fit: BoxFit.cover,
+                      ),
               ),
               const SizedBox(width: 12),
               Expanded(

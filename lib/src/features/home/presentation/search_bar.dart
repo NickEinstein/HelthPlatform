@@ -2,8 +2,15 @@ import 'package:flutter/material.dart';
 
 class CustomSearchBar extends StatelessWidget {
   final VoidCallback? onCameraTap;
+  final TextEditingController controller;
+  final ValueChanged<String> onChanged;
 
-  const CustomSearchBar({super.key, this.onCameraTap});
+  const CustomSearchBar({
+    super.key,
+    this.onCameraTap,
+    required this.controller,
+    required this.onChanged,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +32,10 @@ class CustomSearchBar extends StatelessWidget {
               width: 25,
             ),
             const SizedBox(width: 8),
-            const Expanded(
+            Expanded(
               child: TextField(
+                controller: controller,
+                onChanged: onChanged,
                 style: TextStyle(color: Colors.black),
                 decoration: InputDecoration(
                   hintText: "Search meds or article...",

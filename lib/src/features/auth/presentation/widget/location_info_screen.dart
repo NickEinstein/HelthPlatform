@@ -1,9 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:greenzone_medical/src/constants/color_constant.dart';
 
 import '../../../../constants/dimens.dart';
 import '../../../../constants/helper.dart';
+import '../../../../model/state_model.dart';
 import 'account_controller_holder.dart';
+import 'package:flutter/services.dart' show rootBundle;
 
 class LocationInfoScreen extends StatefulWidget {
   final VoidCallback onNext;
@@ -21,8 +25,67 @@ class LocationInfoScreen extends StatefulWidget {
 }
 
 class _LocationInfoScreenState extends State<LocationInfoScreen> {
-  bool isChecked = false;
+  // bool isChecked = false;
   bool _isValid = false;
+
+  List<StateModel> states = [];
+  List<String> stateNames = [];
+  List<String> lgaNames = [];
+  List<String> cityNames = [];
+
+  String? selectedState;
+  String? selectedLga;
+  String? selectedCity;
+
+  @override
+  void initState() {
+    super.initState();
+    loadStateData();
+  }
+
+  Future<void> loadStateData() async {
+    final String response =
+        await rootBundle.loadString('assets/json/state_lga.json');
+    final List<dynamic> jsonData = json.decode(response);
+    List<StateModel> loadedStates =
+        jsonData.map((data) => StateModel.fromJson(data)).toList();
+
+    setState(() {
+      states = loadedStates;
+      stateNames =
+          states.map((e) => e.name).toSet().toList(); // Ensure uniqueness
+    });
+  }
+
+  void _onStateSelected(String? value) {
+    if (value != null && stateNames.contains(value)) {
+      final state = states.firstWhere((s) => s.name == value);
+
+      setState(() {
+        selectedState = value;
+
+        // Reset LGA and City selections when State changes
+        selectedLga = null;
+        selectedCity = null;
+        widget.controller.lgaController.text = "";
+
+        // Update LGA and City lists
+        lgaNames = state.locals.map((lga) => lga.name).toSet().toList();
+      });
+    } else {
+      print('Error: Selected state value is not in the state names list.');
+    }
+  }
+
+  void _onLgaSelected(String? value) {
+    if (value != null && lgaNames.contains(value)) {
+      setState(() {
+        selectedLga = value;
+        selectedCity = null; // Reset city when LGA changes
+        widget.controller.lgaController.text = value;
+      });
+    }
+  }
 
   void _validateForm() {
     setState(() {
@@ -66,30 +129,43 @@ class _LocationInfoScreenState extends State<LocationInfoScreen> {
             CustomDropdown(
               label: "State",
               controller: widget.controller.stateController,
-              options: const ["Lagos", "Abuja", "Kano"],
-              onChanged: (value) {
-                print("Selected: $value");
-              },
+              options: stateNames,
+              value: selectedState, // Set selected value for State
+              onChanged: _onStateSelected,
             ),
             smallSpace(),
             CustomDropdown(
-                label: "LGA",
-                controller: widget.controller.lgaController,
-                options: const ["LGA 1", "LGA 2", "LGA 3"]),
+              label: "LGA",
+              controller: widget.controller.lgaController,
+              options: lgaNames,
+              value: selectedLga, // Set selected value for LGA
+              onChanged: _onLgaSelected,
+            ),
             smallSpace(),
-            CustomDropdown(
-                label: "City",
-                controller: widget.controller.cityController,
-                options: const ["City A", "City B", "City C"]),
+            CustomTextField(
+              label: "City",
+              hint: "City",
+              controller: widget.controller.cityController,
+              onChanged: (_) => _validateForm(),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return "City cannot be empty";
+                }
+                if (value.length < 2) {
+                  return "Enter a valid City";
+                }
+                return null;
+              },
+            ),
             const SizedBox(height: 20),
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Checkbox(
-                  value: isChecked,
+                  value: widget.controller.isChecked,
                   onChanged: (value) {
                     setState(() {
-                      isChecked = value!;
+                      widget.controller.isChecked = value!;
                     });
                   },
                   activeColor: ColorConstant.primaryColor,

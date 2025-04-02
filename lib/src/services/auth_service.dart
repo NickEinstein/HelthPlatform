@@ -1,10 +1,11 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:dio/dio.dart';
 import 'package:greenzone_medical/src/app_pkg.dart';
 
-import '../model/article_response.dart';
 import '../model/login_response.dart';
+import '../model/nationality_model.dart';
 
 class AuthService {
   final ApiService _apiService;
@@ -37,28 +38,113 @@ class AuthService {
     }
   }
 
-  Future<String> register(String email, String password) async {
+  Future<String> register({
+    required String firstName,
+    required String lastName,
+    required String dateOfBirth,
+    required String stateOfOrigin,
+    required String lga,
+    required String placeOfBirth,
+    required String nationality,
+    required String stateOfResidence,
+    required String lgaResidence,
+    required String city,
+    required String homeAddress,
+    required String phone,
+    required String email,
+  }) async {
     try {
       final response = await _apiService.post(
-        ApiUrl.login,
-        data: {'email': email, 'password': password},
+        ApiUrl.registerUrl,
+        data: {
+          "firstName": firstName,
+          "lastName": lastName,
+          "weight": 0,
+          "dateOfBirth": '${dateOfBirth}T00:00:00.359Z',
+          "stateOfOrigin": stateOfOrigin,
+          "lga": lga,
+          "placeOfBirth": placeOfBirth,
+          "nationality": nationality,
+          "contact": {
+            "stateOfResidence": stateOfResidence,
+            "lgaResidence": lgaResidence,
+            "city": city,
+            "homeAddress": homeAddress,
+            "phone": phone,
+            "email": email,
+          },
+        },
       );
 
       if (response.statusCode == 200 && response.data != null) {
-        final loginResponse = LoginResponse.fromJson(response.data['data']);
-
-        // Save full user data and token
-        await _storageService.setString(
-            StorageConstants.loginData, jsonEncode(loginResponse.toJson()));
-        await _storageService.setString(
-            StorageConstants.accessToken, loginResponse.token);
-
-        return 'Login successful';
+        // otpSendUrl(email);
+        return 'Register successful';
       } else {
         return _handleStatusCode(response.statusCode);
       }
     } catch (error) {
       return _handleError(error);
+    }
+  }
+
+  // Future<List<StateData>> fetchState() async {
+  //   try {
+  //     final response = await _apiService.get(
+  //       'https://edogoverp.com/Connectedhealthonboarding/api/employee/state-list',
+  //       headers: {
+  //         'accept': '*/*', // Matching the cURL request
+  //       },
+  //     );
+
+  //     if (response.statusCode == 200) {
+  //       final List<dynamic> data = response.data['data'] ?? [];
+
+  //       if (data.isEmpty) return [];
+
+  //       final stateList = data.map((e) => StateData.fromJson(e)).toList();
+
+  //       await _storageService.setString(
+  //         StorageConstants.stateData,
+  //         jsonEncode(data),
+  //       );
+
+  //       return stateList;
+  //     } else {
+  //       throw Exception('Failed to fetch state: ${response.statusCode}');
+  //     }
+  //   } catch (error) {
+  //     throw Exception('Error fetching state: $error');
+  //   }
+  // }
+
+  Future<List<NationalityData>> fetchNationality() async {
+    try {
+      final response = await _apiService.get(
+        'https://edogoverp.com/Connectedhealthonboarding/api/employee/nationality/list',
+        headers: {
+          'accept': '*/*', // Matching the cURL request
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = response.data['data'] ?? [];
+
+        if (data.isEmpty) return [];
+
+        final nationalityList =
+            data.map((e) => NationalityData.fromJson(e)).toList();
+
+        await _storageService.setString(
+          StorageConstants.nationalityData,
+          jsonEncode(data),
+        );
+
+        return nationalityList;
+      } else {
+        throw Exception('Failed to fetch state: ${response.statusCode}');
+      }
+    } catch (error) {
+      throw Exception('Error fetching state: $error');
     }
   }
 
@@ -69,6 +155,28 @@ class AuthService {
       );
 
       if (response.statusCode == 200 && response.data != null) {
+        return 'Otp successful';
+      } else {
+        return _handleStatusCode(response.statusCode);
+      }
+    } catch (error) {
+      return _handleError(error);
+    }
+  }
+
+  Future<String> createPasswordUrl(
+      String email, String password, String confirmPassword) async {
+    try {
+      final response = await _apiService.post(
+        ApiUrl.createPasswordUrl,
+        data: {
+          'email': email,
+          'password': password,
+          'confirmPassword': confirmPassword
+        },
+      );
+
+      if (response.statusCode == 200 && response.data != null) {
         final loginResponse = LoginResponse.fromJson(response.data['data']);
 
         // Save full user data and token
@@ -77,7 +185,23 @@ class AuthService {
         await _storageService.setString(
             StorageConstants.accessToken, loginResponse.token);
 
-        return 'Login successful';
+        return 'successful';
+      } else {
+        return _handleStatusCode(response.statusCode);
+      }
+    } catch (error) {
+      return _handleError(error);
+    }
+  }
+
+  Future<String> validateOtpUrl(String email, String otp) async {
+    try {
+      final response = await _apiService.get(
+        ApiUrl.verifyOTPPostUrlForAfterReg(otp, email),
+      );
+
+      if (response.statusCode == 200 && response.data != null) {
+        return 'Otp successful';
       } else {
         return _handleStatusCode(response.statusCode);
       }
@@ -107,6 +231,10 @@ class AuthService {
 
   Future<String?> getToken() async {
     return _storageService.getString(StorageConstants.accessToken);
+  }
+
+  Future<String?> getLoginData() async {
+    return _storageService.getString(StorageConstants.loginData);
   }
 
   String _handleStatusCode(int? statusCode) {

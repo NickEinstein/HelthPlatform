@@ -16,6 +16,7 @@ class AccountCreationController {
   final TextEditingController confirmPasswordController =
       TextEditingController();
   final TextEditingController otpController = TextEditingController();
+  bool isChecked = false;
 
   void dispose() {
     firstNameController.dispose();

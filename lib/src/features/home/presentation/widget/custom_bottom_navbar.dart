@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:greenzone_medical/src/constants/constants.dart';
 import 'package:greenzone_medical/src/features/account/account.dart';
 import 'package:greenzone_medical/src/features/appointment/appointment.dart';
-import 'package:greenzone_medical/src/features/prescription/prescription.dart';
 
+import '../../../prescription/presentation/prescriptions.dart';
 import '../../home.dart';
 
 class CustomBottomNavBar extends StatefulWidget {

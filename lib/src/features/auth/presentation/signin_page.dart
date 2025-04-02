@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:greenzone_medical/src/app_pkg.dart';
 
 import '../../../constants/helper.dart';
+import '../../../provider/all_providers.dart';
 import '../../../routes/routes.dart';
 import '../../../utils/custom_toast.dart';
 
@@ -38,6 +39,8 @@ class _SignInPageState extends ConsumerState<SignInPage> {
 
   @override
   Widget build(BuildContext context) {
+    final isLoading = ref.watch(isLoadingProvider);
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -144,90 +147,107 @@ class _SignInPageState extends ConsumerState<SignInPage> {
                 mediumSpace(),
 
                 // Proceed Button
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: _isValid
-                        ? ColorConstant.primaryColor
-                        : const Color(0xffA8D5BA), // Muted green when disabled
-                    foregroundColor: Colors.white,
-                    disabledBackgroundColor: const Color(
-                        0xffA8D5BA), // Ensure disabled color is applied
-                    disabledForegroundColor: Colors.white
-                        .withOpacity(0.6), // Lightened text for disabled state
-                    minimumSize: const Size(double.infinity, 55),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  onPressed: _isValid
-                      ? () async {
-                          final authService = ref.read(authServiceProvider);
-
-                          if (_formKey.currentState!.validate()) {
-                            final email = _emailController.text.trim();
-                            final password = _passwordController.text;
-
-                            final result =
-                                await authService.login(email, password);
-
-                            if (!context.mounted)
-                              return; // ✅ Prevents using context if unmounted
-
-                            if (result == 'Login successful') {
-                              context.pushReplacement(Routes.BOTTOMNAV);
-                            } else {
-                              CustomToast.show(context, result,
-                                  type: ToastType.error);
-                            }
-                          }
-                        }
-                      : null,
-                  child: const Text(
-                    "Proceed",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 14,
-                    ),
-                  ),
-                ),
-
-                smallSpace(),
-
-                // Sign Up Prompt
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    RichText(
-                      textAlign: TextAlign.center,
-                      text: TextSpan(
-                        style: const TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
+                isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const TextSpan(
-                            text: "Do not have an account? ",
-                            style: TextStyle(
-                                color: Color(0xff595959),
-                                fontWeight: FontWeight.w400,
-                                fontSize: 14),
-                          ),
-                          TextSpan(
-                            text: "Create Account",
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () {
-                                context.pushReplacement(Routes.ACCOUNTCREATION);
-                              },
-                            style: const TextStyle(
-                                fontWeight: FontWeight.w500,
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: _isValid
+                                  ? ColorConstant.primaryColor
+                                  : const Color(
+                                      0xffA8D5BA), // Muted green when disabled
+                              foregroundColor: Colors.white,
+                              disabledBackgroundColor: const Color(
+                                  0xffA8D5BA), // Ensure disabled color is applied
+                              disabledForegroundColor: Colors.white.withOpacity(
+                                  0.6), // Lightened text for disabled state
+                              minimumSize: const Size(double.infinity, 55),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            onPressed: _isValid
+                                ? () async {
+                                    ref.read(isLoadingProvider.notifier).state =
+                                        true;
+
+                                    final authService =
+                                        ref.read(authServiceProvider);
+
+                                    if (_formKey.currentState!.validate()) {
+                                      final email =
+                                          _emailController.text.trim();
+                                      final password = _passwordController.text;
+
+                                      final result = await authService.login(
+                                          email, password);
+
+                                      if (!context.mounted)
+                                        return; // ✅ Prevents using context if unmounted
+                                      ref
+                                          .read(isLoadingProvider.notifier)
+                                          .state = false; // ✅ Stop loading
+
+                                      if (result == 'Login successful') {
+                                        context
+                                            .pushReplacement(Routes.BOTTOMNAV);
+                                      } else {
+                                        CustomToast.show(context, result,
+                                            type: ToastType.error);
+                                      }
+                                    }
+                                  }
+                                : null,
+                            child: const Text(
+                              "Proceed",
+                              style: TextStyle(
+                                fontWeight: FontWeight.w700,
                                 fontSize: 14,
-                                color: ColorConstant.primaryColor),
+                              ),
+                            ),
+                          ),
+                          smallSpace(),
+
+                          // Sign Up Prompt
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              RichText(
+                                textAlign: TextAlign.center,
+                                text: TextSpan(
+                                  style: const TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  children: [
+                                    const TextSpan(
+                                      text: "Do not have an account? ",
+                                      style: TextStyle(
+                                          color: Color(0xff595959),
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 14),
+                                    ),
+                                    TextSpan(
+                                      text: "Create Account",
+                                      recognizer: TapGestureRecognizer()
+                                        ..onTap = () {
+                                          context.pushReplacement(
+                                              Routes.ACCOUNTCREATION);
+                                        },
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 14,
+                                          color: ColorConstant.primaryColor),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                    ),
-                  ],
-                ),
 
                 const SizedBox(height: 10),
               ],

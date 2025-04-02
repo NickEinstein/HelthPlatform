@@ -20,17 +20,17 @@ class ApiService {
           if (accessToken != null) {
             options.headers['Authorization'] = 'Bearer $accessToken';
           }
-          if (options.method != 'GET') {
-            EasyLoading.show(status: 'Please wait...');
-          }
+          // if (options.method != 'GET') {
+          //   EasyLoading.show(status: 'Please wait...');
+          // }
           return handler.next(options);
         },
         onResponse: (Response response, ResponseInterceptorHandler handler) {
-          EasyLoading.dismiss();
+          // EasyLoading.dismiss();
           return handler.next(response);
         },
         onError: (DioException error, ErrorInterceptorHandler handler) {
-          EasyLoading.dismiss();
+          // EasyLoading.dismiss();
 
           return handler.next(error);
         },

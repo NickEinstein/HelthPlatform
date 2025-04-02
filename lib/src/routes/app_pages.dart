@@ -11,6 +11,8 @@ import 'package:greenzone_medical/src/features/doctors/presentation/book_appoint
 import 'package:greenzone_medical/src/features/doctors/presentation/doctor_listing.dart';
 import 'package:greenzone_medical/src/features/healthgoal/presentation/healthgoal_page.dart';
 import 'package:greenzone_medical/src/features/home/home.dart';
+import 'package:greenzone_medical/src/model/community_list_response.dart';
+import 'package:greenzone_medical/src/model/doctord_list_response.dart';
 
 import '../app_pkg.dart';
 import '../features/article/presentation/article_screen.dart';
@@ -135,7 +137,8 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: _Paths.COMMUNITYDETAILS,
         name: _Paths.COMMUNITYDETAILS,
         builder: (context, state) {
-          return const CommunityDetails();
+          final community = state.extra as CommunityListResponse;
+          return CommunityDetails(community: community);
         },
       ),
       GoRoute(
@@ -156,7 +159,8 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: _Paths.DOCTORLISTING,
         name: _Paths.DOCTORLISTING,
         builder: (context, state) {
-          return const DoctorListing();
+          final doctor = state.extra as DoctorListResponse;
+          return DoctorListing(doctor: doctor);
         },
       ),
       GoRoute(

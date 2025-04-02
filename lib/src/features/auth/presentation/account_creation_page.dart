@@ -1,9 +1,11 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:greenzone_medical/src/app_pkg.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
+import '../../../provider/all_providers.dart';
 import '../../../routes/routes.dart';
 import '../../../utils/custom_toast.dart';
 import 'widget/account_controller_holder.dart';
@@ -12,14 +14,15 @@ import 'widget/password_screen.dart';
 import 'widget/personal_info_screen.dart';
 import 'widget/register_otp_page.dart';
 
-class AccountCreationScreen extends StatefulWidget {
+class AccountCreationScreen extends ConsumerStatefulWidget {
   const AccountCreationScreen({super.key});
 
   @override
-  State<AccountCreationScreen> createState() => _AccountCreationScreenState();
+  ConsumerState<AccountCreationScreen> createState() =>
+      _AccountCreationScreenState();
 }
 
-class _AccountCreationScreenState extends State<AccountCreationScreen> {
+class _AccountCreationScreenState extends ConsumerState<AccountCreationScreen> {
   final PageController _pageController = PageController();
   final AccountCreationController _controller = AccountCreationController();
 
@@ -30,7 +33,11 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
     GlobalKey<FormState>(),
     GlobalKey<FormState>(),
   ];
-  void _nextPage() {
+
+  //   selectedAllergies: selectedAllergies,  // The selected allergies from the state
+  //   otherController: otherController,  // Pass the TextEditingController for "Others"
+  // );
+  void _nextPage() async {
     final currentFormState = _formKeys[_currentIndex].currentState;
     if (currentFormState != null && currentFormState.validate()) {
       if (_currentIndex == 3) {
@@ -50,15 +57,66 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
         }
 
         _submitForm();
+      } else if (_currentIndex == 1) {
+        if (_controller.isChecked == false) {
+          CustomToast.show(context, 'Kindly agree to the terms and conditions',
+              type: ToastType.error);
+          return;
+        } else {
+          ref.read(isLoadingProvider.notifier).state = true;
+          final authService = ref.read(authServiceProvider);
+
+          final result = await authService.register(
+              firstName: _controller.firstNameController.text.split(' ')[0],
+              lastName: _controller.firstNameController.text.split(' ')[1],
+              city: _controller.cityController.text,
+              dateOfBirth: _controller.dobController.text,
+              email: _controller.emailController.text,
+              homeAddress: _controller.addressController.text,
+              lga: _controller.lgaController.text,
+              lgaResidence: _controller.lgaController.text,
+              nationality: 'Nigeria',
+              phone: _controller.phoneController.text,
+              placeOfBirth: _controller.addressController.text,
+              stateOfOrigin: _controller.stateController.text,
+              stateOfResidence: _controller.stateController.text);
+
+          if (!context.mounted) return; // ✅ Prevents using context if unmounted
+          ref.read(isLoadingProvider.notifier).state = false;
+          if (result == 'Register successful') {
+            _pageController.nextPage(
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
+            );
+          } else {
+            CustomToast.show(context, result, type: ToastType.error);
+          }
+        }
       } else if (_currentIndex == 2) {
+        // _pageController.nextPage(
+        //   duration: const Duration(milliseconds: 300),
+        //   curve: Curves.easeInOut,
+        // );
         if (_controller.otpController.text.length < 4) {
           CustomToast.show(context, 'Enter a valid OTP', type: ToastType.error);
           return;
         } else {
-          _pageController.nextPage(
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeInOut,
-          );
+          ref.read(isLoadingProvider.notifier).state = true;
+          final authService = ref.read(authServiceProvider);
+
+          final result = await authService.validateOtpUrl(
+              _controller.emailController.text, _controller.otpController.text);
+
+          if (!context.mounted) return; // ✅ Prevents using context if unmounted
+          ref.read(isLoadingProvider.notifier).state = false;
+          if (result == 'Otp successful') {
+            _pageController.nextPage(
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
+            );
+          } else {
+            CustomToast.show(context, result, type: ToastType.error);
+          }
         }
       } else {
         _pageController.nextPage(
@@ -72,14 +130,25 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
     }
   }
 
-  void _submitForm() {
+  void _submitForm() async {
     // Retrieve all values
-    final String firstName = _controller.firstNameController.text;
-    final String lastName = _controller.lastNameController.text;
-    final String email = _controller.emailController.text;
-    final String phone = _controller.phoneController.text;
-    final String address = _controller.addressController.text;
-    final String password = _controller.passwordController.text;
+    ref.read(isLoadingProvider.notifier).state = true;
+    final authService = ref.read(authServiceProvider);
+
+    final result = await authService.createPasswordUrl(
+        _controller.emailController.text,
+        _controller.passwordController.text,
+        _controller.confirmPasswordController.text);
+
+    if (!context.mounted) return; // ✅ Prevents using context if unmounted
+    ref.read(isLoadingProvider.notifier).state = false;
+    if (result == 'successful') {
+      CustomToast.show(context, 'Registered Successfully',
+          type: ToastType.success);
+      context.pushReplacement(Routes.BOTTOMNAV);
+    } else {
+      CustomToast.show(context, result, type: ToastType.error);
+    }
 
     // Proceed with API submission or next step
   }
@@ -95,6 +164,8 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isLoading = ref.watch(isLoadingProvider);
+
     return Scaffold(
       backgroundColor: Colors.white, // Matching the UI
       body: SafeArea(
@@ -191,72 +262,76 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
                 const SizedBox(height: 10),
                 // Navigation Buttons
                 // if (_currentIndex != 2)
-                Align(
-                  alignment: Alignment.center,
-                  child: Column(
-                    children: [
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: ColorConstant.primaryColor,
-                          foregroundColor: Colors.white,
-                          minimumSize: const Size(double.infinity, 55),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
-                        onPressed: _nextPage,
-                        child: Text(
-                            style: const TextStyle(
-                                fontWeight: FontWeight.w700, fontSize: 14),
-                            _currentIndex == 3
-                                ? "Create Account"
-                                : _currentIndex == 2
-                                    ? "Resend Code"
-                                    : "Proceed"),
-                      ),
-                      // if (_currentIndex > 0)
-                      //   TextButton(
-                      //     onPressed: _previousPage,
-                      //     child: const Text(
-                      //       "Back",
-                      //       style: TextStyle(color: ColorConstant.primaryColor),
-                      //     ),
-                      //   ),
-                      const SizedBox(height: 10),
-                      if (_currentIndex != 2)
-                        RichText(
-                          text: TextSpan(
-                            style: const TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
+                isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : Align(
+                        alignment: Alignment.center,
+                        child: Column(
+                          children: [
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: ColorConstant.primaryColor,
+                                foregroundColor: Colors.white,
+                                minimumSize: const Size(double.infinity, 55),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                              onPressed: _nextPage,
+                              child: Text(
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 14),
+                                  _currentIndex == 3
+                                      ? "Create Account"
+                                      : _currentIndex == 2
+                                          ? "Resend Code"
+                                          : "Proceed"),
                             ),
-                            children: [
-                              const TextSpan(
-                                text: "I have an account? ",
-                                style: TextStyle(
-                                  color: Color(0xff595959),
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 14,
+                            // if (_currentIndex > 0)
+                            //   TextButton(
+                            //     onPressed: _previousPage,
+                            //     child: const Text(
+                            //       "Back",
+                            //       style: TextStyle(color: ColorConstant.primaryColor),
+                            //     ),
+                            //   ),
+                            const SizedBox(height: 10),
+                            if (_currentIndex != 2)
+                              RichText(
+                                text: TextSpan(
+                                  style: const TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  children: [
+                                    const TextSpan(
+                                      text: "I have an account? ",
+                                      style: TextStyle(
+                                        color: Color(0xff595959),
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: "Log in",
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 14,
+                                        color: ColorConstant.primaryColor,
+                                      ),
+                                      recognizer: TapGestureRecognizer()
+                                        ..onTap = () {
+                                          context
+                                              .pushReplacement(Routes.SIGNIN);
+                                        },
+                                    ),
+                                  ],
                                 ),
                               ),
-                              TextSpan(
-                                text: "Log in",
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 14,
-                                  color: ColorConstant.primaryColor,
-                                ),
-                                recognizer: TapGestureRecognizer()
-                                  ..onTap = () {
-                                    context.pushReplacement(Routes.SIGNIN);
-                                  },
-                              ),
-                            ],
-                          ),
+                          ],
                         ),
-                    ],
-                  ),
-                ),
+                      ),
               ],
             ),
           ),

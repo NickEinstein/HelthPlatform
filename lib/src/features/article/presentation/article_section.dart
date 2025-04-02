@@ -17,10 +17,10 @@ class ArticlesSection extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
+        const Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text(
+            Text(
               "Articles",
               style: TextStyle(
                 color: ColorConstant.secondryColor,
@@ -28,18 +28,18 @@ class ArticlesSection extends ConsumerWidget {
                 fontWeight: FontWeight.w400,
               ),
             ),
-            TextButton(
-              onPressed: () => context.push(Routes.ARTICLESCREEN),
-              child: const Text(
-                "See All",
-                style: TextStyle(
-                  decoration: TextDecoration.underline,
-                  color: ColorConstant.primaryColor,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
+            // TextButton(
+            //   onPressed: () => context.push(Routes.ARTICLESCREEN),
+            //   child: const Text(
+            //     "See All",
+            //     style: TextStyle(
+            //       decoration: TextDecoration.underline,
+            //       color: ColorConstant.primaryColor,
+            //       fontSize: 16,
+            //       fontWeight: FontWeight.w500,
+            //     ),
+            //   ),
+            // ),
           ],
         ),
 

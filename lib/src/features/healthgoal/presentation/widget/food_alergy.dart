@@ -1,210 +1,227 @@
 import 'package:flutter/material.dart';
+import 'package:greenzone_medical/src/features/healthgoal/controller/health_goal_controller.dart';
 
 import '../../../../constants/constants.dart';
 import '../../../../constants/dimens.dart';
 import '../../../../constants/helper.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class FoodAlergy extends StatefulWidget {
+import '../../../../model/all_alergy_response.dart';
+import '../../../../provider/all_providers.dart';
+
+class FoodAlergy extends ConsumerStatefulWidget {
   final VoidCallback onNext;
-  const FoodAlergy({super.key, required this.onNext});
+  final GlobalKey<FormState> formKey;
+  final HealthGoalController controller;
+  const FoodAlergy({
+    super.key,
+    required this.onNext,
+    required this.formKey,
+    required this.controller,
+  });
 
   @override
-  State<FoodAlergy> createState() => _FoodAlergyState();
+  ConsumerState<FoodAlergy> createState() => _FoodAlergyState();
 }
 
-class _FoodAlergyState extends State<FoodAlergy> {
-  bool isChecked = false;
-  List<String> options = ["Fish", "Peanut", "Soy", "Others"];
-  List<String> selectedOptions = [];
-  bool showOtherTextField = false;
-  bool _hasText = false;
+class _FoodAlergyState extends ConsumerState<FoodAlergy> {
+  bool _isValid = false;
 
-  TextEditingController otherController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    otherController.addListener(() {
-      setState(() {
-        _hasText = otherController.text.isNotEmpty;
-      });
+  void _validateForm() {
+    setState(() {
+      _isValid = widget.formKey.currentState?.validate() ?? false;
     });
   }
 
   @override
-  void dispose() {
-    otherController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      smallSpace(),
-      const CustomDropdown(label: "Any Food Alergy", options: ["Yes", "No"]),
-      mediumSpace(),
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            "If yes, Select options",
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w400,
-              color: Color(0xff3C3B3B),
-            ),
+    final allergyList = ref.watch(allAllegyListProvider);
+
+    return Form(
+      key: widget.formKey,
+      onChanged: _validateForm,
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        smallSpace(),
+        CustomDropdown(
+          label: "Any Food Alergy",
+          options: const ["Yes", "No"],
+          onChanged: (value) {
+            widget.controller.foodAllegy = value!;
+          },
+        ),
+        mediumSpace(),
+        const Text(
+          "If yes, Select option",
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w400,
+            color: Color(0xff3C3B3B),
           ),
-          const SizedBox(height: 8),
-          InkWell(
-            onTap: () {
-              _showMultiSelectDialog(context);
-            },
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-              decoration: BoxDecoration(
-                border: Border.all(color: const Color(0xffB3B3B3)),
-                borderRadius: BorderRadius.circular(3),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: Text(
-                      selectedOptions.isEmpty
-                          ? "Select an option"
-                          : selectedOptions.join(", "),
-                      style: const TextStyle(
-                          fontSize: 16, color: Color(0xffB3B3B3)),
-                      overflow: TextOverflow.ellipsis,
+        ),
+        const SizedBox(height: 8),
+        InkWell(
+          onTap: () => _showDropdownMenu(context, allergyList),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+            decoration: BoxDecoration(
+              border: Border.all(color: const Color(0xffB3B3B3)),
+              borderRadius: BorderRadius.circular(3),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Text(
+                    widget.controller.selectedAllergies.isEmpty
+                        ? "Select option"
+                        : widget.controller.selectedAllergies.values.join(", "),
+                    style: const TextStyle(
+                      fontSize: 16,
+                      color: Color(0xff3C3B3B),
                     ),
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  const Icon(
-                    Icons.keyboard_arrow_down_rounded,
-                    size: 18,
-                  ),
-                ],
-              ),
+                ),
+                const Icon(
+                  Icons.keyboard_arrow_down_rounded,
+                  size: 18,
+                ),
+              ],
             ),
           ),
+        ),
+        if (widget.controller.selectedAllergies.containsKey(0)) ...[
           const SizedBox(height: 10),
-          Wrap(
-            spacing: 6.0,
-            children: selectedOptions.map((option) {
-              return Chip(
-                surfaceTintColor: Colors.white,
-                backgroundColor: Colors.white,
-                label: Text(option),
-                deleteIcon: const Icon(Icons.close, size: 18),
-                onDeleted: () {
-                  setState(() {
-                    selectedOptions.remove(option);
-                    if (option == "Others") {
-                      showOtherTextField = false;
-                      otherController.clear();
-                    }
-                  });
-                },
-              );
-            }).toList(),
-          ),
-          if (showOtherTextField) ...[
-            const SizedBox(height: 10),
-            const Text("Others"),
-            TextField(
-              controller: otherController,
-              decoration: InputDecoration(
-                hintText: "Type in your answer",
-                hintStyle: const TextStyle(
+          const Text("Others"),
+          TextField(
+            controller: widget.controller.otherController,
+            decoration: InputDecoration(
+              hintText: "Type in your answer",
+              hintStyle: const TextStyle(
+                color: Color(0xffB3B3B3),
+                fontWeight: FontWeight.w400,
+                fontSize: 14,
+              ),
+              contentPadding:
+                  const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(3),
+                borderSide: const BorderSide(
                   color: Color(0xffB3B3B3),
-                  fontWeight: FontWeight.w400,
-                  fontSize: 14,
+                  width: 0.8,
                 ),
-                contentPadding:
-                    const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(3),
-                  borderSide: const BorderSide(
-                    color: Color(0xffB3B3B3),
-                    width: 0.8, // Tiny green border
-                  ),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(3),
-                  borderSide: const BorderSide(
-                    color: Color(0xffB3B3B3),
-                    width: 0.8, // Thicker when focused
-                  ),
-                ),
-                filled: true, // Enable background color
-                fillColor: _hasText
-                    ? ColorConstant.primaryLightColor.withOpacity(0.3)
-                    : Colors.transparent, // Background color
               ),
             ),
-          ],
+            onChanged: (text) {
+              setState(() {
+                widget.controller.selectedAllergies[0] =
+                    text; // Update Others allergy source
+              });
+            },
+          ),
         ],
-      )
-    ]);
+      ]),
+    );
   }
 
-  void _showMultiSelectDialog(BuildContext context) async {
-    List<String> tempSelected = List.from(selectedOptions);
-    bool tempShowOtherTextField = showOtherTextField;
+  void _showDropdownMenu(BuildContext context,
+      AsyncValue<List<AllAlergyResponse>> allergyList) async {
+    if (allergyList is AsyncLoading) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Loading allergies...")),
+      );
+      return;
+    }
 
-    await showDialog(
+    if (allergyList is AsyncError) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Failed to load allergies")),
+      );
+      return;
+    }
+
+    List<AllAlergyResponse> options = allergyList.value ?? [];
+
+    await showModalBottomSheet(
       context: context,
-      builder: (BuildContext context) {
+      builder: (context) {
         return StatefulBuilder(
           builder: (context, setDialogState) {
-            return AlertDialog(
-              surfaceTintColor: Colors.white,
-              backgroundColor: Colors.white,
-              title: const Text("Select options"),
-              content: SingleChildScrollView(
-                child: Column(
-                  children: options.map((option) {
-                    return CheckboxListTile(
-                      title: Text(option, overflow: TextOverflow.ellipsis),
-                      value: tempSelected.contains(option),
-                      onChanged: (bool? value) {
-                        setDialogState(() {
-                          if (value == true) {
-                            tempSelected.add(option);
-                            if (option == "Others")
-                              tempShowOtherTextField = true;
-                          } else {
-                            tempSelected.remove(option);
-                            if (option == "Others")
-                              tempShowOtherTextField = false;
-                          }
-                        });
-                      },
-                    );
-                  }).toList(),
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        ...options.map((option) {
+                          bool isSelected = widget.controller.selectedAllergies
+                              .containsKey(option.id);
+
+                          return CheckboxListTile(
+                            title: Text(option.allergyOrIntolleranceSource!),
+                            value: isSelected,
+                            activeColor: Colors.green,
+                            tileColor: isSelected
+                                ? Colors.green.withOpacity(0.2)
+                                : Colors.transparent,
+                            onChanged: (bool? value) {
+                              setDialogState(() {
+                                if (value == true) {
+                                  widget.controller
+                                          .selectedAllergies[option.id!] =
+                                      option.allergyOrIntolleranceSource!;
+                                } else {
+                                  widget.controller.selectedAllergies
+                                      .remove(option.id);
+                                }
+                              });
+                            },
+                          );
+                        }),
+                        CheckboxListTile(
+                          title: const Text("Others"),
+                          value: widget.controller.selectedAllergies
+                              .containsKey(0),
+                          activeColor: Colors.green,
+                          tileColor:
+                              widget.controller.selectedAllergies.containsKey(0)
+                                  ? Colors.green.withOpacity(0.2)
+                                  : Colors.transparent,
+                          onChanged: (bool? value) {
+                            setDialogState(() {
+                              if (value == true) {
+                                widget.controller.selectedAllergies[0] = "";
+                              } else {
+                                widget.controller.selectedAllergies.remove(0);
+                                widget.controller.otherController.clear();
+                              }
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
-              actions: [
-                TextButton(
-                  child: const Text("Cancel"),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-                TextButton(
-                  child: const Text("OK"),
-                  onPressed: () {
-                    setState(() {
-                      selectedOptions = List.from(tempSelected);
-                      showOtherTextField = tempShowOtherTextField;
-                    });
-                    Navigator.of(context).pop();
-                  },
+                Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: ColorConstant.primaryColor,
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context); // Close the modal
+                    },
+                    child: const Text("Done"),
+                  ),
                 ),
               ],
             );
           },
         );
       },
-    );
+    ).then((_) {
+      setState(() {});
+    });
   }
 }
