@@ -2,14 +2,17 @@ import 'dart:async';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:greenzone_medical/src/app_pkg.dart';
 
 import '../../../../constants/helper.dart';
+import '../../../../provider/all_providers.dart';
 import '../../../../utils/custom_header.dart';
+import '../../../../utils/custom_toast.dart';
 import '../../../../utils/pin_input_field.dart';
 import 'account_controller_holder.dart';
 
-class RegisterOTPPage extends StatefulWidget {
+class RegisterOTPPage extends ConsumerStatefulWidget {
   final VoidCallback onNext;
   final GlobalKey<FormState> formKey;
   final AccountCreationController controller;
@@ -22,10 +25,10 @@ class RegisterOTPPage extends StatefulWidget {
   });
 
   @override
-  State<RegisterOTPPage> createState() => _RegisterOTPPageState();
+  ConsumerState<RegisterOTPPage> createState() => _RegisterOTPPageState();
 }
 
-class _RegisterOTPPageState extends State<RegisterOTPPage> {
+class _RegisterOTPPageState extends ConsumerState<RegisterOTPPage> {
   bool isButtonEnabled = false;
   int _remainingTime = 59;
   Timer? _timer;
@@ -184,7 +187,28 @@ class _RegisterOTPPageState extends State<RegisterOTPPage> {
                               .primaryColor, // Make it look like a link
                         ),
                         recognizer: TapGestureRecognizer()
-                          ..onTap = () {
+                          ..onTap = () async {
+                            ref.read(isLoadingProvider.notifier).state = true;
+
+                            final authService = ref.read(authServiceProvider);
+
+                            final email =
+                                widget.controller.emailController.text;
+
+                            final result = await authService.otpSendUrl(email);
+
+                            if (!context.mounted)
+                              return; // ✅ Prevents using context if unmounted
+                            ref.read(isLoadingProvider.notifier).state = false;
+
+                            if (result == 'successful') {
+                              CustomToast.show(context, "otp sent Successfully",
+                                  type: ToastType.success);
+                            } else {
+                              CustomToast.show(context, result,
+                                  type: ToastType.error);
+                            }
+
                             setState(() {
                               _remainingTime = 59;
                             });

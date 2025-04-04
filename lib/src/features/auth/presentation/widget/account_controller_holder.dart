@@ -16,6 +16,15 @@ class AccountCreationController {
   final TextEditingController confirmPasswordController =
       TextEditingController();
   final TextEditingController otpController = TextEditingController();
+  final TextEditingController emefirstNameController = TextEditingController();
+  final TextEditingController emelastNameController = TextEditingController();
+  final TextEditingController emeemailController = TextEditingController();
+  final TextEditingController emephoneController = TextEditingController();
+  final TextEditingController emeaddressController = TextEditingController();
+  final TextEditingController emestateController = TextEditingController();
+  final TextEditingController emelgaController = TextEditingController();
+  final TextEditingController emecityController = TextEditingController();
+
   bool isChecked = false;
 
   void dispose() {

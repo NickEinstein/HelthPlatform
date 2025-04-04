@@ -51,6 +51,7 @@ dependencies:
   dio_smart_retry: ^6.0.0
   duration: ^3.0.13
   gap: ^3.0.1
+  local_auth:
 
 dev_dependencies:
   flutter_test:

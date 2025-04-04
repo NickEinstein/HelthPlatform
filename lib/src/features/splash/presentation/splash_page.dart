@@ -28,7 +28,7 @@ class _SplashPageState extends ConsumerState<SplashPage> {
       if (!mounted) return;
 
       if (isLoggedIn) {
-        context.pushReplacement(Routes.BOTTOMNAV);
+        context.pushReplacement(Routes.SIGNIN);
       } else {
         context.pushReplacement(Routes.ONBOARDING);
       }
@@ -43,7 +43,12 @@ class _SplashPageState extends ConsumerState<SplashPage> {
         children: [
           Container(
             decoration: const BoxDecoration(color: Color(0xff109815)),
-            child: Image.asset('assets/images/splash.png'),
+            child: Image.asset(
+              'assets/images/splash.png',
+              fit: BoxFit.cover, // Ensures the image fills the screen
+              width: double.infinity,
+              height: double.infinity,
+            ),
           ),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -63,7 +68,7 @@ class _SplashPageState extends ConsumerState<SplashPage> {
                 ),
               ),
             ],
-          )
+          ),
         ],
       ),
     );

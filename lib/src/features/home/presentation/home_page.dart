@@ -226,32 +226,35 @@ class _HomePageState extends ConsumerState<HomePage> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text(
-                                "Articles",
-                                style: TextStyle(
-                                  color: ColorConstant.secondryColor,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  context.push(Routes.ARTICLESCREEN);
-                                },
-                                child: const Text(
-                                  "See All",
+                          Padding(
+                            padding: const EdgeInsets.only(left: 10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  "Articles",
                                   style: TextStyle(
-                                    decoration: TextDecoration.underline,
-                                    color: ColorConstant.primaryColor,
+                                    color: ColorConstant.secondryColor,
                                     fontSize: 16,
-                                    fontWeight: FontWeight.w500,
+                                    fontWeight: FontWeight.w400,
                                   ),
                                 ),
-                              ),
-                            ],
+                                TextButton(
+                                  onPressed: () {
+                                    context.push(Routes.ARTICLESCREEN);
+                                  },
+                                  child: const Text(
+                                    "See All",
+                                    style: TextStyle(
+                                      decoration: TextDecoration.underline,
+                                      color: ColorConstant.primaryColor,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
 
                           /// **Handle different states (loading, error, data)**

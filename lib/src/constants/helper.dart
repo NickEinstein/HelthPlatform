@@ -646,13 +646,15 @@ class LoginPasswordTextField extends StatefulWidget {
   final TextEditingController controller;
   final String? Function(String?)? validator;
   final void Function(String)? onChanged; // Add onChanged
+  final FocusNode? focusNode; // Add focusNode to control focus
 
   const LoginPasswordTextField({
     Key? key,
     required this.label,
     required this.controller,
     this.validator,
-    this.onChanged, // Accept onChanged
+    this.onChanged,
+    this.focusNode, // Accept focusNode
   }) : super(key: key);
 
   @override
@@ -678,6 +680,7 @@ class _LoginPasswordTextFieldState extends State<LoginPasswordTextField> {
         const SizedBox(height: 8),
         TextFormField(
           controller: widget.controller,
+          focusNode: widget.focusNode, // Add focusNode here
           obscureText: _isObscured,
           validator: widget.validator,
           onChanged: widget.onChanged, // Call the parent's onChanged

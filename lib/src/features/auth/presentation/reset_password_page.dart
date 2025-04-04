@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:greenzone_medical/src/app_pkg.dart';
 
 import '../../../constants/helper.dart';
+import '../../../provider/all_providers.dart';
 import '../../../routes/routes.dart';
 import '../../../utils/custom_header.dart';
 import '../../../utils/custom_toast.dart';
@@ -36,6 +37,8 @@ class _ResetPasswordPageState extends ConsumerState<ResetPasswordPage> {
 
   @override
   Widget build(BuildContext context) {
+    final isLoading = ref.watch(isLoadingProvider);
+
     return Scaffold(
       backgroundColor: Colors.white, // Matching the UI
       body: SafeArea(
@@ -115,52 +118,64 @@ class _ResetPasswordPageState extends ConsumerState<ResetPasswordPage> {
                 smallSpace(),
 
                 // PageView for Steps
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: _isValid
-                        ? ColorConstant.primaryColor
-                        : const Color(0xffA8D5BA), // Muted green when disabled
-                    foregroundColor: Colors.white,
-                    disabledBackgroundColor: const Color(
-                        0xffA8D5BA), // Ensure disabled color is applied
-                    disabledForegroundColor: Colors.white
-                        .withOpacity(0.6), // Lightened text for disabled state
-                    minimumSize: const Size(double.infinity, 55),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  onPressed: _isValid
-                      ? () async {
-                          final authService = ref.read(authServiceProvider);
+                isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: _isValid
+                              ? ColorConstant.primaryColor
+                              : const Color(
+                                  0xffA8D5BA), // Muted green when disabled
+                          foregroundColor: Colors.white,
+                          disabledBackgroundColor: const Color(
+                              0xffA8D5BA), // Ensure disabled color is applied
+                          disabledForegroundColor: Colors.white.withOpacity(
+                              0.6), // Lightened text for disabled state
+                          minimumSize: const Size(double.infinity, 55),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        onPressed: _isValid
+                            ? () async {
+                                ref.read(isLoadingProvider.notifier).state =
+                                    true;
 
-                          if (_formKey.currentState!.validate()) {
-                            final email = _emailController.text.trim();
+                                final authService =
+                                    ref.read(authServiceProvider);
 
-                            final result = await authService.otpSendUrl(email);
+                                if (_formKey.currentState!.validate()) {
+                                  final email = _emailController.text.trim();
 
-                            if (!context.mounted)
-                              return; // ✅ Prevents using context if unmounted
+                                  final result =
+                                      await authService.otpSendUrl(email);
 
-                            if (result == 'Login successful') {
-                              CustomToast.show(context, result,
-                                  type: ToastType.success);
-                              context.push(Routes.OTPPAGE);
-                            } else {
-                              CustomToast.show(context, result,
-                                  type: ToastType.error);
-                            }
-                          }
-                        }
-                      : null,
-                  child: const Text(
-                    "Send Code",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 14,
-                    ),
-                  ),
-                ),
+                                  if (!context.mounted)
+                                    return; // ✅ Prevents using context if unmounted
+                                  ref.read(isLoadingProvider.notifier).state =
+                                      false;
+
+                                  if (result == 'successful') {
+                                    CustomToast.show(
+                                        context, "otp sent Successfully",
+                                        type: ToastType.success);
+                                    context.push(Routes.OTPPAGE,
+                                        extra: _emailController.text);
+                                  } else {
+                                    CustomToast.show(context, result,
+                                        type: ToastType.error);
+                                  }
+                                }
+                              }
+                            : null,
+                        child: const Text(
+                          "Send Code",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
 
                 smallSpace(),
 

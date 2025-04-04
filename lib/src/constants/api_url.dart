@@ -7,8 +7,8 @@ class ApiUrl {
   static const String registerUrl = '/Patient';
   static const String profileGetUrl = '/user/profile/';
   static const String changePasswordPostUrl = '/user/change-password/';
-  static const String forgetPasswordPostUrl = '/user/forget-password/';
-  static const String otpSendUrl = '/auth/forget-password/';
+  static const String forgetPasswordPostUrl = '/Auth/forgot-password';
+  static const String otpSendUrl = '/Auth/generate-otp?email=';
   static const String allArticleUrl = '/Articles?page=1&pageSize=100000';
   static const String allBannersUrl = '/Banners';
   static const String allCategoriesUrl = '/Categories';

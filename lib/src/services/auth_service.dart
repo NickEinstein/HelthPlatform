@@ -22,6 +22,8 @@ class AuthService {
 
       if (response.statusCode == 200 && response.data != null) {
         final loginResponse = LoginResponse.fromJson(response.data['data']);
+        _storageService.setString('saved_email', email);
+        _storageService.setString('saved_password', password);
 
         // Save full user data and token
         await _storageService.setString(
@@ -155,7 +157,7 @@ class AuthService {
       );
 
       if (response.statusCode == 200 && response.data != null) {
-        return 'Otp successful';
+        return 'successful';
       } else {
         return _handleStatusCode(response.statusCode);
       }
@@ -201,7 +203,32 @@ class AuthService {
       );
 
       if (response.statusCode == 200 && response.data != null) {
-        return 'Otp successful';
+        if (response.data == true) {
+          return 'Otp successful';
+        } else {
+          return 'Invalid OTP entered';
+        }
+      } else {
+        return _handleStatusCode(response.statusCode);
+      }
+    } catch (error) {
+      return _handleError(error);
+    }
+  }
+
+  Future<String> forgotPasswordUrl(
+      String email, String otp, String password, String confirmPassword) async {
+    try {
+      final response =
+          await _apiService.post(ApiUrl.forgetPasswordPostUrl, data: {
+        "email": email,
+        "password": password,
+        "confirmPassword": confirmPassword,
+        "otp": otp
+      });
+
+      if (response.statusCode == 200 && response.data != null) {
+        return 'successful';
       } else {
         return _handleStatusCode(response.statusCode);
       }

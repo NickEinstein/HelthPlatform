@@ -81,14 +81,21 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: _Paths.OTPPAGE,
         name: _Paths.OTPPAGE,
         builder: (context, state) {
-          return const OTPPage();
+          final email = state.extra as String;
+          return OTPPage(
+            email: email,
+          );
         },
       ),
       GoRoute(
         path: _Paths.NEWPASSWORD,
         name: _Paths.NEWPASSWORD,
         builder: (context, state) {
-          return const NewPasswordPage();
+          final extra = state.extra as Map<String, String>?; // Extract extras
+          return NewPasswordPage(
+            email: extra?['email'] ?? '',
+            otp: extra?['otp'] ?? '',
+          );
         },
       ),
       GoRoute(
