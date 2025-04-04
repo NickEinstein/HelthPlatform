@@ -127,11 +127,13 @@ class _CustomTextFieldState extends State<CustomTextField> {
 class CustomLongTextField extends StatefulWidget {
   final String label;
   final String hint;
+  final TextEditingController? controller; // External controller
 
   const CustomLongTextField({
     Key? key,
     required this.label,
     required this.hint,
+    this.controller, // Optional controller parameter
   }) : super(key: key);
 
   @override
@@ -139,12 +141,15 @@ class CustomLongTextField extends StatefulWidget {
 }
 
 class _CustomLongTextFieldState extends State<CustomLongTextField> {
-  final TextEditingController _controller = TextEditingController();
+  late TextEditingController _controller;
   bool _hasText = false;
 
   @override
   void initState() {
     super.initState();
+    // Use the provided controller, or create a new one if it's not provided
+    _controller = widget.controller ?? TextEditingController();
+
     _controller.addListener(() {
       setState(() {
         _hasText = _controller.text.isNotEmpty;
@@ -154,7 +159,10 @@ class _CustomLongTextFieldState extends State<CustomLongTextField> {
 
   @override
   void dispose() {
-    _controller.dispose();
+    // Dispose only if the controller is local (not passed from outside)
+    if (widget.controller == null) {
+      _controller.dispose();
+    }
     super.dispose();
   }
 

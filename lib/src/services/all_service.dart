@@ -555,6 +555,40 @@ class AllService {
     }
   }
 
+  Future<String> bookAppointment(
+      {required int doctorEmployeeId,
+      required String appointDate,
+      required String appointTime,
+      required String description}) async {
+    try {
+      final token = await getToken();
+
+      // Make the PUT request
+      final response = await _apiService.post(
+        ApiUrl.bookAppointmentUrl,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        data: {
+          "doctorEmployeeId": doctorEmployeeId,
+          "appointDate": appointDate,
+          "appointTime": appointTime,
+          "healthCareProviderId": 0,
+          "description": description
+        }, // Pass the payload as the request body
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 1) {
+        return 'successful';
+      } else {
+        return _handleStatusCode(response.statusCode);
+      }
+    } catch (error) {
+      return _handleError(error);
+    }
+  }
+
   String _handleStatusCode(int? statusCode) {
     switch (statusCode) {
       case 400:

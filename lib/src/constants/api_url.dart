@@ -18,6 +18,7 @@ class ApiUrl {
   static String joinCommunityUrl(int id) => '/Community/$id/join-community';
   static const String allAllergyUrl = '/employee/get-allergies';
   static const String createPasswordUrl = '/Auth/create-password';
+  static const String bookAppointmentUrl = '/Appointment';
 
   static String verifyOTPPostUrlForAfterReg(String code, String email) =>
       '/Patient/ValidateOtp?otp=$code&email=$email';
