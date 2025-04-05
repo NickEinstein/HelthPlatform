@@ -11,13 +11,15 @@ import 'package:greenzone_medical/src/features/doctors/presentation/book_appoint
 import 'package:greenzone_medical/src/features/doctors/presentation/doctor_listing.dart';
 import 'package:greenzone_medical/src/features/healthgoal/presentation/healthgoal_page.dart';
 import 'package:greenzone_medical/src/features/home/home.dart';
-import 'package:greenzone_medical/src/features/onboarding/onboarding.dart';
+import 'package:greenzone_medical/src/model/community_list_response.dart';
+import 'package:greenzone_medical/src/model/doctord_list_response.dart';
 
 import '../app_pkg.dart';
 import '../features/article/presentation/article_screen.dart';
 import '../features/community/presentation/search_community.dart';
 import '../features/healthgoal/presentation/about_health.dart';
 import '../features/home/presentation/widget/custom_bottom_navbar.dart';
+import '../features/onboarding/onboarding.dart';
 
 part 'app_routes.dart';
 
@@ -40,6 +42,7 @@ final routerProvider = Provider<GoRouter>((ref) {
     routes: [
       GoRoute(
         path: _Paths.SPLASH,
+
         // name: SplashPage.routeName,
         builder: (context, state) {
           return const SplashPage();
@@ -47,9 +50,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: _Paths.ONBOARDING,
+
         // name: SplashPage.routeName,
         builder: (context, state) {
-          return const OnboardingPage();
+          return const OnBoardingPage();
         },
       ),
       GoRoute(
@@ -77,14 +81,21 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: _Paths.OTPPAGE,
         name: _Paths.OTPPAGE,
         builder: (context, state) {
-          return const OTPPage();
+          final email = state.extra as String;
+          return OTPPage(
+            email: email,
+          );
         },
       ),
       GoRoute(
         path: _Paths.NEWPASSWORD,
         name: _Paths.NEWPASSWORD,
         builder: (context, state) {
-          return const NewPasswordPage();
+          final extra = state.extra as Map<String, String>?; // Extract extras
+          return NewPasswordPage(
+            email: extra?['email'] ?? '',
+            otp: extra?['otp'] ?? '',
+          );
         },
       ),
       GoRoute(
@@ -133,7 +144,8 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: _Paths.COMMUNITYDETAILS,
         name: _Paths.COMMUNITYDETAILS,
         builder: (context, state) {
-          return const CommunityDetails();
+          final community = state.extra as CommunityListResponse;
+          return CommunityDetails(community: community);
         },
       ),
       GoRoute(
@@ -154,14 +166,18 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: _Paths.DOCTORLISTING,
         name: _Paths.DOCTORLISTING,
         builder: (context, state) {
-          return const DoctorListing();
+          final doctor = state.extra as DoctorListResponse;
+          return DoctorListing(doctor: doctor);
         },
       ),
       GoRoute(
         path: _Paths.BOOKAPPOINTMENT,
         name: _Paths.BOOKAPPOINTMENT,
         builder: (context, state) {
-          return const BookAppointment();
+          final doctor = state.extra as DoctorListResponse;
+          return BookAppointment(
+            doctor: doctor,
+          );
         },
       ),
       GoRoute(
@@ -182,7 +198,12 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: _Paths.ARTICLEDETAILS,
         name: _Paths.ARTICLEDETAILS,
         builder: (context, state) {
-          return const ArticleDetails();
+          final article = state.extra as Map<String, String>;
+          return ArticleDetails(
+            title: article["title"]!,
+            description: article["description"]!,
+            imageUrl: article["imageUrl"]!,
+          );
         },
       ),
     ],

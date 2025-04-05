@@ -7,6 +7,7 @@ import 'src/app_pkg.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await StorageServiceImpl().initialize();
   await dotenv.load(fileName: ".env");
   await DependencyInjection.init();
   ErrorWidget.builder = (FlutterErrorDetails details) => Container(
@@ -27,13 +28,12 @@ void configLoading() {
   EasyLoading.instance
     ..indicatorType = EasyLoadingIndicatorType.threeBounce
     ..loadingStyle = EasyLoadingStyle.custom
-    // ..indicatorSize = 45.0
     ..radius = 10.0
-    // ..progressColor = Colors.yellow
-    ..backgroundColor = ColorConstant.accentColor
+    ..backgroundColor = Colors.transparent // ✅ Fully transparent background
     ..indicatorColor = Colors.white
     ..textColor = Colors.white
-    // ..maskColor = Colors.red
+    ..maskColor =
+        Colors.black.withOpacity(0.3) // ✅ Slightly transparent full-screen mask
     ..userInteractions = false
     ..dismissOnTap = false
     ..animationStyle = EasyLoadingAnimationStyle.scale;

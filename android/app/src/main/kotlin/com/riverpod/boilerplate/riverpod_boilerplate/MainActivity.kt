@@ -1,6 +1,6 @@
-package com.riverpod.boilerplate.riverpod_boilerplate
+package com.connectedhealth.app
 
-import io.flutter.embedding.android.FlutterActivity
+import io.flutter.embedding.android.FlutterFragmentActivity
 
-class MainActivity: FlutterActivity() {
+class MainActivity : FlutterFragmentActivity() {
 }
