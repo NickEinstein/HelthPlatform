@@ -174,9 +174,9 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: _Paths.BOOKAPPOINTMENT,
         name: _Paths.BOOKAPPOINTMENT,
         builder: (context, state) {
-          final id = state.extra as int;
+          final doctor = state.extra as DoctorListResponse;
           return BookAppointment(
-            id: id,
+            doctor: doctor,
           );
         },
       ),

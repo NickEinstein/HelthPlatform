@@ -559,6 +559,7 @@ class AllService {
       {required int doctorEmployeeId,
       required String appointDate,
       required String appointTime,
+      required int healthCareProviderId,
       required String description}) async {
     try {
       final token = await getToken();
@@ -574,7 +575,7 @@ class AllService {
           "doctorEmployeeId": doctorEmployeeId,
           "appointDate": appointDate,
           "appointTime": appointTime,
-          "healthCareProviderId": 0,
+          "healthCareProviderId": healthCareProviderId,
           "description": description
         }, // Pass the payload as the request body
       );

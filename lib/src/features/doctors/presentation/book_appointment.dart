@@ -6,14 +6,15 @@ import 'package:greenzone_medical/src/services/all_service.dart';
 import 'package:intl/intl.dart';
 
 import '../../../constants/helper.dart';
+import '../../../model/doctord_list_response.dart';
 import '../../../provider/all_providers.dart';
 import '../../../routes/routes.dart';
 import '../../../utils/custom_header.dart';
 import '../../../utils/custom_toast.dart';
 
 class BookAppointment extends ConsumerStatefulWidget {
-  int id;
-  BookAppointment({super.key, required this.id});
+  final DoctorListResponse doctor; // Accept doctor data
+  BookAppointment({super.key, required this.doctor});
 
   @override
   ConsumerState<BookAppointment> createState() => _BookAppointmentState();
@@ -224,7 +225,9 @@ class _BookAppointmentState extends ConsumerState<BookAppointment> {
                           final allService = ref.read(allServiceProvider);
 
                           final result = await allService.bookAppointment(
-                              doctorEmployeeId: widget.id,
+                              healthCareProviderId:
+                                  widget.doctor.healthCareProviderId!,
+                              doctorEmployeeId: widget.doctor.id!,
                               appointDate:
                                   '${selectedDate.year}/${selectedDate.month}/${selectedDate.day}',
                               appointTime: selectedTime.split(' ')[0],

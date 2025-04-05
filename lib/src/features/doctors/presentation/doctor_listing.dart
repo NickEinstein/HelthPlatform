@@ -175,7 +175,7 @@ class _DoctorListingState extends State<DoctorListing> {
                   ),
                 ),
                 onPressed: () {
-                  context.push(Routes.BOOKAPPOINTMENT, extra: doctor.userId);
+                  context.push(Routes.BOOKAPPOINTMENT, extra: doctor);
                 },
                 child: const Text(
                     style: TextStyle(
