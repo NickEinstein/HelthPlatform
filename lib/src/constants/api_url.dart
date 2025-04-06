@@ -33,4 +33,10 @@ class ApiUrl {
   static const String getDistricts = "/settings/districts";
   static const String sendOTP = "/settings/send-otp";
   static const String verifyOTP = "/settings/verify-otp";
+
+
+  // Appointment
+  static const String appointment = "/appointment";
+
+  
 }

@@ -2,7 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:greenzone_medical/src/features/appointment/presentation/appointment_card.dart';
 
 class CancelledAppointments extends StatelessWidget {
-  const CancelledAppointments({super.key});
+  final List<dynamic> appointments;
+
+  const CancelledAppointments({
+    super.key,
+    required this.appointments,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -11,33 +16,24 @@ class CancelledAppointments extends StatelessWidget {
       child: Column(
         children: [
           const SizedBox(height: 16),
-          AppointmentCard(
-            imageUrl: 'assets/images/doctor1.png',
-            doctorName: 'Rodrigo Hartman',
-            treatment: 'Dental Scaling & Polishing',
-            date: 'Today',
-            time: '20:00 PM',
-            buttonText1: 'Reschedule',
-            showCancelButton:false,
-            buttonText2: 'Reschedule',
-            buttonsDisabled:true,
-            onCancel: () {},
-            onReschedule: () {},
-          ),
-          const SizedBox(height: 10),
-          AppointmentCard(
-            imageUrl: 'assets/images/doctor2.png',
-            doctorName: 'Ember Wynn',
-            treatment: 'Pediatric Neurology',
-            date: 'Wednesday, 15 Mar 2025',
-            buttonText1: 'Reschedule',
-            buttonText2: 'Reschedule',
-            buttonsDisabled:true,
-            showCancelButton:false,
-            time: '10:30 AM',
-            onCancel: () {},
-            onReschedule: () {},
-          ),
+          ...appointments.map((appointment) {
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: AppointmentCard(
+                imageUrl: 'assets/images/doctor1.png', // Optional: dynamic doctor image
+                doctorName: appointment['doctor'] ?? 'Unknown Doctor',
+                treatment: appointment['description'] ?? 'No Description',
+                date: appointment['appointDate'] ?? '',
+                time: appointment['appointTime'] ?? '',
+                buttonText1: 'Cancel',
+                buttonText2: 'Reschedule',
+                showCancelButton: false,
+                buttonsDisabled: true,
+                onCancel: () {},
+                onReschedule: () {},
+              ),
+            );
+          }).toList(),
         ],
       ),
     );

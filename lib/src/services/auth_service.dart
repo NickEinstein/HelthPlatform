@@ -13,7 +13,11 @@ class AuthService {
   AuthService(this._apiService, this._storageService);
 
   Future<String> login(String email, String password) async {
+
+    
     try {
+      // print('Email: $email');
+      // print('Password: $password');
       final response = await _apiService.post(
         ApiUrl.login,
         data: {'email': email, 'password': password},

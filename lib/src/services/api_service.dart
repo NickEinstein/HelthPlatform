@@ -12,6 +12,16 @@ class ApiService {
       receiveTimeout: const Duration(seconds: 15),
     );
     dio = Dio(options);
+
+    // dio.interceptors.add(LogInterceptor(
+    //   request: true,
+    //   requestBody: true,
+    //   responseBody: true,
+    //   responseHeader: false,
+    //   error: true,
+    //   logPrint: (obj) => print(obj.toString()),
+    // ));
+
     dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (RequestOptions options, RequestInterceptorHandler handler) {
@@ -20,6 +30,7 @@ class ApiService {
           if (accessToken != null) {
             options.headers['Authorization'] = 'Bearer $accessToken';
           }
+          print('➡️ Request: ${options.method} ${options.uri}');
           if (options.method != 'GET') {
             EasyLoading.show(status: 'Please wait...');
           }
