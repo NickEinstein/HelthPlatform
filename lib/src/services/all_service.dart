@@ -166,4 +166,74 @@ class AllService {
       return [];
     }
   }
+
+
+   Future<List<dynamic>> fetchAppointments(int userId) async {
+    try {
+      final token = await getToken();
+
+      if (token == null || token.isEmpty) {
+        debugPrint('⚠️ No access token found.');
+        return [];
+      }
+
+      final response = await _apiService.get(
+        ApiUrl.appointment(userId),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = response.data['data'];
+
+        if (data.isEmpty) {
+          debugPrint('⚠️ No appointments found.');
+          return [];
+        }
+
+        return data;
+      } else {
+        debugPrint('❌ Failed to fetch appointments: ${response.statusCode}');
+        throw Exception('Failed to fetch appointments: ${response.statusCode}');
+      }
+    } catch (error) {
+      debugPrint('❌ Error fetching appointments: $error');
+      throw Exception('Error fetching appointments: $error');
+    }
+  }
+
+
+  /// Cancels an appointment by ID
+  Future<bool> cancelAppointment({
+    required int appointmentId,
+    required int healthCareProviderId,
+    required String canceledDate,
+    required String canceledTime,
+  }) async {
+    try {
+      final response = await _apiService.put(
+        ApiUrl.cancelAppointment,
+        data: {
+          "id": appointmentId,
+          "isCanceled": true,
+          "healthCareProviderId": healthCareProviderId,
+          "canceledDate": canceledDate,
+          "canceledTime": canceledTime,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        debugPrint('❌ Failed to cancel appointment: ${response.statusCode}');
+        return false;
+      }
+    } catch (error) {
+      debugPrint('❌ Error cancelling appointment: $error');
+      return false;
+    }
+  }
+
 }

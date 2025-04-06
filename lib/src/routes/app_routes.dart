@@ -29,7 +29,8 @@ abstract class Routes {
   static const HEALTHGOAL = _Paths.HEALTHGOAL;
   static const ABOUTHEALTH = _Paths.ABOUTHEALTH;
   static const DOCTORSREPORTDETAILS = _Paths.DOCTORSREPORTDETAILS;
-  
+
+  static const CAREGIVERSPAGE = _Paths.CAREGIVERSPAGE;
 }
 
 abstract class _Paths {
@@ -51,6 +52,7 @@ abstract class _Paths {
   static const COMMUNITYDETAILS = '/community_details';
   static const SEARCHCOMMUNITY = '/search_community';
   static const DOCTORPAGE = '/doctor_page';
+  static const CAREGIVERSPAGE = '/caregivers_page';
   static const DOCTORLISTING = '/doctor_Listing';
   static const BOOKAPPOINTMENT = '/book_appointment';
   static const HEALTHGOAL = '/health_goal';
@@ -59,6 +61,4 @@ abstract class _Paths {
   static const RESCHEDULEAPPOINTMENT = '/reschedule_appointments';
   static const DOCTORSREPORT = '/doctors_report';
   static const DOCTORSREPORTDETAILS = '/doctors_report_details';
-  
-  
 }

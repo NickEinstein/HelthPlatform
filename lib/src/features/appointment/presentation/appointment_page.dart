@@ -1,54 +1,71 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:greenzone_medical/src/constants/api_url.dart';
+
+
+
+import '../../../di.dart';
+
+
+
+
+
 import 'package:greenzone_medical/src/features/appointment/presentation/widgets/cancelled_appointments.dart';
 import 'package:greenzone_medical/src/features/appointment/presentation/widgets/completed_appointments.dart';
 import 'package:greenzone_medical/src/features/appointment/presentation/widgets/upcoming_appointments.dart';
+// import 'package:greenzone_medical/src/provider/all_providers.dart';
 import 'package:greenzone_medical/src/services/api_service.dart';
-import 'package:greenzone_medical/src/constants/api_url.dart';
 
-class AppointmentPage extends StatefulWidget {
+class AppointmentPage extends ConsumerStatefulWidget {
   const AppointmentPage({super.key});
 
   @override
-  State<AppointmentPage> createState() => _AppointmentPageState();
+  ConsumerState<AppointmentPage> createState() => _AppointmentPageState();
 }
 
-class _AppointmentPageState extends State<AppointmentPage> {
+class _AppointmentPageState extends ConsumerState<AppointmentPage> {
   List<dynamic> appointments = [];
   bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    fetchAppointments();
+    // fetchAppointments();
   }
 
   Future<void> fetchAppointments() async {
-  final apiService = ApiService(); // or use your provider/service locator
+    final authService = ref.read(authServiceProvider);
+    final apiService = ApiService();
 
-  try {
-    final response = await apiService.get(ApiUrl.appointment);
-    
-    // ✅ Pretty-print response data
-    print('📦 Raw API response: ${response.data}');
-    
-    setState(() {
-      appointments = response.data['data'];
-      isLoading = false;
-    });
+    try {
+      final user = await authService.getStoredUser();
 
-    // ✅ Optional: Print each appointment nicely
-    for (var appt in appointments) {
-      print('🩺 Appointment => Doctor: ${appt['doctor']}, Date: ${appt['appointDate']}, Tracking: ${appt['tracking']}');
+      if (user == null) {
+        print("❌ No user found in storage");
+        setState(() => isLoading = false);
+        return;
+      }
+
+      final userId = user.userId;
+
+      final response = await apiService.get('${ApiUrl.appointment(userId)}');
+
+      print('📦 Raw API response: ${response.data}');
+
+      setState(() {
+        appointments = response.data['data'];
+        isLoading = false;
+      });
+
+      for (var appt in appointments) {
+        print(
+            '🩺 Appointment => Doctor: ${appt['doctor']}, Date: ${appt['appointDate']}, Tracking: ${appt['tracking']}');
+      }
+    } catch (e) {
+      setState(() => isLoading = false);
+      print("❌ Failed to fetch appointments: $e");
     }
-
-  } catch (e) {
-    setState(() {
-      isLoading = false;
-    });
-    print("❌ Failed to fetch appointments: $e");
   }
-}
-
 
   @override
   Widget build(BuildContext context) {
@@ -76,13 +93,20 @@ class _AppointmentPageState extends State<AppointmentPage> {
             : TabBarView(
                 children: [
                   UpcomingAppointments(
-                    appointments: appointments.where((appt) => appt['tracking'] == 'AwaitingVitals').toList(),
+                    appointments: appointments
+                        .where((appt) => appt['isCanceled'] == null)
+                        .toList(),
                   ),
                   CompletedAppointments(
-                    // appointments: appointments.where((appt) => appt['tracking'] == 'Completed').toList(),
+                    // You can filter by 'Completed' if applicable
+                    appointments: appointments
+                        .where((appt) => appt['isCanceled'] != 'AwaitingVitals')
+                        .toList(),
                   ),
                   CancelledAppointments(
-                    appointments: appointments.where((appt) => appt['isCanceled'] == true).toList(),
+                    appointments: appointments
+                        .where((appt) => appt['isCanceled'] == true)
+                        .toList(),
                   ),
                 ],
               ),

@@ -29,3 +29,9 @@ final categoryProvider =
   final articleService = ref.watch(articleServiceProvider);
   return await articleService.fetchCategories();
 });
+
+final appointmentProvider =
+    FutureProvider.autoDispose.family<List<dynamic>, int>((ref, userId) async {
+  final appointmentService = ref.watch(articleServiceProvider);
+  return await appointmentService.fetchAppointments(userId);
+});

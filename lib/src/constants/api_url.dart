@@ -36,7 +36,16 @@ class ApiUrl {
 
 
   // Appointment
-  static const String appointment = "/appointment";
+  static String appointment (int patientId) => "/appointment/patient/${patientId}";
+  static const cancelAppointment = "/appointment/cancel-appointment";
+  static const rescheduleAppointment = "/appointment";
+  static String careGivers(int page, int pageSize)=> "/HealthCareProvider/list/${page}/${pageSize}";
+
+  // https://edogoverp.com/ConnectedHealthWebApi/api/HealthCareProvider/list/1/10
+  
+  
+
+  //  static String getHome(int id) => "/products/home-product/?country_id=$id";
 
   
 }

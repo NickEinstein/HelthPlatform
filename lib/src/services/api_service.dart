@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
@@ -56,6 +58,12 @@ class ApiService {
   }) async {
     try {
       final options = Options(headers: headers);
+
+      
+    // 🔍 Log the path and data
+    print('🟡 PUT request to: $path');
+    // print('📦 Data: ${jsonEncode(data)}');
+    print('🧾 Headers: ${headers?.toString()}');
       final response = await dio.get<T>(path,
           queryParameters: queryParameters, options: options);
       return _handleResponse<T>(response);
@@ -78,19 +86,27 @@ class ApiService {
     }
   }
 
-  Future<Response<T>> put<T>(
-    String path, {
-    dynamic data,
-    Map<String, dynamic>? headers,
-  }) async {
-    try {
-      final options = Options(headers: headers);
-      final response = await dio.put<T>(path, data: data, options: options);
-      return _handleResponse<T>(response);
-    } catch (error) {
-      throw _handleError(error);
-    }
+ Future<Response<T>> put<T>(
+  String path, {
+  dynamic data,
+  Map<String, dynamic>? headers,
+}) async {
+  try {
+    final options = Options(headers: headers);
+
+    // // 🔍 Log the path and data
+    // print('🟡 PUT request to: $path');
+    // print('📦 Data: ${jsonEncode(data)}');
+    // print('🧾 Headers: ${headers?.toString()}');
+
+    final response = await dio.put<T>(path, data: data, options: options);
+
+    return _handleResponse<T>(response);
+  } catch (error) {
+    throw _handleError(error);
   }
+}
+
 
   Future<Response<T>> delete<T>(
     String path, {

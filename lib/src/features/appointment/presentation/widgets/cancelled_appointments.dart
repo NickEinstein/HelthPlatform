@@ -26,7 +26,7 @@ class CancelledAppointments extends StatelessWidget {
                 date: appointment['appointDate'] ?? '',
                 time: appointment['appointTime'] ?? '',
                 buttonText1: 'Cancel',
-                buttonText2: 'Reschedule',
+                buttonText2: 'Expired',
                 showCancelButton: false,
                 buttonsDisabled: true,
                 onCancel: () {},
