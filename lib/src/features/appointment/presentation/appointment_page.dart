@@ -30,7 +30,7 @@ class _AppointmentPageState extends ConsumerState<AppointmentPage> {
   @override
   void initState() {
     super.initState();
-    // fetchAppointments();
+    fetchAppointments();
   }
 
   Future<void> fetchAppointments() async {
