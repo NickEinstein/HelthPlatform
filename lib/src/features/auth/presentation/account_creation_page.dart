@@ -323,14 +323,15 @@ class _AccountCreationScreenState extends ConsumerState<AccountCreationScreen> {
                                           ? "Verify OTP"
                                           : "Proceed"),
                             ),
-                            // if (_currentIndex > 0)
-                            //   TextButton(
-                            //     onPressed: _previousPage,
-                            //     child: const Text(
-                            //       "Back",
-                            //       style: TextStyle(color: ColorConstant.primaryColor),
-                            //     ),
-                            //   ),
+                            if (_currentIndex == 1)
+                              TextButton(
+                                onPressed: _previousPage,
+                                child: const Text(
+                                  "Back",
+                                  style: TextStyle(
+                                      color: ColorConstant.primaryColor),
+                                ),
+                              ),
                             const SizedBox(height: 10),
                             if (_currentIndex != 2)
                               RichText(
