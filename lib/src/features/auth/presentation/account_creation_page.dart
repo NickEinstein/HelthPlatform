@@ -9,6 +9,8 @@ import '../../../provider/all_providers.dart';
 import '../../../routes/routes.dart';
 import '../../../utils/custom_toast.dart';
 import 'widget/account_controller_holder.dart';
+import '../../../utils/custom_toast.dart';
+import 'widget/account_controller_holder.dart';
 import 'widget/location_info_screen.dart';
 import 'widget/password_screen.dart';
 import 'widget/personal_info_screen.dart';

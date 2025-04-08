@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:greenzone_medical/src/app_pkg.dart';
 import 'package:greenzone_medical/src/app_pkg.dart';
 import 'package:greenzone_medical/src/routes/app_pages.dart';
 
 import '../../home/presentation/widget/article_card.dart';
 import '../../../provider/all_providers.dart';
+import '../../../provider/all_providers.dart';
 
+class ArticlesSection extends ConsumerWidget {
 class ArticlesSection extends ConsumerWidget {
   const ArticlesSection({super.key});
 
   @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final articleState = ref.watch(articleProvider);
+
   Widget build(BuildContext context, WidgetRef ref) {
     final articleState = ref.watch(articleProvider);
 

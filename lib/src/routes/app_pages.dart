@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:greenzone_medical/src/features/appointment/presentation/doctors_report.dart';
+import 'package:greenzone_medical/src/features/appointment/presentation/doctors_report_details.dart';
 import 'package:greenzone_medical/src/features/article/presentation/article_details.dart';
 import 'package:greenzone_medical/src/features/auth/presentation/new_password_page.dart';
+import 'package:greenzone_medical/src/features/caregivers/presentation/caregivers_page.dart';
+import 'package:greenzone_medical/src/features/caregivers/caregivers.dart';
 import 'package:greenzone_medical/src/features/community/community.dart';
 import 'package:greenzone_medical/src/features/community/presentation/community_details.dart';
 import 'package:greenzone_medical/src/features/community/presentation/community_list.dart';
 import 'package:greenzone_medical/src/features/doctors/doctors.dart';
 import 'package:greenzone_medical/src/features/doctors/presentation/book_appointment.dart';
 import 'package:greenzone_medical/src/features/doctors/presentation/doctor_listing.dart';
+import 'package:greenzone_medical/src/features/appointment/presentation/reschedule_appointments.dart';
 import 'package:greenzone_medical/src/features/healthgoal/presentation/healthgoal_page.dart';
 import 'package:greenzone_medical/src/features/home/home.dart';
 import 'package:greenzone_medical/src/model/community_list_response.dart';
@@ -180,6 +185,40 @@ final routerProvider = Provider<GoRouter>((ref) {
           );
         },
       ),
+
+ GoRoute(
+        path: _Paths.CAREGIVERSPAGE,
+        name: _Paths.CAREGIVERSPAGE,
+        builder: (context, state) {
+          return const CaregiversPage();
+        },
+      ),
+
+     
+      GoRoute(
+        path: _Paths.RESCHEDULEAPPOINTMENT,
+        name: _Paths.RESCHEDULEAPPOINTMENT,
+        builder: (context, state) {
+          final appointmentData = state.extra as Map<String, dynamic>;
+          return RescheduleAppointmentPage(data: appointmentData);
+        },
+      ),
+
+      GoRoute(
+        path: _Paths.DOCTORSREPORT,
+        name: _Paths.DOCTORSREPORT,
+        builder: (context, state) {
+          return const DoctorsReportPage();
+        },
+      ),
+      GoRoute(
+        path: _Paths.DOCTORSREPORTDETAILS,
+        name: _Paths.DOCTORSREPORTDETAILS,
+        builder: (context, state) {
+          return const DoctorsReportDetails();
+        },
+      ),
+
       GoRoute(
         path: _Paths.HEALTHGOAL,
         name: _Paths.HEALTHGOAL,

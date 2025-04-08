@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:greenzone_medical/src/app_pkg.dart';
 import 'package:local_auth/local_auth.dart';
@@ -15,6 +16,7 @@ class SignInPage extends ConsumerStatefulWidget {
   const SignInPage({super.key});
 
   @override
+  ConsumerState<SignInPage> createState() => _SignInPageState();
   ConsumerState<SignInPage> createState() => _SignInPageState();
 }
 

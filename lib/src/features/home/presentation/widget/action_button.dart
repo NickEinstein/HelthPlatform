@@ -43,7 +43,9 @@ class ActionButtonsRow extends StatelessWidget {
                 color: 0xffEAF2FF),
             ActionButton(
                 title: "Caregiver",
-                onButtonPressed: () {},
+                onButtonPressed: () {
+                  context.push(Routes.CAREGIVERSPAGE);
+                },
                 icon: "assets/images/ri_hospital.png",
                 color: 0xffE4F8EB),
           ],

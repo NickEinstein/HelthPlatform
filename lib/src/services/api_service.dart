@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
@@ -12,25 +14,39 @@ class ApiService {
       receiveTimeout: const Duration(seconds: 15),
     );
     dio = Dio(options);
+
+    // dio.interceptors.add(LogInterceptor(
+    //   request: true,
+    //   requestBody: true,
+    //   responseBody: true,
+    //   responseHeader: false,
+    //   error: true,
+    //   logPrint: (obj) => print(obj.toString()),
+    // ));
+
     dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (RequestOptions options, RequestInterceptorHandler handler) {
           String? accessToken = SharedPreferencesService.instance
               .getString(StorageConstants.accessToken);
           if (accessToken != null) {
+          String? accessToken = SharedPreferencesService.instance
+              .getString(StorageConstants.accessToken);
+          if (accessToken != null) {
             options.headers['Authorization'] = 'Bearer $accessToken';
           }
-          // if (options.method != 'GET') {
-          //   EasyLoading.show(status: 'Please wait...');
-          // }
+          print('➡️ Request: ${options.method} ${options.uri}');
+          if (options.method != 'GET') {
+            EasyLoading.show(status: 'Please wait...');
+          }
           return handler.next(options);
         },
         onResponse: (Response response, ResponseInterceptorHandler handler) {
-          // EasyLoading.dismiss();
+          EasyLoading.dismiss();
           return handler.next(response);
         },
         onError: (DioException error, ErrorInterceptorHandler handler) {
-          // EasyLoading.dismiss();
+          EasyLoading.dismiss();
 
           return handler.next(error);
         },
@@ -45,6 +61,12 @@ class ApiService {
   }) async {
     try {
       final options = Options(headers: headers);
+
+      
+    // 🔍 Log the path and data
+    print('🟡 PUT request to: $path');
+    // print('📦 Data: ${jsonEncode(data)}');
+    print('🧾 Headers: ${headers?.toString()}');
       final response = await dio.get<T>(path,
           queryParameters: queryParameters, options: options);
       return _handleResponse<T>(response);

@@ -9,6 +9,10 @@ class CustomTextField extends StatefulWidget {
   final String? Function(String?)? validator;
   final ValueChanged<String>? onChanged;
   final bool obscureText; // Added for password fields
+  final TextEditingController? controller;
+  final String? Function(String?)? validator;
+  final ValueChanged<String>? onChanged;
+  final bool obscureText; // Added for password fields
 
   const CustomTextField({
     Key? key,
