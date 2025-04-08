@@ -42,8 +42,8 @@ class _FoodAlergyState extends ConsumerState<FoodAlergy> {
       onChanged: _validateForm,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         smallSpace(),
-        CustomDropdown(
-          label: "Any Food Alergy",
+        NoSearchDropdown(
+          label: "Any Food Allergy",
           options: const ["Yes", "No"],
           onChanged: (value) {
             widget.controller.foodAllegy = value!;
@@ -73,7 +73,7 @@ class _FoodAlergyState extends ConsumerState<FoodAlergy> {
                 Expanded(
                   child: Text(
                     widget.controller.selectedAllergies.isEmpty
-                        ? "Select option"
+                        ? "Select an option"
                         : widget.controller.selectedAllergies.values.join(", "),
                     style: const TextStyle(
                       fontSize: 16,

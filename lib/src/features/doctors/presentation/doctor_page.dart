@@ -207,10 +207,10 @@ class _DoctorPageState extends ConsumerState<DoctorPage> {
                                         .profilePicture! // ✅ Valid Network URL
                                     : 'assets/images/doctor1.png', // ✅ Default Asset if null/invalid
                                 name:
-                                    '${doctor.firstName ?? 'Unknown'} ${doctor.lastName ?? ''}',
-                                type: doctor.designation ?? 'Unknown',
-                                profession: doctor.department ?? 'Unknown',
-                                hospital: doctor.clinic ?? 'Unknown',
+                                    '${doctor.firstName ?? ''} ${doctor.lastName ?? ''}',
+                                type: doctor.designation ?? '',
+                                profession: doctor.department ?? '',
+                                hospital: doctor.clinic ?? '',
                                 rating: double.tryParse(
                                         doctor.rating?.toString() ?? '0.0') ??
                                     0.0,

@@ -18,6 +18,8 @@ class NewPasswordPage extends ConsumerStatefulWidget {
 
 class _NewPasswordPageState extends ConsumerState<NewPasswordPage> {
   String password = "";
+  String confirmPassword = "";
+
   final TextEditingController _confirmPasswordController =
       TextEditingController();
   bool _passwordsMatch = false;
@@ -102,13 +104,22 @@ class _NewPasswordPageState extends ConsumerState<NewPasswordPage> {
                 const SizedBox(height: 20),
                 ConfirmPasswordTextField(
                   label: "Confirm Password",
-                  password: _confirmPasswordController.text,
+                  password: password, // ✅ This now updates dynamically
                   onMatchChanged: (isMatching) {
-                    setState(() {
-                      _passwordsMatch = isMatching;
-                    });
+                    _passwordsMatch = isMatching;
                   },
+                  controller: _confirmPasswordController,
                 ),
+
+                // ConfirmPasswordTextField(
+                //   label: "Confirm Password",
+                //   password: _confirmPasswordController.text,
+                //   onMatchChanged: (isMatching) {
+                //     setState(() {
+                //       _passwordsMatch = isMatching;
+                //     });
+                //   },
+                // ),
                 // ConfirmPasswordTextField(
                 //   label: "Confirm Password",
                 //   password: password,
@@ -131,7 +142,9 @@ class _NewPasswordPageState extends ConsumerState<NewPasswordPage> {
                         ),
                         onPressed: () async {
                           // context.push(Routes.OTPPAGE);
-                          if (_isValid && _passwordsMatch) {
+                          if (_passwordsMatch &&
+                              _confirmPasswordController.text.isNotEmpty &&
+                              password.isNotEmpty) {
                             ref.read(isLoadingProvider.notifier).state = true;
 
                             final authService = ref.read(authServiceProvider);

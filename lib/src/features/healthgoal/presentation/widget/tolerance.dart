@@ -46,7 +46,7 @@ class _TolerancePageState extends ConsumerState<TolerancePage> {
       onChanged: _validateForm,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         smallSpace(),
-        CustomDropdown(
+        NoSearchDropdown(
           label: "Any Histmine Tolerance",
           options: const ["Yes", "No"],
           onChanged: (value) {
@@ -77,7 +77,7 @@ class _TolerancePageState extends ConsumerState<TolerancePage> {
                 Expanded(
                   child: Text(
                     widget.controller.selectedIntellories.isEmpty
-                        ? "Select option"
+                        ? "Select an option"
                         : widget.controller.selectedIntellories.values
                             .join(", "),
                     style: const TextStyle(

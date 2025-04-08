@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:greenzone_medical/src/constants/color_constant.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 
@@ -9,6 +10,7 @@ class CustomTextField extends StatefulWidget {
   final String? Function(String?)? validator;
   final ValueChanged<String>? onChanged;
   final bool obscureText; // Added for password fields
+  final List<TextInputFormatter>? inputFormatters;
 
   const CustomTextField({
     Key? key,
@@ -18,6 +20,7 @@ class CustomTextField extends StatefulWidget {
     this.validator,
     this.onChanged,
     this.obscureText = false, // Default to false
+    this.inputFormatters,
   }) : super(key: key);
 
   @override
@@ -86,6 +89,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
           controller: _controller,
           obscureText: widget.obscureText,
           validator: widget.validator,
+          inputFormatters: widget.inputFormatters,
           onChanged: (value) => setState(() {
             _hasText = value.isNotEmpty;
           }),
@@ -322,6 +326,120 @@ class _CustomDropdownState extends State<CustomDropdown> {
               fillColor: _selectedValue != null
                   ? ColorConstant.primaryLightColor.withOpacity(0.3)
                   : Colors.transparent,
+            ),
+          ),
+          onChanged: (value) {
+            setState(() {
+              _selectedValue = value;
+            });
+            if (widget.controller != null) {
+              widget.controller!.text = value ?? '';
+            }
+            widget.onChanged?.call(value);
+          },
+          validator: widget.validator ??
+              (value) {
+                if (value == null || value.isEmpty) {
+                  return "Please select an option";
+                }
+                return null;
+              },
+        ),
+      ],
+    );
+  }
+}
+
+class NoSearchDropdown extends StatefulWidget {
+  final String label;
+  final List<String> options;
+  final String hint;
+  final ValueChanged<String?>? onChanged;
+  final String? Function(String?)? validator;
+  final TextEditingController? controller;
+  final String? value;
+
+  const NoSearchDropdown({
+    Key? key,
+    required this.label,
+    required this.options,
+    this.hint = "Select an option",
+    this.onChanged,
+    this.validator,
+    this.controller,
+    this.value,
+  }) : super(key: key);
+
+  @override
+  State<NoSearchDropdown> createState() => _NoSearchDropdownState();
+}
+
+class _NoSearchDropdownState extends State<NoSearchDropdown> {
+  String? _selectedValue;
+
+  @override
+  void initState() {
+    super.initState();
+    _setInitialValue();
+  }
+
+  void _setInitialValue() {
+    if (widget.value != null && widget.value!.isNotEmpty) {
+      if (widget.options.contains(widget.value)) {
+        _selectedValue = widget.value;
+      } else {
+        _selectedValue = null;
+      }
+    } else if (widget.controller != null &&
+        widget.controller!.text.isNotEmpty) {
+      if (widget.options.contains(widget.controller!.text)) {
+        _selectedValue = widget.controller!.text;
+      } else {
+        _selectedValue = null;
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    List<String> uniqueOptions = widget.options.toSet().toList();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          widget.label,
+          style: const TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w400,
+            color: Color(0xff3C3B3B),
+          ),
+        ),
+        const SizedBox(height: 4),
+        DropdownSearch<String>(
+          selectedItem: _selectedValue,
+          popupProps: const PopupProps.menu(
+            showSearchBox: false,
+            fit: FlexFit.loose,
+            constraints: BoxConstraints(maxHeight: 200),
+          ),
+          items: uniqueOptions,
+          dropdownDecoratorProps: DropDownDecoratorProps(
+            dropdownSearchDecoration: InputDecoration(
+              hintText: widget.hint,
+              isDense: true,
+              contentPadding:
+                  const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(6),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(3),
+                borderSide:
+                    const BorderSide(color: Color(0xffB3B3B3), width: 0.8),
+              ),
+              filled: true,
+              fillColor: Colors.white,
             ),
           ),
           onChanged: (value) {

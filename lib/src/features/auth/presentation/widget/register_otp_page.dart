@@ -84,11 +84,11 @@ class _RegisterOTPPageState extends ConsumerState<RegisterOTPPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Title & Page Indicator
-              CustomHeader(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
+              // CustomHeader(
+              //   onPressed: () {
+              //     Navigator.pop(context);
+              //   },
+              // ),
               smallSpace(),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

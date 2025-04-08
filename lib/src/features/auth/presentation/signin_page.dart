@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:greenzone_medical/src/app_pkg.dart';
@@ -200,6 +201,9 @@ class _SignInPageState extends ConsumerState<SignInPage> {
                     hint: "example@example.com",
                     controller: _emailController,
                     onChanged: (_) => _validateForm(),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp(r'.*')),
+                    ],
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return "Email cannot be empty";

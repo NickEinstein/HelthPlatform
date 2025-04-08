@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:math';
 
 import 'package:dio/dio.dart';
 import 'package:greenzone_medical/src/app_pkg.dart';
@@ -20,21 +19,26 @@ class AuthService {
         data: {'email': email, 'password': password},
       );
 
-      if (response.statusCode == 200 && response.data != null) {
-        final loginResponse = LoginResponse.fromJson(response.data['data']);
-        _storageService.setString('saved_email', email);
-        _storageService.setString('saved_password', password);
+      final resData = response.data;
 
-        // Save full user data and token
-        await _storageService.setString(
-            StorageConstants.loginData, jsonEncode(loginResponse.toJson()));
-        await _storageService.setString(
-            StorageConstants.accessToken, loginResponse.token);
+      if (response.statusCode == 200) {
+        if (resData['status'] == 'success' && resData['data'] != null) {
+          final loginResponse = LoginResponse.fromJson(resData['data']);
+          _storageService.setString('saved_email', email);
+          _storageService.setString('saved_password', password);
 
-        return 'Login successful';
-      } else {
-        return _handleStatusCode(response.statusCode);
+          await _storageService.setString(
+              StorageConstants.loginData, jsonEncode(loginResponse.toJson()));
+          await _storageService.setString(
+              StorageConstants.accessToken, loginResponse.token);
+
+          return 'Login successful';
+        } else if (resData['status'] == 'Failed') {
+          return resData['message'] ?? 'Login failed';
+        }
       }
+
+      return _handleStatusCode(response.statusCode);
     } catch (error) {
       return _handleError(error);
     }
@@ -281,12 +285,24 @@ class AuthService {
 
   String _handleError(dynamic error) {
     if (error is DioException) {
-      if (error.response != null) {
-        return _handleStatusCode(error.response!.statusCode);
+      final response = error.response;
+      if (response != null) {
+        final statusCode = response.statusCode;
+        final data = response.data;
+
+        // Optional: log server error response
+
+        // If you expect a message from the server
+        if (data is Map<String, dynamic> && data.containsKey('message')) {
+          return data['message'];
+        }
+
+        return _handleStatusCode(statusCode);
       } else {
         return 'Network error. Please check your connection.';
       }
     }
+
     return 'An unknown error occurred.';
   }
 }

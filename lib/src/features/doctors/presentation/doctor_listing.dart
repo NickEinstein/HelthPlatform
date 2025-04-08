@@ -43,9 +43,9 @@ class _DoctorListingState extends State<DoctorListing> {
                     ? doctor.profilePicture!
                     : 'assets/images/doctor1.png',
                 name: '${doctor.firstName} ${doctor.lastName}',
-                type: doctor.designation ?? 'Unknown',
-                profession: doctor.department ?? 'Unknown',
-                hospital: doctor.clinic ?? 'Unknown',
+                type: doctor.designation ?? '',
+                profession: doctor.department ?? '',
+                hospital: doctor.clinic ?? '',
                 rating:
                     double.tryParse(doctor.rating?.toString() ?? '0.0') ?? 0.0,
                 reviews: doctor.reviews ?? 0,
