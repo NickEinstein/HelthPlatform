@@ -134,7 +134,7 @@ class _AccountCreationScreenState extends ConsumerState<AccountCreationScreen> {
 
           if (!context.mounted) return; // ✅ Prevents using context if unmounted
           ref.read(isLoadingProvider.notifier).state = false;
-          if (result == 'Otp successful') {
+          if (result == 'OTP successful') {
             _pageController.nextPage(
               duration: const Duration(milliseconds: 300),
               curve: Curves.easeInOut,

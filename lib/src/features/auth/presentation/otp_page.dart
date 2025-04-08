@@ -199,39 +199,39 @@ class _OTPPageState extends ConsumerState<OTPPage> {
                           ),
                         ),
                         onPressed: () async {
-                          context.push(
-                            Routes.NEWPASSWORD,
-                            extra: {
-                              'email': widget.email,
-                              'otp': otpController.text
-                            },
-                          );
-                          // if (otpController.text.length == 4) {
-                          //   ref.read(isLoadingProvider.notifier).state = true;
-                          //   final authService = ref.read(authServiceProvider);
+                          // context.push(
+                          //   Routes.NEWPASSWORD,
+                          //   extra: {
+                          //     'email': widget.email,
+                          //     'otp': otpController.text
+                          //   },
+                          // );
+                          if (otpController.text.length == 4) {
+                            ref.read(isLoadingProvider.notifier).state = true;
+                            final authService = ref.read(authServiceProvider);
 
-                          //   final result = await authService.validateOtpUrl(
-                          //       widget.email, otpController.text);
+                            final result = await authService.validateOtpUrl(
+                                widget.email, otpController.text);
 
-                          //   if (!context.mounted) return;
-                          //   ref.read(isLoadingProvider.notifier).state = false;
+                            if (!context.mounted) return;
+                            ref.read(isLoadingProvider.notifier).state = false;
 
-                          //   if (result == 'Otp successful') {
-                          //     context.push(
-                          //       Routes.NEWPASSWORD,
-                          //       extra: {
-                          //         'email': widget.email,
-                          //         'otp': otpController.text
-                          //       },
-                          //     );
-                          //   } else {
-                          //     CustomToast.show(context, result,
-                          //         type: ToastType.error);
-                          //   }
-                          // } else {
-                          //   CustomToast.show(context, 'Enter a valid OTP',
-                          //       type: ToastType.error);
-                          // }
+                            if (result == 'OTP successful') {
+                              context.push(
+                                Routes.NEWPASSWORD,
+                                extra: {
+                                  'email': widget.email,
+                                  'otp': otpController.text
+                                },
+                              );
+                            } else {
+                              CustomToast.show(context, result,
+                                  type: ToastType.error);
+                            }
+                          } else {
+                            CustomToast.show(context, 'Enter a valid OTP',
+                                type: ToastType.error);
+                          }
                         },
                         child: const Text(
                           "Verify OTP", // Fix button text

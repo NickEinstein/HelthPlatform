@@ -155,15 +155,38 @@ class AuthService {
     }
   }
 
+  // Future<String> otpSendUrl(String email) async {
+  //   try {
+  //     final response = await _apiService.post(
+  //       ApiUrl.otpSendUrl + email,
+  //     );
+
+  //     if (response.statusCode == 200 && response.data != null) {
+  //       return 'successful';
+  //     } else {
+  //       return _handleStatusCode(response.statusCode);
+  //     }
+  //   } catch (error) {
+  //     return _handleError(error);
+  //   }
+  // }
   Future<String> otpSendUrl(String email) async {
     try {
       final response = await _apiService.post(
         ApiUrl.otpSendUrl + email,
       );
 
+      // Check if the status code is 200 and the response body has a failure code
       if (response.statusCode == 200 && response.data != null) {
-        return 'successful';
+        if (response.data['code'] == 4) {
+          // Return the failure message from the response
+          return 'Failed: ${response.data['message']}';
+        } else {
+          // Return success if no failure code is present
+          return 'successful';
+        }
       } else {
+        // If the status code is not 200, handle it as a different error
         return _handleStatusCode(response.statusCode);
       }
     } catch (error) {
@@ -201,6 +224,25 @@ class AuthService {
     }
   }
 
+  // Future<String> validateOtpUrl(String email, String otp) async {
+  //   try {
+  //     final response = await _apiService.get(
+  //       ApiUrl.verifyOTPPostUrlForAfterReg(otp, email),
+  //     );
+
+  //     if (response.statusCode == 200 && response.data != null) {
+  //       if (response.data == true) {
+  //         return 'Otp successful';
+  //       } else {
+  //         return 'Invalid OTP entered';
+  //       }
+  //     } else {
+  //       return _handleStatusCode(response.statusCode);
+  //     }
+  //   } catch (error) {
+  //     return _handleError(error);
+  //   }
+  // }
   Future<String> validateOtpUrl(String email, String otp) async {
     try {
       final response = await _apiService.get(
@@ -208,10 +250,14 @@ class AuthService {
       );
 
       if (response.statusCode == 200 && response.data != null) {
+        // If the response data is a boolean indicating success/failure
         if (response.data == true) {
-          return 'Otp successful';
-        } else {
+          return 'OTP successful';
+        } else if (response.data == false) {
           return 'Invalid OTP entered';
+        } else {
+          // If the response.data doesn't match expected values, handle as unexpected
+          return 'Unexpected response data';
         }
       } else {
         return _handleStatusCode(response.statusCode);
