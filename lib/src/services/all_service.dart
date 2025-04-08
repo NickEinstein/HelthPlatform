@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
+// import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../api/app_endpoints.dart';
 import '../constants/api_url.dart';
@@ -439,19 +439,8 @@ class AllService {
   ///
   ///
 
-  Future<List<ArticleResponse>> getCachedArticles() async {
-    try {
-      final cachedData =
-          _storageService.getString(StorageConstants.articleData);
-      if (cachedData == null || cachedData.isEmpty) return [];
 
-      final List<dynamic> data = jsonDecode(cachedData);
-      return data.map((e) => ArticleResponse.fromJson(e)).toList();
-    } catch (error) {
-      debugPrint('❌ Error reading cached articles: $error');
-      return [];
-    }
-  }
+
 
   Future<String> updateAllergies({
     required Map<int, String> selectedAllergies,
@@ -614,5 +603,35 @@ class AllService {
       }
     }
     return 'An unknown error occurred.';
+  }
+  /// Cancels an appointment by ID
+  Future<bool> cancelAppointment({
+    required int appointmentId,
+    required int healthCareProviderId,
+    required String canceledDate,
+    required String canceledTime,
+  }) async {
+    try {
+      final response = await _apiService.put(
+        ApiUrl.cancelAppointment,
+        data: {
+          "id": appointmentId,
+          "isCanceled": true,
+          "healthCareProviderId": healthCareProviderId,
+          "canceledDate": canceledDate,
+          "canceledTime": canceledTime,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        debugPrint('❌ Failed to cancel appointment: ${response.statusCode}');
+        return false;
+      }
+    } catch (error) {
+      debugPrint('❌ Error cancelling appointment: $error');
+      return false;
+    }
   }
 }

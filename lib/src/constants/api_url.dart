@@ -42,4 +42,19 @@ class ApiUrl {
   static const String getDistricts = "/settings/districts";
   static const String sendOTP = "/settings/send-otp";
   static const String verifyOTP = "/settings/verify-otp";
+
+
+  // Appointment
+  static String appointment (int patientId) => "/appointment/patient/$patientId";
+  static const cancelAppointment = "/appointment/cancel-appointment";
+  static const rescheduleAppointment = "/appointment";
+  static String careGivers(int page, int pageSize)=> "/HealthCareProvider/list/$page/$pageSize";
+
+  // https://edogoverp.com/ConnectedHealthWebApi/api/HealthCareProvider/list/1/10
+  
+  
+
+  //  static String getHome(int id) => "/products/home-product/?country_id=$id";
+
+  
 }
