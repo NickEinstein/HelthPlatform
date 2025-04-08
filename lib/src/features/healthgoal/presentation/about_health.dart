@@ -68,10 +68,7 @@ class _AboutGoalPageState extends ConsumerState<AboutGoalPage> {
       }
     } else if (_currentIndex == 1) {
       if (_controller.interllories == 'No') {
-        _pageController.nextPage(
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
-        );
+        context.pushReplacement(Routes.BOTTOMNAV);
       } else if (_controller.interllories == 'Yes') {
         if (_controller.selectedIntellories.isEmpty) {
           CustomToast.show(context, 'Select intolerance',

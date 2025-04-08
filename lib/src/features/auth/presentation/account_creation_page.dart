@@ -39,6 +39,22 @@ class _AccountCreationScreenState extends ConsumerState<AccountCreationScreen> {
   //   selectedAllergies: selectedAllergies,  // The selected allergies from the state
   //   otherController: otherController,  // Pass the TextEditingController for "Others"
   // );
+  String? passwordValidator(String password) {
+    final hasUppercase = password.contains(RegExp(r'[A-Z]'));
+    final hasLowercase = password.contains(RegExp(r'[a-z]'));
+    final hasNumber = password.contains(RegExp(r'[0-9]'));
+    final hasSpecialChar = password.contains(RegExp(r'[!@#\$&*~]'));
+
+    if (!hasUppercase) return "Password must contain Uppercase";
+    if (!hasLowercase) return "Password must contain Lowercase";
+    if (!hasNumber) return "Password must contain a Number";
+    if (!hasSpecialChar) {
+      return "Password must contain a Special Character (!@#\$&*~)";
+    }
+
+    return null; // ✅ All checks passed
+  }
+
   void _nextPage() async {
     final currentFormState = _formKeys[_currentIndex].currentState;
     if (currentFormState != null && currentFormState.validate()) {
@@ -51,6 +67,13 @@ class _AccountCreationScreenState extends ConsumerState<AccountCreationScreen> {
           return;
         }
 
+        final passwordStrengthError =
+            passwordValidator(_controller.passwordController.text);
+        if (passwordStrengthError != null) {
+          CustomToast.show(context, passwordStrengthError,
+              type: ToastType.error);
+          return;
+        }
         if (_controller.passwordController.text !=
             _controller.confirmPasswordController.text) {
           CustomToast.show(context, 'Passwords do not match',
@@ -161,6 +184,16 @@ class _AccountCreationScreenState extends ConsumerState<AccountCreationScreen> {
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
       );
+    }
+  }
+
+  _isAgree() {
+    if (_currentIndex == 1) {
+      if (_controller.isChecked) {
+        return true;
+      } else {
+        return false;
+      }
     }
   }
 
@@ -287,7 +320,7 @@ class _AccountCreationScreenState extends ConsumerState<AccountCreationScreen> {
                                   _currentIndex == 3
                                       ? "Create Account"
                                       : _currentIndex == 2
-                                          ? "Resend Code"
+                                          ? "Verify OTP"
                                           : "Proceed"),
                             ),
                             // if (_currentIndex > 0)

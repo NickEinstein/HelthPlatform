@@ -240,7 +240,7 @@ class _BookAppointmentState extends ConsumerState<BookAppointment> {
 
                           if (result == 'successful') {
                             CustomToast.show(
-                                context, 'Appointment Book Successfully',
+                                context, 'Appointment Booked Successfully.',
                                 type: ToastType.success);
 
                             context.pushReplacement(Routes.BOTTOMNAV);
@@ -248,8 +248,12 @@ class _BookAppointmentState extends ConsumerState<BookAppointment> {
                             CustomToast.show(context, result,
                                 type: ToastType.error);
                           }
-                        } else {
-                          CustomToast.show(context, 'All fields are mandatory',
+                        } else if (selectedTime.isEmpty) {
+                          CustomToast.show(context, 'Select appointment time',
+                              type: ToastType.error);
+                        } else if (descriptionController.text.isEmpty) {
+                          CustomToast.show(context,
+                              'Please describe your problem to proceed',
                               type: ToastType.error);
                         }
                         // Add your action here

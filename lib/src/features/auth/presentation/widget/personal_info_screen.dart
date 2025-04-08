@@ -50,6 +50,9 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
             CustomTextField(
               label: "Full Name",
               hint: "First name, Last name",
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z\s]')),
+              ],
               controller: widget.controller.firstNameController,
               onChanged: (_) => _validateForm(),
               validator: (value) {
@@ -140,6 +143,9 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
               hint: "example@example.com",
               controller: widget.controller.emailController,
               onChanged: (_) => _validateForm(),
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(r'.*')),
+              ],
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return "Email cannot be empty";

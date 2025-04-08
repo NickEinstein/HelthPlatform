@@ -1,13 +1,16 @@
 import 'dart:convert';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:greenzone_medical/src/constants/color_constant.dart';
 
 import '../../../../constants/dimens.dart';
 import '../../../../constants/helper.dart';
 import '../../../../model/state_model.dart';
+import '../../../../utils/custom_toast.dart';
 import 'account_controller_holder.dart';
-import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter/services.dart'
+    show FilteringTextInputFormatter, rootBundle;
 
 class LocationInfoScreen extends StatefulWidget {
   final VoidCallback onNext;
@@ -93,6 +96,13 @@ class _LocationInfoScreenState extends State<LocationInfoScreen> {
     });
   }
 
+  bool _isFormValid() {
+    return _isValid &&
+        selectedState != null &&
+        selectedLga != null &&
+        selectedCity != null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -113,6 +123,9 @@ class _LocationInfoScreenState extends State<LocationInfoScreen> {
             CustomTextField(
               label: "Home Address",
               hint: "House Number, Street name",
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(r'.*')),
+              ],
               controller: widget.controller.addressController,
               onChanged: (_) => _validateForm(),
               validator: (value) {
@@ -145,6 +158,9 @@ class _LocationInfoScreenState extends State<LocationInfoScreen> {
             CustomTextField(
               label: "City",
               hint: "City",
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(r'.*')),
+              ],
               controller: widget.controller.cityController,
               onChanged: (_) => _validateForm(),
               validator: (value) {
@@ -174,7 +190,7 @@ class _LocationInfoScreenState extends State<LocationInfoScreen> {
                 const SizedBox(width: 8),
                 Expanded(
                   child: RichText(
-                    text: const TextSpan(
+                    text: TextSpan(
                       style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w400,
@@ -183,6 +199,11 @@ class _LocationInfoScreenState extends State<LocationInfoScreen> {
                         TextSpan(text: "I agree with the "),
                         TextSpan(
                           text: "Terms & Conditions",
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              CustomToast.show(context, "Coming soon...",
+                                  type: ToastType.error);
+                            },
                           style: TextStyle(
                               color: Color(0xffF04D22),
                               fontSize: 14,
@@ -191,6 +212,11 @@ class _LocationInfoScreenState extends State<LocationInfoScreen> {
                         TextSpan(text: " and "),
                         TextSpan(
                           text: "Privacy Policy statement",
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              CustomToast.show(context, "Coming soon...",
+                                  type: ToastType.error);
+                            },
                           style: TextStyle(
                               color: Color(0xffF04D22),
                               fontSize: 14,
@@ -202,6 +228,7 @@ class _LocationInfoScreenState extends State<LocationInfoScreen> {
                 ),
               ],
             ),
+            smallSpace(),
           ],
         ),
       ),
