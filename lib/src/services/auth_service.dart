@@ -14,11 +14,17 @@ class AuthService {
   AuthService(this._apiService, this._storageService);
 
   Future<String> login(String email, String password) async {
+
+   
     try {
+       print(email);
+    print(password);
       final response = await _apiService.post(
         ApiUrl.login,
         data: {'email': email, 'password': password},
       );
+
+
 
       if (response.statusCode == 200 && response.data != null) {
         final loginResponse = LoginResponse.fromJson(response.data['data']);

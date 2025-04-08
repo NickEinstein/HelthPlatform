@@ -41,7 +41,7 @@ class _AppointmentPageState extends ConsumerState<AppointmentPage> {
       final user = await authService.getStoredUser();
 
       if (user == null) {
-        print("❌ No user found in storage");
+        // print("❌ No user found in storage");
         setState(() => isLoading = false);
         return;
       }
@@ -57,13 +57,13 @@ class _AppointmentPageState extends ConsumerState<AppointmentPage> {
         isLoading = false;
       });
 
-      for (var appt in appointments) {
-        print(
-            '🩺 Appointment => Doctor: ${appt['doctor']}, Date: ${appt['appointDate']}, Tracking: ${appt['tracking']}');
-      }
+      // for (var appt in appointments) {
+      //   print(
+      //       '🩺 Appointment => Doctor: ${appt['doctor']}, Date: ${appt['appointDate']}, Tracking: ${appt['tracking']}');
+      // }
     } catch (e) {
       setState(() => isLoading = false);
-      print("❌ Failed to fetch appointments: $e");
+      // print("❌ Failed to fetch appointments: $e");
     }
   }
 
@@ -76,6 +76,7 @@ class _AppointmentPageState extends ConsumerState<AppointmentPage> {
         appBar: AppBar(
           backgroundColor: Colors.white,
           elevation: 0,
+          automaticallyImplyLeading: false,
           title: const Text('Appointments', style: TextStyle(color: Colors.black)),
           bottom: const TabBar(
             labelColor: Colors.green,

@@ -45,10 +45,10 @@ class ApiUrl {
 
 
   // Appointment
-  static String appointment (int patientId) => "/appointment/patient/${patientId}";
+  static String appointment (int patientId) => "/appointment/patient/$patientId";
   static const cancelAppointment = "/appointment/cancel-appointment";
   static const rescheduleAppointment = "/appointment";
-  static String careGivers(int page, int pageSize)=> "/HealthCareProvider/list/${page}/${pageSize}";
+  static String careGivers(int page, int pageSize)=> "/HealthCareProvider/list/$page/$pageSize";
 
   // https://edogoverp.com/ConnectedHealthWebApi/api/HealthCareProvider/list/1/10
   
