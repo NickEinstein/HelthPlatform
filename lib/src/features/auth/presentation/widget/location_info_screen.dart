@@ -2,17 +2,19 @@ import 'dart:convert';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:greenzone_medical/src/constants/color_constant.dart';
 
 import '../../../../constants/dimens.dart';
 import '../../../../constants/helper.dart';
 import '../../../../model/state_model.dart';
+import '../../../../provider/all_providers.dart';
 import '../../../../utils/custom_toast.dart';
 import 'account_controller_holder.dart';
 import 'package:flutter/services.dart'
     show FilteringTextInputFormatter, rootBundle;
 
-class LocationInfoScreen extends StatefulWidget {
+class LocationInfoScreen extends ConsumerStatefulWidget {
   final VoidCallback onNext;
   final GlobalKey<FormState> formKey;
   final AccountCreationController controller;
@@ -24,10 +26,10 @@ class LocationInfoScreen extends StatefulWidget {
       required this.controller});
 
   @override
-  State<LocationInfoScreen> createState() => _LocationInfoScreenState();
+  ConsumerState<LocationInfoScreen> createState() => _LocationInfoScreenState();
 }
 
-class _LocationInfoScreenState extends State<LocationInfoScreen> {
+class _LocationInfoScreenState extends ConsumerState<LocationInfoScreen> {
   // bool isChecked = false;
   bool _isValid = false;
 
@@ -105,6 +107,8 @@ class _LocationInfoScreenState extends State<LocationInfoScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isAgreed = ref.watch(isAgreedProvider);
+
     return SingleChildScrollView(
       child: Form(
         key: widget.formKey,
@@ -180,9 +184,9 @@ class _LocationInfoScreenState extends State<LocationInfoScreen> {
                 Checkbox(
                   value: widget.controller.isChecked,
                   onChanged: (value) {
-                    setState(() {
-                      widget.controller.isChecked = value!;
-                    });
+                    widget.controller.isChecked = value!;
+                    ref.read(isAgreedProvider.notifier).state =
+                        !ref.read(isAgreedProvider.notifier).state;
                   },
                   activeColor: ColorConstant.primaryColor,
                   visualDensity: VisualDensity.compact,

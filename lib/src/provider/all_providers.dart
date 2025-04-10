@@ -14,6 +14,7 @@ import '../services/all_service.dart';
 
 // Provider for ArticleService
 final isLoadingProvider = StateProvider<bool>((ref) => false);
+final isAgreedProvider = StateProvider<bool>((ref) => false);
 
 final allServiceProvider = Provider<AllService>((ref) {
   final storageService = StorageServiceImpl();
@@ -24,7 +25,6 @@ final allServiceProvider = Provider<AllService>((ref) {
 
 final articleProvider =
     FutureProvider.autoDispose<List<ArticleResponse>>((ref) async {
-
   final articleService = ref.watch(allServiceProvider);
   return await articleService.fetchArticles();
 });
@@ -75,6 +75,4 @@ final allPrescriptionsListProvider =
     FutureProvider.autoDispose<List<GetPrescriptionModel>>((ref) async {
   final allPrescriptionListService = ref.watch(allServiceProvider);
   return await allPrescriptionListService.getPrescriptions();
-
 });
-

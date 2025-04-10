@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:greenzone_medical/src/app_pkg.dart';
 
 import '../../../constants/helper.dart';
 import '../../../provider/all_providers.dart';
+import '../../../routes/routes.dart';
 import '../../../utils/custom_header.dart';
 import '../../../utils/custom_toast.dart';
 
@@ -142,7 +144,9 @@ class _NewPasswordPageState extends ConsumerState<NewPasswordPage> {
                         ),
                         onPressed: () async {
                           // context.push(Routes.OTPPAGE);
-                          if (_passwordsMatch &&
+                          if (canProceed(
+                                  password, _confirmPasswordController.text) &&
+                              _passwordsMatch &&
                               _confirmPasswordController.text.isNotEmpty &&
                               password.isNotEmpty) {
                             ref.read(isLoadingProvider.notifier).state = true;
@@ -168,6 +172,7 @@ class _NewPasswordPageState extends ConsumerState<NewPasswordPage> {
                                 CustomToast.show(context,
                                     "New password updated successfully",
                                     type: ToastType.success);
+                                context.pushReplacement(Routes.SIGNIN);
                               } else {
                                 CustomToast.show(context, result,
                                     type: ToastType.error);
@@ -175,7 +180,7 @@ class _NewPasswordPageState extends ConsumerState<NewPasswordPage> {
                             }
                           } else {
                             CustomToast.show(
-                                context, 'Enter a prefered Password',
+                                context, 'Kindly Check password strength',
                                 type: ToastType.error);
                           }
                         },

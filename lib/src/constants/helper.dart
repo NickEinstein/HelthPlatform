@@ -494,6 +494,7 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
   late ValueNotifier<bool> hasNumber;
   late ValueNotifier<bool> hasSpecialChar;
   late ValueNotifier<bool> hasText;
+  late ValueNotifier<bool> hasMinLength;
 
   @override
   void initState() {
@@ -505,6 +506,7 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
     hasNumber = ValueNotifier(false);
     hasSpecialChar = ValueNotifier(false);
     hasText = ValueNotifier(false);
+    hasMinLength = ValueNotifier(false);
 
     _controller.addListener(() => _validatePassword(_controller.text));
   }
@@ -515,6 +517,7 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
     hasLowercase.value = _lowercase.hasMatch(value);
     hasNumber.value = _number.hasMatch(value);
     hasSpecialChar.value = _specialChar.hasMatch(value);
+    hasMinLength.value = value.length >= 8;
 
     widget.onChanged(value);
   }
@@ -529,6 +532,7 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
     hasNumber.dispose();
     hasSpecialChar.dispose();
     hasText.dispose();
+    hasMinLength.dispose();
     super.dispose();
   }
 
@@ -592,12 +596,15 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
           ),
         ),
         const SizedBox(height: 10),
+        _buildValidationItem(
+            "Password must be at least 8 characters", hasMinLength),
         _buildValidationItem("Password must contain Uppercase", hasUppercase),
         _buildValidationItem("Password must contain Lowercase", hasLowercase),
         _buildValidationItem("Password must contain a Number", hasNumber),
         _buildValidationItem(
-            "Password must contain a Special Character (!@#\$&*~)",
-            hasSpecialChar),
+          "Password must contain a Special Character (!@#\$&*~)",
+          hasSpecialChar,
+        ),
       ],
     );
   }
@@ -617,9 +624,10 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
                 child: Text(
                   text,
                   style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                      color: valid ? Colors.green : Colors.red),
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                    color: valid ? Colors.green : Colors.red,
+                  ),
                 ),
               ),
             ],
@@ -1005,4 +1013,30 @@ String getGreeting() {
   } else {
     return "Good evening! ";
   }
+}
+
+bool canProceed(String password, String confirmPassword) {
+  final hasMinLength = password.length >= 8;
+  final hasUppercase = password.contains(RegExp(r'[A-Z]'));
+  final hasLowercase = password.contains(RegExp(r'[a-z]'));
+  final hasDigit = password.contains(RegExp(r'\d'));
+  final hasSpecialChar = password.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'));
+
+  if (password.isEmpty || confirmPassword.isEmpty) {
+    return false;
+  }
+
+  if (!hasMinLength ||
+      !hasUppercase ||
+      !hasLowercase ||
+      !hasDigit ||
+      !hasSpecialChar) {
+    return false;
+  }
+
+  if (password != confirmPassword) {
+    return false;
+  }
+
+  return true;
 }

@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:greenzone_medical/src/app_pkg.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
+import '../../../constants/helper.dart';
 import '../../../provider/all_providers.dart';
 import '../../../routes/routes.dart';
 import '../../../utils/custom_toast.dart';
@@ -65,6 +66,11 @@ class _AccountCreationScreenState extends ConsumerState<AccountCreationScreen> {
           CustomToast.show(context, 'Passwords cannot be empty',
               type: ToastType.error);
           return;
+        }
+        if (!canProceed(_controller.passwordController.text,
+            _controller.confirmPasswordController.text)) {
+          CustomToast.show(context, 'Kindly Check password strength',
+              type: ToastType.error);
         }
 
         final passwordStrengthError =
@@ -200,6 +206,7 @@ class _AccountCreationScreenState extends ConsumerState<AccountCreationScreen> {
   @override
   Widget build(BuildContext context) {
     final isLoading = ref.watch(isLoadingProvider);
+    final isAgreed = ref.watch(isAgreedProvider);
 
     return Scaffold(
       backgroundColor: Colors.white, // Matching the UI
@@ -305,7 +312,10 @@ class _AccountCreationScreenState extends ConsumerState<AccountCreationScreen> {
                           children: [
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: ColorConstant.primaryColor,
+                                backgroundColor: _currentIndex == 1 && !isAgreed
+                                    ? ColorConstant.primaryLightColor
+                                        .withOpacity(0.3)
+                                    : ColorConstant.primaryColor,
                                 foregroundColor: Colors.white,
                                 minimumSize: const Size(double.infinity, 55),
                                 shape: RoundedRectangleBorder(

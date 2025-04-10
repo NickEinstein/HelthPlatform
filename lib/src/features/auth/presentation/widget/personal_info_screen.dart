@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:greenzone_medical/src/constants/color_constant.dart';
 
 import '../../../../constants/dimens.dart';
 import '../../../../constants/helper.dart';
+import '../../../../provider/all_providers.dart';
 import 'account_controller_holder.dart';
 
-class PersonalInfoScreen extends StatefulWidget {
+class PersonalInfoScreen extends ConsumerStatefulWidget {
   final VoidCallback onNext;
   final GlobalKey<FormState> formKey;
   final AccountCreationController controller;
@@ -20,10 +22,10 @@ class PersonalInfoScreen extends StatefulWidget {
   });
 
   @override
-  State<PersonalInfoScreen> createState() => _PersonalInfoScreenState();
+  ConsumerState<PersonalInfoScreen> createState() => _PersonalInfoScreenState();
 }
 
-class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
+class _PersonalInfoScreenState extends ConsumerState<PersonalInfoScreen> {
   bool _isValid = false;
 
   void _validateForm() {
