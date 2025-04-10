@@ -84,8 +84,14 @@ class AuthService {
       );
 
       if (response.statusCode == 200 && response.data != null) {
-        // otpSendUrl(email);
-        return 'Register successful';
+        // Check if the response contains the error flag
+        if (response.data['statusCode'] == 400) {
+          // Handle specific failure message
+          return 'Failed: ${response.data['error']['emailResult']['message']} ';
+        } else {
+          // Return success message if no failure code
+          return 'Registration successful';
+        }
       } else {
         return _handleStatusCode(response.statusCode);
       }
@@ -93,36 +99,6 @@ class AuthService {
       return _handleError(error);
     }
   }
-
-  // Future<List<StateData>> fetchState() async {
-  //   try {
-  //     final response = await _apiService.get(
-  //       'https://edogoverp.com/Connectedhealthonboarding/api/employee/state-list',
-  //       headers: {
-  //         'accept': '*/*', // Matching the cURL request
-  //       },
-  //     );
-
-  //     if (response.statusCode == 200) {
-  //       final List<dynamic> data = response.data['data'] ?? [];
-
-  //       if (data.isEmpty) return [];
-
-  //       final stateList = data.map((e) => StateData.fromJson(e)).toList();
-
-  //       await _storageService.setString(
-  //         StorageConstants.stateData,
-  //         jsonEncode(data),
-  //       );
-
-  //       return stateList;
-  //     } else {
-  //       throw Exception('Failed to fetch state: ${response.statusCode}');
-  //     }
-  //   } catch (error) {
-  //     throw Exception('Error fetching state: $error');
-  //   }
-  // }
 
   Future<List<NationalityData>> fetchNationality() async {
     try {
