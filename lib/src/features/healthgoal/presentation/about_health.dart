@@ -12,6 +12,10 @@ import '../../../utils/custom_toast.dart';
 import '../../community/presentation/community_details.dart';
 import 'widget/tolerance.dart';
 
+final healthGoalControllerProvider = ChangeNotifierProvider((ref) {
+  return HealthGoalController();
+});
+
 class AboutGoalPage extends ConsumerStatefulWidget {
   const AboutGoalPage({super.key});
 
@@ -21,8 +25,6 @@ class AboutGoalPage extends ConsumerStatefulWidget {
 
 class _AboutGoalPageState extends ConsumerState<AboutGoalPage> {
   final PageController _pageController = PageController();
-  final HealthGoalController _controller = HealthGoalController();
-
   int _currentIndex = 0;
   String title = 'Dietary Restrictions';
   final List<GlobalKey<FormState>> _formKeys = [
@@ -30,8 +32,17 @@ class _AboutGoalPageState extends ConsumerState<AboutGoalPage> {
     GlobalKey<FormState>(),
   ];
 
+  @override
+  void initState() {
+    super.initState();
+    // Reset the controller's selections on first page load
+    final _controller = ref.read(healthGoalControllerProvider);
+    _controller.resetSelections();
+  }
+
   void _nextPage() async {
     final currentFormState = _formKeys[_currentIndex].currentState;
+    final _controller = ref.watch(healthGoalControllerProvider);
 
     if (_currentIndex == 0) {
       if (_controller.foodAllegy == 'No') {
@@ -108,6 +119,7 @@ class _AboutGoalPageState extends ConsumerState<AboutGoalPage> {
   @override
   Widget build(BuildContext context) {
     final isLoading = ref.watch(isLoadingProvider);
+    final _controller = ref.watch(healthGoalControllerProvider);
 
     return Scaffold(
       backgroundColor: Colors.white, // Matching the UI
@@ -117,59 +129,37 @@ class _AboutGoalPageState extends ConsumerState<AboutGoalPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Title & Page Indicator
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Row(
-                    children: [
-                      // Back button with green background
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 8, horizontal: 6),
-                          decoration: BoxDecoration(
-                            color: ColorConstant
-                                .primaryLightColor, // Light green color
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: const Icon(Icons.keyboard_arrow_left_rounded,
-                              color: Colors.white),
-                        ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 8, horizontal: 6),
+                      decoration: BoxDecoration(
+                        color: ColorConstant.primaryLightColor,
+                        borderRadius: BorderRadius.circular(8),
                       ),
-
-                      // Optional title (if provided)
-                      if (title != null) ...[
-                        const SizedBox(width: 12), // Spacing
-                        Text(
-                          _currentIndex == 0 ? title : 'Histamine Tolerance',
-                          style: const TextStyle(
-                            fontSize: 17,
-                            fontWeight: FontWeight.w600,
-                            color: Color(0xff3C3B3B),
-                          ),
-                        ),
-                      ],
-                    ],
-                  ),
-                  SmoothPageIndicator(
-                    controller: _pageController,
-                    count: 2,
-                    effect: const ExpandingDotsEffect(
-                      dotColor: ColorConstant.primaryLightColor,
-                      activeDotColor: ColorConstant.primaryColor,
-                      dotHeight: 6,
-                      dotWidth: 6,
+                      child: const Icon(Icons.keyboard_arrow_left_rounded,
+                          color: Colors.white),
                     ),
                   ),
+                  if (title != null) ...[
+                    const SizedBox(width: 12),
+                    Text(
+                      _currentIndex == 0 ? title : 'Histamine Tolerance',
+                      style: const TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xff3C3B3B)),
+                    ),
+                  ],
                 ],
               ),
-
               verticalSpace(context, 0.04),
-              // PageView for Steps
               Expanded(
                 child: PageView(
                   controller: _pageController,
@@ -179,53 +169,35 @@ class _AboutGoalPageState extends ConsumerState<AboutGoalPage> {
                   },
                   children: [
                     FoodAlergy(
-                      onNext: _nextPage,
-                      formKey: _formKeys[0],
-                      controller: _controller,
-                    ),
+                        onNext: _nextPage,
+                        formKey: _formKeys[0],
+                        controller: _controller),
                     TolerancePage(
-                      onNext: _nextPage,
-                      formKey: _formKeys[1],
-                      controller: _controller,
-                    ),
+                        onNext: _nextPage,
+                        formKey: _formKeys[1],
+                        controller: _controller),
                   ],
                 ),
               ),
               const SizedBox(height: 10),
-              // Navigation Buttons
               isLoading
                   ? const Center(child: CircularProgressIndicator())
                   : Align(
                       alignment: Alignment.center,
-                      child: Column(
-                        children: [
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: ColorConstant.primaryColor,
-                              foregroundColor: Colors.white,
-                              minimumSize: const Size(double.infinity, 55),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                            ),
-                            onPressed: _nextPage,
-                            child: Text(
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.w700, fontSize: 14),
-                                _currentIndex == 2
-                                    ? "Create Account"
-                                    : "Get Started"),
-                          ),
-                          // if (_currentIndex > 0)
-                          //   TextButton(
-                          //     onPressed: _previousPage,
-                          //     child: const Text(
-                          //       "Back",
-                          //       style: TextStyle(color: ColorConstant.primaryColor),
-                          //     ),
-                          //   ),
-                          const SizedBox(height: 10),
-                        ],
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: _getButtonColor(_controller),
+                          foregroundColor: Colors.white,
+                          minimumSize: const Size(double.infinity, 55),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8)),
+                        ),
+                        onPressed: _nextPage,
+                        child: Text(
+                          style: const TextStyle(
+                              fontWeight: FontWeight.w700, fontSize: 14),
+                          _currentIndex == 2 ? "Create Account" : "Continue",
+                        ),
                       ),
                     ),
             ],
@@ -233,5 +205,33 @@ class _AboutGoalPageState extends ConsumerState<AboutGoalPage> {
         ),
       ),
     );
+  }
+
+  Color _getButtonColor(HealthGoalController _controller) {
+    if (_currentIndex == 0) {
+      if (_controller.foodAllegy == 'Yes' &&
+          _controller.selectedAllergies.isNotEmpty) {
+        return ColorConstant.primaryColor; // Active button
+      }
+      if (_controller.foodAllegy == 'No') {
+        return ColorConstant.primaryColor; // Active button
+      }
+      return ColorConstant.primaryLightColor
+          .withOpacity(0.3); // Disabled button
+    }
+
+    if (_currentIndex == 1) {
+      if (_controller.interllories == 'Yes' &&
+          _controller.selectedIntellories.isNotEmpty) {
+        return ColorConstant.primaryColor; // Active button
+      }
+      if (_controller.interllories == 'No') {
+        return ColorConstant.primaryColor; // Active button
+      }
+      return ColorConstant.primaryLightColor
+          .withOpacity(0.3); // Disabled button
+    }
+
+    return ColorConstant.primaryColor; // Default color
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:greenzone_medical/src/app_pkg.dart';
+import 'package:greenzone_medical/src/constants/dimens.dart';
 
 import '../../../constants/helper.dart';
 import '../../../provider/all_providers.dart';
@@ -43,158 +44,162 @@ class _NewPasswordPageState extends ConsumerState<NewPasswordPage> {
       body: Form(
         key: _formKey,
         onChanged: _validateForm,
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Title & Page Indicator
-                CustomHeader(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                ),
-                smallSpace(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    RichText(
-                      text: const TextSpan(
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
+        child: SingleChildScrollView(
+          physics: ScrollPhysics(),
+          child: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Title & Page Indicator
+                  CustomHeader(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                  smallSpace(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      RichText(
+                        text: const TextSpan(
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          children: [
+                            TextSpan(
+                              text: "Reset password",
+                              style: TextStyle(
+                                  color: Color(0xff3C3B3B),
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 24),
+                            ),
+                            TextSpan(
+                              text: "",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 24,
+                                  color: ColorConstant
+                                      .primaryColor), // Change color here
+                            ),
+                          ],
                         ),
-                        children: [
-                          TextSpan(
-                            text: "Reset password",
-                            style: TextStyle(
-                                color: Color(0xff3C3B3B),
-                                fontWeight: FontWeight.w500,
-                                fontSize: 24),
-                          ),
-                          TextSpan(
-                            text: "",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 24,
-                                color: ColorConstant
-                                    .primaryColor), // Change color here
-                          ),
-                        ],
                       ),
-                    ),
-                  ],
-                ),
-                smallSpace(),
-                const Text(
-                  "Enter your preferred password",
-                  style: TextStyle(
-                      color: ColorConstant.secondryColor,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400),
-                ),
-                mediumSpace(),
-                PasswordTextField(
-                  label: "Password",
-                  onChanged: (value) {
-                    setState(() {
-                      password = value;
-                    });
-                  },
-                ),
-                const SizedBox(height: 20),
-                ConfirmPasswordTextField(
-                  label: "Confirm Password",
-                  password: password, // ✅ This now updates dynamically
-                  onMatchChanged: (isMatching) {
-                    _passwordsMatch = isMatching;
-                  },
-                  controller: _confirmPasswordController,
-                ),
+                    ],
+                  ),
 
-                // ConfirmPasswordTextField(
-                //   label: "Confirm Password",
-                //   password: _confirmPasswordController.text,
-                //   onMatchChanged: (isMatching) {
-                //     setState(() {
-                //       _passwordsMatch = isMatching;
-                //     });
-                //   },
-                // ),
-                // ConfirmPasswordTextField(
-                //   label: "Confirm Password",
-                //   password: password,
-                // ),
+                  smallSpace(),
+                  const Text(
+                    "Enter your preferred password",
+                    style: TextStyle(
+                        color: ColorConstant.secondryColor,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400),
+                  ),
+                  mediumSpace(),
+                  PasswordTextField(
+                    label: "Password",
+                    onChanged: (value) {
+                      setState(() {
+                        password = value;
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  ConfirmPasswordTextField(
+                    label: "Confirm Password",
+                    password: password, // ✅ This now updates dynamically
+                    onMatchChanged: (isMatching) {
+                      _passwordsMatch = isMatching;
+                    },
+                    controller: _confirmPasswordController,
+                  ),
 
-                mediumSpace(),
-                smallSpace(),
+                  // ConfirmPasswordTextField(
+                  //   label: "Confirm Password",
+                  //   password: _confirmPasswordController.text,
+                  //   onMatchChanged: (isMatching) {
+                  //     setState(() {
+                  //       _passwordsMatch = isMatching;
+                  //     });
+                  //   },
+                  // ),
+                  // ConfirmPasswordTextField(
+                  //   label: "Confirm Password",
+                  //   password: password,
+                  // ),
 
-                // PageView for Steps
-                isLoading
-                    ? const Center(child: CircularProgressIndicator())
-                    : ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: ColorConstant.primaryColor,
-                          foregroundColor: ColorConstant.primaryColor,
-                          minimumSize: const Size(double.infinity, 55),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
+                  mediumSpace(),
+                  smallSpace(),
+
+                  // PageView for Steps
+                  isLoading
+                      ? const Center(child: CircularProgressIndicator())
+                      : ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: ColorConstant.primaryColor,
+                            foregroundColor: ColorConstant.primaryColor,
+                            minimumSize: const Size(double.infinity, 55),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
                           ),
-                        ),
-                        onPressed: () async {
-                          // context.push(Routes.OTPPAGE);
-                          if (canProceed(
-                                  password, _confirmPasswordController.text) &&
-                              _passwordsMatch &&
-                              _confirmPasswordController.text.isNotEmpty &&
-                              password.isNotEmpty) {
-                            ref.read(isLoadingProvider.notifier).state = true;
+                          onPressed: () async {
+                            // context.push(Routes.OTPPAGE);
+                            if (canProceed(password,
+                                    _confirmPasswordController.text) &&
+                                _passwordsMatch &&
+                                _confirmPasswordController.text.isNotEmpty &&
+                                password.isNotEmpty) {
+                              ref.read(isLoadingProvider.notifier).state = true;
 
-                            final authService = ref.read(authServiceProvider);
+                              final authService = ref.read(authServiceProvider);
 
-                            if (_formKey.currentState!.validate()) {
-                              final email = widget.email;
+                              if (_formKey.currentState!.validate()) {
+                                final email = widget.email;
 
-                              final result =
-                                  await authService.forgotPasswordUrl(
-                                      email,
-                                      widget.otp,
-                                      password,
-                                      _confirmPasswordController.text);
+                                final result =
+                                    await authService.forgotPasswordUrl(
+                                        email,
+                                        widget.otp,
+                                        password,
+                                        _confirmPasswordController.text);
 
-                              if (!context.mounted)
-                                return; // ✅ Prevents using context if unmounted
-                              ref.read(isLoadingProvider.notifier).state =
-                                  false;
+                                if (!context.mounted)
+                                  return; // ✅ Prevents using context if unmounted
+                                ref.read(isLoadingProvider.notifier).state =
+                                    false;
 
-                              if (result == 'successful') {
-                                CustomToast.show(context,
-                                    "New password updated successfully",
-                                    type: ToastType.success);
-                                context.pushReplacement(Routes.SIGNIN);
-                              } else {
-                                CustomToast.show(context, result,
-                                    type: ToastType.error);
+                                if (result == 'successful') {
+                                  CustomToast.show(context,
+                                      "New password updated successfully",
+                                      type: ToastType.success);
+                                  context.pushReplacement(Routes.SIGNIN);
+                                } else {
+                                  CustomToast.show(context, result,
+                                      type: ToastType.error);
+                                }
                               }
+                            } else {
+                              CustomToast.show(
+                                  context, 'Kindly Check password strength',
+                                  type: ToastType.error);
                             }
-                          } else {
-                            CustomToast.show(
-                                context, 'Kindly Check password strength',
-                                type: ToastType.error);
-                          }
-                        },
-                        child: const Text(
-                            style: TextStyle(
-                                fontWeight: FontWeight.w700,
-                                fontSize: 14,
-                                color: Colors.white),
-                            "Reset password"),
-                      ),
-                smallSpace(),
+                          },
+                          child: const Text(
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 14,
+                                  color: Colors.white),
+                              "Reset password"),
+                        ),
+                  smallSpace(),
 
-                // Navigation Buttons
-              ],
+                  // Navigation Buttons
+                ],
+              ),
             ),
           ),
         ),

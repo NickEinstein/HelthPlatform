@@ -33,6 +33,20 @@ class _FoodAlergyState extends ConsumerState<FoodAlergy> {
     });
   }
 
+  String displaySelectedAllergies() {
+    final items = widget.controller.selectedAllergies.entries
+        .map((entry) {
+          if (entry.key == 0) {
+            return "Others";
+          }
+          return entry.value;
+        })
+        .where((v) => v.trim().isNotEmpty)
+        .toList();
+
+    return items.isEmpty ? "Select an option" : items.join(", ");
+  }
+
   @override
   Widget build(BuildContext context) {
     final allergyList = ref.watch(allAllegyListProvider);
@@ -72,9 +86,11 @@ class _FoodAlergyState extends ConsumerState<FoodAlergy> {
               children: [
                 Expanded(
                   child: Text(
-                    widget.controller.selectedAllergies.isEmpty
-                        ? "Select an option"
-                        : widget.controller.selectedAllergies.values.join(", "),
+                    displaySelectedAllergies(),
+
+                    // widget.controller.selectedAllergies.isEmpty
+                    //     ? "Select an option"
+                    //     : widget.controller.selectedAllergies.values.join(", "),
                     style: const TextStyle(
                       fontSize: 16,
                       color: Color(0xff3C3B3B),

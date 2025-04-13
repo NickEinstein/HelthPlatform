@@ -83,14 +83,19 @@ class AuthService {
         },
       );
 
-      if (response.statusCode == 200 && response.data != null) {
-        // Check if the response contains the error flag
-        if (response.data['statusCode'] == 400) {
-          // Handle specific failure message
-          return 'Failed: ${response.data['error']['emailResult']['message']} ';
+      final data = response.data;
+
+      if (response.statusCode == 200 && data != null) {
+        final isSuccess = data['isSuccess'] == true;
+        final statusCode = data['statusCode'];
+
+        if (isSuccess && statusCode == 200) {
+          return 'successful';
         } else {
-          // Return success message if no failure code
-          return 'Registration successful';
+          final errorMessage = data['error']?['emailResult']?['message'] ??
+              data['error']?['message'] ??
+              'Registration failed';
+          return 'Failed: $errorMessage';
         }
       } else {
         return _handleStatusCode(response.statusCode);
