@@ -146,7 +146,6 @@ class _RescheduleAppointmentPageState extends State<RescheduleAppointmentPage> {
     } catch (e) {
       CustomToast.show(context, "An error occurred while rescheduling",
           type: ToastType.error);
-      debugPrint("❌ Reschedule error: $e");
     }
   }
 
