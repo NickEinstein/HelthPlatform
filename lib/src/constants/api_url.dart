@@ -49,6 +49,8 @@ class ApiUrl {
   static const cancelAppointment = "/appointment/cancel-appointment";
   static const rescheduleAppointment = "/appointment";
   static String careGivers(int page, int pageSize)=> "/HealthCareProvider/list/$page/$pageSize";
+  static String careGiverSearch(int page, int pageSize, String searchText)=> "/HealthCareProvider/HealthCareProvider/$searchText/$page/$pageSize";
+  // https://edogoverp.com/ConnectedHealthWebApi/api/HealthCareProvider/HealthCareProvider/y/1/10
 
   // https://edogoverp.com/ConnectedHealthWebApi/api/HealthCareProvider/list/1/10
   

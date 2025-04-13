@@ -131,7 +131,6 @@ class UpcomingAppointments extends StatelessWidget {
                       "An error occurred while cancelling",
                       type: ToastType.error,
                     );
-                    print("❌ Cancel error: $e");
                   }
                 },
                 child: const Text('Yes, Cancel'),
@@ -154,41 +153,45 @@ class UpcomingAppointments extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: 15),
-      child: Column(
-        children: [
-          const SizedBox(height: 16),
-          ...appointments.map((appointment) {
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 10),
-              child: AppointmentCard(
-                imageUrl: 'assets/images/doctor1.png',
-                doctorName: appointment['doctor'] ?? 'Unknown Doctor',
-                treatment: appointment['description'] ?? 'No Description',
-                date: appointment['appointDate'] ?? '',
-                time: appointment['appointTime'] ?? '',
-                buttonText1: 'Cancel',
-                buttonText2: 'Reschedule',
-                onCancel: () {
-                  showCancelModal(context, appointment['id'].toString());
-                },
-                onReschedule: () {
-                  context.push(
-                    Routes.RESCHEDULEAPPOINTMENT,
-                    extra: {
-                      'appointmentId': appointment['id'],
-                      'healthCareProviderId':
-                          appointment['healthCareProviderId'],
-                      'doctorId': appointment['doctorId'] ?? '',
-                      'description': appointment['description'] ?? '',
-                    },
-                  );
-                },
-              ),
-            );
-          }).toList(),
-        ],
+    return Container(
+      color:
+          Color.fromARGB(255, 255, 255, 255), // ✅ background color added here
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: 15),
+        child: Column(
+          children: [
+            const SizedBox(height: 16),
+            ...appointments.map((appointment) {
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 10),
+                child: AppointmentCard(
+                  imageUrl: 'assets/images/doctor1.png',
+                  doctorName: appointment['doctor'] ?? 'Unknown Doctor',
+                  treatment: appointment['description'] ?? 'No Description',
+                  date: appointment['appointDate'] ?? '',
+                  time: appointment['appointTime'] ?? '',
+                  buttonText1: 'Cancel',
+                  buttonText2: 'Reschedule',
+                  onCancel: () {
+                    showCancelModal(context, appointment['id'].toString());
+                  },
+                  onReschedule: () {
+                    context.push(
+                      Routes.RESCHEDULEAPPOINTMENT,
+                      extra: {
+                        'appointmentId': appointment['id'],
+                        'healthCareProviderId':
+                            appointment['healthCareProviderId'],
+                        'doctorId': appointment['doctorId'] ?? '',
+                        'description': appointment['description'] ?? '',
+                      },
+                    );
+                  },
+                ),
+              );
+            }).toList(),
+          ],
+        ),
       ),
     );
   }

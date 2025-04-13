@@ -46,7 +46,7 @@ class AllService {
         return null;
       }
     } catch (error) {
-      debugPrint("❌ Error decoding userID: $error");
+      debugPrint(" Error decoding userID: $error");
       return null;
     }
   }
@@ -87,11 +87,11 @@ class AllService {
 
         return articles;
       } else {
-        debugPrint('❌ Failed to fetch articles: ${response.statusCode}');
+        debugPrint(' Failed to fetch articles: ${response.statusCode}');
         throw Exception('Failed to fetch articles: ${response.statusCode}');
       }
     } catch (error) {
-      debugPrint('❌ Error fetching articles: $error');
+      debugPrint(' Error fetching articles: $error');
       throw Exception('Error fetching articles: $error');
     }
   }
@@ -131,11 +131,11 @@ class AllService {
 
         return banners;
       } else {
-        debugPrint('❌ Failed to fetch Banners: ${response.statusCode}');
+        debugPrint(' Failed to fetch Banners: ${response.statusCode}');
         throw Exception('Failed to fetch banners: ${response.statusCode}');
       }
     } catch (error) {
-      debugPrint('❌ Error fetching articles: $error');
+      debugPrint(' Error fetching articles: $error');
       throw Exception('Error fetching banners: $error');
     }
   }
@@ -175,11 +175,11 @@ class AllService {
 
         return category;
       } else {
-        debugPrint('❌ Failed to fetch categories: ${response.statusCode}');
+        debugPrint(' Failed to fetch categories: ${response.statusCode}');
         throw Exception('Failed to fetch categories: ${response.statusCode}');
       }
     } catch (error) {
-      debugPrint('❌ Error fetching categories: $error');
+      debugPrint(' Error fetching categories: $error');
       throw Exception('Error fetching categories: $error');
     }
   }
@@ -220,11 +220,11 @@ class AllService {
 
         return doctorList;
       } else {
-        debugPrint('❌ Failed to fetch doctorList: ${response.statusCode}');
+        debugPrint(' Failed to fetch doctorList: ${response.statusCode}');
         throw Exception('Failed to fetch doctorList: ${response.statusCode}');
       }
     } catch (error) {
-      debugPrint('❌ Error fetching doctorList: $error');
+      debugPrint(' Error fetching doctorList: $error');
       throw Exception('Error fetching doctorList: $error');
     }
   }
@@ -265,11 +265,11 @@ class AllService {
 
         return communityList;
       } else {
-        debugPrint('❌ Failed to fetch articles: ${response.statusCode}');
+        debugPrint(' Failed to fetch articles: ${response.statusCode}');
         throw Exception('Failed to fetch articles: ${response.statusCode}');
       }
     } catch (error) {
-      debugPrint('❌ Error fetching articles: $error');
+      debugPrint(' Error fetching articles: $error');
       throw Exception('Error fetching articles: $error');
     }
   }
@@ -311,12 +311,12 @@ class AllService {
 
         return allAllegyList;
       } else {
-        debugPrint('❌ Failed to fetch allAllegyList: ${response.statusCode}');
+        debugPrint(' Failed to fetch allAllegyList: ${response.statusCode}');
         throw Exception(
             'Failed to fetch allAllegyList: ${response.statusCode}');
       }
     } catch (error) {
-      debugPrint('❌ Error fetching allAllegyList: $error');
+      debugPrint(' Error fetching allAllegyList: $error');
       throw Exception('Error fetching allAllegyList: $error');
     }
   }
@@ -358,12 +358,12 @@ class AllService {
 
         return allAllegyList;
       } else {
-        debugPrint('❌ Failed to fetch allAllegyList: ${response.statusCode}');
+        debugPrint(' Failed to fetch allAllegyList: ${response.statusCode}');
         throw Exception(
             'Failed to fetch allAllegyList: ${response.statusCode}');
       }
     } catch (error) {
-      debugPrint('❌ Error fetching allAllegyList: $error');
+      debugPrint(' Error fetching allAllegyList: $error');
       throw Exception('Error fetching allAllegyList: $error');
     }
   }
@@ -425,12 +425,12 @@ class AllService {
 
         return prescriptionList;
       } else {
-        debugPrint('❌ Failed to fetch prescriptions: ${response.statusCode}');
+        debugPrint(' Failed to fetch prescriptions: ${response.statusCode}');
         throw Exception(
             'Failed to fetch prescriptions: ${response.statusCode}');
       }
     } catch (error) {
-      debugPrint('❌ Error fetching prescriptions: $error');
+      debugPrint(' Error fetching prescriptions: $error');
       throw Exception('Error fetching prescriptions: $error');
     }
   }
@@ -438,9 +438,6 @@ class AllService {
   /// Fetches cached articles from local storage (useful for offline mode).
   ///
   ///
-
-
-
 
   Future<String> updateAllergies({
     required Map<int, String> selectedAllergies,
@@ -604,6 +601,7 @@ class AllService {
     }
     return 'An unknown error occurred.';
   }
+
   /// Cancels an appointment by ID
   Future<bool> cancelAppointment({
     required int appointmentId,
@@ -626,11 +624,11 @@ class AllService {
       if (response.statusCode == 200) {
         return true;
       } else {
-        debugPrint('❌ Failed to cancel appointment: ${response.statusCode}');
+        debugPrint(' Failed to cancel appointment: ${response.statusCode}');
         return false;
       }
     } catch (error) {
-      debugPrint('❌ Error cancelling appointment: $error');
+      debugPrint(' Error cancelling appointment: $error');
       return false;
     }
   }
