@@ -48,6 +48,13 @@ class _FoodAlergyState extends ConsumerState<FoodAlergy> {
   }
 
   @override
+  void initState() {
+    // TODO: implement initState
+    widget.controller.otherController.clear();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final allergyList = ref.watch(allAllegyListProvider);
 
@@ -61,81 +68,94 @@ class _FoodAlergyState extends ConsumerState<FoodAlergy> {
           options: const ["Yes", "No"],
           onChanged: (value) {
             widget.controller.foodAllegy = value!;
+            widget.controller.selectedIntellories.clear();
+            widget.controller.otherController.clear();
           },
         ),
         mediumSpace(),
-        const Text(
-          "If yes, Select option",
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w400,
-            color: Color(0xff3C3B3B),
-          ),
-        ),
-        const SizedBox(height: 8),
-        InkWell(
-          onTap: () => _showDropdownMenu(context, allergyList),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-            decoration: BoxDecoration(
-              border: Border.all(color: const Color(0xffB3B3B3)),
-              borderRadius: BorderRadius.circular(3),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Text(
-                    displaySelectedAllergies(),
+        if (widget.controller.foodAllegy == "Yes")
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                "If yes, Select option",
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                  color: Color(0xff3C3B3B),
+                ),
+              ),
+              const SizedBox(height: 8),
+              InkWell(
+                onTap: () => _showDropdownMenu(context, allergyList),
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: const Color(0xffB3B3B3)),
+                    borderRadius: BorderRadius.circular(3),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          displaySelectedAllergies(),
 
-                    // widget.controller.selectedAllergies.isEmpty
-                    //     ? "Select an option"
-                    //     : widget.controller.selectedAllergies.values.join(", "),
-                    style: const TextStyle(
-                      fontSize: 16,
-                      color: Color(0xff3C3B3B),
-                    ),
-                    overflow: TextOverflow.ellipsis,
+                          // widget.controller.selectedAllergies.isEmpty
+                          //     ? "Select an option"
+                          //     : widget.controller.selectedAllergies.values.join(", "),
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Color(0xff3C3B3B),
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      const Icon(
+                        Icons.keyboard_arrow_down_rounded,
+                        size: 18,
+                      ),
+                    ],
                   ),
                 ),
-                const Icon(
-                  Icons.keyboard_arrow_down_rounded,
-                  size: 18,
+              ),
+              if (widget.controller.selectedAllergies.containsKey(0)) ...[
+                const SizedBox(height: 10),
+                const Text("Others"),
+                TextField(
+                  controller: widget.controller.otherController,
+                  decoration: InputDecoration(
+                    hintText: "Type in your answer",
+                    hintStyle: const TextStyle(
+                      color: Color(0xffB3B3B3),
+                      fontWeight: FontWeight.w400,
+                      fontSize: 14,
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(
+                        vertical: 12, horizontal: 16),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(3),
+                      borderSide: const BorderSide(
+                        color: Color(0xffB3B3B3),
+                        width: 0.8,
+                      ),
+                    ),
+                  ),
+                  onChanged: (text) {
+                    setState(() {
+                      widget.controller
+                          .updateAllergies(); // Custom method to notify listeners
+
+                      widget.controller.selectedAllergies[0] =
+                          text; // Update Others allergy source
+                    });
+                  },
                 ),
               ],
-            ),
+            ],
           ),
-        ),
-        if (widget.controller.selectedAllergies.containsKey(0)) ...[
-          const SizedBox(height: 10),
-          const Text("Others"),
-          TextField(
-            controller: widget.controller.otherController,
-            decoration: InputDecoration(
-              hintText: "Type in your answer",
-              hintStyle: const TextStyle(
-                color: Color(0xffB3B3B3),
-                fontWeight: FontWeight.w400,
-                fontSize: 14,
-              ),
-              contentPadding:
-                  const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(3),
-                borderSide: const BorderSide(
-                  color: Color(0xffB3B3B3),
-                  width: 0.8,
-                ),
-              ),
-            ),
-            onChanged: (text) {
-              setState(() {
-                widget.controller.selectedAllergies[0] =
-                    text; // Update Others allergy source
-              });
-            },
-          ),
-        ],
       ]),
     );
   }
@@ -226,6 +246,10 @@ class _FoodAlergyState extends ConsumerState<FoodAlergy> {
                       backgroundColor: ColorConstant.primaryColor,
                     ),
                     onPressed: () {
+                      // Instead of calling notifyListeners here, call the method in the controller
+                      widget.controller
+                          .updateAllergies(); // Custom method to notify listeners
+
                       Navigator.pop(context); // Close the modal
                     },
                     child: const Text("Done"),
@@ -237,6 +261,7 @@ class _FoodAlergyState extends ConsumerState<FoodAlergy> {
         );
       },
     ).then((_) {
+      // Trigger any further state updates here if necessary
       setState(() {});
     });
   }

@@ -55,6 +55,12 @@ class _AboutGoalPageState extends ConsumerState<AboutGoalPage> {
           CustomToast.show(context, 'Select an allergy', type: ToastType.error);
           return;
         }
+        if (_controller.selectedAllergies.containsKey(0) &&
+            _controller.otherController.text.trim().isEmpty) {
+          CustomToast.show(context, 'Please specify the "Other" allergy',
+              type: ToastType.error);
+          return;
+        }
         ref.read(isLoadingProvider.notifier).state = true; // ✅ Start loading
 
         final allService = ref.read(allServiceProvider);
@@ -209,29 +215,38 @@ class _AboutGoalPageState extends ConsumerState<AboutGoalPage> {
 
   Color _getButtonColor(HealthGoalController _controller) {
     if (_currentIndex == 0) {
-      if (_controller.foodAllegy == 'Yes' &&
-          _controller.selectedAllergies.isNotEmpty) {
-        return ColorConstant.primaryColor; // Active button
+      final hasOthersSelected = _controller.selectedAllergies.containsKey(0);
+      final isOthersFilled = _controller.otherController.text.trim().isNotEmpty;
+
+      if (_controller.foodAllegy == 'Yes') {
+        final hasValidAllergies = _controller.selectedAllergies.isNotEmpty &&
+            (!hasOthersSelected || (hasOthersSelected && isOthersFilled));
+
+        if (hasValidAllergies) {
+          return ColorConstant.primaryColor;
+        }
       }
+
       if (_controller.foodAllegy == 'No') {
-        return ColorConstant.primaryColor; // Active button
+        return ColorConstant.primaryColor;
       }
-      return ColorConstant.primaryLightColor
-          .withOpacity(0.3); // Disabled button
+
+      return ColorConstant.primaryLightColor.withOpacity(0.3); // Disabled
     }
 
     if (_currentIndex == 1) {
       if (_controller.interllories == 'Yes' &&
           _controller.selectedIntellories.isNotEmpty) {
-        return ColorConstant.primaryColor; // Active button
+        return ColorConstant.primaryColor;
       }
+
       if (_controller.interllories == 'No') {
-        return ColorConstant.primaryColor; // Active button
+        return ColorConstant.primaryColor;
       }
-      return ColorConstant.primaryLightColor
-          .withOpacity(0.3); // Disabled button
+
+      return ColorConstant.primaryLightColor.withOpacity(0.3); // Disabled
     }
 
-    return ColorConstant.primaryColor; // Default color
+    return ColorConstant.primaryColor;
   }
 }

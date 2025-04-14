@@ -46,7 +46,7 @@ class HealthGoalController extends ChangeNotifier {
     // Only dispose when controller is not in use
     selectedAllergies.clear();
     selectedIntellories.clear();
-    otherController.dispose();
+    otherController.clear();
     super.dispose();
   }
 
@@ -57,5 +57,10 @@ class HealthGoalController extends ChangeNotifier {
     foodAllegy = '';
     interllories = '';
     notifyListeners(); // Notify listeners to update UI
+  }
+
+  void updateAllergies() {
+    // This is where we update any necessary state and notify listeners
+    notifyListeners(); // Notifying listeners after making changes
   }
 }

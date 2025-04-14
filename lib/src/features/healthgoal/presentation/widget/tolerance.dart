@@ -51,50 +51,59 @@ class _TolerancePageState extends ConsumerState<TolerancePage> {
           options: const ["Yes", "No"],
           onChanged: (value) {
             widget.controller.interllories = value!;
+            widget.controller.selectedIntellories.clear();
           },
         ),
         mediumSpace(),
-        const Text(
-          "If yes, Select option",
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w400,
-            color: Color(0xff3C3B3B),
-          ),
-        ),
-        const SizedBox(height: 8),
-        InkWell(
-          onTap: () => _showDropdownMenu(context, intolleanceList),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-            decoration: BoxDecoration(
-              border: Border.all(color: const Color(0xffB3B3B3)),
-              borderRadius: BorderRadius.circular(3),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Text(
-                    widget.controller.selectedIntellories.isEmpty
-                        ? "Select an option"
-                        : widget.controller.selectedIntellories.values
-                            .join(", "),
-                    style: const TextStyle(
-                      fontSize: 16,
-                      color: Color(0xff3C3B3B),
-                    ),
-                    overflow: TextOverflow.ellipsis,
+        if (widget.controller.interllories == 'Yes')
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                "If yes, Select option",
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                  color: Color(0xff3C3B3B),
+                ),
+              ),
+              const SizedBox(height: 8),
+              InkWell(
+                onTap: () => _showDropdownMenu(context, intolleanceList),
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: const Color(0xffB3B3B3)),
+                    borderRadius: BorderRadius.circular(3),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          widget.controller.selectedIntellories.isEmpty
+                              ? "Select an option"
+                              : widget.controller.selectedIntellories.values
+                                  .join(", "),
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Color(0xff3C3B3B),
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      const Icon(
+                        Icons.keyboard_arrow_down_rounded,
+                        size: 18,
+                      ),
+                    ],
                   ),
                 ),
-                const Icon(
-                  Icons.keyboard_arrow_down_rounded,
-                  size: 18,
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ),
       ]),
     );
   }
@@ -166,6 +175,9 @@ class _TolerancePageState extends ConsumerState<TolerancePage> {
                       backgroundColor: ColorConstant.primaryColor,
                     ),
                     onPressed: () {
+                      widget.controller
+                          .updateAllergies(); // Custom method to notify listeners
+
                       Navigator.pop(context); // Close the modal
                     },
                     child: const Text("Done"),

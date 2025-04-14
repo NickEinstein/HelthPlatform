@@ -105,7 +105,7 @@ class _SignInPageState extends ConsumerState<SignInPage> {
         FocusNode()); // Request focus on a dummy node to dismiss the keyboard
 
     // Add a slight delay to ensure focus changes
-    await Future.delayed(Duration(milliseconds: 100));
+    await Future.delayed(const Duration(milliseconds: 100));
 
     // Now, unfocus
     FocusScope.of(context).unfocus();
@@ -147,7 +147,7 @@ class _SignInPageState extends ConsumerState<SignInPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
-        physics: ScrollPhysics(),
+        physics: const ScrollPhysics(),
         child: SafeArea(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
@@ -189,10 +189,10 @@ class _SignInPageState extends ConsumerState<SignInPage> {
                   ),
                   smallSpace(),
                   const Text(
-                    "Please provide the following information to get started",
+                    "Please provide the following information to get \nstarted",
                     style: TextStyle(
                         color: ColorConstant.secondryColor,
-                        fontSize: 14,
+                        fontSize: 16,
                         fontWeight: FontWeight.w400),
                   ),
                   mediumSpace(),
@@ -245,7 +245,7 @@ class _SignInPageState extends ConsumerState<SignInPage> {
                         child: const Text(
                           "Forgot password?",
                           style: TextStyle(
-                              color: Color(0xffFFA500),
+                              color: Color(0xff818181),
                               fontWeight: FontWeight.w600,
                               fontSize: 14),
                         ),
@@ -320,11 +320,15 @@ class _SignInPageState extends ConsumerState<SignInPage> {
                                             }
                                           }
                                         : null,
-                                    child: const Text(
-                                      "Proceed",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: 14,
+                                    child: const Padding(
+                                      padding:
+                                          EdgeInsets.symmetric(vertical: 20),
+                                      child: Text(
+                                        "Proceed",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: 14,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -382,12 +386,67 @@ class _SignInPageState extends ConsumerState<SignInPage> {
                                         style: const TextStyle(
                                             fontWeight: FontWeight.w500,
                                             fontSize: 14,
-                                            color: ColorConstant.primaryColor),
+                                            color: Color(0xff17631A)),
                                       ),
                                     ],
                                   ),
                                 ),
                               ],
+                            ),
+                            verticalSpace(context, 0.05),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10),
+                              child: Center(
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: Container(
+                                        height: 1, // Thickness of the line
+                                        color: const Color(
+                                            0xffD8D8D8), // Line color
+                                      ),
+                                    ),
+                                    const Padding(
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 8.0),
+                                      child: Text('OR',
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            color:
+                                                Color(0xff8C8C8C), // Line color
+                                          )),
+                                    ),
+                                    Expanded(
+                                      child: Container(
+                                        height: 1, // Thickness of the line
+                                        color: const Color(
+                                            0xffD8D8D8), // Line color
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            verticalSpace(context, 0.03),
+                            Center(
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                      child: Image.asset(
+                                          'assets/icon/login_google.png')),
+                                  Expanded(
+                                      child: Image.asset(
+                                          'assets/icon/login_apple.png')),
+                                ],
+                              ),
+                            ),
+                            tinySpace(),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10),
+                              child:
+                                  Image.asset('assets/icon/login_facebook.png'),
                             ),
                           ],
                         ),

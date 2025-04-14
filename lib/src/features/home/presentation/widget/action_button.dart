@@ -23,32 +23,66 @@ class ActionButtonsRow extends StatelessWidget {
           ),
         ),
         smallSpace(),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            ActionButton(
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: [
+              ActionButton(
                 title: "Doctors",
                 onButtonPressed: () {
                   context.push(Routes.DOCTORPAGE);
                 },
-                icon: "assets/images/fluent_doctor.png",
-                color: 0xffFAE9E9),
-            ActionButton(
+                icon: "assets/icon/doctor.png",
+                color: 0xffEAFFEB,
+              ),
+              smallHorSpace(),
+              ActionButton(
                 title: "Pharmacy",
                 onButtonPressed: () {
                   CustomToast.show(context, "Coming soon...",
                       type: ToastType.error);
                 },
-                icon: "assets/images/fluent_pill.png",
-                color: 0xffEAF2FF),
-            ActionButton(
+                icon: "assets/icon/phermacy.png",
+                color: 0xffEAFFEB,
+              ),
+              smallHorSpace(),
+              ActionButton(
                 title: "Caregiver",
                 onButtonPressed: () {
                   context.push(Routes.CAREGIVERSPAGE);
                 },
-                icon: "assets/images/ri_hospital.png",
-                color: 0xffE4F8EB),
-          ],
+                icon: "assets/icon/caregive.png",
+                color: 0xffEAFFEB,
+              ),
+              smallHorSpace(),
+              ActionButton(
+                title: "Community",
+                onButtonPressed: () {
+                  context.push(Routes.COMMUNITYLIST);
+                },
+                icon: "assets/icon/community.png",
+                color: 0xffEAFFEB,
+              ),
+              smallHorSpace(),
+              ActionButton(
+                title: "Book",
+                onButtonPressed: () {
+                  context.push(Routes.COMMUNITYLIST);
+                },
+                icon: "assets/icon/book.png",
+                color: 0xffEAFFEB,
+              ),
+              smallHorSpace(),
+              ActionButton(
+                title: "Pay",
+                onButtonPressed: () {
+                  context.push(Routes.COMMUNITYLIST);
+                },
+                icon: "assets/icon/doctor.png",
+                color: 0xffEAFFEB,
+              ),
+            ],
+          ),
         ),
       ],
     );
@@ -76,9 +110,9 @@ class ActionButton extends StatelessWidget {
         InkWell(
           onTap: onButtonPressed,
           child: Container(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(25),
             decoration: BoxDecoration(
-                color: Color(color), borderRadius: BorderRadius.circular(12)),
+                color: Color(color), borderRadius: BorderRadius.circular(50)),
             child: Column(
               children: [
                 Image.asset(
@@ -86,16 +120,16 @@ class ActionButton extends StatelessWidget {
                   width: 32,
                   height: 32,
                 ),
-                const SizedBox(height: 8),
-                Text(title,
-                    style: const TextStyle(
-                        color: Color(0xff091F44),
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400))
               ],
             ),
           ),
         ),
+        const SizedBox(height: 8),
+        Text(title,
+            style: const TextStyle(
+                color: Color(0xff091F44),
+                fontSize: 14,
+                fontWeight: FontWeight.w400))
       ],
     );
   }

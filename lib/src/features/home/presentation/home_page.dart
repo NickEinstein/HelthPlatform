@@ -20,6 +20,7 @@ import 'health_goal_section.dart';
 import 'search_bar.dart';
 import 'widget/action_button.dart';
 import 'widget/article_card.dart';
+import 'widget/custom_ltems.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   // ✅ Change from StatelessWidget to ConsumerWidget
@@ -65,10 +66,11 @@ class _HomePageState extends ConsumerState<HomePage> {
                     ),
                   ),
                   TextSpan(
-                    text: userName,
+                    text: '\n$userName',
                     style: const TextStyle(
                       color: Colors.black,
                       fontSize: 14,
+                      height: 1.9,
                       fontWeight: FontWeight.w400,
                     ),
                   ),
@@ -83,7 +85,7 @@ class _HomePageState extends ConsumerState<HomePage> {
             child: SingleChildScrollView(
               physics:
                   const AlwaysScrollableScrollPhysics(), // Allows pulling even when list is short
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -221,6 +223,35 @@ class _HomePageState extends ConsumerState<HomePage> {
                   ),
                   mediumSpace(),
                   const ActionButtonsRow(),
+                  mediumSpace(),
+                  CustomListTile(
+                    imagePath: "assets/icon/appo_icon.png",
+                    title: "Appointment",
+                    subtitle: "1 upcoming Appointment",
+                    backgroundColor: Color(0xffEAF2FF),
+                    onTap: () {
+                      // Navigate to doctor's page
+                    },
+                  ),
+                  CustomListTile(
+                    imagePath: "assets/icon/pres_icon.png",
+                    title: "Prescriptions",
+                    subtitle: "1 Prescription",
+                    backgroundColor: Color(0xffEAF2FF),
+                    onTap: () {
+                      // Navigate to pharmacy page
+                    },
+                  ),
+                  CustomListTile(
+                    imagePath: "assets/icon/health_ins_icon.png",
+                    title: "Health Insurance",
+                    subtitle: "2 HMO",
+                    backgroundColor: Color(0xffEAF2FF),
+                    onTap: () {
+                      // Navigate to caregiver page
+                    },
+                  ),
+
                   const SizedBox(height: 20),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

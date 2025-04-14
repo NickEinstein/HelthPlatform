@@ -101,7 +101,7 @@ const List<OnBoardingItem> onBoardingItems = [
     title: 'Book Appointments \nEasily',
     subtitle:
         'Schedule consultations with experienced doctors at your convenience.',
-    image: 'assets/images/doctor_3.png',
+    image: 'assets/images/onboardingthree.png',
   ),
 ];
 
