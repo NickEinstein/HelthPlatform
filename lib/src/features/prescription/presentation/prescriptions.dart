@@ -1,62 +1,86 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:greenzone_medical/src/provider/all_providers.dart';
-import 'package:greenzone_medical/src/utils/extensions/widget_extensions.dart';
-
-import '../../../constants/constants.dart';
+import 'package:collection/collection.dart';
+import '../../../provider/all_providers.dart';
 import '../../../provider/index_provider.dart';
-import '../../../resources/resources.dart';
-import '../../../resources/textstyles/app_textstyles.dart';
-import '../../../utils/custom_header.dart';
-import '../models/get_prescriptions_model.dart';
+import '../../../utils/packages.dart';
 import '../providers/prescription_provider.dart';
 import 'widgets/prescriotions_schedule_box.dart';
-import 'package:collection/collection.dart';
 
 class PrescriptionPage extends ConsumerWidget {
-  const PrescriptionPage({super.key});
+  final bool showBackButton;
+
+  const PrescriptionPage({super.key, this.showBackButton = false});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final allPrescriptoonState = ref.watch(allPrescriptionsListProvider);
+    // final allPrescriptoonState = ref.watch(userAllPrescriptionProvider);
+    final prescriptionsAsync = ref.watch(userPrescriptionProvider);
 
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+        elevation: 0,
+        automaticallyImplyLeading: false,
+        title: Row(
+          children: [
+            if (showBackButton)
+              GestureDetector(
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 8, horizontal: 6),
+                  decoration: BoxDecoration(
+                    color: ColorConstant.primaryLightColor, // Light green color
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Icon(Icons.keyboard_arrow_left_rounded,
+                      color: Colors.white),
+                ),
+              ),
+            smallHorSpace(),
+            const Text(
+              'Prescriptions',
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Colors.black),
+            ),
+          ],
+        ),
+      ),
       body: RefreshIndicator.adaptive(
         onRefresh: () async {
           ref.read(presctiptionProvider.notifier).refreshData();
         },
-        child: allPrescriptoonState.when(
+        child: prescriptionsAsync.when(
           loading: () => const Center(
             child: CircularProgressIndicator.adaptive(),
           ),
           error: (error, stackTrace) => Center(
-            child: Text('Error loading prescriptions: $error'),
+            child: Text('Error loading prescriptions:'),
           ),
           data: (prescriptionModel) {
             // final prescriptions =  prescriptionModel.data ?? [];
-            final prescriptions = prescriptionModel
-                .expand(
-                    (model) => model.data ?? []) // Extract data from each model
-                .toList();
+
+            final prescriptions =
+                prescriptionModel; // ✅ Assuming prescriptionModel is a List<Prescription>
 
             // Ensure `prescriptions` is not null before calling `groupListsBy`
             final groupedByTreatment = prescriptions.groupListsBy(
-              (prescription) => prescription.treatmentId,
+              (prescription) => prescription.treatment!.id,
             );
             final groupedByDate = prescriptions.groupListsBy(
-              (prescription) => prescription.appointDate,
+              (prescription) => prescription.queuedInDate,
             );
 
             return CustomScrollView(
               slivers: [
                 SliverToBoxAdapter(
                   child: Padding(
-                    padding: const EdgeInsets.all(27).copyWith(bottom: 0),
+                    padding: const EdgeInsets.symmetric(horizontal: 27)
+                        .copyWith(bottom: 0),
                     child: Column(
                       children: [
-                        verticalSpace(context, 0.05),
                         InkWell(
                           onTap: () {
                             ref.read(indexProvider.notifier).state = 0;
@@ -104,7 +128,13 @@ class PrescriptionPage extends ConsumerWidget {
                                           []) ...[
                                         4.gap,
                                         Text(
-                                          '${(i.medication?.isEmpty ?? true) ? '-no-name-' : i.medication} | ${i.quantity ?? ''}, ${i.frequency ?? ''}, ${i.duration ?? ''}',
+                                          // '${(i.medication?.isEmpty ?? true) ? '-no-name-' : i.medication} | ${i.quantity ?? ''}, ${i.frequency ?? ''}, ${i.duration ?? ''}',
+                                          (i.pharmacyInventory?.productName
+                                                      ?.isEmpty ??
+                                                  true)
+                                              ? '-no-name-'
+                                              : '${i.pharmacyInventory!.productName!} | ${i.quantity ?? ''}mg, | ${i.frequency ?? ''} times per day, ${i.duration ?? ""} day(s)',
+
                                           style:
                                               CustomTextStyle.textsmall14.white,
                                         ),
@@ -134,24 +164,41 @@ class PrescriptionPage extends ConsumerWidget {
                   )
                 else
                   SliverList.separated(
-                    itemCount: groupedByTreatment?.length ?? 0,
+                    itemCount: groupedByTreatment.length,
                     separatorBuilder: (context, index) => 0.gap,
                     itemBuilder: (context, index) {
-                      final item = groupedByTreatment?.entries.elementAt(index);
-                      if (item != null) {
-                        return Padding(
-                          padding: const EdgeInsets.all(27)
-                              .copyWith(top: 12, bottom: 0),
-                          child: PrescriptionScheduleBox(
-                            prescriptions: item.value
-                                .cast<Prescription>(), // ✅ Fix applied here
-                          ),
-                        );
-                      } else {
-                        return SizedBox.shrink();
-                      }
+                      final item = groupedByTreatment.entries.elementAt(index);
+
+                      return Padding(
+                        padding: const EdgeInsets.all(27)
+                            .copyWith(top: 12, bottom: 0),
+                        child: PrescriptionScheduleBox(
+                          prescriptions: item
+                              .value, // ✅ No cast needed if already List<PrescriptionByPatientResponse>
+                        ),
+                      );
                     },
                   ),
+
+                // SliverList.separated(
+                //   itemCount: groupedByTreatment?.length ?? 0,
+                //   separatorBuilder: (context, index) => 0.gap,
+                //   itemBuilder: (context, index) {
+                //     final item = groupedByTreatment?.entries.elementAt(index);
+                //     if (item != null) {
+                //       return Padding(
+                //         padding: const EdgeInsets.all(27)
+                //             .copyWith(top: 12, bottom: 0),
+                //         child: PrescriptionScheduleBox(
+                //           prescriptions: item.value
+                //               .cast<Prescription>(), // ✅ Fix applied here
+                //         ),
+                //       );
+                //     } else {
+                //       return SizedBox.shrink();
+                //     }
+                //   },
+                // ),
               ],
             );
           },

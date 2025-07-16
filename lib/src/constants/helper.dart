@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:greenzone_medical/src/constants/color_constant.dart';
 import 'package:dropdown_search/dropdown_search.dart';
+import 'package:intl/intl.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class CustomTextField extends StatefulWidget {
   final String label;
@@ -979,7 +982,17 @@ String maskEmail(String email) {
   return '$maskedUsername@$domain';
 }
 
-String timeAgo(String? createdAt) {
+String timeAgos(DateTime dateTime) {
+  final now = DateTime.now();
+  final difference = now.difference(dateTime);
+
+  if (difference.inMinutes < 1) return "Just now";
+  if (difference.inHours < 1) return "${difference.inMinutes}m ago";
+  if (difference.inDays < 1) return "${difference.inHours}h ago";
+  return "${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}";
+}
+
+String timeAgo(String? createdAt, String title) {
   if (createdAt == null || createdAt.isEmpty)
     return "Creation date unavailable";
 
@@ -990,13 +1003,13 @@ String timeAgo(String? createdAt) {
 
     if (difference.inDays >= 7) {
       int weeks = (difference.inDays / 7).floor();
-      return "Created about $weeks ${weeks == 1 ? 'week' : 'weeks'} ago";
+      return "${title} about $weeks ${weeks == 1 ? 'week' : 'weeks'} ago";
     } else if (difference.inDays > 0) {
-      return "Created about ${difference.inDays} ${difference.inDays == 1 ? 'day' : 'days'} ago";
+      return "${title} about ${difference.inDays} ${difference.inDays == 1 ? 'day' : 'days'} ago";
     } else if (difference.inHours > 0) {
-      return "Created about ${difference.inHours} ${difference.inHours == 1 ? 'hour' : 'hours'} ago";
+      return "${title} about ${difference.inHours} ${difference.inHours == 1 ? 'hour' : 'hours'} ago";
     } else {
-      return "Created just now";
+      return "${title} just now";
     }
   } catch (e) {
     return "Invalid date format";
@@ -1039,4 +1052,274 @@ bool canProceed(String password, String confirmPassword) {
   }
 
   return true;
+}
+
+String formatDate(String dateTimeStr) {
+  try {
+    DateTime dateTime = DateTime.parse(dateTimeStr);
+    String formattedDate =
+        DateFormat('MMM dd, yyyy').format(dateTime); // e.g., Mar 26, 2025
+    return "$formattedDate • ";
+  } catch (e) {
+    return "Invalid date";
+  }
+}
+
+String formatTimeAgo(String dateTimeStr) {
+  try {
+    DateTime dateTime = DateTime.parse(dateTimeStr);
+    Duration diff = DateTime.now().difference(dateTime);
+
+    if (diff.inSeconds < 60) {
+      return 'Just now';
+    } else if (diff.inMinutes < 60) {
+      return '${diff.inMinutes} minute${diff.inMinutes == 1 ? '' : 's'} ago';
+    } else if (diff.inHours < 24) {
+      return '${diff.inHours} hour${diff.inHours == 1 ? '' : 's'} ago';
+    } else if (diff.inDays < 7) {
+      return '${diff.inDays} day${diff.inDays == 1 ? '' : 's'} ago';
+    } else if (diff.inDays < 30) {
+      int weeks = (diff.inDays / 7).floor();
+      return '$weeks week${weeks == 1 ? '' : 's'} ago';
+    } else if (diff.inDays < 365) {
+      int months = (diff.inDays / 30).floor();
+      return '$months month${months == 1 ? '' : 's'} ago';
+    } else {
+      int years = (diff.inDays / 365).floor();
+      return '$years year${years == 1 ? '' : 's'} ago';
+    }
+  } catch (e) {
+    return "Invalid date";
+  }
+}
+
+Widget buildTab(
+  String label,
+  bool isSelected,
+  int index,
+  VoidCallback onTap,
+) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+    child: GestureDetector(
+      onTap: onTap,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            label,
+            style: TextStyle(
+              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+              color: isSelected ? Colors.green : Colors.grey[800],
+            ),
+          ),
+          if (isSelected)
+            Container(
+              margin: const EdgeInsets.only(top: 4),
+              height: 2,
+              width: label.length * 10.0,
+              color: Colors.green,
+            ),
+        ],
+      ),
+    ),
+  );
+}
+
+String formatNewDate(String dateString) {
+  try {
+    // Parse the input date string
+    final DateTime dateTime = DateTime.parse(dateString);
+
+    // Format the date into the desired format
+    final String formattedDate = DateFormat('MMMM dd, yyyy').format(dateTime);
+
+    return formattedDate;
+  } catch (e) {
+    // Handle any parsing errors
+    return 'Invalid Date';
+  }
+}
+
+Future<List<String>?> openCategoryFilterDialog(
+  List<String> categories,
+  BuildContext context,
+) {
+  // Clear selected categories before opening the dialog
+  List<String> tempSelectedCategories = [];
+
+  return showModalBottomSheet<List<String>>(
+    context: context,
+    isScrollControlled: true, // 🛑 Allow scrollable content
+    backgroundColor: Colors.white,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+    ),
+    builder: (context) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                'Select Categories',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 16),
+              ...categories.map((cat) => StatefulBuilder(
+                    builder: (context, setState) {
+                      final isSelected = tempSelectedCategories.contains(cat);
+                      return CheckboxListTile(
+                        title: Text(cat),
+                        value: isSelected,
+                        activeColor: ColorConstant.primaryColor,
+                        onChanged: (bool? selected) {
+                          setState(() {
+                            if (selected == true) {
+                              tempSelectedCategories.add(cat);
+                            } else {
+                              tempSelectedCategories.remove(cat);
+                            }
+                          });
+                        },
+                      );
+                    },
+                  )),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor:
+                      ColorConstant.primaryColor, // Muted green when disabled
+                  foregroundColor: Colors.white,
+                  disabledBackgroundColor: const Color(
+                      0xffA8D5BA), // Ensure disabled color is applied
+                  disabledForegroundColor: Colors.white
+                      .withOpacity(0.6), // Lightened text for disabled state
+                  minimumSize: const Size(double.infinity, 55),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.pop(context, tempSelectedCategories);
+                },
+                child: const Text('Done'),
+              ),
+              const SizedBox(height: 16),
+            ],
+          ),
+        ),
+      );
+    },
+  );
+}
+
+String formatWeekDate(String dateString) {
+  final dateTime = DateTime.parse(dateString);
+  final dayOfWeek =
+      DateFormat('EEEE').format(dateTime); // Day of the week (e.g. Monday)
+  final time = DateFormat('hh:mm a').format(dateTime); // Time (e.g. 02:35 PM)
+
+  return "$dayOfWeek $time";
+}
+
+void openMapWithAddress(String address) async {
+  final query = Uri.encodeComponent(address);
+  final googleMapsUrl =
+      'https://www.google.com/maps/search/?api=1&query=$query';
+
+  if (await canLaunchUrl(Uri.parse(googleMapsUrl))) {
+    await launchUrl(Uri.parse(googleMapsUrl),
+        mode: LaunchMode.externalApplication);
+  } else {
+    throw 'Could not open the map.';
+  }
+}
+
+String convertTo24HourManual(String time12h) {
+  // Normalize spaces (in case of non-breaking spaces or extra whitespace)
+  time12h = time12h.replaceAll(RegExp(r'\s+'), ' ').trim();
+
+  final parts = time12h.split(' ');
+  if (parts.length != 2) return time12h; // return original if format unexpected
+
+  final timePart = parts[0]; // e.g. "2:00"
+  final period = parts[1].toUpperCase(); // "AM" or "PM"
+
+  final timeSplit = timePart.split(':');
+  int hour = int.parse(timeSplit[0]);
+  final minute = timeSplit.length > 1 ? int.parse(timeSplit[1]) : 0;
+
+  if (period == 'PM' && hour != 12) {
+    hour += 12;
+  } else if (period == 'AM' && hour == 12) {
+    hour = 0;
+  }
+
+  // Pad with leading zeros
+  final hourStr = hour.toString().padLeft(2, '0');
+  final minuteStr = minute.toString().padLeft(2, '0');
+
+  return '$hourStr:$minuteStr'; // e.g., "14:00"
+}
+
+String formatPostDate(String? rawDate) {
+  if (rawDate == null) return '';
+  final date = DateTime.tryParse(rawDate);
+  if (date == null) return '';
+
+  final now = DateTime.now();
+  final difference = now.difference(date);
+
+  if (difference.inSeconds < 60) {
+    return '${difference.inSeconds}s ago';
+  } else if (difference.inMinutes < 60) {
+    return '${difference.inMinutes}m ago';
+  } else if (difference.inHours < 24) {
+    return '${difference.inHours}h ago';
+  } else if (difference.inDays < 7) {
+    return '${difference.inDays}d ago';
+  } else if (difference.inDays < 30) {
+    final weeks = (difference.inDays / 7).floor();
+    return '${weeks}w ago';
+  } else if (difference.inDays < 365) {
+    final months = (difference.inDays / 30).floor();
+    return '${months}mo ago';
+  } else {
+    final years = (difference.inDays / 365).floor();
+    return '${years}y ago';
+  }
+}
+
+Color getAvatarColor(String name) {
+  final colors = [
+    Colors.red,
+    Colors.blue,
+    Colors.green,
+    Colors.purple,
+    Colors.teal,
+    Colors.orange,
+    Colors.brown,
+    Colors.cyan,
+    Colors.indigo,
+    Colors.pink,
+  ];
+  final hash = name.hashCode;
+  final index = hash % colors.length;
+  return colors[index];
+}
+
+Future<void> requestPermissions() async {
+  await Permission.microphone.request();
+  await Permission.camera.request();
+}
+
+String stripHtmlTags(String htmlText) {
+  return htmlText.replaceAll(RegExp(r'<[^>]*>'), '');
 }

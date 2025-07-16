@@ -1,13 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:greenzone_medical/src/app_pkg.dart';
-import 'package:greenzone_medical/src/routes/routes.dart';
-
 import '../../../provider/all_providers.dart';
-import '../../../utils/custom_header.dart';
+import '../../../utils/packages.dart';
 import '../../article/presentation/widget/category_selector.dart';
 import 'widget/doctor_card.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class DoctorPage extends ConsumerStatefulWidget {
   const DoctorPage({super.key});
@@ -17,15 +11,14 @@ class DoctorPage extends ConsumerStatefulWidget {
 }
 
 class _DoctorPageState extends ConsumerState<DoctorPage> {
-  int selectedIndex = 0; // Track selected category index
+  int selectedIndex = 0;
   bool isSearch = false;
   TextEditingController searchController = TextEditingController();
   String searchQuery = "";
   @override
   Widget build(BuildContext context) {
-    final doctorListAsync =
-        ref.watch(doctorListProvider); // ✅ Watch doctor list
-    final categoryState = ref.watch(categoryProvider); // ✅ Watch categories
+    final doctorListAsync = ref.watch(doctorListProvider);
+    final categoryState = ref.watch(categoryProvider);
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -49,6 +42,7 @@ class _DoctorPageState extends ConsumerState<DoctorPage> {
               if (isSearch)
                 Row(
                   children: [
+                    const SizedBox(width: 10),
                     Expanded(
                       child: Container(
                         height: 50,
@@ -76,7 +70,7 @@ class _DoctorPageState extends ConsumerState<DoctorPage> {
                                 },
                                 style: const TextStyle(color: Colors.black),
                                 decoration: const InputDecoration(
-                                  hintText: "Search Article",
+                                  hintText: "Search Doctor",
                                   hintStyle: TextStyle(
                                       color: Color(0xff999999),
                                       fontSize: 14,
@@ -91,16 +85,9 @@ class _DoctorPageState extends ConsumerState<DoctorPage> {
                       ),
                     ),
                     const SizedBox(width: 10),
-                    Image.asset(
-                      'assets/icon/filter_icon.png',
-                      height: 52,
-                      width: 35,
-                    ),
                   ],
                 ),
               smallSpace(),
-
-              // ✅ Load and Display Categories
               categoryState.when(
                 loading: () => const Center(child: CircularProgressIndicator()),
                 error: (err, stack) => const Center(
@@ -113,7 +100,6 @@ class _DoctorPageState extends ConsumerState<DoctorPage> {
 
                   return Column(
                     children: [
-                      // ✅ Category Selector
                       CategorySelector(
                         categories: categories,
                         selectedIndex: selectedIndex,
@@ -124,20 +110,17 @@ class _DoctorPageState extends ConsumerState<DoctorPage> {
                         },
                       ),
                       const SizedBox(height: 16),
-
-                      // ✅ Filter Doctors based on Selected Category
                       doctorListAsync.when(
                         loading: () =>
                             const Center(child: CircularProgressIndicator()),
                         error: (err, stack) =>
-                            Center(child: Text('Error: $err')),
+                            const Center(child: Text('Error loading')),
                         data: (doctors) {
                           if (doctors.isEmpty) {
                             return const Center(
                                 child: Text("No doctors available"));
                           }
 
-                          // ✅ Filter Doctors Based on Selected Category
                           final filteredDoctors = doctors.where((doctor) {
                             final matchesCategory = selectedIndex == 0 ||
                                 (doctor.department != null &&
@@ -151,11 +134,11 @@ class _DoctorPageState extends ConsumerState<DoctorPage> {
                                         ?.toLowerCase()
                                         .contains(searchQuery) ??
                                     false) ||
-                                (doctor.clinic
+                                (doctor.healthCareProvider!.name
                                         ?.toLowerCase()
                                         .contains(searchQuery) ??
                                     false) ||
-                                (doctor.designation
+                                (doctor.workGrade
                                         ?.toLowerCase()
                                         .contains(searchQuery) ??
                                     false) ||
@@ -167,10 +150,6 @@ class _DoctorPageState extends ConsumerState<DoctorPage> {
                                         ?.toLowerCase()
                                         .contains(searchQuery) ??
                                     false) ||
-                                (doctor.role
-                                        ?.toLowerCase()
-                                        .contains(searchQuery) ??
-                                    false) ||
                                 (doctor.lastName
                                         ?.toLowerCase()
                                         .contains(searchQuery) ??
@@ -179,12 +158,10 @@ class _DoctorPageState extends ConsumerState<DoctorPage> {
                             return matchesCategory && matchesSearch;
                           }).toList();
 
-                          // ✅ Show message if no doctor found in the selected category
                           if (filteredDoctors.isEmpty) {
-                            return Center(
+                            return const Center(
                               child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 20),
+                                padding: EdgeInsets.symmetric(vertical: 20),
                                 child: Text(
                                   "No doctors found for this category",
                                   style: TextStyle(
@@ -196,21 +173,15 @@ class _DoctorPageState extends ConsumerState<DoctorPage> {
                               ),
                             );
                           }
-
                           return Column(
                             children: filteredDoctors.map((doctor) {
                               return DoctorCard(
-                                imageUrl: (doctor.profilePicture != null &&
-                                        doctor.profilePicture!
-                                            .startsWith('http'))
-                                    ? doctor
-                                        .profilePicture! // ✅ Valid Network URL
-                                    : 'assets/images/doctor1.png', // ✅ Default Asset if null/invalid
+                                imageUrl: doctor.profilePicture.toString(),
                                 name:
-                                    '${doctor.firstName ?? ''} ${doctor.lastName ?? ''}',
-                                type: doctor.designation ?? '',
+                                    '${doctor.title}. ${doctor.firstName ?? ''} ${doctor.lastName ?? ''}',
+                                type: doctor.workGrade ?? '',
                                 profession: doctor.department ?? '',
-                                hospital: doctor.clinic ?? '',
+                                hospital: doctor.healthCareProvider!.name ?? '',
                                 rating: double.tryParse(
                                         doctor.rating?.toString() ?? '0.0') ??
                                     0.0,

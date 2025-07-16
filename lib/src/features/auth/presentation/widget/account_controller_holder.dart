@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 class AccountCreationController {
@@ -24,6 +26,9 @@ class AccountCreationController {
   final TextEditingController emestateController = TextEditingController();
   final TextEditingController emelgaController = TextEditingController();
   final TextEditingController emecityController = TextEditingController();
+  File? imageFile;
+  int? patientId;
+  String? pictureUrl;
 
   bool isChecked = false;
 
@@ -38,5 +43,8 @@ class AccountCreationController {
 
     confirmPasswordController.dispose();
     otpController.dispose();
+    imageFile = null;
+    patientId = null;
+    pictureUrl = null;
   }
 }

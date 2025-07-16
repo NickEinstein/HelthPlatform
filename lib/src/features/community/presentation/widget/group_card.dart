@@ -1,6 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:greenzone_medical/src/app_pkg.dart';
+import '../../../../utils/network_img_fallback.dart';
+import '../../../../utils/packages.dart';
 
 class GroupCard extends ConsumerStatefulWidget {
   // ✅ Convert to ConsumerStatefulWidget
@@ -12,6 +11,10 @@ class GroupCard extends ConsumerStatefulWidget {
   final bool isMember;
   final VoidCallback onButtonPressed;
   final VoidCallback onPressed;
+  final VoidCallback? onAcceptedButtonPressed;
+  final VoidCallback? onRejecteddButtonPressed;
+  final bool isAcceptReject;
+  final bool? isSentInvite;
 
   const GroupCard({
     Key? key,
@@ -22,6 +25,10 @@ class GroupCard extends ConsumerStatefulWidget {
     required this.isMember,
     required this.isLoading,
     required this.onPressed,
+    this.onAcceptedButtonPressed,
+    this.onRejecteddButtonPressed,
+    this.isAcceptReject = false,
+    this.isSentInvite = false,
     required this.onButtonPressed,
   }) : super(key: key);
 
@@ -43,26 +50,47 @@ class _GroupCardState extends ConsumerState<GroupCard> {
           children: [
             // Image
             ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: (widget.imageUrl.isNotEmpty &&
-                      Uri.tryParse(widget.imageUrl)?.hasAbsolutePath == true)
-                  ? Image.network(
-                      widget.imageUrl,
-                      width: 80,
-                      height: 100,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) => Image.asset(
-                          'assets/images/fitness1.png',
-                          width: 80,
-                          height: 100,
-                          fit: BoxFit.cover),
-                    )
-                  : Image.asset(
-                      widget.imageUrl,
-                      width: 80,
-                      height: 100,
-                      fit: BoxFit.cover,
+              borderRadius: BorderRadius.circular(0),
+              child: Image.network(
+                widget.imageUrl.startsWith('http')
+                    ? widget.imageUrl
+                    : '${AppConstants.noSlashImageURL}${widget.imageUrl}',
+                width: 80,
+                height: 100,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  // Handle name split and initials
+                  final fullName = widget.title;
+                  final nameParts = fullName.trim().split(RegExp(r'\s+'));
+                  String initials = '';
+                  final nonTitleParts =
+                      nameParts.where((p) => !p.endsWith('.')).toList();
+                  if (nonTitleParts.isNotEmpty) {
+                    initials += nonTitleParts.first[0];
+                    if (nonTitleParts.length > 1) {
+                      initials += nonTitleParts.last[0];
+                    }
+                  }
+
+                  return Container(
+                    width: 80,
+                    height: 100,
+                    decoration: BoxDecoration(
+                      color: getAvatarColor(fullName),
+                      borderRadius: BorderRadius.circular(0),
                     ),
+                    alignment: Alignment.center,
+                    child: Text(
+                      initials.toUpperCase(),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 24,
+                      ),
+                    ),
+                  );
+                },
+              ),
             ),
 
             const SizedBox(width: 12),
@@ -75,6 +103,8 @@ class _GroupCardState extends ConsumerState<GroupCard> {
                 children: [
                   Text(
                     widget.title,
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
@@ -82,13 +112,43 @@ class _GroupCardState extends ConsumerState<GroupCard> {
                     ),
                   ),
                   const SizedBox(height: 4),
-                  Text(
-                    widget.subtitle,
-                    style: const TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.w400,
-                      color: ColorConstant.secondryColor,
-                    ),
+                  Row(
+                    children: [
+                      widget.isSentInvite!
+                          ? Text(
+                              'Name: ',
+                              style: TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.w700,
+                                color: ColorConstant.primaryColor,
+                              ),
+                            )
+                          : !widget.isAcceptReject
+                              ? const Text(
+                                  'Public ',
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w700,
+                                    color: ColorConstant.primaryColor,
+                                  ),
+                                )
+                              : Text(
+                                  'Invited by: ',
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w700,
+                                    color: ColorConstant.primaryColor,
+                                  ),
+                                ),
+                      Text(
+                        widget.subtitle,
+                        style: const TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w400,
+                          color: ColorConstant.secondryColor,
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 8),
                   if (!widget.isMember)
@@ -116,6 +176,56 @@ class _GroupCardState extends ConsumerState<GroupCard> {
                               ),
                             ),
                           ),
+                  if (widget.isAcceptReject)
+                    widget.isLoading
+                        ? const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2,
+                            ),
+                          )
+                        : Wrap(
+                            spacing: 12,
+                            runSpacing: 8,
+                            children: [
+                              ElevatedButton(
+                                onPressed: widget.isLoading
+                                    ? null
+                                    : widget.onAcceptedButtonPressed,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.green,
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 16, vertical: 10),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
+                                child: const Text('Accept'),
+                              ),
+                              ElevatedButton(
+                                onPressed: widget.isLoading
+                                    ? null
+                                    : widget.onRejecteddButtonPressed,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.red,
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 16, vertical: 10),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
+                                child: const Text('Reject'),
+                              ),
+                            ],
+                          )
+
+                  // AcceptRejectButtons(
+                  //   onAccept: widget.onAcceptedButtonPressed!,
+                  //   onReject: widget.onRejecteddButtonPressed!,
+                  //   isLoading: widget.isLoading,
+                  // ),
                 ],
               ),
             ),

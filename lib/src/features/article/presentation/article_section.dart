@@ -17,29 +17,26 @@ class ArticlesSection extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Row(
+        Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              "Articles",
-              style: TextStyle(
-                color: ColorConstant.secondryColor,
-                fontSize: 16,
-                fontWeight: FontWeight.w400,
+            Text("Articles",
+                style: TextStyle(
+                    color: ColorConstant.primaryColor,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700)),
+            TextButton(
+              onPressed: () => context.push(Routes.ALLARTICLESECTION),
+              child: const Text(
+                "See All",
+                style: TextStyle(
+                  decoration: TextDecoration.underline,
+                  color: ColorConstant.primaryColor,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
-            // TextButton(
-            //   onPressed: () => context.push(Routes.ARTICLESCREEN),
-            //   child: const Text(
-            //     "See All",
-            //     style: TextStyle(
-            //       decoration: TextDecoration.underline,
-            //       color: ColorConstant.primaryColor,
-            //       fontSize: 16,
-            //       fontWeight: FontWeight.w500,
-            //     ),
-            //   ),
-            // ),
           ],
         ),
 
@@ -67,22 +64,16 @@ class ArticlesSection extends ConsumerWidget {
               children: articles
                   .take(3) // Show only first 3 articles in preview
                   .map((article) => ArticleCard(
-                        title: article.title,
-                        subtitle: article.shortDescription,
-                        imageUrl: "assets/images/article_1.png",
+                        title: article.title!,
+                        subtitle: article.fullDescription!,
+                        // imageUrl: "assets/images/article_1.png",
+                        imageUrl: article.featuredImagePath!,
 
                         // imageUrl:
                         //     article.imageUrl ?? "assets/images/default.png",
-                        onPressed: () => context.push(
-                          Routes.ARTICLEDETAILS,
-                          extra: {
-                            "title": article.title,
-                            "description": article.fullDescription,
-                            "imageUrl": "assets/images/article_1.png",
-                          },
-                        ),
 
-                        // onPressed: () => context.push(Routes.ARTICLEDETAILS),
+                        onPressed: () =>
+                            context.push(Routes.ARTICLEDETAILS, extra: article),
                       ))
                   .toList(),
             );

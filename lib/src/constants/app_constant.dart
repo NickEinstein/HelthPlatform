@@ -15,4 +15,10 @@ class AppConstants {
   static const double perspectiveSm = 0.0005;
   static const double perspective = 0.001;
   static const double perspectiveLg = 0.002;
+  // static const imageURL = 'https://edogoverp.com/ConnectedHealthWebApi/';
+  static const imageURL =
+      'https://api.greenzonetechnologies.com.ng/ConnectedHealthWebApi/';
+  // static const noSlashImageURL = 'https://edogoverp.com/ConnectedHealthWebApi';
+  static const noSlashImageURL =
+      'https://api.greenzonetechnologies.com.ng/ConnectedHealthWebApi';
 }

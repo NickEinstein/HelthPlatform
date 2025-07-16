@@ -1,20 +1,13 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-import 'package:greenzone_medical/src/app_pkg.dart';
-import 'package:greenzone_medical/src/services/all_service.dart';
+import 'package:add_2_calendar/add_2_calendar.dart';
 import 'package:intl/intl.dart';
-
-import '../../../constants/helper.dart';
 import '../../../model/doctord_list_response.dart';
 import '../../../provider/all_providers.dart';
-import '../../../routes/routes.dart';
-import '../../../utils/custom_header.dart';
-import '../../../utils/custom_toast.dart';
+import '../../../utils/packages.dart';
+import '../../health_record/model/appointment_event.dart';
 
 class BookAppointment extends ConsumerStatefulWidget {
   final DoctorListResponse doctor; // Accept doctor data
-  BookAppointment({super.key, required this.doctor});
+  const BookAppointment({super.key, required this.doctor});
 
   @override
   ConsumerState<BookAppointment> createState() => _BookAppointmentState();
@@ -224,26 +217,64 @@ class _BookAppointmentState extends ConsumerState<BookAppointment> {
 
                           final allService = ref.read(allServiceProvider);
 
+                          // Null check for healthCareProviderId and doctorId
+                          if (widget.doctor.id == null) {
+                            CustomToast.show(context, 'Doctor data is missing.',
+                                type: ToastType.error);
+                            ref.read(isLoadingProvider.notifier).state =
+                                false; // Stop loading if error
+                            return;
+                          }
+
                           final result = await allService.bookAppointment(
-                              healthCareProviderId:
-                                  widget.doctor.healthCareProviderId!,
-                              doctorEmployeeId: widget.doctor.id!,
-                              appointDate:
-                                  '${selectedDate.year}/${selectedDate.month}/${selectedDate.day}',
-                              appointTime: selectedTime.split(' ')[0],
-                              description: descriptionController.text);
+                            healthCareProviderId:
+                                // 5,
+                                widget.doctor.healthCareProvider!.id!,
+                            doctorEmployeeId: widget.doctor.id!,
+                            appointDate:
+                                '${selectedDate.year}/${selectedDate.month}/${selectedDate.day}',
+                            appointTime: convertTo24HourManual(selectedTime),
+
+                            // appointDate:
+                            //     '${selectedDate.year}/${selectedDate.month}/${selectedDate.day}',
+                            // appointTime: selectedTime.split(' ')[0],
+                            description: descriptionController.text,
+                          );
 
                           if (!context.mounted)
-                            return; // ✅ Prevents using context if unmounted
+                            return; // Prevents using context if unmounted
                           ref.read(isLoadingProvider.notifier).state =
-                              false; // ✅ Stop loading
+                              false; // Stop loading
 
                           if (result == 'successful') {
-                            CustomToast.show(
-                                context, 'Appointment Booked Successfully.',
-                                type: ToastType.success);
+                            final appointmentDateTime = DateTime(
+                              selectedDate.year,
+                              selectedDate.month,
+                              selectedDate.day,
+                              int.parse(selectedTime.split(':')[0]),
+                              int.parse(
+                                  selectedTime.split(':')[1].split(' ')[0]),
+                            );
 
-                            context.pushReplacement(Routes.BOTTOMNAV);
+                            final event = buildAppointmentEvent(
+                              title:
+                                  'Appointment with Dr. ${widget.doctor.firstName}',
+                              description: descriptionController.text,
+                              startDateTime: appointmentDateTime,
+                            );
+
+                            showInfoBottomSheet(
+                              context,
+                              '',
+                              'Good news! Your appointment with Dr. ${widget.doctor.firstName} has been confirmed.',
+                              buttonText: 'Add to Calendar',
+                              isAnotherTime: true,
+                              onPressed: () async {
+                                Navigator.pop(context);
+                                await Add2Calendar.addEvent2Cal(event);
+                                context.pushReplacement(Routes.BOTTOMNAV);
+                              },
+                            );
                           } else {
                             CustomToast.show(context, result,
                                 type: ToastType.error);
@@ -256,8 +287,6 @@ class _BookAppointmentState extends ConsumerState<BookAppointment> {
                               'Please describe your problem to proceed',
                               type: ToastType.error);
                         }
-                        // Add your action here
-                        // context.pushReplacement(Routes.BOTTOMNAV);
                       },
                       child: const Text(
                           style: TextStyle(

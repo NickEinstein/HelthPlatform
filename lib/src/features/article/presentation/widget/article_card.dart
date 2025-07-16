@@ -1,39 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../constants/constants.dart';
+import '../../../../constants/helper.dart';
 import '../../../../model/article_response.dart';
-
-import 'package:intl/intl.dart';
-
 import '../../../../routes/routes.dart';
+import '../../../../utils/network_img_fallback.dart';
 
 class ArticleCard extends StatelessWidget {
   final ArticleResponse article;
 
   const ArticleCard({required this.article});
 
-  String formatDateTime(String dateTimeStr) {
-    try {
-      DateTime dateTime = DateTime.parse(dateTimeStr);
-      String formattedDate =
-          DateFormat('MMM dd, yyyy').format(dateTime); // e.g., Mar 26, 2025
-      String formattedTime =
-          DateFormat('h:mm a').format(dateTime); // e.g., 2:35 AM
-      return "$formattedDate • $formattedTime";
-    } catch (e) {
-      return "Invalid date";
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        context.push(Routes.ARTICLEDETAILS, extra: {
-          "title": article.title,
-          "description": article.fullDescription,
-          "imageUrl": "assets/images/article_1.png",
-        });
+        context.push(Routes.ARTICLEDETAILS, extra: article);
       },
       child: Container(
         width: 200,
@@ -53,21 +36,19 @@ class ArticleCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Image
-            ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: Image.asset(
-                'assets/images/article_1.png',
-                height: 120,
-                width: double.infinity,
-                fit: BoxFit.cover,
-              ),
+            NetworkImageWithFallback(
+              imageUrl: article.featuredImagePath!,
+              height: 120,
+              width: double.infinity,
+              borderRadius: 16,
+              fallbackAsset: 'assets/images/article_1.png',
             ),
 
             const SizedBox(height: 8),
 
             // Category Label
             Text(
-              article.category.name,
+              article.category!.name!,
               style: TextStyle(
                 color: Colors.green[800],
                 fontWeight: FontWeight.bold,
@@ -78,7 +59,7 @@ class ArticleCard extends StatelessWidget {
 
             // Article Title
             Text(
-              article.title,
+              article.title!,
               style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -90,9 +71,29 @@ class ArticleCard extends StatelessWidget {
             const SizedBox(height: 5),
 
             // Date & Time
-            Text(
-              formatDateTime(article.publishedDate),
-              style: const TextStyle(color: Colors.grey, fontSize: 12),
+            RichText(
+              text: TextSpan(
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+                children: [
+                  TextSpan(
+                    text: formatDate(article.publishedDate!),
+                    style: TextStyle(
+                        color: Color(0xff3C3B3B),
+                        fontWeight: FontWeight.w400,
+                        fontSize: 12),
+                  ),
+                  TextSpan(
+                    text: formatTimeAgo(article.publishedDate!),
+                    style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 12,
+                        color: ColorConstant.primaryColor), // Change color here
+                  ),
+                ],
+              ),
             ),
           ],
         ),

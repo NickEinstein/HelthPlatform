@@ -2,12 +2,8 @@
 /// messages in a Flutter app.
 library;
 
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:greenzone_medical/src/utils/extensions/widget_extensions.dart';
-
 import '../../routes/old_routes.dart';
+import '../packages.dart';
 
 class Dialogs {
   static final GlobalKey<NavigatorState> navigatorKey =
@@ -153,4 +149,89 @@ class CustomBottomSheet extends StatelessWidget {
       ],
     );
   }
+}
+
+void showInfoBottomSheet(
+  BuildContext context,
+  String title,
+  String message, {
+  String buttonText = 'Close',
+  bool isAnotherTime = false,
+  VoidCallback? onPressed,
+}) {
+  showModalBottomSheet(
+    context: context,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+    ),
+    isScrollControlled: true,
+    backgroundColor: Colors.white,
+    builder: (context) {
+      return Padding(
+        padding: MediaQuery.of(context).viewInsets,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Image.asset('assets/icon/hego.png', height: 53, width: 53),
+              mediumSpace(),
+              Align(
+                alignment: Alignment.center,
+                child: Text(
+                  title,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w400,
+                    color: Color(0xff181819),
+                  ),
+                ),
+              ),
+              smallSpace(),
+              Text(message, textAlign: TextAlign.center),
+              mediumSpace(),
+              mediumSpace(),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: ColorConstant.primaryColor,
+                    padding: const EdgeInsets.symmetric(vertical: 18),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                  ),
+                  onPressed: onPressed ?? () => Navigator.pop(context),
+                  child: Text(
+                    buttonText,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+              if (isAnotherTime)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: GestureDetector(
+                    onTap: () {
+                      context.pushReplacement(Routes.BOTTOMNAV);
+                    },
+                    child: const Text(
+                      'I’ll do another time',
+                      style: TextStyle(
+                          color: Color(0xff999EA2),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                )
+            ],
+          ),
+        ),
+      );
+    },
+  );
 }

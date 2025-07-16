@@ -9,8 +9,7 @@ import '../../../constants/helper.dart';
 import '../../../provider/all_providers.dart';
 import '../../../routes/routes.dart';
 import '../../../utils/custom_toast.dart';
-import 'widget/account_controller_holder.dart';
-import '../../../utils/custom_toast.dart';
+import 'upload_selfie_screen.dart';
 import 'widget/account_controller_holder.dart';
 import 'widget/location_info_screen.dart';
 import 'widget/password_screen.dart';
@@ -31,6 +30,7 @@ class _AccountCreationScreenState extends ConsumerState<AccountCreationScreen> {
 
   int _currentIndex = 0;
   final List<GlobalKey<FormState>> _formKeys = [
+    GlobalKey<FormState>(),
     GlobalKey<FormState>(),
     GlobalKey<FormState>(),
     GlobalKey<FormState>(),
@@ -59,7 +59,7 @@ class _AccountCreationScreenState extends ConsumerState<AccountCreationScreen> {
   void _nextPage() async {
     final currentFormState = _formKeys[_currentIndex].currentState;
     if (currentFormState != null && currentFormState.validate()) {
-      if (_currentIndex == 3) {
+      if (_currentIndex == 4) {
         // Ensure password and confirm password are filled and match
         if (_controller.passwordController.text.isEmpty ||
             _controller.confirmPasswordController.text.isEmpty) {
@@ -98,29 +98,37 @@ class _AccountCreationScreenState extends ConsumerState<AccountCreationScreen> {
           final authService = ref.read(authServiceProvider);
 
           final result = await authService.register(
-              firstName: _controller.firstNameController.text.split(' ')[0],
-              lastName: _controller.firstNameController.text.split(' ')[1],
-              city: _controller.cityController.text,
-              dateOfBirth: _controller.dobController.text,
-              email: _controller.emailController.text,
-              homeAddress: _controller.addressController.text,
-              lga: _controller.lgaController.text,
-              lgaResidence: _controller.lgaController.text,
-              nationality: 'Nigeria',
-              phone: _controller.phoneController.text,
-              placeOfBirth: _controller.addressController.text,
-              stateOfOrigin: _controller.stateController.text,
-              stateOfResidence: _controller.stateController.text);
+            firstName: _controller.firstNameController.text.split(' ')[0],
+            lastName: _controller.firstNameController.text.split(' ')[1],
+            city: _controller.cityController.text,
+            dateOfBirth: _controller.dobController.text,
+            email: _controller.emailController.text,
+            homeAddress: _controller.addressController.text,
+            lga: _controller.lgaController.text,
+            lgaResidence: _controller.lgaController.text,
+            nationality: 'Nigeria',
+            phone: _controller.phoneController.text,
+            placeOfBirth: _controller.addressController.text,
+            stateOfOrigin: _controller.stateController.text,
+            stateOfResidence: _controller.stateController.text,
+          );
 
-          if (!context.mounted) return; // ✅ Prevents using context if unmounted
+          if (!context.mounted) return;
           ref.read(isLoadingProvider.notifier).state = false;
-          if (result == 'successful') {
+
+          if (result != null && result.isSuccess && result.statusCode == 200) {
+            final patientId = result.data?.patientId;
+            _controller.patientId = patientId;
             _pageController.nextPage(
               duration: const Duration(milliseconds: 300),
               curve: Curves.easeInOut,
             );
           } else {
-            CustomToast.show(context, result, type: ToastType.error);
+            final errorMessage = result?.data?.emailResult?.message ??
+                result?.error?['message'] ??
+                'Registration failed';
+
+            CustomToast.show(context, errorMessage, type: ToastType.error);
           }
         }
       } else if (_currentIndex == 2) {
@@ -147,6 +155,55 @@ class _AccountCreationScreenState extends ConsumerState<AccountCreationScreen> {
             );
           } else {
             CustomToast.show(context, result, type: ToastType.error);
+          }
+        }
+      } else if (_currentIndex == 3) {
+        // _pageController.nextPage(
+        //   duration: const Duration(milliseconds: 300),
+        //   curve: Curves.easeInOut,
+        // );
+
+        if (_controller.imageFile == null) {
+          CustomToast.show(context, 'Kindly upload profile picture',
+              type: ToastType.error);
+          return;
+        } else {
+          ref.read(isLoadingProvider.notifier).state = true;
+          final authService = ref.read(authServiceProvider);
+
+          final result =
+              await authService.uploadProfileUrl(_controller.imageFile!);
+
+          if (!context.mounted) return; // ✅ Prevents using context if unmounted
+          ref.read(isLoadingProvider.notifier).state = false;
+          if (result["data"] != null) {
+            final String imageUrl = result["data"]["imageUrl"];
+            _controller.pictureUrl = imageUrl;
+
+            ref.read(isLoadingProvider.notifier).state = true;
+
+            final uploadResult = await authService.photoUpdate(
+                _controller.patientId!, _controller.pictureUrl!);
+
+            if (!context.mounted) {
+              return; // ✅ Prevents using context if unmounted
+            }
+            ref.read(isLoadingProvider.notifier).state = false;
+            if (uploadResult == 'successful') {
+              _pageController.nextPage(
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+              );
+            } else {
+              CustomToast.show(context, "Error uploading",
+                  type: ToastType.error);
+            }
+            // _pageController.nextPage(
+            //   duration: const Duration(milliseconds: 300),
+            //   curve: Curves.easeInOut,
+            // );
+          } else {
+            CustomToast.show(context, "Error uploading", type: ToastType.error);
           }
         }
       } else {
@@ -219,7 +276,7 @@ class _AccountCreationScreenState extends ConsumerState<AccountCreationScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Title & Page Indicator
-                if (_currentIndex != 2)
+                if (_currentIndex != 3)
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -260,7 +317,7 @@ class _AccountCreationScreenState extends ConsumerState<AccountCreationScreen> {
                     ],
                   ),
                 const SizedBox(height: 8),
-                if (_currentIndex != 2)
+                if (_currentIndex != 3)
                   const Text(
                     "Please provide the following information to get started",
                     style: TextStyle(
@@ -268,7 +325,7 @@ class _AccountCreationScreenState extends ConsumerState<AccountCreationScreen> {
                         fontSize: 14,
                         fontWeight: FontWeight.w400),
                   ),
-                if (_currentIndex != 2) const SizedBox(height: 20),
+                if (_currentIndex != 3) const SizedBox(height: 20),
                 // PageView for Steps
                 SizedBox(
                   height:
@@ -294,8 +351,13 @@ class _AccountCreationScreenState extends ConsumerState<AccountCreationScreen> {
                         formKey: _formKeys[2],
                         controller: _controller,
                       ),
-                      PasswordScreen(
+                      UploadSelfieScreen(
+                        onNext: _nextPage,
                         formKey: _formKeys[3],
+                        controller: _controller,
+                      ),
+                      PasswordScreen(
+                        formKey: _formKeys[4],
                         controller: _controller,
                       ),
                     ],
@@ -327,7 +389,7 @@ class _AccountCreationScreenState extends ConsumerState<AccountCreationScreen> {
                                   style: const TextStyle(
                                       fontWeight: FontWeight.w700,
                                       fontSize: 14),
-                                  _currentIndex == 3
+                                  _currentIndex == 4
                                       ? "Create Account"
                                       : _currentIndex == 2
                                           ? "Verify OTP"
@@ -343,7 +405,7 @@ class _AccountCreationScreenState extends ConsumerState<AccountCreationScreen> {
                                 ),
                               ),
                             const SizedBox(height: 10),
-                            if (_currentIndex != 2)
+                            if (_currentIndex != 3)
                               RichText(
                                 text: TextSpan(
                                   style: const TextStyle(

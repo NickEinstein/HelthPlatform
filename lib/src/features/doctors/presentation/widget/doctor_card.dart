@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:greenzone_medical/src/constants/constants.dart';
 
+import '../../../../constants/helper.dart';
+
 class DoctorCard extends StatelessWidget {
   final String imageUrl;
   final String name;
+
   final String type;
   final String profession;
   final String hospital;
@@ -11,6 +14,8 @@ class DoctorCard extends StatelessWidget {
   final int reviews;
   final bool isLiked;
   final bool isShowLove;
+  final bool isShowImg;
+  final bool isShowVerified;
   final VoidCallback onPress;
 
   const DoctorCard(
@@ -24,6 +29,8 @@ class DoctorCard extends StatelessWidget {
       required this.reviews,
       required this.isLiked,
       required this.onPress,
+      this.isShowImg = true,
+      this.isShowVerified = false,
       this.isShowLove = true})
       : super(key: key);
 
@@ -39,30 +46,52 @@ class DoctorCard extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
           child: Row(
             children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: (imageUrl.isNotEmpty &&
-                        Uri.tryParse(imageUrl)?.hasAbsolutePath == true)
-                    ? Image.network(
-                        imageUrl,
-                        width: 80,
+              if (isShowImg)
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Image.network(
+                    imageUrl.startsWith('http')
+                        ? imageUrl
+                        : imageUrl.contains('/UploadedFiles')
+                            ? '${AppConstants.noSlashImageURL}$imageUrl'
+                            : '${AppConstants.noSlashImageURL}/$imageUrl',
+                    height: 100,
+                    width: 80,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      // Handle name split and initials
+                      final fullName = name;
+                      final nameParts = fullName.trim().split(RegExp(r'\s+'));
+                      String initials = '';
+                      final nonTitleParts =
+                          nameParts.where((p) => !p.endsWith('.')).toList();
+                      if (nonTitleParts.isNotEmpty) {
+                        initials += nonTitleParts.first[0];
+                        if (nonTitleParts.length > 1) {
+                          initials += nonTitleParts.last[0];
+                        }
+                      }
+
+                      return Container(
                         height: 100,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) =>
-                            Image.asset(
-                          'assets/images/doctor1.png', // 🔥 Default fallback asset
-                          width: 80,
-                          height: 100,
-                          fit: BoxFit.cover,
+                        width: 80,
+                        decoration: BoxDecoration(
+                          color: getAvatarColor(fullName),
+                          borderRadius: BorderRadius.circular(10),
                         ),
-                      )
-                    : Image.asset(
-                        imageUrl, // 🔥 Ensure a valid asset is used
-                        width: 80,
-                        height: 100,
-                        fit: BoxFit.cover,
-                      ),
-              ),
+                        alignment: Alignment.center,
+                        child: Text(
+                          initials.toUpperCase(),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 24,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
               const SizedBox(width: 12),
               Expanded(
                 child: Column(
@@ -71,13 +100,40 @@ class DoctorCard extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          name,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            color: Color(0xff3C3B3B),
-                            fontWeight: FontWeight.w700,
-                          ),
+                        Row(
+                          children: [
+                            Text(
+                              name,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                color: Color(0xff3C3B3B),
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            tiny5HorSpace(),
+                            if (isShowVerified)
+                              Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    color: Color(0xffD9FEAA),
+                                    border: Border.all(
+                                        color: ColorConstant.primaryColor)),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 5),
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        Icons.verified,
+                                        color: ColorConstant.primaryColor,
+                                      ),
+                                      tiny5HorSpace(),
+                                      Text('Verified')
+                                    ],
+                                  ),
+                                ),
+                              )
+                          ],
                         ),
                         if (isShowLove)
                           Icon(
@@ -114,7 +170,7 @@ class DoctorCard extends StatelessWidget {
                         const Text('|',
                             style: TextStyle(
                               fontSize: 12,
-                              color: Colors.black,
+                              color: ColorConstant.primaryColor,
                               fontWeight: FontWeight.w500,
                             )),
                         const SizedBox(width: 5),

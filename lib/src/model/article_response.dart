@@ -1,67 +1,86 @@
 class ArticleResponse {
-  final int id;
-  final String title;
-  final String shortDescription;
-  final String fullDescription;
-  final String featuredImagePath;
-  final String slug;
-  final String publishedDate;
-  final Category category;
+  int? id;
+  String? title;
+  String? shortDescription;
+  String? fullDescription;
+  String? featuredImagePath;
+  String? slug;
+  String? publishedDate;
+  String? lastUpdatedDate;
+  bool? isPublished;
+  bool? isFeatured;
+  int? categoryId;
+  Category? category;
 
-  ArticleResponse({
-    required this.id,
-    required this.title,
-    required this.shortDescription,
-    required this.fullDescription,
-    required this.featuredImagePath,
-    required this.slug,
-    required this.publishedDate,
-    required this.category,
-  });
+  ArticleResponse(
+      {this.id,
+      this.title,
+      this.shortDescription,
+      this.fullDescription,
+      this.featuredImagePath,
+      this.slug,
+      this.publishedDate,
+      this.lastUpdatedDate,
+      this.isPublished,
+      this.isFeatured,
+      this.categoryId,
+      this.category});
 
-  factory ArticleResponse.fromJson(Map<String, dynamic> json) {
-    return ArticleResponse(
-      id: json['id'],
-      title: json['title'],
-      shortDescription: json['shortDescription'],
-      fullDescription: json['fullDescription'],
-      featuredImagePath: json['featuredImagePath'],
-      slug: json['slug'],
-      publishedDate: json['publishedDate'],
-      category: Category.fromJson(json['category']),
-    );
+  ArticleResponse.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    title = json['title'];
+    shortDescription = json['shortDescription'];
+    fullDescription = json['fullDescription'];
+    featuredImagePath = json['featuredImagePath'];
+    slug = json['slug'];
+    publishedDate = json['publishedDate'];
+    lastUpdatedDate = json['lastUpdatedDate'];
+    isPublished = json['isPublished'];
+    isFeatured = json['isFeatured'];
+    categoryId = json['categoryId'];
+    category = json['category'] != null
+        ? new Category.fromJson(json['category'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'title': title,
-      'shortDescription': shortDescription,
-      'fullDescription': fullDescription,
-      'featuredImagePath': featuredImagePath,
-      'slug': slug,
-      'publishedDate': publishedDate,
-      'category': category.toJson(),
-    };
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = id;
+    data['title'] = title;
+    data['shortDescription'] = shortDescription;
+    data['fullDescription'] = fullDescription;
+    data['featuredImagePath'] = featuredImagePath;
+    data['slug'] = slug;
+    data['publishedDate'] = publishedDate;
+    data['lastUpdatedDate'] = lastUpdatedDate;
+    data['isPublished'] = isPublished;
+    data['isFeatured'] = isFeatured;
+    data['categoryId'] = categoryId;
+    if (category != null) {
+      data['category'] = category!.toJson();
+    }
+    return data;
   }
 }
 
 class Category {
-  final int id;
-  final String name;
-  final String description;
+  int? id;
+  String? name;
+  String? description;
 
-  Category({required this.id, required this.name, required this.description});
+  Category({this.id, this.name, this.description});
 
-  factory Category.fromJson(Map<String, dynamic> json) {
-    return Category(
-      id: json['id'],
-      name: json['name'],
-      description: json['description'],
-    );
+  Category.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    name = json['name'];
+    description = json['description'];
   }
 
   Map<String, dynamic> toJson() {
-    return {'id': id, 'name': name, 'description': description};
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = id;
+    data['name'] = name;
+    data['description'] = description;
+    return data;
   }
 }

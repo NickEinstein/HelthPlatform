@@ -1,36 +1,387 @@
 PODS:
+  - add_2_calendar (0.0.1):
+    - Flutter
+  - agora_rtc_engine (6.5.2):
+    - AgoraIrisRTC_iOS (= 4.5.2-build.1)
+    - AgoraRtcEngine_iOS (= 4.5.2)
+    - Flutter
+  - agora_rtm (1.6.0):
+    - AgoraRtm_iOS (= 1.5.1)
+    - Flutter
+  - AgoraInfra_iOS (1.2.13.1)
+  - AgoraIrisRTC_iOS (4.5.2-build.1)
+  - AgoraRtcEngine_iOS (4.5.2):
+    - AgoraRtcEngine_iOS/AIAEC (= 4.5.2)
+    - AgoraRtcEngine_iOS/AIAECLL (= 4.5.2)
+    - AgoraRtcEngine_iOS/AINS (= 4.5.2)
+    - AgoraRtcEngine_iOS/AINSLL (= 4.5.2)
+    - AgoraRtcEngine_iOS/AudioBeauty (= 4.5.2)
+    - AgoraRtcEngine_iOS/ClearVision (= 4.5.2)
+    - AgoraRtcEngine_iOS/ContentInspect (= 4.5.2)
+    - AgoraRtcEngine_iOS/FaceCapture (= 4.5.2)
+    - AgoraRtcEngine_iOS/FaceDetection (= 4.5.2)
+    - AgoraRtcEngine_iOS/LipSync (= 4.5.2)
+    - AgoraRtcEngine_iOS/ReplayKit (= 4.5.2)
+    - AgoraRtcEngine_iOS/RtcBasic (= 4.5.2)
+    - AgoraRtcEngine_iOS/SpatialAudio (= 4.5.2)
+    - AgoraRtcEngine_iOS/VideoAv1CodecDec (= 4.5.2)
+    - AgoraRtcEngine_iOS/VideoAv1CodecEnc (= 4.5.2)
+    - AgoraRtcEngine_iOS/VideoCodecDec (= 4.5.2)
+    - AgoraRtcEngine_iOS/VideoCodecEnc (= 4.5.2)
+    - AgoraRtcEngine_iOS/VirtualBackground (= 4.5.2)
+    - AgoraRtcEngine_iOS/VQA (= 4.5.2)
+  - AgoraRtcEngine_iOS/AIAEC (4.5.2)
+  - AgoraRtcEngine_iOS/AIAECLL (4.5.2)
+  - AgoraRtcEngine_iOS/AINS (4.5.2)
+  - AgoraRtcEngine_iOS/AINSLL (4.5.2)
+  - AgoraRtcEngine_iOS/AudioBeauty (4.5.2)
+  - AgoraRtcEngine_iOS/ClearVision (4.5.2)
+  - AgoraRtcEngine_iOS/ContentInspect (4.5.2)
+  - AgoraRtcEngine_iOS/FaceCapture (4.5.2)
+  - AgoraRtcEngine_iOS/FaceDetection (4.5.2)
+  - AgoraRtcEngine_iOS/LipSync (4.5.2)
+  - AgoraRtcEngine_iOS/ReplayKit (4.5.2)
+  - AgoraRtcEngine_iOS/RtcBasic (4.5.2):
+    - AgoraInfra_iOS (= 1.2.13.1)
+  - AgoraRtcEngine_iOS/SpatialAudio (4.5.2)
+  - AgoraRtcEngine_iOS/VideoAv1CodecDec (4.5.2)
+  - AgoraRtcEngine_iOS/VideoAv1CodecEnc (4.5.2)
+  - AgoraRtcEngine_iOS/VideoCodecDec (4.5.2)
+  - AgoraRtcEngine_iOS/VideoCodecEnc (4.5.2)
+  - AgoraRtcEngine_iOS/VirtualBackground (4.5.2)
+  - AgoraRtcEngine_iOS/VQA (4.5.2)
+  - AgoraRtm_iOS (1.5.1)
+  - AppAuth (1.7.6):
+    - AppAuth/Core (= 1.7.6)
+    - AppAuth/ExternalUserAgent (= 1.7.6)
+  - AppAuth/Core (1.7.6)
+  - AppAuth/ExternalUserAgent (1.7.6):
+    - AppAuth/Core
+  - AppCheckCore (11.2.0):
+    - GoogleUtilities/Environment (~> 8.0)
+    - GoogleUtilities/UserDefaults (~> 8.0)
+    - PromisesObjC (~> 2.4)
+  - audioplayers_darwin (0.0.1):
+    - Flutter
+  - camera_avfoundation (0.0.1):
+    - Flutter
+  - FBAEMKit (17.0.3):
+    - FBSDKCoreKit_Basics (= 17.0.3)
+  - FBSDKCoreKit (17.0.3):
+    - FBAEMKit (= 17.0.3)
+    - FBSDKCoreKit_Basics (= 17.0.3)
+  - FBSDKCoreKit_Basics (17.0.3)
+  - FBSDKLoginKit (17.0.3):
+    - FBSDKCoreKit (= 17.0.3)
+  - Firebase/Auth (11.10.0):
+    - Firebase/CoreOnly
+    - FirebaseAuth (~> 11.10.0)
+  - Firebase/CoreOnly (11.10.0):
+    - FirebaseCore (~> 11.10.0)
+  - Firebase/Messaging (11.10.0):
+    - Firebase/CoreOnly
+    - FirebaseMessaging (~> 11.10.0)
+  - firebase_auth (5.5.4):
+    - Firebase/Auth (= 11.10.0)
+    - firebase_core
+    - Flutter
+  - firebase_core (3.13.1):
+    - Firebase/CoreOnly (= 11.10.0)
+    - Flutter
+  - firebase_messaging (15.2.6):
+    - Firebase/Messaging (= 11.10.0)
+    - firebase_core
+    - Flutter
+  - FirebaseAppCheckInterop (11.14.0)
+  - FirebaseAuth (11.10.0):
+    - FirebaseAppCheckInterop (~> 11.0)
+    - FirebaseAuthInterop (~> 11.0)
+    - FirebaseCore (~> 11.10.0)
+    - FirebaseCoreExtension (~> 11.10.0)
+    - GoogleUtilities/AppDelegateSwizzler (~> 8.0)
+    - GoogleUtilities/Environment (~> 8.0)
+    - GTMSessionFetcher/Core (< 5.0, >= 3.4)
+    - RecaptchaInterop (~> 101.0)
+  - FirebaseAuthInterop (11.14.0)
+  - FirebaseCore (11.10.0):
+    - FirebaseCoreInternal (~> 11.10.0)
+    - GoogleUtilities/Environment (~> 8.0)
+    - GoogleUtilities/Logger (~> 8.0)
+  - FirebaseCoreExtension (11.10.0):
+    - FirebaseCore (~> 11.10.0)
+  - FirebaseCoreInternal (11.10.0):
+    - "GoogleUtilities/NSData+zlib (~> 8.0)"
+  - FirebaseInstallations (11.10.0):
+    - FirebaseCore (~> 11.10.0)
+    - GoogleUtilities/Environment (~> 8.0)
+    - GoogleUtilities/UserDefaults (~> 8.0)
+    - PromisesObjC (~> 2.4)
+  - FirebaseMessaging (11.10.0):
+    - FirebaseCore (~> 11.10.0)
+    - FirebaseInstallations (~> 11.0)
+    - GoogleDataTransport (~> 10.0)
+    - GoogleUtilities/AppDelegateSwizzler (~> 8.0)
+    - GoogleUtilities/Environment (~> 8.0)
+    - GoogleUtilities/Reachability (~> 8.0)
+    - GoogleUtilities/UserDefaults (~> 8.0)
+    - nanopb (~> 3.30910.0)
   - Flutter (1.0.0)
+  - flutter_facebook_auth (6.2.0):
+    - FBSDKLoginKit (~> 17.0.0)
+    - Flutter
+  - flutter_local_notifications (0.0.1):
+    - Flutter
+  - flutter_secure_storage (6.0.0):
+    - Flutter
+  - geocoding_ios (1.0.5):
+    - Flutter
+  - Google-Maps-iOS-Utils (6.1.0):
+    - GoogleMaps (~> 9.0)
+  - google_maps_flutter_ios (0.0.1):
+    - Flutter
+    - Google-Maps-iOS-Utils (< 7.0, >= 5.0)
+    - GoogleMaps (< 10.0, >= 8.4)
+  - google_sign_in_ios (0.0.1):
+    - AppAuth (>= 1.7.4)
+    - Flutter
+    - FlutterMacOS
+    - GoogleSignIn (~> 8.0)
+    - GTMSessionFetcher (>= 3.4.0)
+  - GoogleDataTransport (10.1.0):
+    - nanopb (~> 3.30910.0)
+    - PromisesObjC (~> 2.4)
+  - GoogleMaps (9.4.0):
+    - GoogleMaps/Maps (= 9.4.0)
+  - GoogleMaps/Maps (9.4.0)
+  - GoogleSignIn (8.0.0):
+    - AppAuth (< 2.0, >= 1.7.3)
+    - AppCheckCore (~> 11.0)
+    - GTMAppAuth (< 5.0, >= 4.1.1)
+    - GTMSessionFetcher/Core (~> 3.3)
+  - GoogleUtilities/AppDelegateSwizzler (8.1.0):
+    - GoogleUtilities/Environment
+    - GoogleUtilities/Logger
+    - GoogleUtilities/Network
+    - GoogleUtilities/Privacy
+  - GoogleUtilities/Environment (8.1.0):
+    - GoogleUtilities/Privacy
+  - GoogleUtilities/Logger (8.1.0):
+    - GoogleUtilities/Environment
+    - GoogleUtilities/Privacy
+  - GoogleUtilities/Network (8.1.0):
+    - GoogleUtilities/Logger
+    - "GoogleUtilities/NSData+zlib"
+    - GoogleUtilities/Privacy
+    - GoogleUtilities/Reachability
+  - "GoogleUtilities/NSData+zlib (8.1.0)":
+    - GoogleUtilities/Privacy
+  - GoogleUtilities/Privacy (8.1.0)
+  - GoogleUtilities/Reachability (8.1.0):
+    - GoogleUtilities/Logger
+    - GoogleUtilities/Privacy
+  - GoogleUtilities/UserDefaults (8.1.0):
+    - GoogleUtilities/Logger
+    - GoogleUtilities/Privacy
+  - GTMAppAuth (4.1.1):
+    - AppAuth/Core (~> 1.7)
+    - GTMSessionFetcher/Core (< 4.0, >= 3.3)
+  - GTMSessionFetcher (3.5.0):
+    - GTMSessionFetcher/Full (= 3.5.0)
+  - GTMSessionFetcher/Core (3.5.0)
+  - GTMSessionFetcher/Full (3.5.0):
+    - GTMSessionFetcher/Core
+  - image_picker_ios (0.0.1):
+    - Flutter
+  - iris_method_channel (0.0.1):
+    - Flutter
   - local_auth_darwin (0.0.1):
     - Flutter
     - FlutterMacOS
+  - nanopb (3.30910.0):
+    - nanopb/decode (= 3.30910.0)
+    - nanopb/encode (= 3.30910.0)
+  - nanopb/decode (3.30910.0)
+  - nanopb/encode (3.30910.0)
+  - path_provider_foundation (0.0.1):
+    - Flutter
+    - FlutterMacOS
+  - permission_handler_apple (9.3.0):
+    - Flutter
+  - PromisesObjC (2.4.0)
+  - RecaptchaInterop (101.0.0)
+  - share_plus (0.0.1):
+    - Flutter
   - shared_preferences_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
+  - sign_in_with_apple (0.0.1):
+    - Flutter
   - url_launcher_ios (0.0.1):
     - Flutter
 
 DEPENDENCIES:
+  - add_2_calendar (from `.symlinks/plugins/add_2_calendar/ios`)
+  - agora_rtc_engine (from `.symlinks/plugins/agora_rtc_engine/ios`)
+  - agora_rtm (from `.symlinks/plugins/agora_rtm/ios`)
+  - audioplayers_darwin (from `.symlinks/plugins/audioplayers_darwin/ios`)
+  - camera_avfoundation (from `.symlinks/plugins/camera_avfoundation/ios`)
+  - firebase_auth (from `.symlinks/plugins/firebase_auth/ios`)
+  - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
+  - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
   - Flutter (from `Flutter`)
+  - flutter_facebook_auth (from `.symlinks/plugins/flutter_facebook_auth/ios`)
+  - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
+  - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
+  - geocoding_ios (from `.symlinks/plugins/geocoding_ios/ios`)
+  - google_maps_flutter_ios (from `.symlinks/plugins/google_maps_flutter_ios/ios`)
+  - google_sign_in_ios (from `.symlinks/plugins/google_sign_in_ios/darwin`)
+  - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
+  - iris_method_channel (from `.symlinks/plugins/iris_method_channel/ios`)
   - local_auth_darwin (from `.symlinks/plugins/local_auth_darwin/darwin`)
+  - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
+  - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
+  - share_plus (from `.symlinks/plugins/share_plus/ios`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
+  - sign_in_with_apple (from `.symlinks/plugins/sign_in_with_apple/ios`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
 
+SPEC REPOS:
+  trunk:
+    - AgoraInfra_iOS
+    - AgoraIrisRTC_iOS
+    - AgoraRtcEngine_iOS
+    - AgoraRtm_iOS
+    - AppAuth
+    - AppCheckCore
+    - FBAEMKit
+    - FBSDKCoreKit
+    - FBSDKCoreKit_Basics
+    - FBSDKLoginKit
+    - Firebase
+    - FirebaseAppCheckInterop
+    - FirebaseAuth
+    - FirebaseAuthInterop
+    - FirebaseCore
+    - FirebaseCoreExtension
+    - FirebaseCoreInternal
+    - FirebaseInstallations
+    - FirebaseMessaging
+    - Google-Maps-iOS-Utils
+    - GoogleDataTransport
+    - GoogleMaps
+    - GoogleSignIn
+    - GoogleUtilities
+    - GTMAppAuth
+    - GTMSessionFetcher
+    - nanopb
+    - PromisesObjC
+    - RecaptchaInterop
+
 EXTERNAL SOURCES:
+  add_2_calendar:
+    :path: ".symlinks/plugins/add_2_calendar/ios"
+  agora_rtc_engine:
+    :path: ".symlinks/plugins/agora_rtc_engine/ios"
+  agora_rtm:
+    :path: ".symlinks/plugins/agora_rtm/ios"
+  audioplayers_darwin:
+    :path: ".symlinks/plugins/audioplayers_darwin/ios"
+  camera_avfoundation:
+    :path: ".symlinks/plugins/camera_avfoundation/ios"
+  firebase_auth:
+    :path: ".symlinks/plugins/firebase_auth/ios"
+  firebase_core:
+    :path: ".symlinks/plugins/firebase_core/ios"
+  firebase_messaging:
+    :path: ".symlinks/plugins/firebase_messaging/ios"
   Flutter:
     :path: Flutter
+  flutter_facebook_auth:
+    :path: ".symlinks/plugins/flutter_facebook_auth/ios"
+  flutter_local_notifications:
+    :path: ".symlinks/plugins/flutter_local_notifications/ios"
+  flutter_secure_storage:
+    :path: ".symlinks/plugins/flutter_secure_storage/ios"
+  geocoding_ios:
+    :path: ".symlinks/plugins/geocoding_ios/ios"
+  google_maps_flutter_ios:
+    :path: ".symlinks/plugins/google_maps_flutter_ios/ios"
+  google_sign_in_ios:
+    :path: ".symlinks/plugins/google_sign_in_ios/darwin"
+  image_picker_ios:
+    :path: ".symlinks/plugins/image_picker_ios/ios"
+  iris_method_channel:
+    :path: ".symlinks/plugins/iris_method_channel/ios"
   local_auth_darwin:
     :path: ".symlinks/plugins/local_auth_darwin/darwin"
+  path_provider_foundation:
+    :path: ".symlinks/plugins/path_provider_foundation/darwin"
+  permission_handler_apple:
+    :path: ".symlinks/plugins/permission_handler_apple/ios"
+  share_plus:
+    :path: ".symlinks/plugins/share_plus/ios"
   shared_preferences_foundation:
     :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
+  sign_in_with_apple:
+    :path: ".symlinks/plugins/sign_in_with_apple/ios"
   url_launcher_ios:
     :path: ".symlinks/plugins/url_launcher_ios/ios"
 
 SPEC CHECKSUMS:
+  add_2_calendar: 78896c85421aeb7c19988c2b3aad71983089b7e3
+  agora_rtc_engine: 6a8683bd2d8473e36f059d3bac5f1f475199d571
+  agora_rtm: a461f2a9bef610b85ecc53ccf8ae4e22368d3e5f
+  AgoraInfra_iOS: 3691b2b277a1712a35ae96de25af319de0d73d08
+  AgoraIrisRTC_iOS: eab58c126439adf5ec99632828a558ea216860da
+  AgoraRtcEngine_iOS: 97e2398a2addda9057815a2a583a658e36796ff6
+  AgoraRtm_iOS: 595a9fa33a409831e6183396ea8f8bc563918403
+  AppAuth: d4f13a8fe0baf391b2108511793e4b479691fb73
+  AppCheckCore: cc8fd0a3a230ddd401f326489c99990b013f0c4f
+  audioplayers_darwin: ccf9c770ee768abb07e26d90af093f7bab1c12ab
+  camera_avfoundation: be3be85408cd4126f250386828e9b1dfa40ab436
+  FBAEMKit: 9900b2edd99a2d21629a6277e6166f14c6215799
+  FBSDKCoreKit: 0791f8f68a8630931a4c12aa23a56cc021551596
+  FBSDKCoreKit_Basics: 46d6b472c0dd0a5a7e972c025033d1c567f54eb4
+  FBSDKLoginKit: b4a4eba1d62eb452544411824f41689adabd5bd2
+  Firebase: 1fe1c0a7d9aaea32efe01fbea5f0ebd8d70e53a2
+  firebase_auth: 4d9603c196d22f71e80cf518b71939c4f2117088
+  firebase_core: ba71b44041571da878cb624ce0d80250bcbe58ad
+  firebase_messaging: 13129fe2ca166d1ed2d095062d76cee88943d067
+  FirebaseAppCheckInterop: a92ba81d0ee3c4cddb1a2e52c668ea51dc63c3ae
+  FirebaseAuth: c4146bdfdc87329f9962babd24dae89373f49a32
+  FirebaseAuthInterop: e25b58ecb90f3285085fa2118861a3c9dfdc62ad
+  FirebaseCore: 8344daef5e2661eb004b177488d6f9f0f24251b7
+  FirebaseCoreExtension: 6f357679327f3614e995dc7cf3f2d600bdc774ac
+  FirebaseCoreInternal: ef4505d2afb1d0ebbc33162cb3795382904b5679
+  FirebaseInstallations: 9980995bdd06ec8081dfb6ab364162bdd64245c3
+  FirebaseMessaging: 2b9f56aa4ed286e1f0ce2ee1d413aabb8f9f5cb9
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
+  flutter_facebook_auth: 2f28c889d5727b4538ed8d25be3367092b2cbef7
+  flutter_local_notifications: a5a732f069baa862e728d839dd2ebb904737effb
+  flutter_secure_storage: 1ed9476fba7e7a782b22888f956cce43e2c62f13
+  geocoding_ios: 86f1c479822f07a2f79f7094f2b753d1e9e20215
+  Google-Maps-iOS-Utils: 0a484b05ed21d88c9f9ebbacb007956edd508a96
+  google_maps_flutter_ios: 0291eb2aa252298a769b04d075e4a9d747ff7264
+  google_sign_in_ios: b48bb9af78576358a168361173155596c845f0b9
+  GoogleDataTransport: aae35b7ea0c09004c3797d53c8c41f66f219d6a7
+  GoogleMaps: 0608099d4870cac8754bdba9b6953db543432438
+  GoogleSignIn: ce8c89bb9b37fb624b92e7514cc67335d1e277e4
+  GoogleUtilities: 00c88b9a86066ef77f0da2fab05f65d7768ed8e1
+  GTMAppAuth: f69bd07d68cd3b766125f7e072c45d7340dea0de
+  GTMSessionFetcher: 5aea5ba6bd522a239e236100971f10cb71b96ab6
+  image_picker_ios: 7fe1ff8e34c1790d6fff70a32484959f563a928a
+  iris_method_channel: b9db2053dac3dc84e256c8792eff6f11323a53bd
   local_auth_darwin: 553ce4f9b16d3fdfeafce9cf042e7c9f77c1c391
+  nanopb: fad817b59e0457d11a5dfbde799381cd727c1275
+  path_provider_foundation: 080d55be775b7414fd5a5ef3ac137b97b097e564
+  permission_handler_apple: 4ed2196e43d0651e8ff7ca3483a069d469701f2d
+  PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
+  RecaptchaInterop: 11e0b637842dfb48308d242afc3f448062325aba
+  share_plus: de6030e33b4e106470e09322d87cf2a4258d2d1d
   shared_preferences_foundation: 9e1978ff2562383bd5676f64ec4e9aa8fa06a6f7
+  sign_in_with_apple: c5dcc141574c8c54d5ac99dd2163c0c72ad22418
   url_launcher_ios: 694010445543906933d732453a59da0a173ae33d
 
-PODFILE CHECKSUM: 819463e6a0290f5a72f145ba7cde16e8b6ef0796
+PODFILE CHECKSUM: 4c438addb11b6da45ed7ae408823d68256222460
 
 COCOAPODS: 1.16.2

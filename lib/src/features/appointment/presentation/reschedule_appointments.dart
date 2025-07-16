@@ -1,22 +1,53 @@
-import 'package:flutter/material.dart';
-import 'package:greenzone_medical/src/app_pkg.dart';
-import 'package:greenzone_medical/src/utils/custom_header.dart';
-import 'package:greenzone_medical/src/utils/custom_toast.dart';
 import 'package:intl/intl.dart';
 
-class RescheduleAppointmentPage extends StatefulWidget {
+import '../../../provider/all_providers.dart';
+import '../../../utils/packages.dart';
+
+class RescheduleAppointmentPage extends ConsumerStatefulWidget {
   final Map<String, dynamic> data;
 
   const RescheduleAppointmentPage({super.key, required this.data});
 
   @override
-  State<RescheduleAppointmentPage> createState() =>
+  ConsumerState<RescheduleAppointmentPage> createState() =>
       _RescheduleAppointmentPageState();
 }
 
-class _RescheduleAppointmentPageState extends State<RescheduleAppointmentPage> {
+class _RescheduleAppointmentPageState
+    extends ConsumerState<RescheduleAppointmentPage> {
   int? selectedReason;
+  DateTime selectedDate = DateTime.now();
+  String selectedTime = '';
   final TextEditingController _customReasonController = TextEditingController();
+  List<DateTime> getNext7Days() {
+    return List.generate(
+        7, (index) => DateTime.now().add(Duration(days: index)));
+  }
+
+  List<String> getAvailableTimes() {
+    List<String> times = [];
+    DateTime now = DateTime.now();
+    DateTime startTime =
+        DateTime(selectedDate.year, selectedDate.month, selectedDate.day, 9, 0);
+    DateTime endTime = DateTime(
+        selectedDate.year, selectedDate.month, selectedDate.day, 18, 0);
+
+    while (startTime.isBefore(endTime)) {
+      // Skip past times if selected date is today
+      if (selectedDate.day == now.day &&
+          selectedDate.month == now.month &&
+          selectedDate.year == now.year &&
+          startTime.isBefore(now)) {
+        startTime = startTime.add(Duration(hours: 1));
+        continue;
+      }
+
+      times.add(DateFormat("hh:mm a").format(startTime));
+      startTime = startTime.add(Duration(hours: 1));
+    }
+
+    return times;
+  }
 
   final List<String> reasons = [
     "I'm not available on schedule",
@@ -76,8 +107,7 @@ class _RescheduleAppointmentPageState extends State<RescheduleAppointmentPage> {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.pop(context);
-                    Navigator.pop(context);
+                    context.pushReplacement(Routes.BOTTOMNAV);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,
@@ -100,57 +130,10 @@ class _RescheduleAppointmentPageState extends State<RescheduleAppointmentPage> {
     );
   }
 
-  Future<void> handleReschedule() async {
-    if (selectedReason == null) {
-      CustomToast.show(context, "Please select a reason",
-          type: ToastType.warning);
-      return;
-    }
-
-    final apiService = ApiService();
-
-    final now = DateTime.now();
-    final formattedDate = DateFormat('yyyy/MM/dd').format(now);
-    final formattedTime = DateFormat('HH:mm').format(now);
-
-    final String reason = selectedReason == reasons.length - 1
-        ? _customReasonController.text.trim()
-        : reasons[selectedReason!];
-
-    if (reason.isEmpty) {
-      CustomToast.show(context, "Please enter your reason",
-          type: ToastType.warning);
-      return;
-    }
-
-    try {
-      final response = await apiService.put(
-        ApiUrl.rescheduleAppointment,
-        data: {
-          "doctorEmployeeId": widget.data['doctorId'] ?? 0,
-          "appointDate": formattedDate,
-          "appointTime": formattedTime,
-          "healthCareProviderId": widget.data['healthCareProviderId'] ?? 0,
-          "description": widget.data['description'] ?? '',
-          "id": widget.data['appointmentId'],
-          "rescheduleReason": reason,
-        },
-      );
-
-      if (response.statusCode == 200) {
-        showRescheduleSuccessModal(context);
-      } else {
-        CustomToast.show(context, "Failed to reschedule appointment",
-            type: ToastType.error);
-      }
-    } catch (e) {
-      CustomToast.show(context, "An error occurred while rescheduling",
-          type: ToastType.error);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
+    final isLoading = ref.watch(isLoadingProvider);
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -168,6 +151,103 @@ class _RescheduleAppointmentPageState extends State<RescheduleAppointmentPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            SizedBox(
+              height: 60,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: getNext7Days().length,
+                itemBuilder: (context, index) {
+                  DateTime date = getNext7Days()[index];
+                  return GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        selectedDate = date;
+                        selectedTime = ''; // Reset time selection
+                      });
+                    },
+                    child: Container(
+                      width: 60,
+                      margin: const EdgeInsets.symmetric(horizontal: 5),
+                      decoration: BoxDecoration(
+                        color: selectedDate.day == date.day
+                            ? ColorConstant.primaryColor
+                            : Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                            color: Color(0xffD9D9D94D).withOpacity(0.2)),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            DateFormat("dd").format(date),
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: selectedDate.day == date.day
+                                  ? Colors.white
+                                  : Color(0xff3C3B3B),
+                            ),
+                          ),
+                          Text(
+                            DateFormat("EEE").format(date).toUpperCase(),
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              color: selectedDate.day == date.day
+                                  ? Colors.white
+                                  : Color(0xff3C3B3B),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+            mediumSpace(),
+            const Text("Available Time",
+                style: TextStyle(
+                    fontSize: 14,
+                    color: Color(0xff3C3B3B),
+                    fontWeight: FontWeight.w600)),
+            smallSpace(),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: getAvailableTimes().map((time) {
+                return GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      selectedTime = time;
+                    });
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 15, vertical: 10),
+                    decoration: BoxDecoration(
+                      color: selectedTime == time
+                          ? ColorConstant.primaryColor
+                          : Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: Colors.grey.shade300),
+                    ),
+                    child: Text(
+                      time,
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: selectedTime == time
+                            ? Colors.white
+                            : Color(0xff616060),
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+            smallSpace(),
             const Text(
               'Reason for Schedule Change',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
@@ -203,33 +283,93 @@ class _RescheduleAppointmentPageState extends State<RescheduleAppointmentPage> {
               ),
             ],
             const SizedBox(height: 30),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: handleReschedule,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+            isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        if (selectedReason == null) {
+                          CustomToast.show(context, "Please select a reason",
+                              type: ToastType.warning);
+                          return;
+                        } else if (selectedTime.isEmpty) {
+                          CustomToast.show(context, 'Select appointment time',
+                              type: ToastType.error);
+                        }
+
+                        final apiService = ApiService();
+
+                        final String reason =
+                            selectedReason == reasons.length - 1
+                                ? _customReasonController.text.trim()
+                                : reasons[selectedReason!];
+
+                        if (reason.isEmpty) {
+                          CustomToast.show(context, "Please enter your reason",
+                              type: ToastType.warning);
+                          return;
+                        }
+                        ref.read(isLoadingProvider.notifier).state = true;
+
+                        try {
+                          final response = await apiService.put(
+                            ApiUrl.rescheduleAppointment,
+                            data: {
+                              "doctorEmployeeId": widget.data['doctorId'] ?? 0,
+                              "appointDate":
+                                  '${selectedDate.year}/${selectedDate.month}/${selectedDate.day}',
+                              "appointTime":
+                                  convertTo24HourManual(selectedTime),
+                              "healthCareProviderId":
+                                  widget.data['healthCareProviderId'] ?? 0,
+                              "description": widget.data['description'] ?? '',
+                              "id": widget.data['appointmentId'],
+                              "rescheduleReason": reason,
+                            },
+                          );
+                          ref.read(isLoadingProvider.notifier).state =
+                              false; // Stop loading if error
+
+                          if (response.statusCode == 200) {
+                            showRescheduleSuccessModal(context);
+                          } else {
+                            CustomToast.show(
+                                context, "Failed to reschedule appointment",
+                                type: ToastType.error);
+                          }
+                        } catch (e) {
+                          ref.read(isLoadingProvider.notifier).state =
+                              false; // Stop loading if error
+
+                          CustomToast.show(
+                              context, "An error occurred while rescheduling",
+                              type: ToastType.error);
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green,
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      child: const Text(
+                        'Next',
+                        style: TextStyle(color: Colors.white, fontSize: 16),
+                      ),
+                    ),
                   ),
-                ),
-                child: const Text(
-                  'Next',
-                  style: TextStyle(color: Colors.white, fontSize: 16),
-                ),
-              ),
-            ),
             const SizedBox(height: 20),
-            Center(
-              child: TextButton(
-                onPressed: () {},
-                child: const Text(
-                  'Call the Clinic',
-                  style: TextStyle(color: Colors.grey, fontSize: 14),
-                ),
-              ),
-            ),
+            // Center(
+            //   child: TextButton(
+            //     onPressed: () {},
+            //     child: const Text(
+            //       'Call the Clinic',
+            //       style: TextStyle(color: Colors.grey, fontSize: 14),
+            //     ),
+            //   ),
+            // ),
           ],
         ),
       ),

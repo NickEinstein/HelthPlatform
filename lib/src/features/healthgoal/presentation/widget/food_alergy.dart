@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:greenzone_medical/src/features/healthgoal/controller/health_goal_controller.dart';
+import 'package:secure_pin_input/secure_pin_input.dart';
 
 import '../../../../constants/constants.dart';
 import '../../../../constants/dimens.dart';
@@ -125,34 +126,34 @@ class _FoodAlergyState extends ConsumerState<FoodAlergy> {
                 const SizedBox(height: 10),
                 const Text("Others"),
                 TextField(
-                  controller: widget.controller.otherController,
-                  decoration: InputDecoration(
-                    hintText: "Type in your answer",
-                    hintStyle: const TextStyle(
-                      color: Color(0xffB3B3B3),
-                      fontWeight: FontWeight.w400,
-                      fontSize: 14,
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(
-                        vertical: 12, horizontal: 16),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(3),
-                      borderSide: const BorderSide(
+                    controller: widget.controller.otherController,
+                    decoration: InputDecoration(
+                      hintText: "Type in your answer",
+                      hintStyle: const TextStyle(
                         color: Color(0xffB3B3B3),
-                        width: 0.8,
+                        fontWeight: FontWeight.w400,
+                        fontSize: 14,
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 12, horizontal: 16),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(3),
+                        borderSide: const BorderSide(
+                          color: Color(0xffB3B3B3),
+                          width: 0.8,
+                        ),
                       ),
                     ),
-                  ),
-                  onChanged: (text) {
-                    setState(() {
-                      widget.controller
-                          .updateAllergies(); // Custom method to notify listeners
-
-                      widget.controller.selectedAllergies[0] =
-                          text; // Update Others allergy source
-                    });
-                  },
-                ),
+                    onChanged: (text) {
+                      widget.controller.selectedAllergies[0] = text;
+                      // Schedule notifying listeners AFTER the current frame to avoid build conflicts
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        if (mounted) {
+                          // ignore: invalid_use_of_protected_member
+                          widget.controller.notifyListeners();
+                        }
+                      });
+                    }),
               ],
             ],
           ),
@@ -211,6 +212,10 @@ class _FoodAlergyState extends ConsumerState<FoodAlergy> {
                                   widget.controller.selectedAllergies
                                       .remove(option.id);
                                 }
+                              });
+                              // Notify listeners AFTER the dialog state updates so the UI updates accordingly
+                              WidgetsBinding.instance.addPostFrameCallback((_) {
+                                widget.controller.notifyListeners();
                               });
                             },
                           );

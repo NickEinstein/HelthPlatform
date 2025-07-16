@@ -6,9 +6,10 @@ import '../../../../resources/resources.dart';
 import '../../../../resources/textstyles/app_textstyles.dart';
 import '../../../../routes/old_routes.dart';
 import '../../models/get_prescriptions_model.dart';
+import '../../models/prescription_model.dart';
 
 class MedicationDetailsWidget extends StatelessWidget {
-  final Prescription prescription;
+  final PrescriptionByPatientResponse prescription;
   const MedicationDetailsWidget({
     super.key,
     required this.prescription,
@@ -52,7 +53,7 @@ class MedicationDetailsWidget extends StatelessWidget {
                         borderRadius: BorderRadius.circular(30),
                       ),
                       child: Text(
-                        prescription.appointTime?.toString() ?? '',
+                        prescription.dispensedDate?.toString() ?? '',
                         style: CustomTextStyle.texttiny11.w700
                             .withColorHex(0xff530186),
                       ),
@@ -84,7 +85,7 @@ class MedicationDetailsWidget extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            '${(prescription.medication?.isEmpty ?? true) ? '-no-name-' : prescription.medication}',
+                            '${(prescription.pharmacyInventory!.productName?.isEmpty ?? true) ? '-no-name-' : prescription.pharmacyInventory!.productName}',
                             style: CustomTextStyle.textxSmall13.w700
                                 .withColorHex(0xff2F2F2F),
                           ),
@@ -96,7 +97,7 @@ class MedicationDetailsWidget extends StatelessWidget {
                           ),
                           3.gap,
                           Text(
-                            prescription.carePlan ?? '',
+                            prescription.treatment!.carePlan ?? '',
                             style: CustomTextStyle.textxSmall13
                                 .withColorHex(0xff393939),
                           ),

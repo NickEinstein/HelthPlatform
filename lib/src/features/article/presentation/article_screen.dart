@@ -1,11 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-import 'package:greenzone_medical/src/app_pkg.dart';
-
 import '../../../provider/all_providers.dart';
-import '../../../routes/routes.dart';
-import '../../../utils/custom_header.dart';
+import '../../../utils/packages.dart';
 import 'article_section.dart';
 import 'widget/article_list.dart';
 import 'widget/category_selector.dart';
@@ -21,6 +15,14 @@ class _ArticleScreenState extends ConsumerState<ArticleScreen> {
   int selectedIndex = 0; // Track selected category index
   TextEditingController searchController = TextEditingController();
   String searchQuery = "";
+  List<String> selectedCategories = []; // Initialize selected categories list
+
+  @override
+  void initState() {
+    super.initState();
+    // Clear selected categories on initial screen load
+    selectedCategories = [];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -85,13 +87,57 @@ class _ArticleScreenState extends ConsumerState<ArticleScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 10),
-                  Image.asset(
-                    'assets/icon/filter_icon.png',
-                    height: 52,
-                    width: 35,
-                  ),
+                  // const SizedBox(width: 10),
+                  // GestureDetector(
+                  //   onTap: () async {
+                  //     // Fetch categories names and reset selected categories list
+                  //     final categoryNames = categoryState.maybeWhen(
+                  //       data: (categories) =>
+                  //           categories.map((c) => c.name as String).toList(),
+                  //       orElse: () => <String>[],
+                  //     );
+
+                  //     final result = await openCategoryFilterDialog(
+                  //         categoryNames, context);
+
+                  //     if (result != null) {
+                  //       setState(() {
+                  //         selectedCategories =
+                  //             result; // Update the selected categories
+                  //       });
+                  //     }
+                  //   },
+                  //   child: Image.asset(
+                  //     'assets/icon/filter_icon.png',
+                  //     height: 52,
+                  //     width: 35,
+                  //   ),
+                  // ),
                 ],
+              ),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: selectedCategories
+                    .map((cat) => Chip(
+                          label: Text(cat),
+                          deleteIcon: const Icon(
+                            Icons.close,
+                            size: 20,
+                            color: Color(0xff059909),
+                          ),
+                          onDeleted: () {
+                            setState(() {
+                              selectedCategories.remove(cat);
+                            });
+                          },
+                          backgroundColor: Color(0xffD9FEAA),
+                          shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(20), // Set radius to 20
+                          ),
+                        ))
+                    .toList(),
               ),
               smallSpace(),
               categoryState.when(
@@ -125,73 +171,63 @@ class _ArticleScreenState extends ConsumerState<ArticleScreen> {
                                     color: ColorConstant.primaryColor,
                                     fontSize: 16,
                                     fontWeight: FontWeight.w700)),
-                            // TextButton(
-                            //     onPressed: () {
-                            //       context.push(Routes.ARTICLESCREEN);
-                            //     },
-                            //     child: const Text("See All",
-                            //         style: TextStyle(
-                            //             decoration: TextDecoration.underline,
-                            //             color: ColorConstant.primaryColor,
-                            //             fontSize: 16,
-                            //             fontWeight: FontWeight.w500)))
                           ],
                         ),
                       ),
 
-                      // ✅ Filter Articles based on Selected Category
+                      // ✅ Filter Articles based on Selected Category and Search Query
                       articleState.when(
                         loading: () =>
                             const Center(child: CircularProgressIndicator()),
                         error: (error, stackTrace) =>
-                            Center(child: Text('Error: $error')),
+                            Center(child: Text('No articles available.')),
                         data: (articles) {
                           final filteredArticles = articles.where((article) {
                             final matchesCategory = selectedIndex == 0 ||
-                                article.category.name.trim().toLowerCase() ==
-                                    categories[selectedIndex]
-                                        .trim()
-                                        .toLowerCase();
+                                article.category!.name ==
+                                    categories[selectedIndex];
 
                             final matchesSearch = searchQuery.isEmpty ||
-                                article.title
+                                article.title!
                                     .toLowerCase()
                                     .contains(searchQuery) ||
-                                article.shortDescription
+                                article.shortDescription!
                                     .toLowerCase()
                                     .contains(searchQuery) ||
-                                article.slug
+                                article.slug!
                                     .toLowerCase()
                                     .contains(searchQuery) ||
-                                article.category.name
+                                article.category!.name!
                                     .toLowerCase()
                                     .contains(searchQuery) ||
-                                article.category.description
+                                article.category!.description!
                                     .toLowerCase()
                                     .contains(searchQuery) ||
-                                article.fullDescription
+                                article.fullDescription!
                                     .toLowerCase()
                                     .contains(searchQuery);
 
-                            return matchesCategory && matchesSearch;
+                            final isFeatured = article.isFeatured == true;
+
+                            return matchesCategory &&
+                                matchesSearch &&
+                                isFeatured;
                           }).toList();
 
-                          // final filteredArticles = selectedIndex == 0
-                          //     ? articles
-                          //     : articles
-                          //         .where((article) =>
-                          //             article.category.name
-                          //                 .trim()
-                          //                 .toLowerCase() ==
-                          //             categories[selectedIndex]
-                          //                 .trim()
-                          //                 .toLowerCase())
-                          //         .toList();
+                          if (filteredArticles.isEmpty) {
+                            return Center(
+                              child: Text(
+                                "No articles match your search",
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            );
+                          }
 
-                          return SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.28,
-                            child: ArticleList(articles: filteredArticles),
-                          );
+                          return ArticleList(articles: filteredArticles);
                         },
                       ),
 

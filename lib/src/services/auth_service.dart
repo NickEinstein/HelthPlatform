@@ -1,8 +1,15 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:greenzone_medical/src/app_pkg.dart';
+import 'package:path/path.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
+import '../features/auth/model/register_response.dart';
+import '../features/notifications/messaging/firebase_messaging_config.dart';
 import '../model/login_response.dart';
 import '../model/nationality_model.dart';
 
@@ -14,8 +21,6 @@ class AuthService {
 
   Future<String> login(String email, String password) async {
     try {
-      print(email);
-      print(password);
       final response = await _apiService.post(
         ApiUrl.login,
         data: {'email': email, 'password': password},
@@ -25,6 +30,7 @@ class AuthService {
       if (response.statusCode == 200) {
         if (resData['status'] == 'success' && resData['data'] != null) {
           final loginResponse = LoginResponse.fromJson(resData['data']);
+
           _storageService.setString('saved_email', email);
           _storageService.setString('saved_password', password);
 
@@ -32,6 +38,14 @@ class AuthService {
               StorageConstants.loginData, jsonEncode(loginResponse.toJson()));
           await _storageService.setString(
               StorageConstants.accessToken, loginResponse.token);
+
+          final notificationRepo = NotificationRepositoryImpl();
+          final fcmToken = await notificationRepo.getFCMToken();
+
+          if (fcmToken != null && fcmToken.isNotEmpty) {
+            await _storageService.setString('fcm_token', fcmToken);
+            await updateDeviceID(loginResponse.userId, fcmToken);
+          }
 
           return 'Login successful';
         } else if (resData['status'] == 'Failed') {
@@ -45,7 +59,94 @@ class AuthService {
     }
   }
 
-  Future<String> register({
+  Future<UserCredential?> signInWithGoogle() async {
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+    if (googleUser == null) return null;
+
+    final GoogleSignInAuthentication googleAuth =
+        await googleUser.authentication;
+
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+
+    final userCredential =
+        await FirebaseAuth.instance.signInWithCredential(credential);
+
+    return userCredential;
+  }
+
+  Future<void> signInWithApple() async {
+    final credential = await SignInWithApple.getAppleIDCredential(
+      scopes: [
+        AppleIDAuthorizationScopes.email,
+        AppleIDAuthorizationScopes.fullName,
+      ],
+    );
+
+    // send credential.identityToken or credential.authorizationCode to backend
+  }
+
+  Future<String> socialLogin(String provider, String accessToken) async {
+    try {
+      final response = await _apiService.post(
+        ApiUrl.socialLogin,
+        data: {'provider': provider, 'accessToken': accessToken},
+      );
+      final resData = response.data;
+
+      if (response.statusCode == 200) {
+        if (resData['status'] == 'success' && resData['data'] != null) {
+          final loginResponse = LoginResponse.fromJson(resData['data']);
+
+          await _storageService.setString(
+              StorageConstants.loginData, jsonEncode(loginResponse.toJson()));
+          await _storageService.setString(
+              StorageConstants.accessToken, loginResponse.token);
+
+          final notificationRepo = NotificationRepositoryImpl();
+          final fcmToken = await notificationRepo.getFCMToken();
+
+          if (fcmToken != null && fcmToken.isNotEmpty) {
+            await _storageService.setString('fcm_token', fcmToken);
+            await updateDeviceID(loginResponse.userId, fcmToken);
+          }
+
+          return 'Login successful';
+        } else if (resData['status'] == 'Failed') {
+          return resData['message'] ?? 'Login failed';
+        }
+      }
+
+      return _handleStatusCode(response.statusCode);
+    } catch (error) {
+      return _handleError(error);
+    }
+  }
+
+  Future<String> updateDeviceID(int userId, String deviceToken) async {
+    try {
+      final response = await _apiService.post(
+        ApiUrl.updateDeviceTokenUrl, // ✅ Ensure this is the correct endpoint
+        data: {
+          'userId': userId,
+          'deviceToken': deviceToken,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return 'successful';
+      }
+
+      return _handleStatusCode(response.statusCode);
+    } catch (error) {
+      return _handleError(error);
+    }
+  }
+
+  Future<RegisterResponse?> register({
     required String firstName,
     required String lastName,
     required String dateOfBirth,
@@ -83,32 +184,21 @@ class AuthService {
         },
       );
 
-      final data = response.data;
-
-      if (response.statusCode == 200 && data != null) {
-        final isSuccess = data['isSuccess'] == true;
-        final statusCode = data['statusCode'];
-
-        if (isSuccess && statusCode == 200) {
-          return 'successful';
-        } else {
-          final errorMessage = data['error']?['emailResult']?['message'] ??
-              data['error']?['message'] ??
-              'Registration failed';
-          return 'Failed: $errorMessage';
-        }
+      if (response.statusCode == 200 && response.data != null) {
+        final result = RegisterResponse.fromJson(response.data);
+        return result;
       } else {
-        return _handleStatusCode(response.statusCode);
+        return null;
       }
     } catch (error) {
-      return _handleError(error);
+      return null;
     }
   }
 
   Future<List<NationalityData>> fetchNationality() async {
     try {
       final response = await _apiService.get(
-        'https://edogoverp.com/Connectedhealthonboarding/api/employee/nationality/list',
+        'https://api.greenzonetechnologies.com.ng/Connectedhealthonboarding/api/employee/nationality/list',
         headers: {
           'accept': '*/*', // Matching the cURL request
         },
@@ -133,6 +223,26 @@ class AuthService {
       }
     } catch (error) {
       throw Exception('Error fetching state: $error');
+    }
+  }
+
+  Future<String> photoUpdate(int patientId, String pictureUrl) async {
+    try {
+      final response = await _apiService.put(
+        ApiUrl.uploadProfileUrl, // ✅ Ensure this is the correct endpoint
+        data: {
+          'patientId': patientId,
+          'pictureUrl': pictureUrl,
+        },
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return 'successful';
+      }
+
+      return _handleStatusCode(response.statusCode);
+    } catch (error) {
+      return _handleError(error);
     }
   }
 
@@ -183,18 +293,26 @@ class AuthService {
         data: {
           'email': email,
           'password': password,
-          'confirmPassword': confirmPassword
+          'confirmPassword': confirmPassword,
         },
       );
 
       if (response.statusCode == 200 && response.data != null) {
         final loginResponse = LoginResponse.fromJson(response.data['data']);
 
-        // Save full user data and token
         await _storageService.setString(
             StorageConstants.loginData, jsonEncode(loginResponse.toJson()));
         await _storageService.setString(
             StorageConstants.accessToken, loginResponse.token);
+
+        // 🔁 Get FCM token from NotificationRepositoryImpl
+        final notificationRepo = NotificationRepositoryImpl();
+        final fcmToken = await notificationRepo.getFCMToken();
+
+        if (fcmToken != null && fcmToken.isNotEmpty) {
+          await _storageService.setString('fcm_token', fcmToken);
+          await updateDeviceID(loginResponse.userId, fcmToken);
+        }
 
         return 'successful';
       } else {
@@ -245,6 +363,38 @@ class AuthService {
       }
     } catch (error) {
       return _handleError(error);
+    }
+  }
+
+  Future<Map<String, dynamic>> uploadProfileUrl(File imageFile) async {
+    try {
+      final formData = FormData.fromMap({
+        'imageFile': await MultipartFile.fromFile(
+          imageFile.path,
+          filename: basename(imageFile.path),
+        ),
+      });
+
+      final response = await _apiService.post(
+        ApiUrl.imageUploadUrl,
+        data: formData,
+      );
+
+      if (response.statusCode == 200) {
+        return response.data;
+      } else {
+        return {
+          "code": 0,
+          "status": "error",
+          "message": "Server error: ${response.statusCode}",
+        };
+      }
+    } catch (e) {
+      return {
+        "code": 0,
+        "status": "error",
+        "message": "Exception: $e",
+      };
     }
   }
 

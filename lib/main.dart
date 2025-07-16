@@ -1,27 +1,33 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'src/app_pkg.dart';
+import 'src/features/notifications/messaging/firebase_messaging_config.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await StorageServiceImpl().initialize();
+
+  await Firebase.initializeApp(); // 🔒 Ensure Firebase is ready
+
   await dotenv.load(fileName: ".env");
+  await StorageServiceImpl().initialize();
   await DependencyInjection.init();
+
   ErrorWidget.builder = (FlutterErrorDetails details) => Container(
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
           color: Colors.amberAccent.shade400,
           borderRadius: BorderRadius.circular(12),
         ),
-        child: Text(
-          details.exception.toString(),
-        ),
+        child: Text(details.exception.toString()),
       );
-  runApp(const ProviderScope(child: MyApp()));
+
   configLoading();
+
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 void configLoading() {

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:greenzone_medical/src/utils/packages.dart';
+
+import '../../../../utils/network_img_fallback.dart';
 
 class ArticleCard extends StatelessWidget {
   final String title;
@@ -30,19 +33,14 @@ class ArticleCard extends StatelessWidget {
         child: Row(
           children: [
             // Article Image
-            Container(
-              width: 80,
+            NetworkImageWithFallback(
+              imageUrl: imageUrl,
               height: 80,
-              decoration: ShapeDecoration(
-                image: DecorationImage(
-                  image: AssetImage(imageUrl),
-                  fit: BoxFit.cover,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-              ),
+              width: 80,
+              borderRadius: 16,
+              fallbackAsset: 'assets/images/article_1.png',
             ),
+
             const SizedBox(width: 12), // Spacing between image & text
 
             // Title & Subtitle
@@ -51,7 +49,7 @@ class ArticleCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    title,
+                    stripHtmlTags(title),
                     style: const TextStyle(
                       color: Color(0xFF3C3A3A),
                       fontSize: 14,
@@ -59,10 +57,13 @@ class ArticleCard extends StatelessWidget {
                       fontWeight: FontWeight.w600,
                       height: 1.29,
                     ),
+                    maxLines: 2, // Limits to one line
+                    overflow:
+                        TextOverflow.ellipsis, // Adds "..." when text overflows
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    subtitle,
+                    stripHtmlTags(subtitle),
                     style: const TextStyle(
                       color: Color(0xFF605F5F),
                       fontSize: 12,
@@ -70,7 +71,9 @@ class ArticleCard extends StatelessWidget {
                       fontWeight: FontWeight.w400,
                       height: 1.33,
                     ),
-                  ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  )
                 ],
               ),
             ),

@@ -13,6 +13,7 @@ import '../../../api/api_handler_models.dart';
 import '../../../api/app_endpoints.dart';
 import '../../../utils/dialogs/dialog.dart';
 import '../models/get_prescriptions_model.dart';
+import '../models/prescription_model.dart';
 import '../models/prescription_reminder_model.dart';
 
 final presctiptionProvider =
@@ -41,15 +42,16 @@ class PrescriptionProvider extends Notifier<PrescriptionRepo> {
   }
 
   Future<void> rescheduleReminder(
-      {required Prescription prescription, required Duration duration}) async {
+      {required PrescriptionByPatientResponse prescription,
+      required Duration duration}) async {
     var currentDate =
-        DateFormat('MM/dd/yyyy').tryParse(prescription.appointDate ?? '');
+        DateFormat('MM/dd/yyyy').tryParse(prescription.dispensedDate ?? '');
 
     if (currentDate == null) return;
 
     currentDate = currentDate.copyWith(
-      hour: int.tryParse(prescription.appointTime?.split(':')[0] ?? ''),
-      minute: int.tryParse(prescription.appointTime?.split(':')[1] ?? ''),
+      hour: int.tryParse(prescription.dispensedDate?.split(':')[0] ?? ''),
+      minute: int.tryParse(prescription.dispensedDate?.split(':')[1] ?? ''),
     );
     currentDate = currentDate.add(duration);
 

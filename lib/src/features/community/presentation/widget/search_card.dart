@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:greenzone_medical/src/app_pkg.dart';
 
+import '../../../../constants/helper.dart';
+import '../../../../utils/network_img_fallback.dart';
+
 class SearchCard extends StatefulWidget {
   final String imageUrl;
   final String title;
@@ -32,30 +35,41 @@ class _SearchCardState extends State<SearchCard> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             // Image
-
             ClipRRect(
               borderRadius: BorderRadius.circular(10),
-              child: (widget.imageUrl.isNotEmpty &&
-                      Uri.tryParse(widget.imageUrl)?.hasAbsolutePath == true)
-                  ? Image.network(
-                      widget.imageUrl,
-                      width: 60,
-                      height: 50,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) => Image.asset(
-                        'assets/images/fitness1.png', // 🔥 Default fallback asset
-                        width: 60,
-                        height: 50,
-                        fit: BoxFit.cover,
-                      ),
-                    )
-                  : Image.asset(
-                      widget.imageUrl, // 🔥 Ensure a valid asset is used
-                      width: 60,
-                      height: 50,
-                      fit: BoxFit.cover,
+              child: Image.network(
+                (widget.imageUrl).startsWith('http')
+                    ? widget.imageUrl
+                    : '${AppConstants.noSlashImageURL}${widget.imageUrl}',
+                width: 60,
+                height: 70,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  final firstName = widget.title;
+                  final initials = (firstName.isNotEmpty ? firstName[0] : '');
+
+                  return Container(
+                    width: 60,
+                    height: 70,
+                    decoration: BoxDecoration(
+                      color: getAvatarColor(firstName),
+                      borderRadius: BorderRadius.circular(10),
                     ),
+                    alignment: Alignment.center,
+                    child: Text(
+                      initials,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize:
+                            16, // Adjusted from 24 to better fit the avatar
+                      ),
+                    ),
+                  );
+                },
+              ),
             ),
+
             const SizedBox(width: 12),
 
             // Title and Subtitle with Button
@@ -66,6 +80,8 @@ class _SearchCardState extends State<SearchCard> {
                 children: [
                   Text(
                     widget.title,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
                     style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,

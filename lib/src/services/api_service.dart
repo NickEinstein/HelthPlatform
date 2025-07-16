@@ -7,7 +7,9 @@ class ApiService {
   late Dio dio;
   ApiService() {
     final options = BaseOptions(
-      baseUrl: 'https://edogoverp.com/ConnectedHealthWebApi/api',
+      // baseUrl: 'https://edogoverp.com/ConnectedHealthWebApi/api',
+      baseUrl:
+          'https://api.greenzonetechnologies.com.ng/ConnectedHealthWebApi/api',
       connectTimeout: const Duration(seconds: 10),
       receiveTimeout: const Duration(seconds: 15),
     );
@@ -57,10 +59,28 @@ class ApiService {
     String path, {
     dynamic data,
     Map<String, dynamic>? headers,
+    Options? options, // Add this
   }) async {
     try {
-      final options = Options(headers: headers);
-      final response = await dio.post<T>(path, data: data, options: options);
+      final defaultHeaders = {
+        'Accept': 'application/json',
+        ...?headers,
+      };
+
+      final requestOptions = options?.copyWith(
+            headers: {
+              ...defaultHeaders,
+              ...?options.headers,
+            },
+          ) ??
+          Options(headers: defaultHeaders);
+
+      final response = await dio.post<T>(
+        path,
+        data: data,
+        options: requestOptions,
+      );
+
       return _handleResponse<T>(response);
     } catch (error) {
       throw _handleError(error);

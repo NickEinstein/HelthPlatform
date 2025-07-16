@@ -1,11 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-import 'package:greenzone_medical/src/app_pkg.dart';
-
 import '../../../provider/all_providers.dart';
-import '../../../routes/app_pages.dart';
-import '../../../utils/custom_header.dart';
+import '../../../utils/packages.dart';
 import 'widget/search_card.dart';
 
 class SearchCommunity extends ConsumerStatefulWidget {
@@ -17,10 +11,12 @@ class SearchCommunity extends ConsumerStatefulWidget {
 
 class _SearchCommunityState extends ConsumerState<SearchCommunity> {
   String searchQuery = '';
+  List<String> selectedCategories = []; // Track selected categories
 
   @override
   Widget build(BuildContext context) {
     final communityListAsync = ref.watch(communityListProvider);
+    final categoryState = ref.watch(categoryProvider);
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -28,9 +24,7 @@ class _SearchCommunityState extends ConsumerState<SearchCommunity> {
         padding: const EdgeInsets.symmetric(horizontal: 15),
         child: Column(
           children: [
-            // Reduced or removed extra space
             verticalSpace(context, 0.08),
-
             CustomHeader(
               title: 'Community',
               onPressed: () {
@@ -63,7 +57,7 @@ class _SearchCommunityState extends ConsumerState<SearchCommunity> {
                           child: TextField(
                             style: const TextStyle(color: Colors.black),
                             decoration: const InputDecoration(
-                              hintText: "Search Group Name",
+                              hintText: "Search Community Name",
                               hintStyle: TextStyle(
                                   color: Color(0xff999999),
                                   fontSize: 14,
@@ -83,23 +77,86 @@ class _SearchCommunityState extends ConsumerState<SearchCommunity> {
                   ),
                 ),
                 const SizedBox(width: 10),
-                Image.asset(
-                  'assets/icon/filter_icon.png',
-                  height: 52,
-                  width: 35,
+                GestureDetector(
+                  onTap: () async {
+                    final categoryNames = categoryState.when(
+                      data: (categoriesList) {
+                        // Get category names
+                        final categories = categoriesList
+                            .map((category) => category.name)
+                            .toSet()
+                            .toList();
+                        return categories;
+                      },
+                      loading: () => <String>[], // Empty list while loading
+                      error: (error, stack) =>
+                          <String>[], // Empty list on error
+                    );
+
+                    // Open your category filter dialog
+                    final result = await openCategoryFilterDialog(
+                      categoryNames.cast<String>(),
+                      context,
+                    );
+
+                    if (result != null) {
+                      setState(() {
+                        selectedCategories = result;
+                      });
+                    }
+                  },
+                  child: Image.asset(
+                    'assets/icon/filter_icon.png',
+                    height: 52,
+                    width: 35,
+                  ),
                 ),
               ],
             ),
 
-            // 🏋️ Community List
+            // 🏋️ Selected Categories Chips
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: selectedCategories
+                  .map((cat) => Chip(
+                        label: Text(cat),
+                        deleteIcon: const Icon(
+                          Icons.close,
+                          size: 20,
+                          color: Color(0xff059909),
+                        ),
+                        onDeleted: () {
+                          setState(() {
+                            selectedCategories.remove(cat);
+                          });
+                        },
+                        backgroundColor: Color(0xffD9FEAA),
+                        shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.circular(20), // Set radius to 20
+                        ),
+                      ))
+                  .toList(),
+            ),
+
             smallSpace(),
+
+            // 🏋️ Community List
             Expanded(
               child: communityListAsync.when(
                 data: (communityList) {
-                  final filteredList = communityList
-                      .where((community) =>
-                          community.name!.toLowerCase().contains(searchQuery))
-                      .toList();
+                  // Filter communities based on search and selected categories
+                  final filteredList = communityList.where((community) {
+                    final matchesSearch =
+                        community.name!.toLowerCase().contains(searchQuery);
+
+                    final matchesCategory = selectedCategories.isEmpty
+                        ? true // If no categories selected, match all
+                        : selectedCategories.contains(community.category?.name);
+
+                    return matchesSearch && matchesCategory;
+                  }).toList();
 
                   if (filteredList.isEmpty) {
                     return const Center(
@@ -114,16 +171,10 @@ class _SearchCommunityState extends ConsumerState<SearchCommunity> {
                     itemBuilder: (context, index) {
                       final community = filteredList[index];
                       return SearchCard(
-                        imageUrl: community.pictureUrl
-                                .toString()
-                                .contains('uploads')
-                            ? 'https://edogoverp.com/ConnectedHealthWebApi/${community.pictureUrl!}'
-                            : community.pictureUrl!.isNotEmpty
-                                ? community.pictureUrl!
-                                : 'assets/images/fitness1.png',
+                        imageUrl: community.pictureUrl!,
                         title: community.name ?? 'Unknown Community',
                         subtitle:
-                            '${community.communityMembers?.length ?? 0} members',
+                            '${community.communityGroupMembers?.length ?? 0} members',
                         onButtonPressed: () {
                           context.push(Routes.COMMUNITYDETAILS,
                               extra: community);
@@ -133,7 +184,8 @@ class _SearchCommunityState extends ConsumerState<SearchCommunity> {
                   );
                 },
                 loading: () => const Center(child: CircularProgressIndicator()),
-                error: (error, stack) => Center(child: Text("Error: $error")),
+                error: (error, stack) =>
+                    Center(child: Text("Error community found")),
               ),
             ),
           ],

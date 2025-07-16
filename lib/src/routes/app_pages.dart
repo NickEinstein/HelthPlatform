@@ -1,34 +1,32 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-import 'package:greenzone_medical/src/features/appointment/presentation/doctors_report.dart';
-import 'package:greenzone_medical/src/features/appointment/presentation/doctors_report_details.dart';
-import 'package:greenzone_medical/src/features/article/presentation/article_details.dart';
-import 'package:greenzone_medical/src/features/auth/presentation/new_password_page.dart';
-import 'package:greenzone_medical/src/features/caregivers/presentation/caregivers_page.dart';
-import 'package:greenzone_medical/src/features/caregivers/caregivers.dart';
-import 'package:greenzone_medical/src/features/community/community.dart';
-import 'package:greenzone_medical/src/features/community/presentation/community_details.dart';
-import 'package:greenzone_medical/src/features/community/presentation/community_list.dart';
-import 'package:greenzone_medical/src/features/doctors/doctors.dart';
-import 'package:greenzone_medical/src/features/doctors/presentation/book_appointment.dart';
-import 'package:greenzone_medical/src/features/doctors/presentation/doctor_listing.dart';
-import 'package:greenzone_medical/src/features/appointment/presentation/reschedule_appointments.dart';
-import 'package:greenzone_medical/src/features/healthgoal/presentation/healthgoal_page.dart';
-import 'package:greenzone_medical/src/features/home/home.dart';
+import 'package:greenzone_medical/src/features/appointment/appointment.dart';
+import 'package:greenzone_medical/src/features/appointment/presentation/widgets/reasoncancelled_appointments.dart';
+import 'package:greenzone_medical/src/features/chats/chats.dart';
+import 'package:greenzone_medical/src/features/chats/presentation/model/chatcontact_model.dart';
+import 'package:greenzone_medical/src/features/health_record/presentation/widget/main_health_record.dart';
+import 'package:greenzone_medical/src/features/notifications/notifications.dart';
+import 'package:greenzone_medical/src/features/prescription/presentation/prescriptions.dart';
 import 'package:greenzone_medical/src/model/community_list_response.dart';
-import 'package:greenzone_medical/src/model/doctord_list_response.dart';
-
-import '../app_pkg.dart';
-import '../features/article/presentation/article_screen.dart';
-import '../features/community/presentation/search_community.dart';
-import '../features/healthgoal/presentation/about_health.dart';
-import '../features/home/presentation/widget/custom_bottom_navbar.dart';
-import '../features/onboarding/onboarding.dart';
+import '../features/appointment/model/appointment_model.dart';
+import '../features/article/all_articles.dart';
+import '../features/biling/presentation/billings_page.dart';
+import '../features/chats/presentation/model/chatsummary_model.dart';
+import '../features/chats/presentation/model/widget/chat_detail_screen.dart';
+import '../features/chats/presentation/model/widget/contact_info.dart';
+import '../features/community/presentation/community_friends_details.dart';
+import '../features/community/presentation/friends_with_search.dart';
+import '../features/health_record/model/health_record_model.dart';
+import '../features/health_record/presentation/widget/doctorsnote/notes_page.dart';
+import '../features/home/model/friend_request_receiver.dart';
+import '../features/home/presentation/friend_request/all_friend_request.dart';
+import '../features/home/presentation/friend_request/view_patient.dart';
+import '../features/home/presentation/widget/all_group_interest.dart';
+import '../features/rating/rating_page.dart';
+import '../model/doctord_list_response.dart';
+import '../utils/packages.dart';
 
 part 'app_routes.dart';
 
-final _key = GlobalKey<NavigatorState>();
+final rootNavigatorKey = GlobalKey<NavigatorState>();
 
 class AppPages {
   AppPages._();
@@ -41,7 +39,7 @@ final routerProvider = Provider<GoRouter>((ref) {
   // static String get routeName => 'splash';
   // static String get routeLocation => '/$routeName';
   return GoRouter(
-    navigatorKey: _key,
+    navigatorKey: rootNavigatorKey,
     debugLogDiagnostics: true,
     initialLocation: _Paths.SPLASH,
     routes: [
@@ -92,6 +90,24 @@ final routerProvider = Provider<GoRouter>((ref) {
           );
         },
       ),
+      GoRoute(
+        path: _Paths.CHATDETAILS,
+        name: _Paths.CHATDETAILS,
+        builder: (context, state) {
+          final chat = state.extra as ChatContact;
+          return ChatDetailScreen(chat: chat);
+        },
+      ),
+      //  GoRoute(
+      //   path: _Paths.UPLOADPROFILEIMAGE,
+      //   name: _Paths.UPLOADPROFILEIMAGE,
+      //   builder: (context, state) {
+      //     final email = state.extra as String;
+      //     return OTPPage(
+      //       email: email,
+      //     );
+      //   },
+      // ),
       GoRoute(
         path: _Paths.NEWPASSWORD,
         name: _Paths.NEWPASSWORD,
@@ -185,16 +201,16 @@ final routerProvider = Provider<GoRouter>((ref) {
           );
         },
       ),
-
- GoRoute(
+      GoRoute(
         path: _Paths.CAREGIVERSPAGE,
         name: _Paths.CAREGIVERSPAGE,
         builder: (context, state) {
-          return const CaregiversPage();
+          final type = state.extra as String;
+          return CaregiversPage(
+            type: type,
+          );
         },
       ),
-
-     
       GoRoute(
         path: _Paths.RESCHEDULEAPPOINTMENT,
         name: _Paths.RESCHEDULEAPPOINTMENT,
@@ -203,7 +219,6 @@ final routerProvider = Provider<GoRouter>((ref) {
           return RescheduleAppointmentPage(data: appointmentData);
         },
       ),
-
       GoRoute(
         path: _Paths.DOCTORSREPORT,
         name: _Paths.DOCTORSREPORT,
@@ -218,7 +233,6 @@ final routerProvider = Provider<GoRouter>((ref) {
           return const DoctorsReportDetails();
         },
       ),
-
       GoRoute(
         path: _Paths.HEALTHGOAL,
         name: _Paths.HEALTHGOAL,
@@ -237,11 +251,217 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: _Paths.ARTICLEDETAILS,
         name: _Paths.ARTICLEDETAILS,
         builder: (context, state) {
-          final article = state.extra as Map<String, String>;
-          return ArticleDetails(
-            title: article["title"]!,
-            description: article["description"]!,
-            imageUrl: article["imageUrl"]!,
+          final article = state.extra as ArticleResponse;
+          return ArticleDetails(article: article);
+        },
+      ),
+      GoRoute(
+        path: _Paths.MYCOMMUNITY,
+        name: _Paths.MYCOMMUNITY,
+        builder: (context, state) {
+          return const MyCommunity();
+        },
+      ),
+      GoRoute(
+        path: _Paths.PRODUCTSCAN,
+        name: _Paths.PRODUCTSCAN,
+        builder: (context, state) {
+          return const ProductScanScreen();
+        },
+      ),
+      GoRoute(
+        path: _Paths.LOADINGPRODUCTSCAN,
+        name: _Paths.LOADINGPRODUCTSCAN,
+        builder: (context, state) {
+          final imagePath = state.extra as String;
+          return LoadingScreen(
+            imagePath: imagePath,
+          );
+        },
+      ),
+      GoRoute(
+        path: _Paths.PRODUCTSCANRESULT,
+        name: _Paths.PRODUCTSCANRESULT,
+        builder: (context, state) {
+          final args = state.extra as ScanResultArgs;
+
+          return ResultScreen(
+            imagePath: args.imagePath,
+            productData: args.productData,
+          );
+        },
+      ),
+      GoRoute(
+        path: _Paths.USERPERSONAL,
+        name: _Paths.USERPERSONAL,
+        builder: (context, state) {
+          return const PersonalDataScreen();
+        },
+      ),
+      GoRoute(
+        path: _Paths.USERCONTACT,
+        name: _Paths.USERCONTACT,
+        builder: (context, state) {
+          return const HealthContactDetails();
+        },
+      ),
+      GoRoute(
+        path: _Paths.USEREMERGENCY,
+        name: _Paths.USEREMERGENCY,
+        builder: (context, state) {
+          return const EmergencyContactDetails();
+        },
+      ),
+      GoRoute(
+        path: _Paths.MAINHEALTHRECORD,
+        name: _Paths.MAINHEALTHRECORD,
+        builder: (context, state) {
+          return const MainHealthRecord();
+        },
+      ),
+      GoRoute(
+        path: _Paths.NOTESPAGE,
+        name: _Paths.NOTESPAGE,
+        builder: (context, state) {
+          final medicalRes = state.extra as MedicalRecordResponse;
+          return NotesPage(screenData: medicalRes);
+        },
+      ),
+      GoRoute(
+        path: _Paths.PRESCRIPTION,
+        name: _Paths.PRESCRIPTION,
+        builder: (context, state) {
+          final showBack = (state.extra as bool?) ?? false;
+          return PrescriptionPage(showBackButton: showBack);
+        },
+      ),
+      // GoRoute(
+      //   path: _Paths.REASONCANCELAPPOINTMENT,
+      //   name: _Paths.REASONCANCELAPPOINTMENT,
+      //   builder: (context, state) {
+      //     return ReasoncancelledAppointments();
+      //   },
+      // ),
+      GoRoute(
+        path: _Paths.REASONCANCELAPPOINTMENT,
+        name: _Paths.REASONCANCELAPPOINTMENT,
+        builder: (context, state) {
+          final extra = state.extra as Map<String, dynamic>;
+          return ReasoncancelledAppointments(
+            appointmentId: extra['appointmentId'],
+            onRefresh: extra['onRefresh'],
+            isCanceled: extra['isCanceled'],
+          );
+        },
+      ),
+
+      GoRoute(
+        path: _Paths.APPOINTMENT,
+        name: _Paths.APPOINTMENT,
+        builder: (context, state) {
+          final showBack = state.extra as bool;
+          return AppointmentPage(showBackButton: showBack);
+        },
+      ),
+      GoRoute(
+        path: _Paths.RATINGPAGE,
+        name: _Paths.RATINGPAGE,
+        builder: (context, state) {
+          final doctor = state.extra as AppointmentResponse;
+          return RatingPage(
+            doctor: doctor,
+          );
+        },
+      ),
+      GoRoute(
+        path: _Paths.ALLFRIENDREQUEST,
+        name: _Paths.ALLFRIENDREQUEST,
+        builder: (context, state) {
+          return const AllFriendRequest();
+        },
+      ),
+      GoRoute(
+        path: _Paths.VIEWPATIENTPAGE,
+        name: _Paths.VIEWPATIENTPAGE,
+        builder: (context, state) {
+          final friendRequestReceiverResponse =
+              state.extra as FriendRequestReceiverResponse;
+          return ViewPatientPage(
+            friendRequestReceiverResponse: friendRequestReceiverResponse,
+          );
+        },
+      ),
+      GoRoute(
+        path: _Paths.VIEWALLGROUPINTEREST,
+        name: _Paths.VIEWALLGROUPINTEREST,
+        builder: (context, state) {
+          final categoryIds = state.extra as List<int>;
+          return AllGroupInterestScreen(
+            categoryIds: categoryIds,
+          );
+        },
+      ),
+      GoRoute(
+        path: _Paths.COMMUNITYFRIENDSDETAILS,
+        name: _Paths.COMMUNITYFRIENDSDETAILS,
+        builder: (context, state) {
+          final extra = state.extra as Map<String, dynamic>;
+          final community = extra['community'] as CommunityListResponse;
+          final id = extra['id'] as int;
+
+          return CommunityFriendDetails(
+            community: community,
+            id: id,
+          );
+        },
+      ),
+      GoRoute(
+        path: _Paths.FRIENDWITHSEARCHPAGE,
+        name: _Paths.FRIENDWITHSEARCHPAGE,
+        builder: (context, state) {
+          final extra = state.extra as Map<String, dynamic>;
+          final community = extra['community'] as CommunityListResponse;
+
+          return FriendWithSearchPage(
+            community: community,
+          );
+        },
+      ),
+      GoRoute(
+        path: _Paths.BILLINGPAGE,
+        name: _Paths.BILLINGPAGE,
+        builder: (context, state) {
+          return const BillingsPage();
+        },
+      ),
+      GoRoute(
+        path: _Paths.ALLARTICLESECTION,
+        name: _Paths.ALLARTICLESECTION,
+        builder: (context, state) {
+          return const AllArticleScreen();
+        },
+      ),
+      GoRoute(
+        path: _Paths.CHATPAGE,
+        name: _Paths.CHATPAGE,
+        builder: (context, state) {
+          return const ChatPage();
+        },
+      ),
+      GoRoute(
+        path: _Paths.NOTIFICATIONPAGE,
+        name: _Paths.NOTIFICATIONPAGE,
+        builder: (context, state) {
+          return const NotificationPage();
+        },
+      ),
+      GoRoute(
+        path: _Paths.CONTACTINFOPAGE,
+        name: _Paths.CONTACTINFOPAGE,
+        builder: (context, state) {
+          final userID = state.extra as int;
+          return ContactInfoPage(
+            friendRequestReceiverResponse: userID,
           );
         },
       ),

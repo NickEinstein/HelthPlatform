@@ -4,6 +4,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:greenzone_medical/src/constants/color_constant.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../constants/dimens.dart';
 import '../../../../constants/helper.dart';
@@ -195,25 +196,32 @@ class _LocationInfoScreenState extends ConsumerState<LocationInfoScreen> {
                 Expanded(
                   child: RichText(
                     text: TextSpan(
-                      style: TextStyle(
+                      style: const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w400,
                           color: Color(0xff616060)),
                       children: [
-                        TextSpan(text: "I agree with the "),
+                        const TextSpan(text: "I agree with the "),
                         TextSpan(
                           text: "Terms & Conditions",
                           recognizer: TapGestureRecognizer()
-                            ..onTap = () {
-                              CustomToast.show(context, "Coming soon...",
-                                  type: ToastType.error);
+                            ..onTap = () async {
+                              // CustomToast.show(context, "Coming soon...",
+                              //     type: ToastType.error);
+                              //               String onTapValue = goal.onTap.toString();
+
+                              // if (Uri.tryParse(onTapValue)?.hasAbsolutePath == true) {
+                              //   if (await canLaunchUrl(Uri.parse(onTapValue))) {
+                              //     await launchUrl(Uri.parse(onTapValue));
+                              //   }
+                              // }
                             },
-                          style: TextStyle(
+                          style: const TextStyle(
                               color: Color(0xffF04D22),
                               fontSize: 14,
                               fontWeight: FontWeight.w400),
                         ),
-                        TextSpan(text: " and "),
+                        const TextSpan(text: " and "),
                         TextSpan(
                           text: "Privacy Policy statement",
                           recognizer: TapGestureRecognizer()
@@ -221,7 +229,7 @@ class _LocationInfoScreenState extends ConsumerState<LocationInfoScreen> {
                               CustomToast.show(context, "Coming soon...",
                                   type: ToastType.error);
                             },
-                          style: TextStyle(
+                          style: const TextStyle(
                               color: Color(0xffF04D22),
                               fontSize: 14,
                               fontWeight: FontWeight.w400),

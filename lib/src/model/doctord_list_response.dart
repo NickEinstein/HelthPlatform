@@ -6,36 +6,30 @@ class DoctorListResponse {
   String? middleName;
   String? lastName;
   String? gender;
+  String? salaryAccountNumber;
+  String? salaryDomiciledBank;
+  String? nin;
+  String? bvn;
+  String? staffId;
   String? dateOfBirth;
   String? placeOfBirth;
   String? maritalStatus;
+  String? religion;
+  State? state;
+  State? nationality;
   String? motherMaidenName;
   String? weddingAnniversary;
-  String? authToken;
-  int? stateId;
-  int? nationalityId;
-  int? religionId;
-  String? designation;
-  String? staffId;
-  String? bvn;
-  String? nin;
-  String? salaryAccountNumber;
-  String? salaryDomiciledBank;
-  int? clinicId;
-  String? clinic;
-  int? healthCareProviderId;
+  String? phoneNumber;
   String? profilePicture;
-  String? role;
-  String? employeePrivilegeAccesses;
-  String? department;
+  List<UserRoles>? userRoles;
   String? workGrade;
-  int? userId;
-  String? username;
-  bool? isSuperAdmin;
   String? resumptionDate;
-  String? onboardingDate;
   String? lastLoginTime;
   String? signature;
+  String? department;
+  String? accountStatus;
+  HealthCareProvider? healthCareProvider;
+  String? onboardingDate;
   String? createdAt;
   int? createdBy;
   String? modifiedAt;
@@ -46,7 +40,7 @@ class DoctorListResponse {
   int? rating;
   int? reviews;
   int? status;
-  String? accountStatus;
+  int? userType;
 
   DoctorListResponse(
       {this.id,
@@ -56,36 +50,30 @@ class DoctorListResponse {
       this.middleName,
       this.lastName,
       this.gender,
+      this.salaryAccountNumber,
+      this.salaryDomiciledBank,
+      this.nin,
+      this.bvn,
+      this.staffId,
       this.dateOfBirth,
       this.placeOfBirth,
       this.maritalStatus,
+      this.religion,
+      this.state,
+      this.nationality,
       this.motherMaidenName,
       this.weddingAnniversary,
-      this.authToken,
-      this.stateId,
-      this.nationalityId,
-      this.religionId,
-      this.designation,
-      this.staffId,
-      this.bvn,
-      this.nin,
-      this.salaryAccountNumber,
-      this.salaryDomiciledBank,
-      this.clinicId,
-      this.clinic,
-      this.healthCareProviderId,
+      this.phoneNumber,
       this.profilePicture,
-      this.role,
-      this.employeePrivilegeAccesses,
-      this.department,
+      this.userRoles,
       this.workGrade,
-      this.userId,
-      this.username,
-      this.isSuperAdmin,
       this.resumptionDate,
-      this.onboardingDate,
       this.lastLoginTime,
       this.signature,
+      this.department,
+      this.accountStatus,
+      this.healthCareProvider,
+      this.onboardingDate,
       this.createdAt,
       this.createdBy,
       this.modifiedAt,
@@ -96,7 +84,7 @@ class DoctorListResponse {
       this.rating,
       this.reviews,
       this.status,
-      this.accountStatus});
+      this.userType});
 
   DoctorListResponse.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -106,36 +94,39 @@ class DoctorListResponse {
     middleName = json['middleName'];
     lastName = json['lastName'];
     gender = json['gender'];
+    salaryAccountNumber = json['salaryAccountNumber'];
+    salaryDomiciledBank = json['salaryDomiciledBank'];
+    nin = json['nin'];
+    bvn = json['bvn'];
+    staffId = json['staffId'];
     dateOfBirth = json['dateOfBirth'];
     placeOfBirth = json['placeOfBirth'];
     maritalStatus = json['maritalStatus'];
+    religion = json['religion'];
+    state = json['state'] != null ? new State.fromJson(json['state']) : null;
+    nationality = json['nationality'] != null
+        ? new State.fromJson(json['nationality'])
+        : null;
     motherMaidenName = json['motherMaidenName'];
     weddingAnniversary = json['weddingAnniversary'];
-    authToken = json['authToken'];
-    stateId = json['stateId'];
-    nationalityId = json['nationalityId'];
-    religionId = json['religionId'];
-    designation = json['designation'];
-    staffId = json['staffId'];
-    bvn = json['bvn'];
-    nin = json['nin'];
-    salaryAccountNumber = json['salaryAccountNumber'];
-    salaryDomiciledBank = json['salaryDomiciledBank'];
-    clinicId = json['clinicId'];
-    clinic = json['clinic'];
-    healthCareProviderId = json['healthCareProviderId'];
+    phoneNumber = json['phoneNumber'];
     profilePicture = json['profilePicture'];
-    role = json['role'];
-    employeePrivilegeAccesses = json['employeePrivilegeAccesses'];
-    department = json['department'];
+    if (json['userRoles'] != null) {
+      userRoles = <UserRoles>[];
+      json['userRoles'].forEach((v) {
+        userRoles!.add(new UserRoles.fromJson(v));
+      });
+    }
     workGrade = json['workGrade'];
-    userId = json['userId'];
-    username = json['username'];
-    isSuperAdmin = json['isSuperAdmin'];
     resumptionDate = json['resumptionDate'];
-    onboardingDate = json['onboardingDate'];
     lastLoginTime = json['lastLoginTime'];
     signature = json['signature'];
+    department = json['department'];
+    accountStatus = json['accountStatus'];
+    healthCareProvider = json['healthCareProvider'] != null
+        ? new HealthCareProvider.fromJson(json['healthCareProvider'])
+        : null;
+    onboardingDate = json['onboardingDate'];
     createdAt = json['createdAt'];
     createdBy = json['createdBy'];
     modifiedAt = json['modifiedAt'];
@@ -146,7 +137,7 @@ class DoctorListResponse {
     rating = json['rating'];
     reviews = json['reviews'];
     status = json['status'];
-    accountStatus = json['accountStatus'];
+    status = json['usersType'];
   }
 
   Map<String, dynamic> toJson() {
@@ -158,36 +149,38 @@ class DoctorListResponse {
     data['middleName'] = this.middleName;
     data['lastName'] = this.lastName;
     data['gender'] = this.gender;
+    data['salaryAccountNumber'] = this.salaryAccountNumber;
+    data['salaryDomiciledBank'] = this.salaryDomiciledBank;
+    data['nin'] = this.nin;
+    data['bvn'] = this.bvn;
+    data['staffId'] = this.staffId;
     data['dateOfBirth'] = this.dateOfBirth;
     data['placeOfBirth'] = this.placeOfBirth;
     data['maritalStatus'] = this.maritalStatus;
+    data['religion'] = this.religion;
+    if (this.state != null) {
+      data['state'] = this.state!.toJson();
+    }
+    if (this.nationality != null) {
+      data['nationality'] = this.nationality!.toJson();
+    }
     data['motherMaidenName'] = this.motherMaidenName;
     data['weddingAnniversary'] = this.weddingAnniversary;
-    data['authToken'] = this.authToken;
-    data['stateId'] = this.stateId;
-    data['nationalityId'] = this.nationalityId;
-    data['religionId'] = this.religionId;
-    data['designation'] = this.designation;
-    data['staffId'] = this.staffId;
-    data['bvn'] = this.bvn;
-    data['nin'] = this.nin;
-    data['salaryAccountNumber'] = this.salaryAccountNumber;
-    data['salaryDomiciledBank'] = this.salaryDomiciledBank;
-    data['clinicId'] = this.clinicId;
-    data['clinic'] = this.clinic;
-    data['healthCareProviderId'] = this.healthCareProviderId;
+    data['phoneNumber'] = this.phoneNumber;
     data['profilePicture'] = this.profilePicture;
-    data['role'] = this.role;
-    data['employeePrivilegeAccesses'] = this.employeePrivilegeAccesses;
-    data['department'] = this.department;
+    if (this.userRoles != null) {
+      data['userRoles'] = this.userRoles!.map((v) => v.toJson()).toList();
+    }
     data['workGrade'] = this.workGrade;
-    data['userId'] = this.userId;
-    data['username'] = this.username;
-    data['isSuperAdmin'] = this.isSuperAdmin;
     data['resumptionDate'] = this.resumptionDate;
-    data['onboardingDate'] = this.onboardingDate;
     data['lastLoginTime'] = this.lastLoginTime;
     data['signature'] = this.signature;
+    data['department'] = this.department;
+    data['accountStatus'] = this.accountStatus;
+    if (this.healthCareProvider != null) {
+      data['healthCareProvider'] = this.healthCareProvider!.toJson();
+    }
+    data['onboardingDate'] = this.onboardingDate;
     data['createdAt'] = this.createdAt;
     data['createdBy'] = this.createdBy;
     data['modifiedAt'] = this.modifiedAt;
@@ -198,7 +191,102 @@ class DoctorListResponse {
     data['rating'] = this.rating;
     data['reviews'] = this.reviews;
     data['status'] = this.status;
-    data['accountStatus'] = this.accountStatus;
+    data['userType'] = this.userType;
+
+    return data;
+  }
+}
+
+class State {
+  int? id;
+  String? name;
+
+  State({this.id, this.name});
+
+  State.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    name = json['name'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['name'] = this.name;
+    return data;
+  }
+}
+
+class UserRoles {
+  int? id;
+  Employee? employee;
+  State? role;
+
+  UserRoles({this.id, this.employee, this.role});
+
+  UserRoles.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    employee = json['employee'] != null
+        ? new Employee.fromJson(json['employee'])
+        : null;
+    role = json['role'] != null ? new State.fromJson(json['role']) : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    if (this.employee != null) {
+      data['employee'] = this.employee!.toJson();
+    }
+    if (this.role != null) {
+      data['role'] = this.role!.toJson();
+    }
+    return data;
+  }
+}
+
+class Employee {
+  int? id;
+  String? firstName;
+  String? lastName;
+
+  Employee({this.id, this.firstName, this.lastName});
+
+  Employee.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    firstName = json['firstName'];
+    lastName = json['lastName'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['firstName'] = this.firstName;
+    data['lastName'] = this.lastName;
+    return data;
+  }
+}
+
+class HealthCareProvider {
+  int? id;
+  String? name;
+  String? rcNumber;
+  String? brandName;
+
+  HealthCareProvider({this.id, this.name, this.rcNumber, this.brandName});
+
+  HealthCareProvider.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    name = json['name'];
+    rcNumber = json['rcNumber'];
+    brandName = json['brandName'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['name'] = this.name;
+    data['rcNumber'] = this.rcNumber;
+    data['brandName'] = this.brandName;
     return data;
   }
 }

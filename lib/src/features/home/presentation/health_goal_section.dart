@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:greenzone_medical/src/constants/color_constant.dart';
 import 'package:greenzone_medical/src/constants/dimens.dart';
@@ -12,16 +14,62 @@ class HealthGoalsPager extends StatefulWidget {
   _HealthGoalsPagerState createState() => _HealthGoalsPagerState();
 }
 
-class _HealthGoalsPagerState extends State<HealthGoalsPager> {
-  final PageController _pageController = PageController(viewportFraction: 1);
+class _HealthGoalsPagerState extends State<HealthGoalsPager>
+    with SingleTickerProviderStateMixin {
+  // final PageController _pageController = PageController(viewportFraction: 1);
+  late PageController _pageController;
+
   int _currentIndex = 0;
+  late Timer _autoSlideTimer;
+  late AnimationController _pulseController;
+  late Animation<double> _pulseAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController();
+    _pulseController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 1),
+    )..repeat(reverse: true);
+
+    _pulseAnimation = Tween<double>(
+      begin: 1.0,
+      end: 1.05,
+    ).animate(CurvedAnimation(
+      parent: _pulseController,
+      curve: Curves.easeInOut,
+    ));
+
+    _autoSlideTimer = Timer.periodic(const Duration(seconds: 5), (Timer timer) {
+      if (!mounted) return;
+
+      int nextIndex = _currentIndex + 1;
+      if (nextIndex >= widget.goals.length) nextIndex = 0;
+
+      _pageController.animateToPage(
+        nextIndex,
+        duration: const Duration(milliseconds: 400),
+        curve: Curves.easeInOut,
+      );
+    });
+  }
+
+  @override
+  void dispose() {
+    _pulseController.dispose();
+    _autoSlideTimer.cancel();
+    _autoSlideTimer.cancel();
+    _pageController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         SizedBox(
-          height: 160, // Adjust as needed
+          height: 180,
           child: PageView.builder(
             controller: _pageController,
             itemCount: widget.goals.length,
@@ -29,25 +77,32 @@ class _HealthGoalsPagerState extends State<HealthGoalsPager> {
               setState(() => _currentIndex = index);
             },
             itemBuilder: (context, index) {
-              return _buildHealthGoalCard(widget.goals[index]);
+              return AnimatedScale(
+                scale: _currentIndex == index ? 1.0 : 0.95,
+                duration: const Duration(milliseconds: 300),
+                child: _buildHealthGoalCard(widget.goals[index]),
+              );
             },
           ),
         ),
-        smallSpace(),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: List.generate(
-            widget.goals.length,
-            (index) => AnimatedContainer(
-              duration: const Duration(milliseconds: 300),
-              margin: const EdgeInsets.symmetric(horizontal: 4),
-              width: _currentIndex == index ? 12 : 8,
-              height: 8,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: _currentIndex == index
-                    ? ColorConstant.primaryColor
-                    : Color(0xffE6E6E6),
+        const SizedBox(height: 8),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: List.generate(
+              widget.goals.length,
+              (index) => AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                margin: const EdgeInsets.symmetric(horizontal: 4),
+                width: _currentIndex == index ? 12 : 8,
+                height: 8,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: _currentIndex == index
+                      ? ColorConstant.primaryColor
+                      : const Color(0xffE6E6E6),
+                ),
               ),
             ),
           ),
@@ -63,73 +118,93 @@ class _HealthGoalsPagerState extends State<HealthGoalsPager> {
       margin: const EdgeInsets.symmetric(horizontal: 8),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: goal.backgroundColor, // Fallback background color
+        color: goal.backgroundColor,
         borderRadius: BorderRadius.circular(12),
         image: isAssetImage
-            ? null // Skip loading if it's an asset image
+            ? null
             : DecorationImage(
                 image: NetworkImage(goal.imagePath),
                 fit: BoxFit.cover,
                 colorFilter: ColorFilter.mode(
-                  Colors.black.withOpacity(0.3), // Dark overlay for readability
+                  Colors.black.withOpacity(0.3),
                   BlendMode.darken,
                 ),
               ),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Stack(
+        clipBehavior: Clip.none,
         children: [
-          Text(
-            goal.title,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
-          ),
-          const SizedBox(height: 5),
-          Text(
-            goal.description,
-            style: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-              color: Color(0xffF2F2F2),
-            ),
-          ),
-          const SizedBox(height: 10),
-          GestureDetector(
-            onTap: () async {
-              if (goal.onTap != null) {
-                String onTapValue = goal.onTap.toString();
-
-                // Check if onTap contains a URL
-                if (Uri.tryParse(onTapValue)?.hasAbsolutePath == true) {
-                  // It's a valid URL, launch it
-                  if (await canLaunchUrl(Uri.parse(onTapValue))) {
-                    await launchUrl(Uri.parse(onTapValue));
-                  }
-                } else {
-                  // It's a function, call it normally
-                  goal.onTap();
-                }
-              }
-            },
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(6),
-                border: Border.all(color: Colors.white, width: 1.5),
+          // Floating small image
+          Positioned(
+            top: -35,
+            right: 0,
+            bottom: 10,
+            child: ScaleTransition(
+              scale: _pulseAnimation,
+              child: Image.asset(
+                'assets/images/health_goals.png',
+                width: width(context) * 0.33,
+                height: height(context) * 0.34,
               ),
-              child: Text(
-                goal.buttonText,
+            ),
+          ),
+
+          // Text and Button
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 10), // Adjust spacing if needed
+              Text(
+                goal.title,
                 style: const TextStyle(
-                  color: Color(0xff666666),
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
                 ),
               ),
-            ),
+              const SizedBox(height: 5),
+              Text(
+                goal.description,
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: Color(0xffF2F2F2),
+                ),
+              ),
+              const SizedBox(height: 10),
+              GestureDetector(
+                onTap: () async {
+                  if (goal.onTap != null) {
+                    String onTapValue = goal.onTap.toString();
+
+                    if (Uri.tryParse(onTapValue)?.hasAbsolutePath == true) {
+                      if (await canLaunchUrl(Uri.parse(onTapValue))) {
+                        await launchUrl(Uri.parse(onTapValue));
+                      }
+                    } else {
+                      goal.onTap();
+                    }
+                  }
+                },
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(6),
+                    border: Border.all(color: Colors.white, width: 1.5),
+                  ),
+                  child: Text(
+                    goal.buttonText,
+                    style: const TextStyle(
+                      color: Color(0xff666666),
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),

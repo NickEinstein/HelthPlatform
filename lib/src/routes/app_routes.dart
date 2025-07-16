@@ -31,6 +31,31 @@ abstract class Routes {
   static const DOCTORSREPORTDETAILS = _Paths.DOCTORSREPORTDETAILS;
 
   static const CAREGIVERSPAGE = _Paths.CAREGIVERSPAGE;
+  static const MYCOMMUNITY = _Paths.MYCOMMUNITY;
+  static const PRODUCTSCAN = _Paths.PRODUCTSCAN;
+  static const LOADINGPRODUCTSCAN = _Paths.LOADINGPRODUCTSCAN;
+  static const PRODUCTSCANRESULT = _Paths.PRODUCTSCANRESULT;
+
+  static const USERPERSONAL = _Paths.USERPERSONAL;
+  static const USERCONTACT = _Paths.USERCONTACT;
+  static const USEREMERGENCY = _Paths.USEREMERGENCY;
+  static const MAINHEALTHGOAL = _Paths.MAINHEALTHRECORD;
+  static const NOTESPAGE = _Paths.NOTESPAGE;
+  static const PRESCRIPTION = _Paths.PRESCRIPTION;
+  static const APPOINTMENT = _Paths.APPOINTMENT;
+  static const REASONCANCELAPPOINTMENT = _Paths.REASONCANCELAPPOINTMENT;
+  static const RATINGPAGE = _Paths.RATINGPAGE;
+  static const ALLFRIENDREQUEST = _Paths.ALLFRIENDREQUEST;
+  static const VIEWPATIENTPAGE = _Paths.VIEWPATIENTPAGE;
+  static const VIEWALLGROUPINTEREST = _Paths.VIEWALLGROUPINTEREST;
+  static const COMMUNITYFRIENDSDETAILS = _Paths.COMMUNITYFRIENDSDETAILS;
+  static const FRIENDWITHSEARCHPAGE = _Paths.FRIENDWITHSEARCHPAGE;
+  static const BILLINGPAGE = _Paths.BILLINGPAGE;
+  static const ALLARTICLESECTION = _Paths.ALLARTICLESECTION;
+  static const CHATPAGE = _Paths.CHATPAGE;
+  static const CHATDETAILS = _Paths.CHATDETAILS;
+  static const NOTIFICATIONPAGE = _Paths.NOTIFICATIONPAGE;
+  static const CONTACTINFOPAGE = _Paths.CONTACTINFOPAGE;
 }
 
 abstract class _Paths {
@@ -61,4 +86,30 @@ abstract class _Paths {
   static const RESCHEDULEAPPOINTMENT = '/reschedule_appointments';
   static const DOCTORSREPORT = '/doctors_report';
   static const DOCTORSREPORTDETAILS = '/doctors_report_details';
+  static const MYCOMMUNITY = '/my_community';
+  static const PRODUCTSCAN = '/product_scan';
+  static const LOADINGPRODUCTSCAN = '/loading_product_scan';
+  static const PRODUCTSCANRESULT = '/product_scan_result';
+  static const USERPERSONAL = '/user_personal';
+  static const USERCONTACT = '/user_contact';
+  static const USEREMERGENCY = '/user_emergency';
+  static const MAINHEALTHRECORD = '/main_health_record';
+  static const NOTESPAGE = '/note_page';
+  static const PRESCRIPTION = '/prescription';
+
+  static const APPOINTMENT = '/appointment';
+  static const REASONCANCELAPPOINTMENT = '/reason_cancel_appointment';
+
+  static const RATINGPAGE = '/rating_page';
+  static const ALLFRIENDREQUEST = '/all_friend_request';
+  static const VIEWPATIENTPAGE = '/view_patient_page';
+  static const VIEWALLGROUPINTEREST = '/view_group_interest';
+  static const COMMUNITYFRIENDSDETAILS = '/community_friends_details';
+  static const FRIENDWITHSEARCHPAGE = '/friend_with_search_page';
+  static const BILLINGPAGE = '/billing_page';
+  static const ALLARTICLESECTION = '/all_article_section';
+  static const CHATPAGE = '/chatpage';
+  static const CHATDETAILS = '/chatdetails';
+  static const NOTIFICATIONPAGE = '/notificationpage';
+  static const CONTACTINFOPAGE = '/contact_info_page';
 }

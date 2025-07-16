@@ -61,14 +61,15 @@ class _ToastContent extends StatelessWidget {
         ],
       ),
       child: Row(
-        mainAxisSize: MainAxisSize.min,
         children: [
           Icon(icon, color: Colors.white),
           const SizedBox(width: 10),
-          Expanded(
+          Flexible(
+            // <--- use Flexible instead of Expanded
             child: Text(
               message,
               style: const TextStyle(color: Colors.white, fontSize: 14),
+              maxLines: 3, // optional: allow up to 3 lines before cutting
               overflow: TextOverflow.ellipsis,
             ),
           ),

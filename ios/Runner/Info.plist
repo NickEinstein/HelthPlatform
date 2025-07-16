@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Greenzone Medical</string>
+	<string>ConnectHealthPro</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -15,7 +15,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>riverpod_boilerplate</string>
+	<string>ConnectHealthPro</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -24,12 +24,39 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>FirebaseAppDelegateProxyEnabled</key>
+	<false/>
+	<key>GMSApiKey</key>
+	<string>AIzaSyB_5ZihPhnFqFajHvq8NmsJ0KsqszbEpC4</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>This app needs access to the camera for video calls.</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>We use Face ID for quick authentication</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>This app uses your location for map functionality</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>We need your location to show relevant map content</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>This app needs access to the microphone for voice calls.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>CFBundleURLTypes</key>
+<array>
+  <dict>
+    <key>CFBundleURLSchemes</key>
+    <array>
+      <string>com.googleusercontent.apps.648993315957-gdek92s3b2egu95hgesqsfpd5419u18o</string> <!-- paste here -->
+    </array>
+  </dict>
+</array>
+
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>remote-notification</string>
+		<string>fetch</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
@@ -47,5 +74,14 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>io.flutter.embedded_views_preview</key>
+	<true/>
+	<key>NSAppTransportSecurity</key>
+<dict>
+  <key>NSAllowsArbitraryLoads</key>
+  <true/>
 </dict>
+
+</dict>
+
 </plist>

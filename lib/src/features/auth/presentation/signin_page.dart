@@ -1,7 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:greenzone_medical/src/app_pkg.dart';
@@ -57,7 +59,6 @@ class _SignInPageState extends ConsumerState<SignInPage> {
     final prefs = await SharedPreferences.getInstance();
     final savedEmail = prefs.getString('saved_email') ?? "";
     final savedPassword = prefs.getString('saved_password') ?? "";
-    print("Initializing SignInPage...");
 
     if (savedEmail.isNotEmpty && savedPassword.isNotEmpty) {
       final bool canCheckBiometrics = await _localAuth.canCheckBiometrics;
@@ -100,11 +101,9 @@ class _SignInPageState extends ConsumerState<SignInPage> {
   }
 
   Future<void> _signIn() async {
-    // Ensure focus is moved away from the fields before proceeding
     FocusScope.of(context).requestFocus(
         FocusNode()); // Request focus on a dummy node to dismiss the keyboard
 
-    // Add a slight delay to ensure focus changes
     await Future.delayed(const Duration(milliseconds: 100));
 
     // Now, unfocus
@@ -189,7 +188,7 @@ class _SignInPageState extends ConsumerState<SignInPage> {
                   ),
                   smallSpace(),
                   const Text(
-                    "Please provide the following information to get \nstarted",
+                    "Please provide the following information to get started",
                     style: TextStyle(
                         color: ColorConstant.secondryColor,
                         fontSize: 16,
@@ -429,25 +428,124 @@ class _SignInPageState extends ConsumerState<SignInPage> {
                               ),
                             ),
                             verticalSpace(context, 0.03),
-                            Center(
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                      child: Image.asset(
-                                          'assets/icon/login_google.png')),
-                                  Expanded(
-                                      child: Image.asset(
-                                          'assets/icon/login_apple.png')),
-                                ],
-                              ),
+                            // if (Platform.isIOS)
+                            //   Center(
+                            //     child: Row(
+                            //       children: [
+                            //         Expanded(
+                            //             child: InkWell(
+                            //           onTap: () async {
+                            //             ref
+                            //                 .read(isLoadingProvider.notifier)
+                            //                 .state = true;
+
+                            //             final authService =
+                            //                 ref.read(authServiceProvider);
+                            //             final userCredential = await authService
+                            //                 .signInWithGoogle();
+
+                            //             if (!mounted) return;
+                            //             ref
+                            //                 .read(isLoadingProvider.notifier)
+                            //                 .state = false;
+
+                            //             if (userCredential != null) {
+                            //               final idToken = await userCredential
+                            //                   .user
+                            //                   ?.getIdToken();
+
+                            //               if (idToken != null) {
+                            //                 final result = await authService
+                            //                     .socialLogin('google', idToken);
+
+                            //                 if (result == 'Login successful') {
+                            //                   context.pushReplacement(
+                            //                       Routes.BOTTOMNAV);
+                            //                 } else {
+                            //                   CustomToast.show(context, result,
+                            //                       type: ToastType.error);
+                            //                 }
+                            //               } else {
+                            //                 CustomToast.show(
+                            //                     context, 'Token not found',
+                            //                     type: ToastType.error);
+                            //               }
+                            //             } else {
+                            //               CustomToast.show(
+                            //                   context, 'Google Sign-in failed',
+                            //                   type: ToastType.error);
+                            //             }
+                            //           },
+                            //           child: Image.asset(
+                            //               'assets/icon/login_google.png'),
+                            //         )),
+                            //         Expanded(
+                            //             child: Image.asset(
+                            //                 'assets/icon/login_apple.png')),
+                            //       ],
+                            //     ),
+                            //   ),
+                            // if (Platform.isAndroid)
+                            InkWell(
+                              onTap: () async {
+                                ref.read(isLoadingProvider.notifier).state =
+                                    true;
+
+                                final authService =
+                                    ref.read(authServiceProvider);
+                                final userCredential =
+                                    await authService.signInWithGoogle();
+
+                                if (!mounted) return;
+                                ref.read(isLoadingProvider.notifier).state =
+                                    false;
+
+                                if (userCredential != null) {
+                                  final idToken =
+                                      await userCredential.user?.getIdToken();
+
+                                  if (idToken != null) {
+                                    final result = await authService
+                                        .socialLogin('google', idToken);
+
+                                    if (result == 'Login successful') {
+                                      context.pushReplacement(Routes.BOTTOMNAV);
+                                    } else {
+                                      CustomToast.show(context, result,
+                                          type: ToastType.error);
+                                    }
+                                  } else {
+                                    CustomToast.show(context, 'Token not found',
+                                        type: ToastType.error);
+                                  }
+                                } else {
+                                  CustomToast.show(
+                                      context, 'Google Sign-in failed',
+                                      type: ToastType.error);
+                                }
+                              },
+                              child: Image.asset(
+                                  width: width(context),
+                                  height: height(context) * 0.09,
+                                  'assets/icon/login_google.png'),
                             ),
-                            tinySpace(),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 10),
-                              child:
-                                  Image.asset('assets/icon/login_facebook.png'),
-                            ),
+                            // tinySpace(),
+                            // InkWell(
+                            //   onTap: () async {
+                            //     final LoginResult result =
+                            //         await FacebookAuth.instance.login();
+                            //     if (result.status == LoginStatus.success) {
+                            //       final accessToken = result.accessToken;
+                            //       // Use accessToken to authenticate with backend or Firebase
+                            //     }
+                            //   },
+                            //   child: Padding(
+                            //     padding:
+                            //         const EdgeInsets.symmetric(horizontal: 10),
+                            //     child: Image.asset(
+                            //         'assets/icon/login_facebook.png'),
+                            //   ),
+                            // ),
                           ],
                         ),
 

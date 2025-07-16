@@ -1,233 +1,272 @@
 import 'dart:async';
-import 'package:flutter/material.dart';
-import 'package:greenzone_medical/src/constants/api_url.dart';
-import 'package:greenzone_medical/src/features/caregivers/presentation/caregivers_detail_page.dart';
-import 'package:greenzone_medical/src/services/api_service.dart';
-import 'package:greenzone_medical/src/utils/custom_header.dart';
+import '../../../provider/all_providers.dart';
+import '../../../utils/packages.dart';
+import 'caregivers_detail_page.dart';
 
-class CaregiversPage extends StatefulWidget {
-  const CaregiversPage({super.key});
+class CaregiversPage extends ConsumerStatefulWidget {
+  final String type;
+  const CaregiversPage({super.key, required this.type});
 
   @override
-  State<CaregiversPage> createState() => _CaregiversPageState();
+  ConsumerState<CaregiversPage> createState() => _CaregiversPageState();
 }
 
-class _CaregiversPageState extends State<CaregiversPage> {
-  final ScrollController _scrollController = ScrollController();
+class _CaregiversPageState extends ConsumerState<CaregiversPage> {
   final TextEditingController _searchController = TextEditingController();
-  final List<Map<String, dynamic>> caregivers = [];
-
-  bool isLoading = true;
-  bool isFetchingMore = false;
-  int currentPage = 1;
-  final int pageSize = 8;
-  bool hasMore = true;
   String searchText = '';
   Timer? _debounce;
 
   @override
-  void initState() {
-    super.initState();
-    fetchCaregivers();
-    _scrollController.addListener(_onScroll);
-  }
-
-  @override
   void dispose() {
     _debounce?.cancel();
-    _scrollController.dispose();
     _searchController.dispose();
     super.dispose();
   }
 
-  Future<void> fetchCaregivers() async {
-    try {
-      setState(() => isFetchingMore = true);
-
-      final apiService = ApiService();
-      final String url = searchText.isNotEmpty
-          ? ApiUrl.careGiverSearch(currentPage, pageSize, searchText)
-          : ApiUrl.careGivers(currentPage, pageSize);
-
-      final response = await apiService.get(url);
-
-      if (response.statusCode == 200) {
-        final List<dynamic> data = response.data['resultList'];
-
-        setState(() {
-          caregivers.addAll(data.cast<Map<String, dynamic>>());
-          isLoading = false;
-          isFetchingMore = false;
-          hasMore = data.isNotEmpty;
-        });
-      } else {
-        setState(() => isFetchingMore = false);
-      }
-    } catch (e) {
-      debugPrint(" Error fetching caregivers: $e");
-      setState(() => isFetchingMore = false);
-    }
-  }
-
-  void _onScroll() {
-    if (_scrollController.position.pixels >=
-            _scrollController.position.maxScrollExtent - 200 &&
-        !isFetchingMore &&
-        hasMore) {
-      currentPage++;
-      fetchCaregivers();
-    }
-  }
-
-  Future<void> _refreshCaregivers({bool showLoading = true}) async {
-    setState(() {
-      currentPage = 1;
-      caregivers.clear();
-      hasMore = true;
-      if (showLoading) isLoading = true;
-    });
-    await fetchCaregivers();
-  }
-
   void _onSearchChanged(String value) {
-    if (_debounce?.isActive ?? false) _debounce?.cancel();
-
-    _debounce = Timer(const Duration(milliseconds: 500), () {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    _debounce = Timer(const Duration(milliseconds: 300), () {
       setState(() {
-        searchText = value.trim();
-        currentPage = 1;
-        caregivers.clear();
-        hasMore = true;
+        searchText = value.toLowerCase();
       });
-      fetchCaregivers();
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    final careGiverResponse = ref.watch(userAllHealthCareProvider);
+
+    final caregivers = careGiverResponse.when(
+      data: (data) {
+        final lowerType = widget.type.toLowerCase();
+
+        return data.where((caregiver) {
+          final name = caregiver.name?.toLowerCase() ?? '';
+
+          // Apply search text filter
+          if (searchText.isNotEmpty && !name.contains(searchText)) {
+            return false;
+          }
+
+          // Match based on type
+          if (lowerType.contains('pharmacy')) {
+            return name.contains('pharmacy');
+          } else if (lowerType.contains('lab')) {
+            return name.contains('lab');
+          } else if (lowerType.contains('hospital')) {
+            return name.contains('hospital') ||
+                name.contains('diagnosis') ||
+                name.contains('diagno');
+          } else if (lowerType.contains('diagnosis') ||
+              lowerType.contains('diag')) {
+            return name.contains('diagnosis') || name.contains('diagno');
+          } else {
+            // For 'caregiver' or anything else, exclude institutions
+            return !(name.contains('pharmacy') ||
+                name.contains('lab') ||
+                name.contains('hospital') ||
+                name.contains('clinic') ||
+                name.contains('diagnosis') ||
+                name.contains('diagno'));
+          }
+        }).toList();
+      },
+      loading: () => null,
+      error: (_, __) => null,
+    );
+
     return Scaffold(
       backgroundColor: Colors.white,
-      body: isLoading
+      body: careGiverResponse.isLoading
           ? const Center(child: CircularProgressIndicator())
-          : RefreshIndicator(
-              onRefresh: () => _refreshCaregivers(),
-              child: SingleChildScrollView(
-                controller: _scrollController,
-                physics: const AlwaysScrollableScrollPhysics(),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: Column(
-                    children: [
-                      const SizedBox(height: 60),
-                      CustomHeader(
-                        title: 'Caregivers',
-                        onPressed: () => Navigator.pop(context),
-                        onSearchPressed: () {},
-                      ),
-                      const SizedBox(height: 16),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: TextField(
-                              controller: _searchController,
-                              onChanged: _onSearchChanged,
-                              decoration: InputDecoration(
-                                hintText: 'Search for caregivers',
-                                contentPadding:
-                                    const EdgeInsets.symmetric(horizontal: 16),
-                                filled: true,
-                                fillColor: const Color(0xffF6F6F6),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide.none,
-                                ),
+          : SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 60),
+                    CustomHeader(
+                      title: widget.type,
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                    const SizedBox(height: 16),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            controller: _searchController,
+                            onChanged: _onSearchChanged,
+                            decoration: InputDecoration(
+                              prefixIcon: const Icon(Icons.search,
+                                  size: 25, color: Color(0xff999999)),
+                              hintText: 'Search for ${widget.type}',
+                              hintStyle:
+                                  const TextStyle(color: Color(0xff999999)),
+                              contentPadding:
+                                  const EdgeInsets.symmetric(horizontal: 16),
+                              filled: true,
+                              fillColor: Colors.white,
+                              border: OutlineInputBorder(
+                                borderSide:
+                                    const BorderSide(color: Color(0xffE6E6E6)),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide:
+                                    const BorderSide(color: Color(0xffE6E6E6)),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: const BorderSide(
+                                    color: Color(0xffE6E6E6), width: 2),
+                                borderRadius: BorderRadius.circular(10),
                               ),
                             ),
                           ),
-                          const SizedBox(width: 10),
-                          Container(
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFF2F8F3),
-                              border: Border.all(color: Colors.grey),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            padding: const EdgeInsets.all(10),
-                            child: const Icon(Icons.filter_list, size: 20),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 20),
-                      if (caregivers.isEmpty && !isFetchingMore)
-                        const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 40),
-                          child: Text('No caregivers found.'),
                         ),
+                        // if (widget.type.toLowerCase() != 'pharmacy' &&
+                        //     widget.type.toLowerCase() != 'lab') ...[
+                        //   const SizedBox(width: 10),
+                        // GestureDetector(
+                        //   onTap: _showFilterDialog,
+                        //   child: Container(
+                        //     decoration: BoxDecoration(
+                        //       color: const Color(0xFFF2F8F3),
+                        //       border: Border.all(color: Colors.grey),
+                        //       borderRadius: BorderRadius.circular(8),
+                        //     ),
+                        //     padding: const EdgeInsets.all(10),
+                        //     child: const Icon(Icons.filter_list, size: 20),
+                        //   ),
+                        // ),
+                        // ]
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    if (caregivers == null)
+                      const Center(child: CircularProgressIndicator())
+                    else if (caregivers.isEmpty)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 40),
+                        child: Text('No ${widget.type} found.'),
+                      )
+                    else
                       ...caregivers.map((caregiver) {
-                        final name = caregiver['name']?.toString() ?? '';
+                        final name = caregiver.name.toString() ?? '';
                         final location =
-                            caregiver['location']?.toString() ?? 'No Location';
+                            caregiver.location.toString() ?? 'No Location';
 
                         return Card(
-                          margin: const EdgeInsets.symmetric(vertical: 6),
-                          elevation: 1,
-                          child: ListTile(
-                            tileColor: const Color(0xFFF2F8F3),
-                            contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 12, vertical: 8),
-                            leading: CircleAvatar(
-                              backgroundColor: Colors.grey.shade300,
-                              child: Text(
-                                name.isNotEmpty ? name[0].toUpperCase() : '?',
-                                style: const TextStyle(color: Colors.black),
-                              ),
-                            ),
-                            title: Text(
-                              name,
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.w600),
-                            ),
-                            subtitle: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(location),
-                                const SizedBox(height: 4),
-                                Row(
-                                  children: List.generate(
-                                    5,
-                                    (index) => const Icon(
-                                      Icons.star,
-                                      size: 14,
-                                      color: Colors.amber,
+                          margin: const EdgeInsets.symmetric(vertical: 0),
+                          elevation: 0,
+                          color: Colors.white,
+                          child: Column(
+                            children: [
+                              const Divider(
+                                  height: 1,
+                                  thickness: 1,
+                                  color: Color(0xFFE0E0E0)),
+                              ListTile(
+                                tileColor: Colors.white,
+                                contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 12, vertical: 8),
+                                leading: CircleAvatar(
+                                  backgroundColor: Colors.grey.shade300,
+                                  child: Text(
+                                    name.isNotEmpty
+                                        ? name[0].toUpperCase()
+                                        : '?',
+                                    style: const TextStyle(color: Colors.black),
+                                  ),
+                                ),
+                                title: Text(name,
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        color: Color(0xff091F44))),
+                                subtitle: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(location,
+                                        style: const TextStyle(
+                                            color: Color(0xff091F44))),
+                                    const SizedBox(height: 4),
+                                    Row(
+                                      children: List.generate(
+                                        5,
+                                        (index) => const Icon(Icons.star,
+                                            size: 14, color: Colors.amber),
+                                      ),
                                     ),
-                                  ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                            trailing: const Icon(Icons.chevron_right),
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => CaregiverDetailsPage(
-                                    caregiver: caregiver,
-                                  ),
-                                ),
-                              );
-                            },
+                                trailing: const Icon(Icons.chevron_right,
+                                    color: Color(0xff6C63FF)),
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => CaregiverDetailsPage(
+                                          caregiver: caregiver),
+                                    ),
+                                  );
+                                },
+                              ),
+                              const Divider(
+                                  height: 1,
+                                  thickness: 1,
+                                  color: Color(0xFFE0E0E0)),
+                            ],
                           ),
                         );
                       }),
-                      if (isFetchingMore && caregivers.isNotEmpty)
-                        const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 16),
-                          child: CircularProgressIndicator(),
-                        ),
-                      const SizedBox(height: 20),
-                    ],
-                  ),
+                    const SizedBox(height: 20),
+                  ],
                 ),
               ),
             ),
     );
+  }
+
+  void _showFilterDialog() {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (BuildContext context) {
+        return Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text('Filter by',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 20),
+              ListTile(
+                title: const Text('Fitness'),
+                onTap: () {
+                  Navigator.pop(context);
+                  _applyFilter('fitness');
+                },
+              ),
+              ListTile(
+                title: const Text('Care'),
+                onTap: () {
+                  Navigator.pop(context);
+                  _applyFilter('care');
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _applyFilter(String selectedType) {
+    setState(() {
+      searchText = selectedType;
+    });
   }
 }

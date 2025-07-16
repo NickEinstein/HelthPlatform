@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:greenzone_medical/src/features/prescription/models/prescription_model.dart';
 import 'package:greenzone_medical/src/utils/extensions/widget_extensions.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../resources/textstyles/app_textstyles.dart';
 import '../../../../utils/dialogs/dialog.dart';
-import '../../models/get_prescriptions_model.dart';
 import 'medication_details_widget.dart';
 import 'set_new_time_widget.dart';
 
 class PrescriptionScheduleBox extends ConsumerWidget {
-  final List<Prescription> prescriptions;
+  final List<PrescriptionByPatientResponse> prescriptions;
   const PrescriptionScheduleBox({super.key, required this.prescriptions});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final first = prescriptions.firstOrNull;
+
     return Container(
       decoration: ShapeDecoration(
         color: const Color(0xFFFAFAFA),
@@ -25,15 +28,11 @@ class PrescriptionScheduleBox extends ConsumerWidget {
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 12,
-              vertical: 10,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (prescriptions.firstOrNull?.appointDate != null) ...[
+                if (first?.dispensedDate != null) ...[
                   Row(
                     children: [
                       Container(
@@ -44,8 +43,8 @@ class PrescriptionScheduleBox extends ConsumerWidget {
                           borderRadius: BorderRadius.circular(30),
                         ),
                         child: Text(
-                          prescriptions.firstOrNull?.appointDate?.toString() ??
-                              '',
+                          DateFormat('yyyy-MM-dd')
+                              .format(DateTime.parse(first!.dispensedDate!)),
                           style: CustomTextStyle.texttiny11.w700
                               .withColorHex(0xff2F2F2F),
                         ),
@@ -55,7 +54,7 @@ class PrescriptionScheduleBox extends ConsumerWidget {
                   10.gap,
                 ],
                 Text(
-                  prescriptions.firstOrNull?.diagnosis?.toString() ?? '',
+                  first?.treatment!.diagnosis ?? '',
                   style:
                       CustomTextStyle.texttiny11.w700.withColorHex(0xff2F2F2F),
                 ),
@@ -72,12 +71,12 @@ class PrescriptionScheduleBox extends ConsumerWidget {
     );
   }
 
-  Widget _tab(Prescription prescription) {
+  Widget _tab(PrescriptionByPatientResponse prescription) {
     return InkWell(
       onTap: () async {
         bool? t = await Dialogs.openBottomSheet(
           child: MedicationDetailsWidget(
-            prescription: prescription,
+            prescription: prescription, // If needed, adapt this widget
           ),
         );
         if (!(t ?? false)) return;
@@ -96,26 +95,31 @@ class PrescriptionScheduleBox extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '${(prescription.medication?.isEmpty ?? true) ? '-no-name-' : prescription.medication}',
+                    (prescription.pharmacyInventory!.productName?.isEmpty ??
+                            true)
+                        ? '-no-name-'
+                        : prescription.pharmacyInventory!.productName!,
                     style: CustomTextStyle.textxSmall13.w700
                         .withColorHex(0xff2F2F2F),
                   ),
                   3.gap,
                   Text(
-                    '${prescription.quantity ?? ''}, ${prescription.frequency ?? ''}, ${prescription.duration ?? ''}',
+                    '${prescription.quantity ?? ''}mg, ${prescription.frequency ?? ''} times per day, ${prescription.duration ?? ''} day(s)',
                     style:
                         CustomTextStyle.textxSmall13.withColorHex(0xff393939),
                   ),
                   3.gap,
                   Text(
-                    prescription.carePlan ?? '',
+                    prescription.treatment!.carePlan ?? '',
                     style:
                         CustomTextStyle.textxSmall13.withColorHex(0xff393939),
                   ),
                 ],
               ),
             ),
-            if (prescription.appointTime != null)
+
+// Inside your widget build:
+            if (prescription.dispensedDate != null)
               Container(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
@@ -124,7 +128,8 @@ class PrescriptionScheduleBox extends ConsumerWidget {
                   borderRadius: BorderRadius.circular(30),
                 ),
                 child: Text(
-                  prescription.appointTime?.toString() ?? '',
+                  DateFormat.Hm()
+                      .format(DateTime.parse(prescription.dispensedDate!)),
                   style:
                       CustomTextStyle.texttiny11.w700.withColorHex(0xff530186),
                 ),

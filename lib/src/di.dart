@@ -23,8 +23,10 @@ final dioProvider = Provider<Dio>((ref) {
   // dio.interceptors.add(CustomInterceptor());
 
   // Configure other Dio settings as needed
+  // dio.options.baseUrl =
+  //     'https://edogoverp.com/ConnectedHealthWebApi/api'; // Your base URL
   dio.options.baseUrl =
-      'https://edogoverp.com/ConnectedHealthWebApi/api'; // Your base URL
+      'https://api.greenzonetechnologies.com.ng/ConnectedHealthWebApi/api'; // Your base URL
 
   return dio;
 });

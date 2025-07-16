@@ -3,6 +3,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:greenzone_medical/src/app_pkg.dart';
 
+import 'features/notifications/messaging/firebase_messaging_config.dart';
 import 'routes/app_pages.dart';
 
 class MyApp extends ConsumerWidget {
@@ -11,9 +12,13 @@ class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(routerProvider);
+    final notificationRepository = NotificationRepositoryImpl();
 
+    ///THIS BEFORE FIREBASE INIT
+    notificationRepository.initializeLocalNotifications();
+    notificationRepository.initializeFirebase(ref);
     return MaterialApp.router(
-      title: 'Greenzone Medical',
+      title: 'ConnectHealthPro',
       debugShowCheckedModeBanner: false,
       routeInformationParser: router.routeInformationParser,
       routerDelegate: router.routerDelegate,

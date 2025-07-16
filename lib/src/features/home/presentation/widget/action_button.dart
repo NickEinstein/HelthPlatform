@@ -1,15 +1,57 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:greenzone_medical/src/app_pkg.dart';
 import 'package:greenzone_medical/src/routes/routes.dart';
 
-import '../../../../utils/custom_toast.dart';
-
-class ActionButtonsRow extends StatelessWidget {
+class ActionButtonsRow extends StatefulWidget {
   const ActionButtonsRow({super.key});
 
   @override
+  State<ActionButtonsRow> createState() => _ActionButtonsRowState();
+}
+
+class _ActionButtonsRowState extends State<ActionButtonsRow> {
+  @override
   Widget build(BuildContext context) {
+    final items = [
+      {
+        "title": "Doctors",
+        "icon": "assets/icon/doctor.png",
+        "onTap": () => context.push(Routes.DOCTORPAGE),
+      },
+      {
+        "title": "Pharmacy",
+        "icon": "assets/icon/phermacy.png",
+        "onTap": () => context.push(Routes.CAREGIVERSPAGE, extra: 'Pharmacy'),
+      },
+      {
+        "title": "Caregiver",
+        "icon": "assets/icon/caregive.png",
+        "onTap": () => context.push(Routes.CAREGIVERSPAGE, extra: 'Caregivers'),
+      },
+      {
+        "title": "Community",
+        "icon": "assets/icon/community.png",
+        "onTap": () => context.push(Routes.MYCOMMUNITY),
+      },
+      {
+        "title": "Book",
+        "icon": "assets/icon/book.png",
+        "onTap": () => context.push(Routes.DOCTORPAGE),
+      },
+      {
+        "title": "Lab",
+        "icon": "assets/icon/phermacy.png",
+        "onTap": () => context.push(Routes.CAREGIVERSPAGE, extra: 'Lab'),
+      },
+      {
+        "title": "Hospital",
+        "icon": "assets/icon/phermacy.png",
+        "onTap": () => context.push(Routes.CAREGIVERSPAGE, extra: 'Hospital'),
+      },
+    ];
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -26,64 +68,25 @@ class ActionButtonsRow extends StatelessWidget {
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
-            children: [
-              ActionButton(
-                title: "Doctors",
-                onButtonPressed: () {
-                  context.push(Routes.DOCTORPAGE);
-                },
-                icon: "assets/icon/doctor.png",
-                color: 0xffEAFFEB,
-              ),
-              smallHorSpace(),
-              ActionButton(
-                title: "Pharmacy",
-                onButtonPressed: () {
-                  CustomToast.show(context, "Coming soon...",
-                      type: ToastType.error);
-                },
-                icon: "assets/icon/phermacy.png",
-                color: 0xffEAFFEB,
-              ),
-              smallHorSpace(),
-              ActionButton(
-                title: "Caregiver",
-                onButtonPressed: () {
-                  context.push(Routes.CAREGIVERSPAGE);
-                },
-                icon: "assets/icon/caregive.png",
-                color: 0xffEAFFEB,
-              ),
-              smallHorSpace(),
-              ActionButton(
-                title: "Community",
-                onButtonPressed: () {
-                  context.push(Routes.COMMUNITYLIST);
-                },
-                icon: "assets/icon/community.png",
-                color: 0xffEAFFEB,
-              ),
-              smallHorSpace(),
-              ActionButton(
-                title: "Book",
-                onButtonPressed: () {
-                  context.push(Routes.COMMUNITYLIST);
-                },
-                icon: "assets/icon/book.png",
-                color: 0xffEAFFEB,
-              ),
-              smallHorSpace(),
-              ActionButton(
-                title: "Pay",
-                onButtonPressed: () {
-                  context.push(Routes.COMMUNITYLIST);
-                },
-                icon: "assets/icon/doctor.png",
-                color: 0xffEAFFEB,
-              ),
-            ],
+            children: List.generate(items.length, (index) {
+              final item = items[index];
+              return Row(
+                children: [
+                  ActionButton(
+                    title: item["title"] as String,
+                    icon: item["icon"] as String,
+                    onButtonPressed: item["onTap"] as VoidCallback,
+                    color: 0xffEAFFEB,
+                  )
+                      .animate()
+                      .slideX(begin: 1, end: 0, duration: 400.ms)
+                      .fadeIn(delay: (index * 100).ms), // delay based on index
+                  smallHorSpace(),
+                ],
+              );
+            }),
           ),
-        ),
+        )
       ],
     );
   }
@@ -117,8 +120,8 @@ class ActionButton extends StatelessWidget {
               children: [
                 Image.asset(
                   icon,
-                  width: 32,
-                  height: 32,
+                  width: 25,
+                  height: 25,
                 ),
               ],
             ),

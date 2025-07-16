@@ -6,10 +6,11 @@ import 'package:greenzone_medical/src/utils/extensions/widget_extensions.dart';
 import '../../../../resources/resources.dart';
 import '../../../../resources/textstyles/app_textstyles.dart';
 import '../../models/get_prescriptions_model.dart';
+import '../../models/prescription_model.dart';
 import '../../providers/prescription_provider.dart';
 
 class SetNewTimeWidget extends ConsumerWidget {
-  final Prescription prescription;
+  final PrescriptionByPatientResponse prescription;
   const SetNewTimeWidget({
     super.key,
     required this.prescription,

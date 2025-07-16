@@ -21,7 +21,8 @@ class AppEndpoints {
     }
   }
 
-  static String baseUrlTest = 'https://edogoverp.com';
+  // static String baseUrlTest = 'https://edogoverp.com';
+  static String baseUrlTest = 'https://api.greenzonetechnologies.com.ng';
 
   static String baseUrlLive = 'https://api.greenzonetechnologies.com.ng';
 
