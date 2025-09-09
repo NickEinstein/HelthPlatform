@@ -50,6 +50,26 @@ class _PersonalInfoScreenState extends ConsumerState<PersonalInfoScreen> {
                     color: Colors.black)),
             const SizedBox(height: 20),
             CustomTextField(
+              label: "Username",
+              hint: "Username",
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z\s]')),
+              ],
+              controller: widget.controller.userNameController,
+              onChanged: (_) => _validateForm(),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return "Username empty";
+                }
+                if (value.length < 4) {
+                  return "Enter a valid Username";
+                }
+                return null;
+              },
+            ),
+
+            smallSpace(),
+            CustomTextField(
               label: "Full Name",
               hint: "First name, Last name",
               inputFormatters: [
@@ -69,6 +89,7 @@ class _PersonalInfoScreenState extends ConsumerState<PersonalInfoScreen> {
             ),
 
             smallSpace(),
+
             const Padding(
               padding: EdgeInsets.only(bottom: 10),
               child: Text(

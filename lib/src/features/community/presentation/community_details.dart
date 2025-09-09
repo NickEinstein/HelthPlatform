@@ -85,6 +85,7 @@ class CommunityDetails extends ConsumerWidget {
                           },
                         ),
                       ),
+
                       // NetworkImageWithFallback(
                       //   imageUrl: community.pictureUrl!,
                       //   width: double.infinity,

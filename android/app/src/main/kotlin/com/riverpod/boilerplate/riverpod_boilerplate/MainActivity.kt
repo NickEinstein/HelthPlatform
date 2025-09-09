@@ -1,4 +1,4 @@
-package com.connecthealthpro.app
+package com.connecthealthpro.mobile
 
 import io.flutter.embedding.android.FlutterFragmentActivity
 

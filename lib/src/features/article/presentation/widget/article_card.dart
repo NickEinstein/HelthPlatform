@@ -37,7 +37,8 @@ class ArticleCard extends StatelessWidget {
           children: [
             // Image
             NetworkImageWithFallback(
-              imageUrl: article.featuredImagePath!,
+              imageUrl:
+                  article.featuredImagePath ?? '', // fallback to empty string
               height: 120,
               width: double.infinity,
               borderRadius: 16,

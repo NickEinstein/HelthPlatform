@@ -8,6 +8,7 @@ class AccountCreationController {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController dobController = TextEditingController();
+  final TextEditingController userNameController = TextEditingController();
 
   final TextEditingController addressController = TextEditingController();
   final TextEditingController stateController = TextEditingController();
@@ -35,6 +36,7 @@ class AccountCreationController {
   void dispose() {
     firstNameController.dispose();
     lastNameController.dispose();
+    userNameController.dispose();
     emailController.dispose();
     phoneController.dispose();
     addressController.dispose();

@@ -1,18 +1,23 @@
 import 'package:flutter/material.dart';
 
 import '../constants/constants.dart';
+import '../constants/voice_recording_sheet.dart';
 
 class CustomHeader extends StatelessWidget {
   final String? title;
   final VoidCallback onPressed;
+  final bool isVoice;
   final VoidCallback? onSearchPressed; // Optional search button callback
+  final Function(String)? onVoiceResult; // Add this
 
-  const CustomHeader({
-    Key? key,
-    this.title, // Optional title
-    required this.onPressed, // Required back button function
-    this.onSearchPressed, // Optional search button function
-  }) : super(key: key);
+  const CustomHeader(
+      {Key? key,
+      this.title, // Optional title
+      required this.onPressed, // Required back button function
+      this.onSearchPressed, // Optional search button function
+      this.onVoiceResult,
+      this.isVoice = false})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -54,15 +59,50 @@ class CustomHeader extends StatelessWidget {
           ),
 
           // Optional search icon (if onSearchPressed is provided)
-          if (onSearchPressed != null)
-            GestureDetector(
-              onTap: onSearchPressed,
-              child: Image.asset(
-                'assets/images/search.png',
-                width: 20,
-                height: 20,
-              ),
-            ),
+          Row(
+            children: [
+              if (onSearchPressed != null)
+                GestureDetector(
+                  onTap: onSearchPressed,
+                  child: Image.asset(
+                    'assets/images/search.png',
+                    width: 20,
+                    height: 20,
+                  ),
+                ),
+              if (isVoice)
+                Row(
+                  children: [
+                    tinyHorSpace(),
+                    GestureDetector(
+                      onTap: () {
+                        showModalBottomSheet(
+                          context: context,
+                          isDismissible: false,
+                          isScrollControlled: true,
+                          backgroundColor: Colors.white,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.vertical(top: Radius.circular(20)),
+                          ),
+                          builder: (ctx) => VoiceRecordingSheet(
+                            type: title ?? '',
+                            onResult: (text) {
+                              if (onVoiceResult != null) {
+                                onVoiceResult!(text);
+                              }
+                              // Navigator.pop(context);
+                            },
+                          ),
+                        );
+                      },
+                      child: Image.asset('assets/icon/voice.png',
+                          width: 35, height: 35),
+                    ),
+                  ],
+                ),
+            ],
+          ),
         ],
       ),
     );

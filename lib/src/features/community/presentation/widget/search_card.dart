@@ -2,19 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:greenzone_medical/src/app_pkg.dart';
 
 import '../../../../constants/helper.dart';
-import '../../../../utils/network_img_fallback.dart';
 
 class SearchCard extends StatefulWidget {
-  final String imageUrl;
-  final String title;
-  final String subtitle;
+  final String? imageUrl;
+  final String? title;
+  final String? subtitle;
   final VoidCallback onButtonPressed;
 
   const SearchCard({
     Key? key,
-    required this.imageUrl,
-    required this.title,
-    required this.subtitle,
+    this.imageUrl,
+    this.title,
+    this.subtitle,
     required this.onButtonPressed,
   }) : super(key: key);
 
@@ -25,6 +24,9 @@ class SearchCard extends StatefulWidget {
 class _SearchCardState extends State<SearchCard> {
   @override
   Widget build(BuildContext context) {
+    final safeTitle = widget.title ?? '';
+    final safeSubtitle = widget.subtitle ?? '';
+
     return InkWell(
       onTap: widget.onButtonPressed,
       child: Card(
@@ -34,40 +36,27 @@ class _SearchCardState extends State<SearchCard> {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // Image
+            // Image or fallback initials
             ClipRRect(
               borderRadius: BorderRadius.circular(10),
-              child: Image.network(
-                (widget.imageUrl).startsWith('http')
-                    ? widget.imageUrl
-                    : '${AppConstants.noSlashImageURL}${widget.imageUrl}',
-                width: 60,
-                height: 70,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  final firstName = widget.title;
-                  final initials = (firstName.isNotEmpty ? firstName[0] : '');
-
-                  return Container(
-                    width: 60,
-                    height: 70,
-                    decoration: BoxDecoration(
-                      color: getAvatarColor(firstName),
-                      borderRadius: BorderRadius.circular(10),
+              child: widget.imageUrl != null && widget.imageUrl!.isNotEmpty
+                  ? Image.network(
+                      widget.imageUrl!.startsWith('http')
+                          ? widget.imageUrl!
+                          : '${AppConstants.noSlashImageURL}${widget.imageUrl!}',
+                      width: 60,
+                      height: 70,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        final initials =
+                            safeTitle.isNotEmpty ? safeTitle[0] : '?';
+                        return _buildFallbackAvatar(initials, safeTitle);
+                      },
+                    )
+                  : _buildFallbackAvatar(
+                      safeTitle.isNotEmpty ? safeTitle[0] : '?',
+                      safeTitle,
                     ),
-                    alignment: Alignment.center,
-                    child: Text(
-                      initials,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize:
-                            16, // Adjusted from 24 to better fit the avatar
-                      ),
-                    ),
-                  );
-                },
-              ),
             ),
 
             const SizedBox(width: 12),
@@ -79,7 +68,7 @@ class _SearchCardState extends State<SearchCard> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    widget.title,
+                    safeTitle,
                     overflow: TextOverflow.ellipsis,
                     maxLines: 2,
                     style: const TextStyle(
@@ -91,21 +80,18 @@ class _SearchCardState extends State<SearchCard> {
                   const SizedBox(height: 4),
                   Row(
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.circle,
                         color: ColorConstant.primaryColor,
                         size: 12,
                       ),
-                      SizedBox(
-                        width: 3,
-                      ),
+                      const SizedBox(width: 3),
                       Text(
-                        widget.subtitle,
+                        safeSubtitle,
                         style: const TextStyle(
                           fontSize: 10,
                           fontWeight: FontWeight.w400,
-                          color: ColorConstant
-                              .secondryColor, // Temporary fix if ColorConstant has issues
+                          color: ColorConstant.secondryColor,
                         ),
                       ),
                     ],
@@ -115,6 +101,26 @@ class _SearchCardState extends State<SearchCard> {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFallbackAvatar(String initials, String seed) {
+    return Container(
+      width: 60,
+      height: 70,
+      decoration: BoxDecoration(
+        color: getAvatarColor(seed),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      alignment: Alignment.center,
+      child: Text(
+        initials,
+        style: const TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+          fontSize: 16,
         ),
       ),
     );

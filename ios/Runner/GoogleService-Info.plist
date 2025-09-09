@@ -3,11 +3,11 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>648993315957-gdek92s3b2egu95hgesqsfpd5419u18o.apps.googleusercontent.com</string>
+	<string>648993315957-97c78cdaajs0kgkbbhn35mu76gqkd2ca.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.648993315957-gdek92s3b2egu95hgesqsfpd5419u18o</string>
+	<string>com.googleusercontent.apps.648993315957-97c78cdaajs0kgkbbhn35mu76gqkd2ca</string>
 	<key>ANDROID_CLIENT_ID</key>
-	<string>648993315957-tpi7p7bsm58qpvdakvnfsqlu06t2r2r3.apps.googleusercontent.com</string>
+	<string>648993315957-nrafm346bf48tlibubg8b0p2h6ut73t3.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
 	<string>AIzaSyA4ZIlHNzI0O9KX9k9KDHQ8As7VVIZK-wA</string>
 	<key>GCM_SENDER_ID</key>
@@ -15,7 +15,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.connecthealthpro.app</string>
+	<string>com.connecthealthpro.mobile</string>
 	<key>PROJECT_ID</key>
 	<string>notify-38b31</string>
 	<key>STORAGE_BUCKET</key>
@@ -31,6 +31,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:648993315957:ios:930dd18211b94296aeac3c</string>
+	<string>1:648993315957:ios:c394041cc8a2e548aeac3c</string>
 </dict>
 </plist>

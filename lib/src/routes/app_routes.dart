@@ -56,6 +56,10 @@ abstract class Routes {
   static const CHATDETAILS = _Paths.CHATDETAILS;
   static const NOTIFICATIONPAGE = _Paths.NOTIFICATIONPAGE;
   static const CONTACTINFOPAGE = _Paths.CONTACTINFOPAGE;
+  static const ENGAGEPAGE = _Paths.ENGAGEPAGE;
+  static const ACCOUNTRESETPASSWORDPAGE = _Paths.ACCOUNTRESETPASSWORDPAGE;
+  static const FLAGGEDCONTENTPAGE = _Paths.FLAGGEDCONTENTPAGE;
+  static const REFFEREDCONTENTPAGE = _Paths.REFFEREDCONTENTPAGE;
 }
 
 abstract class _Paths {
@@ -78,6 +82,8 @@ abstract class _Paths {
   static const SEARCHCOMMUNITY = '/search_community';
   static const DOCTORPAGE = '/doctor_page';
   static const CAREGIVERSPAGE = '/caregivers_page';
+  static const ENGAGEPAGE = '/engage_page';
+
   static const DOCTORLISTING = '/doctor_Listing';
   static const BOOKAPPOINTMENT = '/book_appointment';
   static const HEALTHGOAL = '/health_goal';
@@ -112,4 +118,7 @@ abstract class _Paths {
   static const CHATDETAILS = '/chatdetails';
   static const NOTIFICATIONPAGE = '/notificationpage';
   static const CONTACTINFOPAGE = '/contact_info_page';
+  static const ACCOUNTRESETPASSWORDPAGE = '/account_reset_password_page';
+  static const FLAGGEDCONTENTPAGE = '/flagged_content_page';
+  static const REFFEREDCONTENTPAGE = '/referred_content_page';
 }

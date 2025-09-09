@@ -1,4 +1,4 @@
-package com.connectedhealth.new_emr
+package com.connecthealthpro.app
 
 import io.flutter.embedding.android.FlutterActivity
 

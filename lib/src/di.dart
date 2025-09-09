@@ -26,7 +26,7 @@ final dioProvider = Provider<Dio>((ref) {
   // dio.options.baseUrl =
   //     'https://edogoverp.com/ConnectedHealthWebApi/api'; // Your base URL
   dio.options.baseUrl =
-      'https://api.greenzonetechnologies.com.ng/ConnectedHealthWebApi/api'; // Your base URL
+      'https://api.greenzonetechnologies.com.ng'; // Your base URL
 
   return dio;
 });

@@ -158,12 +158,12 @@ class DoctorCard extends StatelessWidget {
                     ),
                     Row(
                       children: [
-                        Text(
-                          profession,
-                          style: const TextStyle(
-                            fontSize: 12,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
+                        Flexible(
+                          child: Text(
+                            profession,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                                fontSize: 12, fontWeight: FontWeight.w500),
                           ),
                         ),
                         const SizedBox(width: 5),
@@ -174,12 +174,12 @@ class DoctorCard extends StatelessWidget {
                               fontWeight: FontWeight.w500,
                             )),
                         const SizedBox(width: 5),
-                        Text(
-                          hospital,
-                          style: const TextStyle(
-                            fontSize: 12,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
+                        Flexible(
+                          child: Text(
+                            hospital,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                                fontSize: 12, fontWeight: FontWeight.w500),
                           ),
                         ),
                       ],

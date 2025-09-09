@@ -15,6 +15,8 @@ class GroupCard extends ConsumerStatefulWidget {
   final VoidCallback? onRejecteddButtonPressed;
   final bool isAcceptReject;
   final bool? isSentInvite;
+  final bool? isShowMore;
+  final String? doctorName;
 
   const GroupCard({
     Key? key,
@@ -29,7 +31,9 @@ class GroupCard extends ConsumerStatefulWidget {
     this.onRejecteddButtonPressed,
     this.isAcceptReject = false,
     this.isSentInvite = false,
+    this.isShowMore = false,
     required this.onButtonPressed,
+    this.doctorName,
   }) : super(key: key);
 
   @override
@@ -101,21 +105,45 @@ class _GroupCardState extends ConsumerState<GroupCard> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(
-                    widget.title,
-                    maxLines: 3,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: Color(0xff3C3B3B),
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        // 👈 prevent overflow
+                        child: Text(
+                          widget.title,
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: Color(0xff3C3B3B),
+                          ),
+                        ),
+                      ),
+                      if (widget.isShowMore == true)
+                        const Icon(
+                          Icons.arrow_forward_ios,
+                          size: 12,
+                          color: Colors.black,
+                        ),
+                    ],
                   ),
+                  if (widget.doctorName != null)
+                    Text(
+                      '${widget.doctorName}',
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                        color: Color(0xff3C3B3B),
+                      ),
+                    ),
                   const SizedBox(height: 4),
+
                   Row(
                     children: [
                       widget.isSentInvite!
-                          ? Text(
+                          ? const Text(
                               'Name: ',
                               style: TextStyle(
                                 fontSize: 10,
@@ -132,7 +160,7 @@ class _GroupCardState extends ConsumerState<GroupCard> {
                                     color: ColorConstant.primaryColor,
                                   ),
                                 )
-                              : Text(
+                              : const Text(
                                   'Invited by: ',
                                   style: TextStyle(
                                     fontSize: 10,
@@ -150,6 +178,7 @@ class _GroupCardState extends ConsumerState<GroupCard> {
                       ),
                     ],
                   ),
+
                   const SizedBox(height: 8),
                   if (!widget.isMember)
                     widget.isLoading

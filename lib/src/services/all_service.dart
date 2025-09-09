@@ -8,6 +8,7 @@ import 'package:path/path.dart';
 import '../api/app_endpoints.dart';
 import '../constants/api_url.dart';
 import '../constants/storage_constant.dart';
+import '../features/account/model/referral_list.dart';
 import '../features/appointment/model/appointment_model.dart';
 import '../features/appointment/model/doctors_rating.dart';
 import '../features/biling/model/billing_response.dart';
@@ -828,6 +829,52 @@ class AllService {
         );
 
         return communityList;
+      } else {
+        debugPrint(' Failed to fetch articles: ${response.statusCode}');
+        throw Exception('Failed to fetch articles: ${response.statusCode}');
+      }
+    } catch (error) {
+      debugPrint(' Error fetching articles: $error');
+      throw Exception('Error fetching articles: $error');
+    }
+  }
+
+  Future<List<ReferralList>> fetchMyReferredList() async {
+    try {
+      final token = await getToken();
+      final userId = await getUserId();
+
+      if (token == null || token.isEmpty) {
+        debugPrint('⚠️ No access token found.');
+        return [];
+      }
+
+      final response = await _apiService.get(
+        ApiUrl.refferedURL(userId!),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if ((response.statusCode == 200 || response.statusCode == 1)) {
+        final List<dynamic> data = response.data['data']['recordList'];
+
+        if (data.isEmpty) {
+          debugPrint('⚠️ No reffered found.');
+          return [];
+        }
+
+        final referrealList =
+            data.map((e) => ReferralList.fromJson(e)).toList();
+
+        // ✅ Save articles in storage for offline use
+        await _storageService.setString(
+          StorageConstants.refferedListData,
+          jsonEncode(data),
+        );
+
+        return referrealList;
       } else {
         debugPrint(' Failed to fetch articles: ${response.statusCode}');
         throw Exception('Failed to fetch articles: ${response.statusCode}');
@@ -1858,6 +1905,47 @@ class AllService {
 
       final response = await _apiService.get(
         ApiUrl.allPostURL(groupId, pageNumber, pageSize),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = response.data['posts'];
+
+        if (data.isEmpty) {
+          debugPrint('⚠️ No categories found.');
+          return [];
+        }
+
+        final category = data.map((e) => AllPostResponse.fromJson(e)).toList();
+
+        // ✅ Save categories for offline use
+
+        return category;
+      } else {
+        debugPrint(' Failed to fetch categories: ${response.statusCode}');
+        throw Exception('Failed to fetch categories: ${response.statusCode}');
+      }
+    } catch (error) {
+      debugPrint(' Error fetching categories: $error');
+      throw Exception('Error fetching categories: $error');
+    }
+  }
+
+  Future<List<AllPostResponse>> fetchAllFlaggedPosts() async {
+    try {
+      final token = await getToken();
+      final userId = await getUserId();
+
+      if (token == null || token.isEmpty) {
+        debugPrint('⚠️ No access token found.');
+        return [];
+      }
+
+      final response = await _apiService.get(
+        ApiUrl.allFlaggedPostURL(userId!),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',

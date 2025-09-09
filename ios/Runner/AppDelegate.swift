@@ -10,7 +10,7 @@ import FirebaseCore
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
     FirebaseApp.configure();
-        GMSServices.provideAPIKey("AIzaSyB_5ZihPhnFqFajHvq8NmsJ0KsqszbEpC4")
+        GMSServices.provideAPIKey("AIzaSyATQiPzHvg0zfR_P0u0cVZpfPPsDYyU3OQ")
 GMSServices.setMetalRendererEnabled(true)
     GeneratedPluginRegistrant.register(with: self)
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)

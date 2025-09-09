@@ -12,6 +12,7 @@ import 'package:greenzone_medical/src/model/state_model.dart';
 import 'package:greenzone_medical/src/model/user_model.dart';
 
 import '../app_pkg.dart';
+import '../features/account/model/referral_list.dart';
 import '../features/appointment/model/appointment_model.dart';
 import '../features/appointment/model/doctors_rating.dart';
 import '../features/biling/model/billing_response.dart';
@@ -121,6 +122,11 @@ final myCommunityListProvider =
     FutureProvider.autoDispose<List<CommunityListResponse>>((ref) async {
   final communityListService = ref.watch(allServiceProvider);
   return await communityListService.fetchMyCommunityList();
+});
+final myRefferredListProvider =
+    FutureProvider.autoDispose<List<ReferralList>>((ref) async {
+  final referralListService = ref.watch(allServiceProvider);
+  return await referralListService.fetchMyReferredList();
 });
 final adminUserCommunityListProvider =
     FutureProvider.autoDispose<List<CommunityListResponse>>((ref) async {
@@ -243,6 +249,13 @@ final userAllPostProvider = FutureProvider.autoDispose
     params.pageSize,
   );
 });
+
+final userAllFlaggedPostProvider =
+    FutureProvider.autoDispose<List<AllPostResponse>>((ref) async {
+  final responseListService = ref.watch(allServiceProvider);
+  return await responseListService.fetchAllFlaggedPosts();
+});
+
 final userAllMediaProvider = FutureProvider.autoDispose
     .family<List<PostMediaResponse>, int>((ref, categoryId) async {
   final userDataService = ref.watch(allServiceProvider);

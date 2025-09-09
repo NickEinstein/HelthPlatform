@@ -8,8 +8,7 @@ class ApiService {
   ApiService() {
     final options = BaseOptions(
       // baseUrl: 'https://edogoverp.com/ConnectedHealthWebApi/api',
-      baseUrl:
-          'https://api.greenzonetechnologies.com.ng/ConnectedHealthWebApi/api',
+      baseUrl: 'https://api.greenzonetechnologies.com.ng',
       connectTimeout: const Duration(seconds: 10),
       receiveTimeout: const Duration(seconds: 15),
     );

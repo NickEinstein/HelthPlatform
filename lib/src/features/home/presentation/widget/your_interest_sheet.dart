@@ -36,133 +36,134 @@ class _YourInterestSheetState extends ConsumerState<YourInterestSheet> {
   @override
   Widget build(BuildContext context) {
     final isLoading = ref.watch(isLoadingProvider);
-    // final communityListAsync = ref.watch(communityListProvider);
-    final communityListAsync =
-        ref.watch(categoryProvider); // ✅ Watch categories
+    final communityListAsync = ref.watch(categoryProvider);
 
-    return Padding(
-      padding: MediaQuery.of(context).viewInsets,
+    return SafeArea(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Image.asset('assets/icon/hego.png', height: 53, width: 53),
-            mediumSpace(),
-            const Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                "What are your interests",
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w400,
-                  color: Color(0xff181819),
-                ),
-              ),
-            ),
-            smallSpace(),
-
-            // Dynamic Interests from API
-            communityListAsync.when(
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (error, stackTrace) =>
-                  const Center(child: Text('Error loading interest')),
-              data: (communityList) {
-                return Wrap(
-                  spacing: 10,
-                  runSpacing: 10,
-                  children: communityList.map((community) {
-                    final isSelected =
-                        selectedInterests.contains(community.id!);
-                    return GestureDetector(
-                      onTap: () => toggleInterest(community.id!),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 10),
-                        decoration: BoxDecoration(
-                          color: isSelected
-                              ? ColorConstant.primaryColor
-                              : Color(0xffE3E5E5).withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(5),
-                          border: Border.all(
-                            color: isSelected
-                                ? ColorConstant.primaryColor
-                                : Colors.grey,
-                          ),
-                        ),
-                        child: Text(
-                          community.name ?? '',
-                          style: TextStyle(
-                            color: isSelected ? Colors.white : Colors.black87,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                    );
-                  }).toList(),
-                );
-              },
-            ),
-
-            mediumSpace(),
-            mediumSpace(),
-
-            isLoading
-                ? const Center(child: CircularProgressIndicator())
-                : SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: selectedInterests.isEmpty
-                            ? Colors.grey // Disabled color
-                            : ColorConstant.primaryColor,
-                        padding: const EdgeInsets.symmetric(vertical: 18),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                      ),
-                      onPressed: selectedInterests.isEmpty
-                          ? null
-                          : () async {
-                              ref.read(isLoadingProvider.notifier).state = true;
-
-                              final allService = ref.read(allServiceProvider);
-                              final result =
-                                  await allService.saveFavouriteCategoy(
-                                selectedInterests.toList(),
-                              );
-
-                              if (!context.mounted) return;
-
-                              ref.read(isLoadingProvider.notifier).state =
-                                  false;
-
-                              if (result == 'successful') {
-                                Navigator.pop(context); // pop safely
-
-                                // Delay to ensure Navigator stack stabilizes
-                                newShowInfoBottomSheet(
-                                  'Notice',
-                                  'Records updated successfully.',
-                                  buttonText: 'Close',
-                                  isAnotherTime: false,
-                                );
-                              } else {
-                                Navigator.pop(context);
-                                CustomToast.show(context, result,
-                                    type: ToastType.error);
-                              }
-                            },
-                      child: const Text(
-                        'Update Records',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+        padding: MediaQuery.of(context).viewInsets,
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Image.asset('assets/icon/hego.png', height: 53, width: 53),
+                mediumSpace(),
+                const Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "What are your interests",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w400,
+                      color: Color(0xff181819),
                     ),
                   ),
-          ],
+                ),
+                smallSpace(),
+
+                // Dynamic Interests
+                communityListAsync.when(
+                  loading: () =>
+                      const Center(child: CircularProgressIndicator()),
+                  error: (error, stackTrace) =>
+                      const Center(child: Text('Error loading interest')),
+                  data: (communityList) {
+                    return Wrap(
+                      spacing: 10,
+                      runSpacing: 10,
+                      children: communityList.map((community) {
+                        final isSelected =
+                            selectedInterests.contains(community.id);
+                        return GestureDetector(
+                          onTap: () => toggleInterest(community.id),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 10),
+                            decoration: BoxDecoration(
+                              color: isSelected
+                                  ? ColorConstant.primaryColor
+                                  : Color(0xffE3E5E5).withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(5),
+                              border: Border.all(
+                                color: isSelected
+                                    ? ColorConstant.primaryColor
+                                    : Colors.grey,
+                              ),
+                            ),
+                            child: Text(
+                              community.name ?? '',
+                              style: TextStyle(
+                                color:
+                                    isSelected ? Colors.white : Colors.black87,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    );
+                  },
+                ),
+
+                mediumSpace(),
+                mediumSpace(),
+
+                isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: selectedInterests.isEmpty
+                                ? Colors.grey
+                                : ColorConstant.primaryColor,
+                            padding: const EdgeInsets.symmetric(vertical: 18),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                          ),
+                          onPressed: selectedInterests.isEmpty
+                              ? null
+                              : () async {
+                                  ref.read(isLoadingProvider.notifier).state =
+                                      true;
+                                  final allService =
+                                      ref.read(allServiceProvider);
+                                  final result =
+                                      await allService.saveFavouriteCategoy(
+                                    selectedInterests.toList(),
+                                  );
+                                  if (!context.mounted) return;
+                                  ref.read(isLoadingProvider.notifier).state =
+                                      false;
+                                  if (result == 'successful') {
+                                    Navigator.pop(context);
+                                    // pop safely // Delay to ensure Navigator stack stabilizes
+                                    newShowInfoBottomSheet(
+                                      'Notice',
+                                      'Records updated successfully.',
+                                      buttonText: 'Close',
+                                      isAnotherTime: false,
+                                    );
+                                  } else {
+                                    Navigator.pop(context);
+                                    CustomToast.show(context, result,
+                                        type: ToastType.error);
+                                  }
+                                },
+                          child: const Text(
+                            'Update Records',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+              ],
+            ),
+          ),
         ),
       ),
     );

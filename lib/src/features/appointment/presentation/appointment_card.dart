@@ -147,21 +147,15 @@ class _AppointmentCardState extends ConsumerState<AppointmentCard> {
             ),
             // mediumSpace(),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 if (widget.showCancelButton)
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed:
-                          widget.buttonsDisabled ? null : widget.onCancel,
-                      style: OutlinedButton.styleFrom(
-                        side:
-                            const BorderSide(color: ColorConstant.primaryColor),
-                      ),
-                      child: Text(
-                        widget.buttonText1,
-                        style:
-                            const TextStyle(color: ColorConstant.primaryColor),
-                      ),
+                  InkWell(
+                    onTap: widget.buttonsDisabled ? null : widget.onReschedule,
+                    child: Text(
+                      widget.buttonText2,
+                      style: const TextStyle(
+                          color: ColorConstant.primaryColor, fontSize: 16),
                     ),
                   ),
                 if (widget.showCancelButton) const SizedBox(width: 8),
@@ -197,7 +191,7 @@ class _AppointmentCardState extends ConsumerState<AppointmentCard> {
                       ),
                     ),
                   )
-                else if (widget.isDischargedNote)
+                else if (widget.buttonsDisabled)
                   Expanded(
                     child: ElevatedButton(
                       onPressed:
@@ -214,7 +208,67 @@ class _AppointmentCardState extends ConsumerState<AppointmentCard> {
                         style: const TextStyle(color: Colors.white),
                       ),
                     ),
-                  ),
+                  )
+                else if (widget.isDischargedNote)
+                  Row(
+                    children: [
+                      InkWell(
+                        onTap: widget.buttonsDisabled
+                            ? null
+                            : () async {
+                                final zoomUrl = widget.appointment.zoomJoinUrl;
+                                if (zoomUrl != null &&
+                                    await canLaunchUrl(Uri.parse(zoomUrl))) {
+                                  await launchUrl(Uri.parse(zoomUrl),
+                                      mode: LaunchMode.externalApplication);
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content: Text(
+                                            "Could not launch Zoom meeting")),
+                                  );
+                                }
+                              },
+                        child: Image.asset(
+                          'assets/icon/zoom.png',
+                          height: 35,
+                          width: 35,
+                        ),
+                      ),
+                      tinyHorSpace(),
+                      Image.asset(
+                        'assets/icon/chat.png',
+                        height: 35,
+                        width: 35,
+                      ),
+                      tinyHorSpace(),
+                      InkWell(
+                        onTap: widget.buttonsDisabled ? null : widget.onCancel,
+                        child: Image.asset(
+                          'assets/icon/cancel.png',
+                          height: 35,
+                          width: 35,
+                        ),
+                      ),
+                    ],
+                  )
+                // Expanded(
+                //   child: ElevatedButton(
+                //     onPressed:
+                //         widget.buttonsDisabled ? null : widget.onReschedule,
+                //     style: ElevatedButton.styleFrom(
+                //       backgroundColor: ColorConstant.primaryColor,
+                //       padding: const EdgeInsets.symmetric(vertical: 16),
+                //       shape: RoundedRectangleBorder(
+                //         borderRadius: BorderRadius.circular(12),
+                //       ),
+                //     ),
+                //     child: Text(
+                //       widget.buttonText2,
+                //       style: const TextStyle(color: Colors.white),
+                //     ),
+                //   ),
+                // )
               ],
             ),
             if (widget.showRating)

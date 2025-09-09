@@ -2,6 +2,7 @@
 
 // import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:greenzone_medical/src/features/home/presentation/widget/advert_helper.dart';
 
 import '../../../provider/all_providers.dart';
 import '../../../utils/packages.dart';
@@ -53,6 +54,59 @@ class _HomePageState extends ConsumerState<HomePage> {
       // showHealthGoalBottomSheet(context);
       showInterestBottomSheet(context);
     });
+  }
+
+  Widget _buildStaticBanners() {
+    final List<HealthGoalModel> staticBanners = [
+      HealthGoalModel(
+        title: "Health Goals !!",
+        description: "Tell us more about your Health \nGoals",
+        backgroundColor: ColorConstant.primaryColor,
+        buttonText: "See Details",
+        onTap: () async {
+          final prefs = await SharedPreferences.getInstance();
+          final hasVisited = prefs.getBool('hasVisitedHealthGoal') ?? false;
+
+          if (hasVisited) {
+            context.push(Routes.ABOUTHEALTH);
+          } else {
+            await prefs.setBool('hasVisitedHealthGoal', true);
+            context.push(Routes.HEALTHGOAL);
+          }
+        },
+        imagePath: "assets/images/health_goals.png",
+      ), // <--- comma here
+      HealthGoalModel(
+        title: "Community",
+        description: "Have you taken your \nmedicine yet?",
+        backgroundColor: const Color(0xff633717),
+        buttonText: "Join a Community",
+        onTap: () async {
+          final prefs = await SharedPreferences.getInstance();
+          final hasJoined = prefs.getBool('hasJoinedCommunity') ?? false;
+
+          if (hasJoined) {
+            context.push(Routes.COMMUNITYLIST);
+          } else {
+            await prefs.setBool('hasJoinedCommunity', true);
+            context.push(Routes.COMMUNITYPAGE);
+          }
+        },
+        imagePath: "assets/images/health_goals.png",
+      ), // <--- comma here
+      HealthGoalModel(
+        title: "Track your meds!",
+        description: "Have you taken your \nmedicine yet?",
+        backgroundColor: const Color(0xff175B63),
+        buttonText: "See Details",
+        onTap: () async {
+          context.push(Routes.COMMUNITYPAGE);
+        },
+        imagePath: "assets/images/health_goals.png",
+      ), // <--- optional trailing comma (recommended)
+    ];
+
+    return HealthGoalsPager(goals: staticBanners);
   }
 
   @override
@@ -375,100 +429,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                     ],
                   ),
                   const SizedBox(height: 20),
-                  bannerState.when(
-                    loading: () =>
-                        const Center(child: CircularProgressIndicator()),
-                    error: (err, stack) =>
-                        const Center(child: Text("Failed to load banners")),
-                    data: (banners) {
-                      if (banners.isEmpty) {
-                        return const Center(
-                            child: Text("No banners available."));
-                      }
-
-                      // Define static banners
-                      final List<HealthGoalModel> staticBanners = [
-                        HealthGoalModel(
-                          title: "Health Goals !!",
-                          description: "Tell us more about your Health \nGoals",
-                          backgroundColor: ColorConstant.primaryColor,
-                          buttonText: "See Details",
-                          onTap: () async {
-                            final prefs = await SharedPreferences.getInstance();
-                            final hasVisited =
-                                prefs.getBool('hasVisitedHealthGoal') ?? false;
-
-                            if (hasVisited) {
-                              context.push(Routes
-                                  .ABOUTHEALTH); // 🚀 Redirect after first visit
-                            } else {
-                              await prefs.setBool(
-                                  'hasVisitedHealthGoal', true); // ✅ Store flag
-                              // ignore: use_build_context_synchronously
-                              context.push(Routes
-                                  .HEALTHGOAL); // 🚀 First-time navigation
-                            }
-                          },
-                          imagePath: "assets/images/health_goals.png",
-                        ),
-                        HealthGoalModel(
-                          title: "Community",
-                          description: "Have you taken your \nmedicine yet?",
-                          backgroundColor: const Color(0xff633717),
-                          buttonText: "Join a Community",
-                          onTap: () async {
-                            final prefs = await SharedPreferences.getInstance();
-                            final hasJoined =
-                                prefs.getBool('hasJoinedCommunity') ?? false;
-
-                            if (hasJoined) {
-                              // ignore: use_build_context_synchronously
-                              context.push(Routes.COMMUNITYLIST);
-                            } else {
-                              await prefs.setBool('hasJoinedCommunity', true);
-                              // ignore: use_build_context_synchronously
-                              context.push(Routes.COMMUNITYPAGE);
-                            }
-                          },
-                          imagePath: "assets/images/health_goals.png",
-                        ),
-                      ];
-
-                      // Convert API banners to HealthGoalModel list
-                      final List<HealthGoalModel> apiBanners =
-                          banners.map((banner) {
-                        return HealthGoalModel(
-                          title: banner.name ?? "No Title",
-                          description: "Check out ${banner.name}!",
-                          backgroundColor: ColorConstant.primaryColor,
-                          onTap: () {
-                            if (banner.linkUrl != null &&
-                                banner.linkUrl!.isNotEmpty) {
-                              try {
-                                launchUrl(Uri.parse(banner.linkUrl!));
-                              } catch (e) {
-                                debugPrint(
-                                    "⚠️ Failed to launch URL: ${banner.linkUrl}");
-                              }
-                            } else {
-                              launchUrl(Uri.parse("https://edogoverp.com"));
-                            }
-                          },
-                          buttonText: "Learn More",
-                          imagePath:
-                              "${AppConstants.imageURL}${banner.imageUrl}",
-                        );
-                      }).toList();
-
-                      // Combine static and API banners
-                      final List<HealthGoalModel> allBanners = [
-                        ...staticBanners,
-                        ...apiBanners
-                      ];
-
-                      return HealthGoalsPager(goals: allBanners);
-                    },
-                  ),
+                  _buildStaticBanners(),
                   mediumSpace(),
                   const ActionButtonsRow(),
                   mediumSpace(),
@@ -504,6 +465,48 @@ class _HomePageState extends ConsumerState<HomePage> {
                         onTap: () {},
                       ),
                       const FriendRequestSection(),
+                      bannerState.when(
+                        loading: () =>
+                            const Center(child: CircularProgressIndicator()),
+                        error: (err, stack) =>
+                            const Center(child: Text("Failed to load banners")),
+                        data: (banners) {
+                          if (banners.isEmpty) {
+                            return const Center(
+                                child: Text("No banners available."));
+                          }
+
+                          // API banners only
+                          final List<AdvertModel> apiBanners =
+                              banners.map((banner) {
+                            final imageUrl = banner.imageUrl ?? "";
+                            final isVideo = imageUrl.endsWith('.mp4');
+
+                            return AdvertModel(
+                              title: "",
+                              description: "",
+                              backgroundColor: ColorConstant.primaryColor,
+                              mediaType: isVideo ? 'video' : 'image',
+                              imagePath:
+                                  "${AppConstants.noSlashImageURL}$imageUrl",
+                              onTap: () {
+                                final url = imageUrl.isNotEmpty
+                                    ? "${AppConstants.noSlashImageURL}$imageUrl"
+                                    : "https://edogoverp.com";
+
+                                try {
+                                  launchUrl(Uri.parse(url));
+                                } catch (e) {
+                                  debugPrint("⚠️ Failed to launch URL: $url");
+                                }
+                              },
+                            );
+                          }).toList();
+
+                          return AdvertHelper(goals: apiBanners);
+                        },
+                      ),
+
                       getAllInterestAsync.when(
                         data: (interests) {
                           if (interests == null || interests.isEmpty) {
@@ -603,7 +606,8 @@ class _HomePageState extends ConsumerState<HomePage> {
                                           title: article.title!,
                                           subtitle: article.fullDescription!,
                                           // imageUrl: "assets/images/article_1.png",
-                                          imageUrl: article.featuredImagePath!,
+                                          imageUrl: article.featuredImagePath ??
+                                              'assets/images/article_1.png',
 
                                           onPressed: () => context.push(
                                             Routes.ARTICLEDETAILS,

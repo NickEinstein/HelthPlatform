@@ -160,6 +160,7 @@ class AuthService {
     required String homeAddress,
     required String phone,
     required String email,
+    required String username,
   }) async {
     try {
       final response = await _apiService.post(
@@ -173,6 +174,7 @@ class AuthService {
           "lga": lga,
           "placeOfBirth": placeOfBirth,
           "nationality": nationality,
+          "username": username,
           "contact": {
             "stateOfResidence": stateOfResidence,
             "lgaResidence": lgaResidence,
@@ -410,6 +412,33 @@ class AuthService {
       });
 
       if (response.statusCode == 200 && response.data != null) {
+        return 'successful';
+      } else {
+        return _handleStatusCode(response.statusCode);
+      }
+    } catch (error) {
+      return _handleError(error);
+    }
+  }
+
+  Future<String> resetPasswordUrl(
+      String email, String oldPassword, String password) async {
+    try {
+      final response =
+          await _apiService.post(ApiUrl.resetPasswordPostUrl, data: {
+        "email": email,
+        "oldPassword": oldPassword,
+        "newPassword": password,
+      });
+
+      if (response.statusCode == 200 && response.data != null) {
+        final data = response.data;
+
+        // Check if API returned failure inside body
+        if (data is Map && data['status'] == 'Failed') {
+          return data['message'] ?? 'Request failed';
+        }
+
         return 'successful';
       } else {
         return _handleStatusCode(response.statusCode);

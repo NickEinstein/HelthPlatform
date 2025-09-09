@@ -1,3 +1,5 @@
+import 'package:speech_to_text/speech_to_text.dart';
+
 import '../../../provider/all_providers.dart';
 import '../../../utils/packages.dart';
 import '../../article/presentation/widget/category_selector.dart';
@@ -15,6 +17,10 @@ class _DoctorPageState extends ConsumerState<DoctorPage> {
   bool isSearch = false;
   TextEditingController searchController = TextEditingController();
   String searchQuery = "";
+  bool isRecording = false;
+  List<String> selectedCategories = [];
+  SpeechToText speechToText = SpeechToText();
+
   @override
   Widget build(BuildContext context) {
     final doctorListAsync = ref.watch(doctorListProvider);
@@ -36,6 +42,21 @@ class _DoctorPageState extends ConsumerState<DoctorPage> {
                 onSearchPressed: () {
                   setState(() {
                     isSearch = !isSearch;
+                  });
+                },
+                isVoice: true,
+                onVoiceResult: (spokenText) {
+                  final words = spokenText
+                      .toLowerCase()
+                      .split(' ')
+                      .where((w) => w.isNotEmpty)
+                      .toSet()
+                      .toList();
+
+                  setState(() {
+                    selectedCategories = words;
+                    searchQuery = words.join(' ');
+                    searchController.text = searchQuery;
                   });
                 },
               ),
@@ -88,6 +109,29 @@ class _DoctorPageState extends ConsumerState<DoctorPage> {
                   ],
                 ),
               smallSpace(),
+              if (selectedCategories.isNotEmpty)
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: selectedCategories.map((cat) {
+                    return Chip(
+                      label: Text(cat),
+                      deleteIcon: const Icon(Icons.close,
+                          size: 20, color: Color(0xff059909)),
+                      onDeleted: () {
+                        setState(() {
+                          selectedCategories.remove(cat);
+                          searchQuery = selectedCategories.join(' ');
+                          searchController.text = searchQuery;
+                        });
+                      },
+                      backgroundColor: const Color(0xffD9FEAA),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    );
+                  }).toList(),
+                ),
               categoryState.when(
                 loading: () => const Center(child: CircularProgressIndicator()),
                 error: (err, stack) => const Center(
@@ -110,6 +154,44 @@ class _DoctorPageState extends ConsumerState<DoctorPage> {
                         },
                       ),
                       const SizedBox(height: 16),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5),
+                        child: InkWell(
+                          onTap: () {
+                            context.push(Routes.ENGAGEPAGE,
+                                extra: "Engaged Doctors");
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 5),
+                            decoration: BoxDecoration(
+                              color: Color(0xffFAFAFA),
+                              borderRadius: BorderRadius.circular(6),
+                              border: Border.all(
+                                  color: Color(0xffB0B0B0), width: 0.5),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 10),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "View Engaged Doctors",
+                                    style: const TextStyle(
+                                      color: Color(0xff737373),
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                  Image.asset('assets/icon/arrowright.png')
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      tinySpace(),
                       doctorListAsync.when(
                         loading: () =>
                             const Center(child: CircularProgressIndicator()),
@@ -179,8 +261,11 @@ class _DoctorPageState extends ConsumerState<DoctorPage> {
                                 imageUrl: doctor.profilePicture.toString(),
                                 name:
                                     '${doctor.title}. ${doctor.firstName ?? ''} ${doctor.lastName ?? ''}',
-                                type: doctor.workGrade ?? '',
-                                profession: doctor.department ?? '',
+                                type: doctor.userRoles!.last.roleSpecialist!
+                                        .specialistName ??
+                                    'Private Practitional',
+                                profession:
+                                    doctor.userRoles!.last.role!.name ?? '',
                                 hospital: doctor.healthCareProvider!.name ?? '',
                                 rating: double.tryParse(
                                         doctor.rating?.toString() ?? '0.0') ??

@@ -106,6 +106,7 @@ class _AccountCreationScreenState extends ConsumerState<AccountCreationScreen> {
             homeAddress: _controller.addressController.text,
             lga: _controller.lgaController.text,
             lgaResidence: _controller.lgaController.text,
+            username: _controller.userNameController.text,
             nationality: 'Nigeria',
             phone: _controller.phoneController.text,
             placeOfBirth: _controller.addressController.text,

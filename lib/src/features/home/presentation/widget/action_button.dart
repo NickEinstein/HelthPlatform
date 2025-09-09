@@ -16,39 +16,44 @@ class _ActionButtonsRowState extends State<ActionButtonsRow> {
   Widget build(BuildContext context) {
     final items = [
       {
-        "title": "Doctors",
+        "title": "Doctor",
         "icon": "assets/icon/doctor.png",
         "onTap": () => context.push(Routes.DOCTORPAGE),
       },
       {
         "title": "Pharmacy",
-        "icon": "assets/icon/phermacy.png",
+        "icon": "assets/icon/pharmacy.png",
         "onTap": () => context.push(Routes.CAREGIVERSPAGE, extra: 'Pharmacy'),
       },
       {
-        "title": "Caregiver",
-        "icon": "assets/icon/caregive.png",
-        "onTap": () => context.push(Routes.CAREGIVERSPAGE, extra: 'Caregivers'),
-      },
-      {
-        "title": "Community",
-        "icon": "assets/icon/community.png",
-        "onTap": () => context.push(Routes.MYCOMMUNITY),
-      },
-      {
-        "title": "Book",
-        "icon": "assets/icon/book.png",
-        "onTap": () => context.push(Routes.DOCTORPAGE),
-      },
-      {
         "title": "Lab",
-        "icon": "assets/icon/phermacy.png",
+        "icon": "assets/icon/lab.png",
         "onTap": () => context.push(Routes.CAREGIVERSPAGE, extra: 'Lab'),
       },
       {
-        "title": "Hospital",
-        "icon": "assets/icon/phermacy.png",
+        "title": "Hospitals",
+        "icon": "assets/icon/hospital.png",
         "onTap": () => context.push(Routes.CAREGIVERSPAGE, extra: 'Hospital'),
+      },
+      {
+        "title": "Ambulance",
+        "icon": "assets/icon/ambulance.png",
+        "onTap": () => context.push(Routes.CAREGIVERSPAGE, extra: 'Caregivers'),
+      },
+      {
+        "title": "Wallet",
+        "icon": "assets/icon/wallet.png",
+        "onTap": () => context.push(Routes.CAREGIVERSPAGE, extra: 'Caregivers'),
+      },
+      {
+        "title": "Socials",
+        "icon": "assets/icon/socials.png",
+        "onTap": () => context.push(Routes.MYCOMMUNITY),
+      },
+      {
+        "title": "App Library",
+        "icon": "assets/icon/applibrary.png",
+        "onTap": () => context.push(Routes.MYCOMMUNITY),
       },
     ];
 
@@ -113,15 +118,17 @@ class ActionButton extends StatelessWidget {
         InkWell(
           onTap: onButtonPressed,
           child: Container(
-            padding: const EdgeInsets.all(25),
+            padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-                color: Color(color), borderRadius: BorderRadius.circular(50)),
+                border: Border.all(color: Color(0xff109615)),
+                color: Color(color),
+                borderRadius: BorderRadius.circular(50)),
             child: Column(
               children: [
                 Image.asset(
                   icon,
-                  width: 25,
-                  height: 25,
+                  width: 35,
+                  height: 35,
                 ),
               ],
             ),
@@ -131,7 +138,7 @@ class ActionButton extends StatelessWidget {
         Text(title,
             style: const TextStyle(
                 color: Color(0xff091F44),
-                fontSize: 14,
+                fontSize: 13,
                 fontWeight: FontWeight.w400))
       ],
     );

@@ -467,6 +467,119 @@ class _NoSearchDropdownState extends State<NoSearchDropdown> {
   }
 }
 
+class OldPasswordTextField extends StatefulWidget {
+  final String label;
+  final Function(String) onChanged;
+  final TextEditingController? controller;
+
+  const OldPasswordTextField({
+    Key? key,
+    required this.label,
+    required this.onChanged,
+    this.controller,
+  }) : super(key: key);
+
+  @override
+  _OldPasswordTextFieldState createState() => _OldPasswordTextFieldState();
+}
+
+class _OldPasswordTextFieldState extends State<OldPasswordTextField> {
+  bool _isObscured = true;
+  late TextEditingController _controller;
+
+  late ValueNotifier<bool> hasText;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = widget.controller ?? TextEditingController();
+
+    hasText = ValueNotifier(false);
+
+    _controller.addListener(() => _validatePassword(_controller.text));
+  }
+
+  void _validatePassword(String value) {
+    hasText.value = value.isNotEmpty;
+
+    widget.onChanged(value);
+  }
+
+  @override
+  void dispose() {
+    if (widget.controller == null) {
+      _controller.dispose();
+    }
+
+    hasText.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(bottom: 8),
+          child: Text(
+            widget.label,
+            style: const TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w400,
+              color: Color(0xff3C3B3B),
+            ),
+          ),
+        ),
+        TextField(
+          controller: _controller,
+          obscureText: _isObscured,
+          onChanged: _validatePassword,
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: hasText.value
+                ? ColorConstant.primaryLightColor.withOpacity(0.3)
+                : Colors.white,
+            hintText: "Enter Password",
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+            hintStyle: const TextStyle(
+              color: Color(0xffB3B3B3),
+              fontWeight: FontWeight.w400,
+              fontSize: 14,
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(3),
+              borderSide: const BorderSide(
+                color: Color(0xffB3B3B3),
+                width: 0.8,
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(3),
+              borderSide: const BorderSide(
+                color: Color(0xffB3B3B3),
+                width: 0.8,
+              ),
+            ),
+            suffixIcon: IconButton(
+              icon: Icon(
+                _isObscured ? Icons.visibility_off : Icons.visibility,
+                color: Colors.black,
+              ),
+              onPressed: () {
+                setState(() {
+                  _isObscured = !_isObscured;
+                });
+              },
+            ),
+          ),
+        ),
+        const SizedBox(height: 10),
+      ],
+    );
+  }
+}
+
 class PasswordTextField extends StatefulWidget {
   final String label;
   final Function(String) onChanged;
@@ -893,7 +1006,7 @@ class _DateOfBirthFieldState extends State<DateOfBirthField> {
     if (picked != null) {
       // Convert the picked date to UTC and format it as YYYY-MM-DD
       String formattedDate =
-          "${picked.toUtc().year.toString().padLeft(4, '0')}-${picked.toUtc().month.toString().padLeft(2, '0')}-${picked.toUtc().day.toString().padLeft(2, '0')}";
+          "${picked.year.toString().padLeft(4, '0')}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}";
 
       setState(() {
         widget.controller.text = formattedDate; // Only date, no time
@@ -1321,5 +1434,12 @@ Future<void> requestPermissions() async {
 }
 
 String stripHtmlTags(String htmlText) {
-  return htmlText.replaceAll(RegExp(r'<[^>]*>'), '');
+  final withoutTags = htmlText.replaceAll(RegExp(r'<[^>]*>'), '');
+  final decoded = withoutTags
+      .replaceAll('&nbsp;', ' ')
+      .replaceAll('&amp;', '&')
+      .replaceAll('&quot;', '"')
+      .replaceAll('&lt;', '<')
+      .replaceAll('&gt;', '>');
+  return decoded;
 }

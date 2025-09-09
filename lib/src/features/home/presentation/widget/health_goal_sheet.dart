@@ -105,7 +105,7 @@ class _HealthGoalBottomSheetState extends State<HealthGoalBottomSheet> {
                     alignment: Alignment.centerLeft,
                     padding: const EdgeInsets.symmetric(horizontal: 12),
                     decoration: BoxDecoration(
-                      color: Color(0xffEAFFEB),
+                      color: const Color(0xffEAFFEB),
                       border: Border.all(color: ColorConstant.primaryColor),
                       borderRadius: const BorderRadius.only(
                         topLeft: Radius.circular(6),
@@ -120,10 +120,9 @@ class _HealthGoalBottomSheetState extends State<HealthGoalBottomSheet> {
                   flex: 8,
                   child: TextField(
                     controller: ageController,
-                    decoration: InputDecoration(
-                      contentPadding:
-                          const EdgeInsets.symmetric(horizontal: 12),
-                      border: const OutlineInputBorder(
+                    decoration: const InputDecoration(
+                      contentPadding: EdgeInsets.symmetric(horizontal: 12),
+                      border: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.green),
                         borderRadius: BorderRadius.only(
                           topRight: Radius.circular(6),
@@ -144,7 +143,7 @@ class _HealthGoalBottomSheetState extends State<HealthGoalBottomSheet> {
                     alignment: Alignment.centerLeft,
                     padding: const EdgeInsets.symmetric(horizontal: 12),
                     decoration: BoxDecoration(
-                      color: Color(0xffEAFFEB),
+                      color: const Color(0xffEAFFEB),
                       border: Border.all(color: ColorConstant.primaryColor),
                       borderRadius: const BorderRadius.only(
                         topLeft: Radius.circular(6),
@@ -159,10 +158,9 @@ class _HealthGoalBottomSheetState extends State<HealthGoalBottomSheet> {
                   flex: 8,
                   child: TextField(
                     controller: weightController,
-                    decoration: InputDecoration(
-                      contentPadding:
-                          const EdgeInsets.symmetric(horizontal: 12),
-                      border: const OutlineInputBorder(
+                    decoration: const InputDecoration(
+                      contentPadding: EdgeInsets.symmetric(horizontal: 12),
+                      border: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.green),
                         borderRadius: BorderRadius.only(
                           topRight: Radius.circular(6),
@@ -226,10 +224,6 @@ class _HealthGoalBottomSheetState extends State<HealthGoalBottomSheet> {
                 onPressed: () {
                   // Handle the update logic here
                   Navigator.pop(context);
-                  print("Updated health goal: $selectedGoal");
-                  print("Age: ${ageController.text}");
-                  print("Weight: ${weightController.text}");
-                  print("Medical Concern: $selectedMedicalConcern");
                 },
                 child: const Text(
                   'Update Records',

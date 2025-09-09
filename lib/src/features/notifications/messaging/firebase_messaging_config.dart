@@ -44,14 +44,16 @@ class NotificationRepositoryImpl implements NotificationRepository {
   // final _debouncer = Debouncer(milliseconds: 250);
   // final UtilityService _utilityService = locator<UtilityService>();
   // final NavigationService _navigationService = locator<NavigationService>();
+
+  @override
   Future<void> initializeFirebase(WidgetRef ref) async {
     try {
-      await requestPermission();
+      // ❌ Don’t request permission here automatically
+      // ✅ Only initialize Firebase and token handling
 
       if (Platform.isIOS) {
         final String? apnsToken = await _firebaseMessaging.getAPNSToken();
         debugPrint('✅ APNS Token: $apnsToken');
-        await Future.delayed(const Duration(seconds: 2));
       }
 
       final String? token = await _firebaseMessaging
@@ -64,12 +66,10 @@ class NotificationRepositoryImpl implements NotificationRepository {
       debugPrint('✅ FCM Token: $token');
       firebaseToken = token ?? '';
 
-      await _firebaseMessaging
-          .subscribeToTopic('all')
-          .timeout(const Duration(seconds: 3), onTimeout: () {
-        debugPrint("❌ Timeout subscribing to topic");
-      });
+      // Auto-subscribe to a topic (optional, safe)
+      await _firebaseMessaging.subscribeToTopic('all');
 
+      // Foreground messages
       FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
         final data = message.data;
 
@@ -88,7 +88,10 @@ class NotificationRepositoryImpl implements NotificationRepository {
         }
       });
 
+      // Background messages
       FirebaseMessaging.onBackgroundMessage(firebaseBackgroundHandler);
+
+      // Taps on notifications
       FirebaseMessaging.onMessageOpenedApp.listen((message) {
         try {
           handleNotificationOnOpenApp(message);
@@ -97,7 +100,7 @@ class NotificationRepositoryImpl implements NotificationRepository {
         }
       });
 
-      debugPrint("✅ Firebase initialized");
+      debugPrint("✅ Firebase initialized (without forcing notifications)");
     } catch (e) {
       debugPrint("❌ Firebase init error: $e");
     }
@@ -177,31 +180,40 @@ class NotificationRepositoryImpl implements NotificationRepository {
 
   @override
   Future<void> requestPermission() async {
-    if (Platform.isIOS) {
-      NotificationSettings settings =
-          await _firebaseMessaging.requestPermission(
-              alert: true,
-              announcement: true,
-              badge: true,
-              carPlay: false,
-              criticalAlert: true,
-              provisional: false,
-              sound: true);
+    try {
+      if (Platform.isIOS) {
+        NotificationSettings settings =
+            await _firebaseMessaging.requestPermission(
+          alert: true,
+          badge: true,
+          sound: true,
+        );
 
-      if (settings.authorizationStatus != AuthorizationStatus.authorized) {
-        openAppSettings();
-      }
-    } else if (Platform.isAndroid) {
-      final NotificationSettings settings =
-          await _firebaseMessaging.requestPermission(
-        alert: true,
-        badge: true,
-        sound: true,
-      );
+        if (settings.authorizationStatus == AuthorizationStatus.denied) {
+          debugPrint("🚫 User denied iOS notifications.");
+          // ✅ Do NOT force openAppSettings()
+        } else if (settings.authorizationStatus ==
+            AuthorizationStatus.notDetermined) {
+          debugPrint("🤔 User has not yet made a choice for notifications.");
+        } else {
+          debugPrint("✅ iOS Notifications granted.");
+        }
+      } else if (Platform.isAndroid) {
+        NotificationSettings settings =
+            await _firebaseMessaging.requestPermission(
+          alert: true,
+          badge: true,
+          sound: true,
+        );
 
-      if (settings.authorizationStatus != AuthorizationStatus.authorized) {
-        openAppSettings();
+        if (settings.authorizationStatus == AuthorizationStatus.denied) {
+          debugPrint("🚫 User denied Android notifications.");
+        } else {
+          debugPrint("✅ Android Notifications granted.");
+        }
       }
+    } catch (e) {
+      debugPrint("❌ Error requesting permission: $e");
     }
   }
 

@@ -15,6 +15,9 @@ class _CaregiversPageState extends ConsumerState<CaregiversPage> {
   final TextEditingController _searchController = TextEditingController();
   String searchText = '';
   Timer? _debounce;
+  bool isSearch = false;
+  String searchQuery = '';
+  List<String> selectedCategories = [];
 
   @override
   void dispose() {
@@ -27,7 +30,12 @@ class _CaregiversPageState extends ConsumerState<CaregiversPage> {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
     _debounce = Timer(const Duration(milliseconds: 300), () {
       setState(() {
-        searchText = value.toLowerCase();
+        searchQuery = value.toLowerCase();
+        selectedCategories = searchQuery
+            .split(' ')
+            .where((e) => e.trim().isNotEmpty)
+            .toSet()
+            .toList();
       });
     });
   }
@@ -43,9 +51,11 @@ class _CaregiversPageState extends ConsumerState<CaregiversPage> {
         return data.where((caregiver) {
           final name = caregiver.name?.toLowerCase() ?? '';
 
-          // Apply search text filter
-          if (searchText.isNotEmpty && !name.contains(searchText)) {
-            return false;
+          // Match based on voice/search chips
+          if (selectedCategories.isNotEmpty) {
+            final matchesCategory =
+                selectedCategories.any((term) => name.contains(term));
+            if (!matchesCategory) return false;
           }
 
           // Match based on type
@@ -89,61 +99,100 @@ class _CaregiversPageState extends ConsumerState<CaregiversPage> {
                     CustomHeader(
                       title: widget.type,
                       onPressed: () => Navigator.pop(context),
+                      isVoice: true,
+                      onVoiceResult: (spokenText) {
+                        final words = spokenText
+                            .toLowerCase()
+                            .split(' ')
+                            .where((w) => w.isNotEmpty)
+                            .toSet()
+                            .toList();
+
+                        setState(() {
+                          selectedCategories = words;
+                          searchQuery = words.join(' ');
+                          _searchController.text = searchQuery;
+                        });
+                      },
                     ),
                     const SizedBox(height: 16),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: TextField(
-                            controller: _searchController,
-                            onChanged: _onSearchChanged,
-                            decoration: InputDecoration(
-                              prefixIcon: const Icon(Icons.search,
-                                  size: 25, color: Color(0xff999999)),
-                              hintText: 'Search for ${widget.type}',
-                              hintStyle:
-                                  const TextStyle(color: Color(0xff999999)),
-                              contentPadding:
-                                  const EdgeInsets.symmetric(horizontal: 16),
-                              filled: true,
-                              fillColor: Colors.white,
-                              border: OutlineInputBorder(
-                                borderSide:
-                                    const BorderSide(color: Color(0xffE6E6E6)),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide:
-                                    const BorderSide(color: Color(0xffE6E6E6)),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(
-                                    color: Color(0xffE6E6E6), width: 2),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
+                    _tab(),
+                    smallSpace(),
+                    Row(children: [
+                      Expanded(
+                        child: TextField(
+                          controller: _searchController,
+                          onChanged: _onSearchChanged,
+                          decoration: InputDecoration(
+                            prefixIcon: const Icon(Icons.search,
+                                size: 25, color: Color(0xff999999)),
+                            hintText: 'Search for ${widget.type}',
+                            hintStyle:
+                                const TextStyle(color: Color(0xff999999)),
+                            contentPadding:
+                                const EdgeInsets.symmetric(horizontal: 16),
+                            filled: true,
+                            fillColor: Colors.white,
+                            border: OutlineInputBorder(
+                              borderSide:
+                                  const BorderSide(color: Color(0xffE6E6E6)),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide:
+                                  const BorderSide(color: Color(0xffE6E6E6)),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(
+                                  color: Color(0xffE6E6E6), width: 2),
+                              borderRadius: BorderRadius.circular(10),
                             ),
                           ),
                         ),
-                        // if (widget.type.toLowerCase() != 'pharmacy' &&
-                        //     widget.type.toLowerCase() != 'lab') ...[
-                        //   const SizedBox(width: 10),
-                        // GestureDetector(
-                        //   onTap: _showFilterDialog,
-                        //   child: Container(
-                        //     decoration: BoxDecoration(
-                        //       color: const Color(0xFFF2F8F3),
-                        //       border: Border.all(color: Colors.grey),
-                        //       borderRadius: BorderRadius.circular(8),
-                        //     ),
-                        //     padding: const EdgeInsets.all(10),
-                        //     child: const Icon(Icons.filter_list, size: 20),
-                        //   ),
-                        // ),
-                        // ]
-                      ],
-                    ),
-                    const SizedBox(height: 20),
+                      ),
+                      // if (widget.type.toLowerCase() != 'pharmacy' &&
+                      //     widget.type.toLowerCase() != 'lab') ...[
+                      const SizedBox(width: 10),
+                      GestureDetector(
+                        onTap: _showFilterDialog,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFF2F8F3),
+                            border: Border.all(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          padding: const EdgeInsets.all(10),
+                          child: const Icon(Icons.filter_list, size: 20),
+                        ),
+                      ),
+                    ]
+                        // ],
+                        ),
+                    smallSpace(),
+                    if (selectedCategories.isNotEmpty)
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: selectedCategories.map((cat) {
+                          return Chip(
+                            label: Text(cat),
+                            deleteIcon: const Icon(Icons.close,
+                                size: 20, color: Color(0xff059909)),
+                            onDeleted: () {
+                              setState(() {
+                                selectedCategories.remove(cat);
+                                searchQuery = selectedCategories.join(' ');
+                                _searchController.text = searchQuery;
+                              });
+                            },
+                            backgroundColor: const Color(0xffD9FEAA),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                          );
+                        }).toList(),
+                      ),
                     if (caregivers == null)
                       const Center(child: CircularProgressIndicator())
                     else if (caregivers.isEmpty)
@@ -266,7 +315,138 @@ class _CaregiversPageState extends ConsumerState<CaregiversPage> {
 
   void _applyFilter(String selectedType) {
     setState(() {
-      searchText = selectedType;
+      selectedCategories = [selectedType.toLowerCase()];
+      searchQuery = selectedType;
+      _searchController.text = searchQuery;
     });
+  }
+
+  Widget _tab() {
+    return Container(
+      width: width(context),
+      height: 48,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(5),
+        color: const Color.fromRGBO(249, 249, 249, 1),
+        border: Border.all(
+          color: const Color.fromRGBO(175, 175, 175, 1),
+          width: 0.5,
+        ),
+      ),
+      child: Row(
+        children: [
+          // Left tab (selected or highlighted)
+          if (widget.type == 'Pharmacy')
+            InkWell(
+              onTap: () {
+                context.push(Routes.ENGAGEPAGE,
+                    extra: "Engaged ${widget.type}");
+              },
+              child: Container(
+                width: 177,
+                decoration: BoxDecoration(
+                  color: const Color.fromRGBO(255, 255, 255, 1),
+                  border: Border.all(
+                    color: const Color.fromRGBO(175, 175, 175, 1),
+                    width: 0.75,
+                  ),
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(5),
+                    bottomLeft: Radius.circular(5),
+                  ),
+                ),
+                alignment: Alignment.center,
+                child: Text(
+                  'Engaged ${widget.type}',
+                  style: const TextStyle(
+                    color: Color.fromRGBO(114, 114, 114, 1),
+                    fontFamily: 'Inter',
+                    fontSize: 12,
+                    fontWeight: FontWeight.normal,
+                    height: 1,
+                  ),
+                ),
+              ),
+            )
+          else
+            InkWell(
+              onTap: () {
+                context.push(Routes.ENGAGEPAGE,
+                    extra: "Engaged ${widget.type}");
+              },
+              child: Container(
+                width: 177,
+                decoration: BoxDecoration(
+                  color: const Color.fromRGBO(255, 255, 255, 1),
+                  border: Border.all(
+                    color: const Color.fromRGBO(175, 175, 175, 1),
+                    width: 0.75,
+                  ),
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(5),
+                    bottomLeft: Radius.circular(5),
+                  ),
+                ),
+                alignment: Alignment.center,
+                child: Text(
+                  'Engaged ${widget.type}',
+                  style: const TextStyle(
+                    color: Color.fromRGBO(114, 114, 114, 1),
+                    fontFamily: 'Inter',
+                    fontSize: 12,
+                    fontWeight: FontWeight.normal,
+                    height: 1,
+                  ),
+                ),
+              ),
+            ),
+
+          // Right tab (unselected or normal)
+          if (widget.type == 'Lab')
+            Expanded(
+              child: InkWell(
+                onTap: () {
+                  context.push(Routes.ENGAGEPAGE,
+                      extra: "${widget.type} Request Log");
+                },
+                child: Container(
+                  alignment: Alignment.center,
+                  child: Text(
+                    '${widget.type} Request Log',
+                    style: const TextStyle(
+                      color: Color.fromRGBO(114, 114, 114, 1),
+                      fontFamily: 'Inter',
+                      fontSize: 12,
+                      fontWeight: FontWeight.normal,
+                      height: 1,
+                    ),
+                  ),
+                ),
+              ),
+            )
+          else
+            Expanded(
+              child: InkWell(
+                onTap: () {
+                  context.push(Routes.ENGAGEPAGE, extra: "Prescription Log");
+                },
+                child: Container(
+                  alignment: Alignment.center,
+                  child: const Text(
+                    'Prescription Log',
+                    style: TextStyle(
+                      color: Color.fromRGBO(114, 114, 114, 1),
+                      fontFamily: 'Inter',
+                      fontSize: 12,
+                      fontWeight: FontWeight.normal,
+                      height: 1,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
   }
 }

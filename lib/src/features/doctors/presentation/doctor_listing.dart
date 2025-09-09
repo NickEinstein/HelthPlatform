@@ -2,6 +2,7 @@ import 'package:greenzone_medical/src/model/doctord_list_response.dart'
     // ignore: library_prefixes
     as DoctorResponse;
 
+import '../../../constants/route_map_widget.dart';
 import '../../../utils/packages.dart';
 import 'widget/doctor_card.dart';
 import 'widget/title_subtitle_section.dart';
@@ -91,8 +92,9 @@ class _DoctorListingState extends ConsumerState<DoctorListing> {
                   imageUrl: doctor.profilePicture!,
                   name:
                       '${doctor.title}. ${doctor.firstName} ${doctor.lastName}',
-                  type: doctor.workGrade ?? '',
-                  profession: doctor.department ?? '',
+                  type: doctor.userRoles!.last.roleSpecialist!.specialistName ??
+                      '',
+                  profession: doctor.userRoles!.last.role!.name ?? '',
                   hospital: doctor.healthCareProvider!.name ?? '',
                   isShowImg: false,
                   isShowVerified: true,
@@ -255,7 +257,14 @@ class _DoctorListingState extends ConsumerState<DoctorListing> {
                                 color: ColorConstant.primaryColor),
                             "View Dr. ${doctor.firstName}'s Community"),
                       ),
-                      mediumSpace(),
+                      smallSpace(),
+                      // RouteMapWidget(
+                      //   from:
+                      //       'current', // special keyword to use current device location
+                      //   to: doctor.healthCareProvider!.location ?? '',
+                      //   travelMode:
+                      //       'driving', // or 'walking', 'bicycling', 'transit'
+                      // ),
                       verticalSpace(context, 0.08),
                     ],
                   ),

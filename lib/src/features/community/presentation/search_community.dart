@@ -57,7 +57,7 @@ class _SearchCommunityState extends ConsumerState<SearchCommunity> {
                           child: TextField(
                             style: const TextStyle(color: Colors.black),
                             decoration: const InputDecoration(
-                              hintText: "Search Community Name",
+                              hintText: "Find a Group",
                               hintStyle: TextStyle(
                                   color: Color(0xff999999),
                                   fontSize: 14,

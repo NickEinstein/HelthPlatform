@@ -147,7 +147,7 @@ class _CommunityListState extends ConsumerState<CommunityList> {
                                     ),
                                     const SizedBox(height: 8),
                                     SizedBox(
-                                      height: height(context) * 0.14,
+                                      height: height(context) * 0.15,
                                       child: ListView.builder(
                                         scrollDirection: Axis.horizontal,
                                         itemCount: topPopularCommunities.length,
@@ -262,16 +262,23 @@ class _CommunityListState extends ConsumerState<CommunityList> {
                                                   ),
                                                 ),
                                                 const SizedBox(height: 6),
-                                                Text(
-                                                  community.category?.name ??
-                                                      '',
-                                                  textAlign: TextAlign.center,
-                                                  style: const TextStyle(
-                                                      fontSize: 12),
-                                                  maxLines: 2,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                ),
+                                                ConstrainedBox(
+                                                  constraints:
+                                                      const BoxConstraints(
+                                                    maxWidth:
+                                                        100, // Set your desired max width here
+                                                  ),
+                                                  child: Text(
+                                                    community.category?.name ??
+                                                        '',
+                                                    textAlign: TextAlign.center,
+                                                    style: const TextStyle(
+                                                        fontSize: 12),
+                                                    maxLines: 2,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                )
                                               ],
                                             ),
                                           );
@@ -315,54 +322,61 @@ class _CommunityListState extends ConsumerState<CommunityList> {
                                                   //             .pictureUrl!
                                                   //         : 'assets/images/fitness1.png',
                                                   title: community.name!,
+                                                  isShowMore: true,
+                                                  doctorName:
+                                                      'Dr. ${community.communityGroupAdmin!.employee!.firstName} ${community.communityGroupAdmin!.employee!.lastName}',
                                                   subtitle:
                                                       '${community.communityGroupMembers!.length} members',
                                                   buttonText: isMember
-                                                      ? 'Joined'
-                                                      : 'Join',
+                                                      ? 'View'
+                                                      : 'View',
                                                   isMember: isMember,
                                                   isLoading: ref.watch(
                                                               loadingMapProvider)[
                                                           community.id] ??
                                                       false,
                                                   onButtonPressed: () async {
-                                                    final loadingMap = ref.read(
-                                                        loadingMapProvider
-                                                            .notifier);
-                                                    loadingMap.state = {
-                                                      ...loadingMap.state,
-                                                      community.id!: true,
-                                                    };
+                                                    context.push(
+                                                      Routes.COMMUNITYDETAILS,
+                                                      extra: community,
+                                                    );
+                                                    // final loadingMap = ref.read(
+                                                    //     loadingMapProvider
+                                                    //         .notifier);
+                                                    // loadingMap.state = {
+                                                    //   ...loadingMap.state,
+                                                    //   community.id!: true,
+                                                    // };
 
-                                                    final allService = ref.read(
-                                                        allServiceProvider);
-                                                    final result =
-                                                        await allService
-                                                            .joinCommunity(
-                                                                community.id!);
+                                                    // final allService = ref.read(
+                                                    //     allServiceProvider);
+                                                    // final result =
+                                                    //     await allService
+                                                    //         .joinCommunity(
+                                                    //             community.id!);
 
-                                                    if (!context.mounted)
-                                                      return;
+                                                    // if (!context.mounted)
+                                                    //   return;
 
-                                                    loadingMap.state = {
-                                                      ...loadingMap.state,
-                                                      community.id!: false,
-                                                    };
+                                                    // loadingMap.state = {
+                                                    //   ...loadingMap.state,
+                                                    //   community.id!: false,
+                                                    // };
 
-                                                    if (result ==
-                                                        'Join successful') {
-                                                      CustomToast.show(context,
-                                                          'Joined the Community Successfully',
-                                                          type: ToastType
-                                                              .success);
-                                                      context.pushReplacement(
-                                                          Routes.BOTTOMNAV);
-                                                    } else {
-                                                      CustomToast.show(
-                                                          context, result,
-                                                          type:
-                                                              ToastType.error);
-                                                    }
+                                                    // if (result ==
+                                                    //     'Join successful') {
+                                                    //   CustomToast.show(context,
+                                                    //       'Joined the Community Successfully',
+                                                    //       type: ToastType
+                                                    //           .success);
+                                                    //   context.pushReplacement(
+                                                    //       Routes.BOTTOMNAV);
+                                                    // } else {
+                                                    //   CustomToast.show(
+                                                    //       context, result,
+                                                    //       type:
+                                                    //           ToastType.error);
+                                                    // }
                                                   },
                                                 ),
                                                 smallSpace(),

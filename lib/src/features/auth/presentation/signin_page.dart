@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+// import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:greenzone_medical/src/app_pkg.dart';
@@ -198,7 +198,7 @@ class _SignInPageState extends ConsumerState<SignInPage> {
 
                   // Email Address Field
                   CustomTextField(
-                    label: "Email Address",
+                    label: "Username Email Address",
                     hint: "example@example.com",
                     controller: _emailController,
                     onChanged: (_) => _validateForm(),
@@ -206,14 +206,26 @@ class _SignInPageState extends ConsumerState<SignInPage> {
                       FilteringTextInputFormatter.allow(RegExp(r'.*')),
                     ],
                     validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return "Email cannot be empty";
+                      if (value == null || value.trim().isEmpty) {
+                        return "Field cannot be empty";
                       }
-                      if (!RegExp(
-                              r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}")
-                          .hasMatch(value)) {
-                        return "Enter a valid email address";
+
+                      final emailRegex = RegExp(
+                        r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+                      );
+                      final phoneRegex = RegExp(
+                        r'^\+?[0-9]{7,15}$', // allows +234..., 080..., etc. with 7–15 digits
+                      );
+                      final usernameRegex = RegExp(
+                        r'^[a-zA-Z0-9._-]{3,}$', // min 3 chars, alphanumeric with . _ -
+                      );
+
+                      if (!(emailRegex.hasMatch(value) ||
+                          phoneRegex.hasMatch(value) ||
+                          usernameRegex.hasMatch(value))) {
+                        return "Enter a valid email, phone number, or username";
                       }
+
                       return null;
                     },
                   ),
@@ -393,40 +405,41 @@ class _SignInPageState extends ConsumerState<SignInPage> {
                               ],
                             ),
                             verticalSpace(context, 0.05),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 10),
-                              child: Center(
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: Container(
-                                        height: 1, // Thickness of the line
-                                        color: const Color(
-                                            0xffD8D8D8), // Line color
+                            if (Platform.isAndroid)
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 10),
+                                child: Center(
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: Container(
+                                          height: 1, // Thickness of the line
+                                          color: const Color(
+                                              0xffD8D8D8), // Line color
+                                        ),
                                       ),
-                                    ),
-                                    const Padding(
-                                      padding:
-                                          EdgeInsets.symmetric(horizontal: 8.0),
-                                      child: Text('OR',
-                                          style: TextStyle(
-                                            fontSize: 18,
-                                            color:
-                                                Color(0xff8C8C8C), // Line color
-                                          )),
-                                    ),
-                                    Expanded(
-                                      child: Container(
-                                        height: 1, // Thickness of the line
-                                        color: const Color(
-                                            0xffD8D8D8), // Line color
+                                      const Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 8.0),
+                                        child: Text('OR',
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              color: Color(
+                                                  0xff8C8C8C), // Line color
+                                            )),
                                       ),
-                                    ),
-                                  ],
+                                      Expanded(
+                                        child: Container(
+                                          height: 1, // Thickness of the line
+                                          color: const Color(
+                                              0xffD8D8D8), // Line color
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
                             verticalSpace(context, 0.03),
                             // if (Platform.isIOS)
                             //   Center(
@@ -485,50 +498,53 @@ class _SignInPageState extends ConsumerState<SignInPage> {
                             //       ],
                             //     ),
                             //   ),
-                            // if (Platform.isAndroid)
-                            InkWell(
-                              onTap: () async {
-                                ref.read(isLoadingProvider.notifier).state =
-                                    true;
+                            if (Platform.isAndroid)
+                              InkWell(
+                                onTap: () async {
+                                  ref.read(isLoadingProvider.notifier).state =
+                                      true;
 
-                                final authService =
-                                    ref.read(authServiceProvider);
-                                final userCredential =
-                                    await authService.signInWithGoogle();
+                                  final authService =
+                                      ref.read(authServiceProvider);
+                                  final userCredential =
+                                      await authService.signInWithGoogle();
 
-                                if (!mounted) return;
-                                ref.read(isLoadingProvider.notifier).state =
-                                    false;
+                                  if (!mounted) return;
+                                  ref.read(isLoadingProvider.notifier).state =
+                                      false;
 
-                                if (userCredential != null) {
-                                  final idToken =
-                                      await userCredential.user?.getIdToken();
+                                  if (userCredential != null) {
+                                    final idToken =
+                                        await userCredential.user?.getIdToken();
 
-                                  if (idToken != null) {
-                                    final result = await authService
-                                        .socialLogin('google', idToken);
+                                    if (idToken != null) {
+                                      final result = await authService
+                                          .socialLogin('google', idToken);
 
-                                    if (result == 'Login successful') {
-                                      context.pushReplacement(Routes.BOTTOMNAV);
+                                      if (result == 'Login successful') {
+                                        context
+                                            .pushReplacement(Routes.BOTTOMNAV);
+                                      } else {
+                                        CustomToast.show(context, result,
+                                            type: ToastType.error);
+                                      }
                                     } else {
-                                      CustomToast.show(context, result,
+                                      CustomToast.show(
+                                          context, 'Token not found',
                                           type: ToastType.error);
                                     }
                                   } else {
-                                    CustomToast.show(context, 'Token not found',
+                                    CustomToast.show(
+                                        context, 'Google Sign-in failed',
                                         type: ToastType.error);
                                   }
-                                } else {
-                                  CustomToast.show(
-                                      context, 'Google Sign-in failed',
-                                      type: ToastType.error);
-                                }
-                              },
-                              child: Image.asset(
-                                  width: width(context),
-                                  height: height(context) * 0.09,
-                                  'assets/icon/login_google.png'),
-                            ),
+                                },
+                                child: Image.asset(
+                                    width: width(context),
+                                    height: height(context) * 0.09,
+                                    'assets/icon/login_google.png'),
+                              ),
+
                             // tinySpace(),
                             // InkWell(
                             //   onTap: () async {

@@ -111,24 +111,69 @@ class _AppointmentPageState extends ConsumerState<AppointmentPage> {
                 .where((appt) => (appt.isCanceled ?? false))
                 .toList();
 
-            return TabBarView(
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  color: Colors.transparent,
-                  child: UpcomingAppointments(appointments: upcoming),
-                  // child: UpcomingAppointments(appointments: cancelled),
+                Padding(
+                  padding: const EdgeInsets.only(left: 15, right: 15, top: 15),
+                  child: InkWell(
+                    onTap: () {
+                      context.push(
+                        Routes.DOCTORPAGE,
+                      );
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 5),
+                      decoration: BoxDecoration(
+                        color: Color(0xffFAFAFA),
+                        borderRadius: BorderRadius.circular(6),
+                        border:
+                            Border.all(color: Color(0xffB0B0B0), width: 0.5),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Book An Appointment Today!",
+                              style: const TextStyle(
+                                color: Color(0xff737373),
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                            Image.asset('assets/icon/arrowright.png')
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
-                Container(
-                  color: Colors.transparent,
-                  child: CompletedAppointments(appointments: completed),
-                  // child: CompletedAppointments(appointments: cancelled),
-                ),
-                Container(
-                  color: Colors.transparent,
-                  child: CancelledAppointments(appointments: cancelled),
+                Expanded(
+                  child: TabBarView(
+                    children: [
+                      Container(
+                        color: Colors.transparent,
+                        child: UpcomingAppointments(appointments: upcoming),
+                      ),
+                      Container(
+                        color: Colors.transparent,
+                        child: CompletedAppointments(appointments: completed),
+                      ),
+                      Container(
+                        color: Colors.transparent,
+                        child: CancelledAppointments(appointments: cancelled),
+                      ),
+                    ],
+                  )
+                      .animate()
+                      .slideY(begin: 1.0, end: 0, duration: 600.ms)
+                      .fadeIn(),
                 ),
               ],
-            ).animate().slideY(begin: 1.0, end: 0, duration: 600.ms).fadeIn();
+            );
           },
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (error, stack) => const Center(

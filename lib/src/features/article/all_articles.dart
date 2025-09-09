@@ -210,7 +210,7 @@ class _AllArticleScreenState extends ConsumerState<AllArticleScreen> {
                                             title: article.title!,
                                             subtitle: article.fullDescription!,
                                             imageUrl:
-                                                article.featuredImagePath!,
+                                                article.featuredImagePath ?? '',
 
                                             // imageUrl:
                                             //     "assets/images/article_1.png",

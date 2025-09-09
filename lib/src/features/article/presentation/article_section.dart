@@ -67,7 +67,7 @@ class ArticlesSection extends ConsumerWidget {
                         title: article.title!,
                         subtitle: article.fullDescription!,
                         // imageUrl: "assets/images/article_1.png",
-                        imageUrl: article.featuredImagePath!,
+                        imageUrl: article.featuredImagePath ?? '',
 
                         // imageUrl:
                         //     article.imageUrl ?? "assets/images/default.png",

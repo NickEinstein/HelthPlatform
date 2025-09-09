@@ -1,11 +1,15 @@
+import 'package:greenzone_medical/src/features/account/presentation/flagged_content.dart';
+import 'package:greenzone_medical/src/features/account/presentation/referred_content.dart';
 import 'package:greenzone_medical/src/features/appointment/appointment.dart';
 import 'package:greenzone_medical/src/features/appointment/presentation/widgets/reasoncancelled_appointments.dart';
+import 'package:greenzone_medical/src/features/caregivers/presentation/engage_page.dart';
 import 'package:greenzone_medical/src/features/chats/chats.dart';
 import 'package:greenzone_medical/src/features/chats/presentation/model/chatcontact_model.dart';
 import 'package:greenzone_medical/src/features/health_record/presentation/widget/main_health_record.dart';
 import 'package:greenzone_medical/src/features/notifications/notifications.dart';
 import 'package:greenzone_medical/src/features/prescription/presentation/prescriptions.dart';
 import 'package:greenzone_medical/src/model/community_list_response.dart';
+import '../features/account/presentation/account_reset_password.dart';
 import '../features/appointment/model/appointment_model.dart';
 import '../features/article/all_articles.dart';
 import '../features/biling/presentation/billings_page.dart';
@@ -207,6 +211,16 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) {
           final type = state.extra as String;
           return CaregiversPage(
+            type: type,
+          );
+        },
+      ),
+      GoRoute(
+        path: _Paths.ENGAGEPAGE,
+        name: _Paths.ENGAGEPAGE,
+        builder: (context, state) {
+          final type = state.extra as String;
+          return EngagePage(
             type: type,
           );
         },
@@ -463,6 +477,27 @@ final routerProvider = Provider<GoRouter>((ref) {
           return ContactInfoPage(
             friendRequestReceiverResponse: userID,
           );
+        },
+      ),
+      GoRoute(
+        path: _Paths.ACCOUNTRESETPASSWORDPAGE,
+        name: _Paths.ACCOUNTRESETPASSWORDPAGE,
+        builder: (context, state) {
+          return AccountResetPasswordPage();
+        },
+      ),
+      GoRoute(
+        path: _Paths.FLAGGEDCONTENTPAGE,
+        name: _Paths.FLAGGEDCONTENTPAGE,
+        builder: (context, state) {
+          return FlaggedContentPage();
+        },
+      ),
+      GoRoute(
+        path: _Paths.REFFEREDCONTENTPAGE,
+        name: _Paths.REFFEREDCONTENTPAGE,
+        builder: (context, state) {
+          return ReferredContentPage();
         },
       ),
     ],

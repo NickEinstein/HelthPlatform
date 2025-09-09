@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:greenzone_medical/src/utils/packages.dart';
 
 import '../../../../utils/network_img_fallback.dart';

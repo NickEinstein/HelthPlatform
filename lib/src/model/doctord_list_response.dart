@@ -39,8 +39,7 @@ class DoctorListResponse {
   String? aboutCareGiver;
   int? rating;
   int? reviews;
-  int? status;
-  int? userType;
+  int? usersType;
 
   DoctorListResponse(
       {this.id,
@@ -83,8 +82,7 @@ class DoctorListResponse {
       this.aboutCareGiver,
       this.rating,
       this.reviews,
-      this.status,
-      this.userType});
+      this.usersType});
 
   DoctorListResponse.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -136,8 +134,7 @@ class DoctorListResponse {
     aboutCareGiver = json['aboutCareGiver'];
     rating = json['rating'];
     reviews = json['reviews'];
-    status = json['status'];
-    status = json['usersType'];
+    usersType = json['usersType'];
   }
 
   Map<String, dynamic> toJson() {
@@ -190,9 +187,7 @@ class DoctorListResponse {
     data['aboutCareGiver'] = this.aboutCareGiver;
     data['rating'] = this.rating;
     data['reviews'] = this.reviews;
-    data['status'] = this.status;
-    data['userType'] = this.userType;
-
+    data['usersType'] = this.usersType;
     return data;
   }
 }
@@ -220,8 +215,9 @@ class UserRoles {
   int? id;
   Employee? employee;
   State? role;
+  RoleSpecialist? roleSpecialist;
 
-  UserRoles({this.id, this.employee, this.role});
+  UserRoles({this.id, this.employee, this.role, this.roleSpecialist});
 
   UserRoles.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -229,6 +225,9 @@ class UserRoles {
         ? new Employee.fromJson(json['employee'])
         : null;
     role = json['role'] != null ? new State.fromJson(json['role']) : null;
+    roleSpecialist = json['roleSpecialist'] != null
+        ? new RoleSpecialist.fromJson(json['roleSpecialist'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -239,6 +238,9 @@ class UserRoles {
     }
     if (this.role != null) {
       data['role'] = this.role!.toJson();
+    }
+    if (this.roleSpecialist != null) {
+      data['roleSpecialist'] = this.roleSpecialist!.toJson();
     }
     return data;
   }
@@ -266,19 +268,56 @@ class Employee {
   }
 }
 
+class RoleSpecialist {
+  int? id;
+  State? role;
+  String? specialistName;
+
+  RoleSpecialist({this.id, this.role, this.specialistName});
+
+  RoleSpecialist.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    role = json['role'] != null ? new State.fromJson(json['role']) : null;
+    specialistName = json['specialistName'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    if (this.role != null) {
+      data['role'] = this.role!.toJson();
+    }
+    data['specialistName'] = this.specialistName;
+    return data;
+  }
+}
+
 class HealthCareProvider {
   int? id;
   String? name;
   String? rcNumber;
   String? brandName;
+  String? logoPath;
+  String? location;
+  String? category;
 
-  HealthCareProvider({this.id, this.name, this.rcNumber, this.brandName});
+  HealthCareProvider(
+      {this.id,
+      this.name,
+      this.rcNumber,
+      this.brandName,
+      this.logoPath,
+      this.location,
+      this.category});
 
   HealthCareProvider.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
     rcNumber = json['rcNumber'];
     brandName = json['brandName'];
+    logoPath = json['logoPath'];
+    location = json['location'];
+    category = json['category'];
   }
 
   Map<String, dynamic> toJson() {
@@ -287,6 +326,9 @@ class HealthCareProvider {
     data['name'] = this.name;
     data['rcNumber'] = this.rcNumber;
     data['brandName'] = this.brandName;
+    data['logoPath'] = this.logoPath;
+    data['location'] = this.location;
+    data['category'] = this.category;
     return data;
   }
 }

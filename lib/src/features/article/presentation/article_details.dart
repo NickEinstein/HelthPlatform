@@ -98,7 +98,7 @@ class _ArticleDetailsState extends State<ArticleDetails> {
             smallSpace(),
 
             NetworkImageWithFallback(
-              imageUrl: widget.article.featuredImagePath!,
+              imageUrl: widget.article.featuredImagePath ?? '',
               height: 250,
               width: width(context),
               borderRadius: 0,

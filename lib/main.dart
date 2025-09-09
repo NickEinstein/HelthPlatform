@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -5,7 +7,6 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'src/app_pkg.dart';
-import 'src/features/notifications/messaging/firebase_messaging_config.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,6 +29,37 @@ Future<void> main() async {
   configLoading();
 
   runApp(const ProviderScope(child: MyApp()));
+
+  // runZonedGuarded(() async {
+  //   WidgetsFlutterBinding.ensureInitialized();
+
+  //   await Firebase.initializeApp(); // 🔒 Ensure Firebase is ready
+
+  //   await dotenv.load(fileName: ".env");
+  //   await StorageServiceImpl().initialize();
+  //   await DependencyInjection.init();
+
+  //   ErrorWidget.builder = (FlutterErrorDetails details) => Container(
+  //         padding: const EdgeInsets.all(10),
+  //         decoration: BoxDecoration(
+  //           color: Colors.amberAccent.shade400,
+  //           borderRadius: BorderRadius.circular(12),
+  //         ),
+  //         child: Text(details.exception.toString()),
+  //       );
+
+  //   configLoading();
+  //   FlutterError.onError = (FlutterErrorDetails details) {
+  //     // Log Flutter errors
+  //     FlutterError.dumpErrorToConsole(details);
+  //     // You can send to Crashlytics or Sentry here
+  //   };
+
+  //   runApp(const ProviderScope(child: MyApp()));
+  // }, (error, stack) {
+  //   // Log uncaught async errors
+  //   print('Unhandled error: $error');
+  // });
 }
 
 void configLoading() {

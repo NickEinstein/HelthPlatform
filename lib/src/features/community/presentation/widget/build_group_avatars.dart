@@ -10,19 +10,35 @@ Widget buildCommunityAvatars(
   BuildContext context,
   bool isShowMore,
 ) {
+  // 🔍 Filter members with valid employee and non-null names
+  final validMembers = members.where((member) {
+    final firstName = member.employee?.firstName;
+    final lastName = member.employee?.lastName;
+    return firstName != null &&
+        firstName.toLowerCase() != 'null' &&
+        firstName.trim().isNotEmpty &&
+        lastName != null &&
+        lastName.toLowerCase() != 'null' &&
+        lastName.trim().isNotEmpty;
+  }).toList();
+
   return SizedBox(
     height: 50,
     child: SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: SizedBox(
-        width: (members.length + (isShowMore ? 1 : 0)) * 30.0 +
-            20, // adjust padding
+        width: (validMembers.length + (isShowMore ? 1 : 0)) * 30.0 + 20,
         child: Stack(
           children: [
-            ...List.generate(members.length, (index) {
-              final member = members[index];
-              final profileUrl = member.patient?.pictureUrl ?? '';
-              final memberId = member.patient?.id;
+            ...List.generate(validMembers.length, (index) {
+              final member = validMembers[index];
+              final memberId = member.employee?.id;
+
+              final initials =
+                  '${member.employee!.firstName![0]}${member.employee!.lastName![0]}';
+
+              final nameForColor =
+                  member.employee!.firstName! + member.employee!.lastName!;
 
               return Positioned(
                 left: index * 30.0,
@@ -44,44 +60,22 @@ Widget buildCommunityAvatars(
                     child: ClipOval(
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(0),
-                        child: Image.network(
-                          profileUrl.startsWith('http')
-                              ? profileUrl
-                              : '${AppConstants.noSlashImageURL}$profileUrl',
+                        child: Container(
                           width: 50,
                           height: 50,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            final initials = (member
-                                            .patient?.firstName?.isNotEmpty ==
-                                        true &&
-                                    member.patient?.lastName?.isNotEmpty ==
-                                        true)
-                                ? '${member.patient!.firstName![0]}${member.patient!.lastName![0]}'
-                                : '?';
-
-                            final nameForColor =
-                                (member.patient?.firstName ?? '') +
-                                    (member.patient?.lastName ?? '');
-
-                            return Container(
-                              width: 50,
-                              height: 50,
-                              decoration: BoxDecoration(
-                                color: getAvatarColor(nameForColor),
-                                borderRadius: BorderRadius.circular(0),
-                              ),
-                              alignment: Alignment.center,
-                              child: Text(
-                                initials.toUpperCase(),
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 24,
-                                ),
-                              ),
-                            );
-                          },
+                          decoration: BoxDecoration(
+                            color: getAvatarColor(nameForColor),
+                            borderRadius: BorderRadius.circular(0),
+                          ),
+                          alignment: Alignment.center,
+                          child: Text(
+                            initials.toUpperCase(),
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 24,
+                            ),
+                          ),
                         ),
                       ),
                     ),
@@ -89,9 +83,9 @@ Widget buildCommunityAvatars(
                 ),
               );
             }),
-            if (isShowMore && members.isNotEmpty)
+            if (isShowMore && validMembers.isNotEmpty)
               Positioned(
-                left: members.length * 30.0,
+                left: validMembers.length * 30.0,
                 child: GestureDetector(
                   onTapDown: (TapDownDetails details) {
                     _showTooltipMenu(

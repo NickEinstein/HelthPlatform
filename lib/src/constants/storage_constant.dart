@@ -22,4 +22,5 @@ class StorageConstants {
   static const String stateData = "stateData";
   static const String nationalityData = "nationalityData";
   static const String prescriptionListData = "prescriptionListData";
+  static const String refferedListData = "refferedListData";
 }
