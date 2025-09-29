@@ -87,8 +87,7 @@ class OnBoardingItem {
 const List<OnBoardingItem> onBoardingItems = [
   OnBoardingItem(
     title: 'Better Health, \nConnected',
-    subtitle:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt',
+    subtitle: 'Get your health records and tips right at your fingertips',
     image: 'assets/images/doctor_1.png',
   ),
   OnBoardingItem(

@@ -2,13 +2,15 @@ class RegisterResponse {
   final bool isSuccess;
   final int statusCode;
   final RegisterData? data;
-  final dynamic error;
+  final RegisterError? error; // 👈 add this
+  final String? message;
 
   RegisterResponse({
     required this.isSuccess,
     required this.statusCode,
-    required this.data,
+    this.data,
     this.error,
+    this.message,
   });
 
   factory RegisterResponse.fromJson(Map<String, dynamic> json) {
@@ -16,8 +18,25 @@ class RegisterResponse {
       isSuccess: json['isSuccess'] ?? false,
       statusCode: json['statusCode'] ?? 0,
       data: json['data'] != null ? RegisterData.fromJson(json['data']) : null,
-      error: json['error'],
+      error:
+          json['error'] != null ? RegisterError.fromJson(json['error']) : null,
+      message: json['message'],
     );
+  }
+
+  /// 👇 Helper to always return the right error message
+  String get errorMessage {
+    if (error?.emailResult?.message != null &&
+        error!.emailResult!.message!.isNotEmpty) {
+      return error!.emailResult!.message!;
+    }
+    if (error?.message != null && error!.message!.isNotEmpty) {
+      return error!.message!;
+    }
+    if (message != null && message!.isNotEmpty) {
+      return message!;
+    }
+    return "Something went wrong";
   }
 }
 
@@ -36,6 +55,29 @@ class RegisterData {
     return RegisterData(
       message: json['message'] ?? '',
       patientId: json['patientId'] ?? 0,
+      emailResult: json['emailResult'] != null
+          ? EmailResult.fromJson(json['emailResult'])
+          : null,
+    );
+  }
+}
+
+/// 👇 New class for the `error` object
+class RegisterError {
+  final String? message;
+  final int? patientId;
+  final EmailResult? emailResult;
+
+  RegisterError({
+    this.message,
+    this.patientId,
+    this.emailResult,
+  });
+
+  factory RegisterError.fromJson(Map<String, dynamic> json) {
+    return RegisterError(
+      message: json['message'],
+      patientId: json['patientId'],
       emailResult: json['emailResult'] != null
           ? EmailResult.fromJson(json['emailResult'])
           : null,

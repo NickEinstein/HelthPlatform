@@ -42,7 +42,10 @@ class ApiUrl {
       '/ConnectedHealthWebApi/api/employee/state-list';
   static const String immunizationUrl =
       '/ConnectedHealthWebApi/api/Patient/immunization/';
-  static const String medicalRecordUrl = '/ConnectedHealthWebApi/api/Treatment';
+  // static const String medicalRecordUrl = '/ConnectedHealthWebApi/api/Treatment';
+  static String medicalRecordUrl(String id) =>
+      '/medicals/api/patients/$id/medicalhistory';
+
   static const String prescriptionByIdUrl =
       '/ConnectedHealthWebApi/api/ConnectedHealthWebApi/api/Prescription/treatment/';
   static const String allPrescriptionUrl =

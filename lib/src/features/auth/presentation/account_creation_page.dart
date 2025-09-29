@@ -96,10 +96,14 @@ class _AccountCreationScreenState extends ConsumerState<AccountCreationScreen> {
         } else {
           ref.read(isLoadingProvider.notifier).state = true;
           final authService = ref.read(authServiceProvider);
+          final parts = _controller.firstNameController.text.trim().split(' ');
+
+          final firstName = parts.isNotEmpty ? parts.first : '';
+          final lastName = parts.length > 1 ? parts.sublist(1).join(' ') : '';
 
           final result = await authService.register(
-            firstName: _controller.firstNameController.text.split(' ')[0],
-            lastName: _controller.firstNameController.text.split(' ')[1],
+            firstName: firstName,
+            lastName: lastName,
             city: _controller.cityController.text,
             dateOfBirth: _controller.dobController.text,
             email: _controller.emailController.text,
@@ -107,6 +111,9 @@ class _AccountCreationScreenState extends ConsumerState<AccountCreationScreen> {
             lga: _controller.lgaController.text,
             lgaResidence: _controller.lgaController.text,
             username: _controller.userNameController.text,
+            referralCode: _controller.referralCodeController.text.isNotEmpty
+                ? int.parse(_controller.referralCodeController.text)
+                : null,
             nationality: 'Nigeria',
             phone: _controller.phoneController.text,
             placeOfBirth: _controller.addressController.text,
@@ -116,7 +123,6 @@ class _AccountCreationScreenState extends ConsumerState<AccountCreationScreen> {
 
           if (!context.mounted) return;
           ref.read(isLoadingProvider.notifier).state = false;
-
           if (result != null && result.isSuccess && result.statusCode == 200) {
             final patientId = result.data?.patientId;
             _controller.patientId = patientId;
@@ -125,11 +131,11 @@ class _AccountCreationScreenState extends ConsumerState<AccountCreationScreen> {
               curve: Curves.easeInOut,
             );
           } else {
-            final errorMessage = result?.data?.emailResult?.message ??
-                result?.error?['message'] ??
-                'Registration failed';
-
-            CustomToast.show(context, errorMessage, type: ToastType.error);
+            CustomToast.show(
+              context,
+              result?.errorMessage ?? "Something went wrong",
+              type: ToastType.error,
+            );
           }
         }
       } else if (_currentIndex == 2) {

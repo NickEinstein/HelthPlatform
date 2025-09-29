@@ -159,6 +159,12 @@ final userFetchMedicalRecordProvider =
   final userDataService = ref.watch(allServiceProvider);
   return await userDataService.fetchMedicalHistory();
 });
+// final userFetchMedicalRecordProvider =
+//     FutureProvider<List<MedicalRecordResponse>>((ref) async {
+//   final userDataService = ref.watch(allServiceProvider);
+//   return userDataService.fetchMedicalHistory();
+// });
+
 final userPrescriptionByIdProvider = FutureProvider.autoDispose
     .family<List<PrescriptionByIDResponse>, int>((ref, id) async {
   final userDataService = ref.watch(allServiceProvider);

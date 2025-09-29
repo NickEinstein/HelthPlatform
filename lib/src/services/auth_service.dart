@@ -161,39 +161,69 @@ class AuthService {
     required String phone,
     required String email,
     required String username,
+    int? referralCode,
   }) async {
     try {
+      final data = {
+        "firstName": firstName,
+        "lastName": lastName,
+        "weight": 0,
+        "dateOfBirth": '${dateOfBirth}T00:00:00.359Z',
+        "stateOfOrigin": stateOfOrigin,
+        "lga": lga,
+        "placeOfBirth": placeOfBirth,
+        "nationality": nationality,
+        "username": username,
+        "contact": {
+          "stateOfResidence": stateOfResidence,
+          "lgaResidence": lgaResidence,
+          "city": city,
+          "homeAddress": homeAddress,
+          "phone": phone,
+          "email": email,
+        },
+        if (referralCode != null) "reffererId": referralCode,
+      };
+
       final response = await _apiService.post(
         ApiUrl.registerUrl,
-        data: {
-          "firstName": firstName,
-          "lastName": lastName,
-          "weight": 0,
-          "dateOfBirth": '${dateOfBirth}T00:00:00.359Z',
-          "stateOfOrigin": stateOfOrigin,
-          "lga": lga,
-          "placeOfBirth": placeOfBirth,
-          "nationality": nationality,
-          "username": username,
-          "contact": {
-            "stateOfResidence": stateOfResidence,
-            "lgaResidence": lgaResidence,
-            "city": city,
-            "homeAddress": homeAddress,
-            "phone": phone,
-            "email": email,
-          },
-        },
+        data: data,
       );
 
       if (response.statusCode == 200 && response.data != null) {
-        final result = RegisterResponse.fromJson(response.data);
-        return result;
+        return RegisterResponse.fromJson(response.data);
       } else {
         return null;
       }
+    } on DioException catch (e) {
+      // 👇 unwrap backend error response
+      if (e.response != null && e.response?.data != null) {
+        final errorJson = e.response?.data;
+
+        try {
+          final result = RegisterResponse.fromJson(errorJson);
+          return result; // you’ll get errorData here
+        } catch (_) {
+          // fallback if parsing fails
+          return RegisterResponse(
+            isSuccess: false,
+            statusCode: e.response?.statusCode ?? 0,
+            message: e.response?.statusMessage,
+          );
+        }
+      } else {
+        return RegisterResponse(
+          isSuccess: false,
+          statusCode: 0,
+          message: e.message,
+        );
+      }
     } catch (error) {
-      return null;
+      return RegisterResponse(
+        isSuccess: false,
+        statusCode: 0,
+        message: error.toString(),
+      );
     }
   }
 

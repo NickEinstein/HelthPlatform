@@ -6,7 +6,6 @@ import 'package:greenzone_medical/src/constants/color_constant.dart';
 
 import '../../../../constants/dimens.dart';
 import '../../../../constants/helper.dart';
-import '../../../../provider/all_providers.dart';
 import 'account_controller_holder.dart';
 
 class PersonalInfoScreen extends ConsumerStatefulWidget {

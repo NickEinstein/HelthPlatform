@@ -163,7 +163,7 @@ class _MainHealthRecordState extends ConsumerState<MainHealthRecord> {
           physics: const NeverScrollableScrollPhysics(),
           itemBuilder: (_, i) => buildGrayRecordTile(
             title: records[i].diagnosis ?? 'Unknown Diagnosis',
-            subtitle: formatNewDate(records[i].dateOfVisit!),
+            subtitle: formatNewDate(records[i].dateOfVisit.toIso8601String()),
             icon: 'assets/images/bocx.png',
             isSvg: true,
             isCircle: true,

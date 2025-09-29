@@ -56,153 +56,201 @@ class ImmunizationResponse {
 }
 
 class MedicalRecordResponse {
-  int? id;
-  int? medicationId;
-  String? diagnosis;
-  int? temperature;
-  String? age;
-  int? weight;
-  String? additionalNote;
-  int? patientId;
-  int? treatmentStatus;
-  String? carePlan;
-  int? treatmentCategoryId;
-  int? doctorId;
-  bool? isAdmitted;
-  int? appointmentId;
-  int? healthCareProviderId;
-  String? dateOfVisit;
-  String? doctorNote;
-  String? pharmacistNote;
-  String? appointmentDate;
-  String? appointmentTime;
-  String? medication;
-  String? otherMedication;
-  String? doctor;
-  int? treatmentId;
-  int? dispensedBy;
-  bool? isDispensed;
-  String? dispensedDate;
-  String? patientName;
-  String? initiatedHealthCareProvider;
-  String? tracking;
-  String? dispensedByName;
-  List<Vitals>? vitals;
+  final int id;
+  final DateTime dateOfVisit;
+  final double temperature;
+  final String age;
+  final double weight;
+  final int treatmentCategoryId;
+  final String diagnosis;
+  final String? additonalNote;
+  final String specialistType;
+  final bool isAdmitted;
+  final int userId;
+  final int doctorId;
+  final int? clinicId;
+  final int patientId;
+  final int appointmentId;
+  final String bloodPressure;
+  final int heartPulse;
+  final String respiratory;
+  final String oxygenSaturation;
+  final String bloodSugar;
+  final double height;
+  final String doctor;
+  final int? vitalNurseId;
+  final String carePlan;
+  final int quantity;
+  final int frequency;
+  final int duration;
+  final String? pharmacistNote;
+  final int otherMedicationsQuantity;
+  final int otherMedicationsFrequency;
+  final int otherMedicationsDuration;
+  final String? otherMedicationsNote;
+  final String? drugName;
+  final List<Medication> medications;
 
   MedicalRecordResponse({
-    this.id,
-    this.medicationId,
-    this.diagnosis,
-    this.temperature,
-    this.age,
-    this.weight,
-    this.additionalNote,
-    this.patientId,
-    this.treatmentStatus,
-    this.carePlan,
-    this.treatmentCategoryId,
-    this.doctorId,
-    this.isAdmitted,
-    this.appointmentId,
-    this.healthCareProviderId,
-    this.dateOfVisit,
-    this.doctorNote,
+    required this.id,
+    required this.dateOfVisit,
+    required this.temperature,
+    required this.age,
+    required this.weight,
+    required this.treatmentCategoryId,
+    required this.diagnosis,
+    this.additonalNote,
+    required this.specialistType,
+    required this.isAdmitted,
+    required this.userId,
+    required this.doctorId,
+    this.clinicId,
+    required this.patientId,
+    required this.appointmentId,
+    required this.bloodPressure,
+    required this.heartPulse,
+    required this.respiratory,
+    required this.oxygenSaturation,
+    required this.bloodSugar,
+    required this.height,
+    required this.doctor,
+    this.vitalNurseId,
+    required this.carePlan,
+    required this.quantity,
+    required this.frequency,
+    required this.duration,
     this.pharmacistNote,
-    this.appointmentDate,
-    this.appointmentTime,
-    this.medication,
-    this.otherMedication,
-    this.doctor,
-    this.treatmentId,
-    this.dispensedBy,
-    this.isDispensed,
-    this.dispensedDate,
-    this.patientName,
-    this.initiatedHealthCareProvider,
-    this.tracking,
-    this.dispensedByName,
-    this.vitals,
+    required this.otherMedicationsQuantity,
+    required this.otherMedicationsFrequency,
+    required this.otherMedicationsDuration,
+    this.otherMedicationsNote,
+    this.drugName,
+    required this.medications,
   });
 
-  MedicalRecordResponse.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    medicationId = json['medicationId'];
-    diagnosis = json['diagnosis']?.toString();
-    temperature = (json['temperature'] as num?)?.toInt();
-    age = json['age']?.toString();
-    weight = (json['weight'] as num?)?.toInt();
-    additionalNote = json['additionalNote']?.toString();
-    patientId = json['patientId'];
-    treatmentStatus = json['treatmentStatus'];
-    carePlan = json['carePlan']?.toString();
-    treatmentCategoryId = json['treatmentCategoryId'];
-    doctorId = json['doctorId'];
-    isAdmitted = json['isAdmitted'];
-    appointmentId = json['appointmentId'];
-    healthCareProviderId = json['healthCareProviderId'];
-    dateOfVisit = json['dateOfVisit']?.toString();
-    doctorNote = json['doctorNote']?.toString();
-    pharmacistNote = json['pharmacistNote']?.toString();
-    appointmentDate = json['appointmentDate']?.toString();
-    appointmentTime = json['appointmentTime']?.toString();
-    medication = json['medication']?.toString();
-    otherMedication = json['otherMedication']?.toString();
-    doctor = json['doctor']?.toString();
-    treatmentId = json['treatmentId'];
-    dispensedBy = json['dispensedBy'];
-    isDispensed = json['isDispensed'];
-    dispensedDate = json['dispensedDate']?.toString();
-    patientName = json['patientName']?.toString();
-    initiatedHealthCareProvider =
-        json['initiatedHealthCareProvider']?.toString();
-    tracking = json['tracking']?.toString();
-    dispensedByName = json['dispensedByName']?.toString();
-
-    if (json['vitals'] != null) {
-      vitals = <Vitals>[];
-      json['vitals'].forEach((v) {
-        vitals!.add(Vitals.fromJson(v));
-      });
-    }
+  factory MedicalRecordResponse.fromJson(Map<String, dynamic> json) {
+    return MedicalRecordResponse(
+      id: json['id'] ?? 0,
+      dateOfVisit: DateTime.parse(json['dateOfVisit']),
+      temperature: (json['temperature'] as num?)?.toDouble() ?? 0.0,
+      age: json['age'] ?? '',
+      weight: (json['weight'] as num?)?.toDouble() ?? 0.0,
+      treatmentCategoryId: json['treatmentCategoryId'] ?? 0,
+      diagnosis: json['diagnosis'] ?? '',
+      additonalNote: json['additonalNote'],
+      specialistType: json['specialistType'] ?? '',
+      isAdmitted: json['isAdmitted'] ?? false,
+      userId: json['userId'] ?? 0,
+      doctorId: json['doctorId'] ?? 0,
+      clinicId: json['clinicId'],
+      patientId: json['patientId'] ?? 0,
+      appointmentId: json['appointmentId'] ?? 0,
+      bloodPressure: json['bloodPressure'] ?? '',
+      heartPulse: json['heartPulse'] ?? 0,
+      respiratory: json['respiratory'] ?? '',
+      oxygenSaturation: json['oxygenSaturation'] ?? '',
+      bloodSugar: json['bloodSugar'] ?? '',
+      height: (json['height'] as num?)?.toDouble() ?? 0.0,
+      doctor: json['doctor'] ?? '',
+      vitalNurseId: json['vitalNurseId'],
+      carePlan: json['carePlan'] ?? '',
+      quantity: json['quantity'] ?? 0,
+      frequency: json['frequency'] ?? 0,
+      duration: json['duration'] ?? 0,
+      pharmacistNote: json['pharmacistNote'],
+      otherMedicationsQuantity: json['otherMedicationsQuantity'] ?? 0,
+      otherMedicationsFrequency: json['otherMedicationsFrequency'] ?? 0,
+      otherMedicationsDuration: json['otherMedicationsDuration'] ?? 0,
+      otherMedicationsNote: json['otherMedicationsNote'],
+      drugName: json['drugName'],
+      medications: (json['medications'] as List<dynamic>?)
+              ?.map((e) => Medication.fromJson(e))
+              .toList() ??
+          [],
+    );
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = {};
-    data['id'] = id;
-    data['medicationId'] = medicationId;
-    data['diagnosis'] = diagnosis;
-    data['temperature'] = temperature;
-    data['age'] = age;
-    data['weight'] = weight;
-    data['additionalNote'] = additionalNote;
-    data['patientId'] = patientId;
-    data['treatmentStatus'] = treatmentStatus;
-    data['carePlan'] = carePlan;
-    data['treatmentCategoryId'] = treatmentCategoryId;
-    data['doctorId'] = doctorId;
-    data['isAdmitted'] = isAdmitted;
-    data['appointmentId'] = appointmentId;
-    data['healthCareProviderId'] = healthCareProviderId;
-    data['dateOfVisit'] = dateOfVisit;
-    data['doctorNote'] = doctorNote;
-    data['pharmacistNote'] = pharmacistNote;
-    data['appointmentDate'] = appointmentDate;
-    data['appointmentTime'] = appointmentTime;
-    data['medication'] = medication;
-    data['otherMedication'] = otherMedication;
-    data['doctor'] = doctor;
-    data['treatmentId'] = treatmentId;
-    data['dispensedBy'] = dispensedBy;
-    data['isDispensed'] = isDispensed;
-    data['dispensedDate'] = dispensedDate;
-    data['patientName'] = patientName;
-    data['initiatedHealthCareProvider'] = initiatedHealthCareProvider;
-    data['tracking'] = tracking;
-    data['dispensedByName'] = dispensedByName;
-    if (vitals != null) {
-      data['vitals'] = vitals!.map((v) => v.toJson()).toList();
-    }
-    return data;
+    return {
+      'id': id,
+      'dateOfVisit': dateOfVisit.toIso8601String(),
+      'temperature': temperature,
+      'age': age,
+      'weight': weight,
+      'treatmentCategoryId': treatmentCategoryId,
+      'diagnosis': diagnosis,
+      'additonalNote': additonalNote,
+      'specialistType': specialistType,
+      'isAdmitted': isAdmitted,
+      'userId': userId,
+      'doctorId': doctorId,
+      'clinicId': clinicId,
+      'patientId': patientId,
+      'appointmentId': appointmentId,
+      'bloodPressure': bloodPressure,
+      'heartPulse': heartPulse,
+      'respiratory': respiratory,
+      'oxygenSaturation': oxygenSaturation,
+      'bloodSugar': bloodSugar,
+      'height': height,
+      'doctor': doctor,
+      'vitalNurseId': vitalNurseId,
+      'carePlan': carePlan,
+      'quantity': quantity,
+      'frequency': frequency,
+      'duration': duration,
+      'pharmacistNote': pharmacistNote,
+      'otherMedicationsQuantity': otherMedicationsQuantity,
+      'otherMedicationsFrequency': otherMedicationsFrequency,
+      'otherMedicationsDuration': otherMedicationsDuration,
+      'otherMedicationsNote': otherMedicationsNote,
+      'drugName': drugName,
+      'medications': medications.map((e) => e.toJson()).toList(),
+    };
+  }
+
+  static List<MedicalRecordResponse> listFromJson(List<dynamic> jsonList) {
+    return jsonList.map((e) => MedicalRecordResponse.fromJson(e)).toList();
+  }
+}
+
+class Medication {
+  final String drugName;
+  final int drugStrengthUnit;
+  final int quantity;
+  final int frequency;
+  final int duration;
+  final String pharmacistNote;
+
+  Medication({
+    required this.drugName,
+    required this.drugStrengthUnit,
+    required this.quantity,
+    required this.frequency,
+    required this.duration,
+    required this.pharmacistNote,
+  });
+
+  factory Medication.fromJson(Map<String, dynamic> json) {
+    return Medication(
+      drugName: json['drugName'] ?? '',
+      drugStrengthUnit: json['drugStrengthUnit'] ?? 0,
+      quantity: json['quantity'] ?? 0,
+      frequency: json['frequency'] ?? 0,
+      duration: json['duration'] ?? 0,
+      pharmacistNote: json['pharmacistNote'] ?? '',
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'drugName': drugName,
+      'drugStrengthUnit': drugStrengthUnit,
+      'quantity': quantity,
+      'frequency': frequency,
+      'duration': duration,
+      'pharmacistNote': pharmacistNote,
+    };
   }
 }
 

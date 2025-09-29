@@ -27,6 +27,8 @@ class AccountCreationController {
   final TextEditingController emestateController = TextEditingController();
   final TextEditingController emelgaController = TextEditingController();
   final TextEditingController emecityController = TextEditingController();
+  final TextEditingController referralCodeController = TextEditingController();
+
   File? imageFile;
   int? patientId;
   String? pictureUrl;
@@ -39,12 +41,14 @@ class AccountCreationController {
     userNameController.dispose();
     emailController.dispose();
     phoneController.dispose();
+    referralCodeController.dispose();
     addressController.dispose();
     passwordController.dispose();
     dobController.dispose();
 
     confirmPasswordController.dispose();
     otpController.dispose();
+
     imageFile = null;
     patientId = null;
     pictureUrl = null;

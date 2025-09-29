@@ -178,6 +178,12 @@ class _LocationInfoScreenState extends ConsumerState<LocationInfoScreen> {
                 return null;
               },
             ),
+            smallSpace(),
+            CustomTextField(
+              label: "Referral Code",
+              hint: "Referral Code (Optional)",
+              controller: widget.controller.referralCodeController,
+            ),
             const SizedBox(height: 20),
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,

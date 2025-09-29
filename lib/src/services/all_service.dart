@@ -194,45 +194,52 @@ class AllService {
   Future<List<MedicalRecordResponse>> fetchMedicalHistory() async {
     try {
       final token = await getToken();
+      final userId = await getUserId();
 
       if (token == null || token.isEmpty) {
         debugPrint('⚠️ No access token found.');
         return [];
       }
+      if (userId == null || userId.isEmpty) {
+        debugPrint('⚠️ No userId found.');
+        return [];
+      }
 
       final response = await _apiService.get(
-        ApiUrl.medicalRecordUrl,
+        ApiUrl.medicalRecordUrl(userId),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
       );
 
-      if ((response.statusCode == 200 || response.statusCode == 1)) {
-        final List<dynamic> data = response.data['data'];
+      if (response.statusCode == 200) {
+        debugPrint('📥 Raw response: ${response.data}');
+        debugPrint('📥 Type: ${response.data.runtimeType}');
 
-        if (data.isEmpty) {
-          debugPrint('⚠️ No treatment found.');
+        // Handle both cases: Map with "data" or direct List
+        dynamic decoded = response.data;
+        final rawData =
+            decoded is Map<String, dynamic> ? decoded['data'] : decoded;
+
+        if (rawData == null || rawData is! List) {
+          debugPrint('⚠️ Unexpected response format: $decoded');
           return [];
         }
 
         final gottenData =
-            data.map((e) => MedicalRecordResponse.fromJson(e)).toList();
-
-        // ✅ Save articles in storage for offline use
-        await _storageService.setString(
-          StorageConstants.articleData,
-          jsonEncode(data),
-        );
+            rawData.map((e) => MedicalRecordResponse.fromJson(e)).toList();
 
         return gottenData;
       } else {
-        debugPrint(' Failed to fetch articles: ${response.statusCode}');
-        throw Exception('Failed to fetch articles: ${response.statusCode}');
+        debugPrint('❌ Failed to fetch medical history: ${response.statusCode}');
+        throw Exception(
+            'Failed to fetch medical history: ${response.statusCode}');
       }
-    } catch (error) {
-      debugPrint(' Error fetching articles: $error');
-      throw Exception('Error fetching articles: $error');
+    } catch (error, st) {
+      debugPrint('❌ Error fetching medical history: $error');
+      debugPrintStack(stackTrace: st);
+      throw Exception('Error fetching medical history: $error');
     }
   }
 

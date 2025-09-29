@@ -53,8 +53,7 @@ class _XOnboardingPageState extends State<XOnboardingPage> {
     {
       "image": "assets/images/doctor_1.png",
       "title": "Better Health, Connected",
-      "description":
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt"
+      "description": "Get your health records and tips right at your fingertips"
     },
     {
       "image": "assets/images/doctor_2.png",

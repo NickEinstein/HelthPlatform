@@ -58,8 +58,8 @@ class _NotesPageState extends ConsumerState<NotesPage> {
                   smallSpace(),
                   buildRecordTile(
                     title: widget.screenData.diagnosis ?? '',
-                    subtitle:
-                        formatNewDate(widget.screenData.dateOfVisit ?? ''),
+                    subtitle: formatNewDate(
+                        widget.screenData.dateOfVisit.toIso8601String() ?? ''),
                     icon: SvgAssets.medx,
                     isSvg: false,
                     isCircle: true,
@@ -69,300 +69,301 @@ class _NotesPageState extends ConsumerState<NotesPage> {
                     },
                   ),
                   tinySpace(),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: const Color(0xffF5F5F5),
-                      borderRadius: BorderRadius.circular(7),
-                      border: Border.all(
-                        width: 0.5,
-                        color: const Color(0xffAEAEAE),
-                      ),
-                    ),
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 12,
-                          ),
-                          child: InkWell(
-                            onTap: () {
-                              setState(() {
-                                showDetails = !showDetails;
-                              });
-                            },
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    'Vitals',
-                                    style: CustomTextStyle.textsmall14.w700
-                                        .withColorHex(0xff393939),
-                                  ),
-                                ),
-                                showDetails
-                                    ? const Icon(
-                                        Icons.keyboard_arrow_down_rounded,
-                                        color: Color(0xffB3B3B3))
-                                    : const Icon(
-                                        Icons.keyboard_arrow_right_rounded,
-                                        color: Color(0xffB3B3B3)),
-                              ],
-                            ),
-                          ),
-                        ),
-                        if (showDetails) ...[
-                          Container(
-                              width: double.infinity,
-                              decoration: const ShapeDecoration(
-                                color: Colors.white,
-                                shape: RoundedRectangleBorder(
-                                  side: BorderSide(
-                                      width: 0.50, color: Color(0xFFCACACA)),
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(7),
-                                    topRight: Radius.circular(7),
-                                  ),
-                                ),
-                              ),
-                              padding: const EdgeInsets.all(16),
-                              child: widget.screenData.vitals?.isEmpty ?? true
-                                  ? Center(
-                                      child: Text(
-                                        'No vitals data available.',
-                                        style: CustomTextStyle.textsmall14
-                                            .withColorHex(0xff888888),
-                                      ),
-                                    )
-                                  : ListView.builder(
-                                      shrinkWrap: true,
-                                      physics:
-                                          const NeverScrollableScrollPhysics(), // Prevent scrolling if nested in another scrollable widget
-                                      itemCount:
-                                          widget.screenData.vitals?.length ?? 0,
-                                      padding: const EdgeInsets.all(0),
-                                      itemBuilder: (context, index) {
-                                        final vital =
-                                            widget.screenData.vitals![index];
+                  // Container(
+                  //   decoration: BoxDecoration(
+                  //     color: const Color(0xffF5F5F5),
+                  //     borderRadius: BorderRadius.circular(7),
+                  //     border: Border.all(
+                  //       width: 0.5,
+                  //       color: const Color(0xffAEAEAE),
+                  //     ),
+                  //   ),
+                  //   child: Column(
+                  //     children: [
+                  //       Padding(
+                  //         padding: const EdgeInsets.symmetric(
+                  //           horizontal: 16,
+                  //           vertical: 12,
+                  //         ),
+                  //         child: InkWell(
+                  //           onTap: () {
+                  //             setState(() {
+                  //               showDetails = !showDetails;
+                  //             });
+                  //           },
+                  //           child: Row(
+                  //             children: [
+                  //               Expanded(
+                  //                 child: Text(
+                  //                   'Vitals',
+                  //                   style: CustomTextStyle.textsmall14.w700
+                  //                       .withColorHex(0xff393939),
+                  //                 ),
+                  //               ),
+                  //               showDetails
+                  //                   ? const Icon(
+                  //                       Icons.keyboard_arrow_down_rounded,
+                  //                       color: Color(0xffB3B3B3))
+                  //                   : const Icon(
+                  //                       Icons.keyboard_arrow_right_rounded,
+                  //                       color: Color(0xffB3B3B3)),
+                  //             ],
+                  //           ),
+                  //         ),
+                  //       ),
+                  //       // if (showDetails) ...[
+                  //       //   Container(
+                  //       //       width: double.infinity,
+                  //       //       decoration: const ShapeDecoration(
+                  //       //         color: Colors.white,
+                  //       //         shape: RoundedRectangleBorder(
+                  //       //           side: BorderSide(
+                  //       //               width: 0.50, color: Color(0xFFCACACA)),
+                  //       //           borderRadius: BorderRadius.only(
+                  //       //             topLeft: Radius.circular(7),
+                  //       //             topRight: Radius.circular(7),
+                  //       //           ),
+                  //       //         ),
+                  //       //       ),
+                  //       //       padding: const EdgeInsets.all(16),
+                  //       //       child: widget.screenData.vitals?.isEmpty ?? true
+                  //       //           ? Center(
+                  //       //               child: Text(
+                  //       //                 'No vitals data available.',
+                  //       //                 style: CustomTextStyle.textsmall14
+                  //       //                     .withColorHex(0xff888888),
+                  //       //               ),
+                  //       //             )
+                  //       //           : ListView.builder(
+                  //       //               shrinkWrap: true,
+                  //       //               physics:
+                  //       //                   const NeverScrollableScrollPhysics(), // Prevent scrolling if nested in another scrollable widget
+                  //       //               itemCount:
+                  //       //                   widget.screenData.vitals?.length ?? 0,
+                  //       //               padding: const EdgeInsets.all(0),
+                  //       //               itemBuilder: (context, index) {
+                  //       //                 final vital =
+                  //       //                     widget.screenData.vitals![index];
 
-                                        return Column(
-                                          crossAxisAlignment: CrossAxisAlignment
-                                              .start, // Ensure alignment starts from the left
-                                          children: [
-                                            Text.rich(
-                                              TextSpan(
-                                                children: [
-                                                  TextSpan(
-                                                    text: 'Blood Pressure: ',
-                                                    style: CustomTextStyle
-                                                        .labelMedium
-                                                        .withColorHex(
-                                                            0xff393939),
-                                                  ),
-                                                  TextSpan(
-                                                    text:
-                                                        '${vital.bloodPressure} mmHg',
-                                                    style: CustomTextStyle
-                                                        .textsmall14
-                                                        .withColorHex(
-                                                            0xff393939),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            smallSpace(),
-                                            Text.rich(
-                                              TextSpan(
-                                                children: [
-                                                  TextSpan(
-                                                    text:
-                                                        'Heart Rate (Pulse): ',
-                                                    style: CustomTextStyle
-                                                        .labelMedium
-                                                        .withColorHex(
-                                                            0xff393939),
-                                                  ),
-                                                  TextSpan(
-                                                    text:
-                                                        '${vital.heartPulse} beats per minute (bpm)',
-                                                    style: CustomTextStyle
-                                                        .textsmall14
-                                                        .withColorHex(
-                                                            0xff393939),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            smallSpace(),
-                                            Text.rich(
-                                              TextSpan(
-                                                children: [
-                                                  TextSpan(
-                                                    text: 'Respiratory Rate: ',
-                                                    style: CustomTextStyle
-                                                        .labelMedium
-                                                        .withColorHex(
-                                                            0xff393939),
-                                                  ),
-                                                  TextSpan(
-                                                    text:
-                                                        '${vital.respiratory} breaths per minute',
-                                                    style: CustomTextStyle
-                                                        .textsmall14
-                                                        .withColorHex(
-                                                            0xff393939),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            smallSpace(),
-                                            Text.rich(
-                                              TextSpan(
-                                                children: [
-                                                  TextSpan(
-                                                    text: 'Body Temperature: ',
-                                                    style: CustomTextStyle
-                                                        .labelMedium
-                                                        .withColorHex(
-                                                            0xff393939),
-                                                  ),
-                                                  TextSpan(
-                                                    text:
-                                                        '${vital.temperature}°F (37°C)',
-                                                    style: CustomTextStyle
-                                                        .textsmall14
-                                                        .withColorHex(
-                                                            0xff393939),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            smallSpace(),
-                                            Text.rich(
-                                              TextSpan(
-                                                children: [
-                                                  TextSpan(
-                                                    text: 'Height: ',
-                                                    style: CustomTextStyle
-                                                        .labelMedium
-                                                        .withColorHex(
-                                                            0xff393939),
-                                                  ),
-                                                  TextSpan(
-                                                    text: '${vital.height} cm',
-                                                    style: CustomTextStyle
-                                                        .textsmall14
-                                                        .withColorHex(
-                                                            0xff393939),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            smallSpace(),
-                                            Text.rich(
-                                              TextSpan(
-                                                children: [
-                                                  TextSpan(
-                                                    text: 'Weight: ',
-                                                    style: CustomTextStyle
-                                                        .labelMedium
-                                                        .withColorHex(
-                                                            0xff393939),
-                                                  ),
-                                                  TextSpan(
-                                                    text: '${vital.weight} kg',
-                                                    style: CustomTextStyle
-                                                        .textsmall14
-                                                        .withColorHex(
-                                                            0xff393939),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            smallSpace(),
-                                            Text(
-                                              'Additional Notes:',
-                                              style: CustomTextStyle.labelMedium
-                                                  .withColorHex(0xff393939),
-                                            ),
-                                            tiny5Space(),
-                                            vital.notes?.isEmpty ?? true
-                                                ? Center(
-                                                    child: Text(
-                                                      'No notes available.',
-                                                      style: CustomTextStyle
-                                                          .textsmall14
-                                                          .withColorHex(
-                                                              0xff888888),
-                                                    ),
-                                                  )
-                                                : ListView.builder(
-                                                    shrinkWrap: true,
-                                                    physics:
-                                                        const NeverScrollableScrollPhysics(), // Prevent scrolling if nested
-                                                    itemCount: vital
-                                                            .notes?.length ??
-                                                        0, // Dynamically handles the size of the list
-                                                    padding:
-                                                        const EdgeInsets.all(0),
-                                                    itemBuilder:
-                                                        (context, index) {
-                                                      final notes = vital
-                                                              .notes![
-                                                          index]; // Access the current percentage
+                  //       //                 return Column(
+                  //       //                   crossAxisAlignment: CrossAxisAlignment
+                  //       //                       .start, // Ensure alignment starts from the left
+                  //       //                   children: [
+                  //       //                     Text.rich(
+                  //       //                       TextSpan(
+                  //       //                         children: [
+                  //       //                           TextSpan(
+                  //       //                             text: 'Blood Pressure: ',
+                  //       //                             style: CustomTextStyle
+                  //       //                                 .labelMedium
+                  //       //                                 .withColorHex(
+                  //       //                                     0xff393939),
+                  //       //                           ),
+                  //       //                           TextSpan(
+                  //       //                             text:
+                  //       //                                 '${vital.bloodPressure} mmHg',
+                  //       //                             style: CustomTextStyle
+                  //       //                                 .textsmall14
+                  //       //                                 .withColorHex(
+                  //       //                                     0xff393939),
+                  //       //                           ),
+                  //       //                         ],
+                  //       //                       ),
+                  //       //                     ),
+                  //       //                     smallSpace(),
+                  //       //                     Text.rich(
+                  //       //                       TextSpan(
+                  //       //                         children: [
+                  //       //                           TextSpan(
+                  //       //                             text:
+                  //       //                                 'Heart Rate (Pulse): ',
+                  //       //                             style: CustomTextStyle
+                  //       //                                 .labelMedium
+                  //       //                                 .withColorHex(
+                  //       //                                     0xff393939),
+                  //       //                           ),
+                  //       //                           TextSpan(
+                  //       //                             text:
+                  //       //                                 '${vital.heartPulse} beats per minute (bpm)',
+                  //       //                             style: CustomTextStyle
+                  //       //                                 .textsmall14
+                  //       //                                 .withColorHex(
+                  //       //                                     0xff393939),
+                  //       //                           ),
+                  //       //                         ],
+                  //       //                       ),
+                  //       //                     ),
+                  //       //                     smallSpace(),
+                  //       //                     Text.rich(
+                  //       //                       TextSpan(
+                  //       //                         children: [
+                  //       //                           TextSpan(
+                  //       //                             text: 'Respiratory Rate: ',
+                  //       //                             style: CustomTextStyle
+                  //       //                                 .labelMedium
+                  //       //                                 .withColorHex(
+                  //       //                                     0xff393939),
+                  //       //                           ),
+                  //       //                           TextSpan(
+                  //       //                             text:
+                  //       //                                 '${vital.respiratory} breaths per minute',
+                  //       //                             style: CustomTextStyle
+                  //       //                                 .textsmall14
+                  //       //                                 .withColorHex(
+                  //       //                                     0xff393939),
+                  //       //                           ),
+                  //       //                         ],
+                  //       //                       ),
+                  //       //                     ),
+                  //       //                     smallSpace(),
+                  //       //                     Text.rich(
+                  //       //                       TextSpan(
+                  //       //                         children: [
+                  //       //                           TextSpan(
+                  //       //                             text: 'Body Temperature: ',
+                  //       //                             style: CustomTextStyle
+                  //       //                                 .labelMedium
+                  //       //                                 .withColorHex(
+                  //       //                                     0xff393939),
+                  //       //                           ),
+                  //       //                           TextSpan(
+                  //       //                             text:
+                  //       //                                 '${vital.temperature}°F (37°C)',
+                  //       //                             style: CustomTextStyle
+                  //       //                                 .textsmall14
+                  //       //                                 .withColorHex(
+                  //       //                                     0xff393939),
+                  //       //                           ),
+                  //       //                         ],
+                  //       //                       ),
+                  //       //                     ),
+                  //       //                     smallSpace(),
+                  //       //                     Text.rich(
+                  //       //                       TextSpan(
+                  //       //                         children: [
+                  //       //                           TextSpan(
+                  //       //                             text: 'Height: ',
+                  //       //                             style: CustomTextStyle
+                  //       //                                 .labelMedium
+                  //       //                                 .withColorHex(
+                  //       //                                     0xff393939),
+                  //       //                           ),
+                  //       //                           TextSpan(
+                  //       //                             text: '${vital.height} cm',
+                  //       //                             style: CustomTextStyle
+                  //       //                                 .textsmall14
+                  //       //                                 .withColorHex(
+                  //       //                                     0xff393939),
+                  //       //                           ),
+                  //       //                         ],
+                  //       //                       ),
+                  //       //                     ),
+                  //       //                     smallSpace(),
+                  //       //                     Text.rich(
+                  //       //                       TextSpan(
+                  //       //                         children: [
+                  //       //                           TextSpan(
+                  //       //                             text: 'Weight: ',
+                  //       //                             style: CustomTextStyle
+                  //       //                                 .labelMedium
+                  //       //                                 .withColorHex(
+                  //       //                                     0xff393939),
+                  //       //                           ),
+                  //       //                           TextSpan(
+                  //       //                             text: '${vital.weight} kg',
+                  //       //                             style: CustomTextStyle
+                  //       //                                 .textsmall14
+                  //       //                                 .withColorHex(
+                  //       //                                     0xff393939),
+                  //       //                           ),
+                  //       //                         ],
+                  //       //                       ),
+                  //       //                     ),
+                  //       //                     smallSpace(),
+                  //       //                     Text(
+                  //       //                       'Additional Notes:',
+                  //       //                       style: CustomTextStyle.labelMedium
+                  //       //                           .withColorHex(0xff393939),
+                  //       //                     ),
+                  //       //                     tiny5Space(),
+                  //       //                     vital.notes?.isEmpty ?? true
+                  //       //                         ? Center(
+                  //       //                             child: Text(
+                  //       //                               'No notes available.',
+                  //       //                               style: CustomTextStyle
+                  //       //                                   .textsmall14
+                  //       //                                   .withColorHex(
+                  //       //                                       0xff888888),
+                  //       //                             ),
+                  //       //                           )
+                  //       //                         : ListView.builder(
+                  //       //                             shrinkWrap: true,
+                  //       //                             physics:
+                  //       //                                 const NeverScrollableScrollPhysics(), // Prevent scrolling if nested
+                  //       //                             itemCount: vital
+                  //       //                                     .notes?.length ??
+                  //       //                                 0, // Dynamically handles the size of the list
+                  //       //                             padding:
+                  //       //                                 const EdgeInsets.all(0),
+                  //       //                             itemBuilder:
+                  //       //                                 (context, index) {
+                  //       //                               final notes = vital
+                  //       //                                       .notes![
+                  //       //                                   index]; // Access the current percentage
 
-                                                      return Padding(
-                                                        padding: const EdgeInsets
-                                                            .symmetric(
-                                                            vertical:
-                                                                4.0), // Add spacing between items
-                                                        child: Text(
-                                                          '- ${notes.note}',
-                                                          style: CustomTextStyle
-                                                              .textsmall14
-                                                              .withColorHex(
-                                                                  0xff393939),
-                                                        ),
-                                                      );
-                                                    },
-                                                  ),
-                                          ],
-                                        );
-                                      })),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 12,
-                            ),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Text.rich(
-                                    TextSpan(
-                                      children: [
-                                        TextSpan(
-                                          text:
-                                              ' ${formatNewDate(widget.screenData.dateOfVisit ?? '')}',
-                                          style: const TextStyle(
-                                            color: Color(0xFF797979),
-                                            fontSize: 13,
-                                            fontFamily: 'Inter',
-                                            fontWeight: FontWeight.w400,
-                                            height: 0,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ],
-                    ),
-                  ),
-                  tinySpace(),
+                  //       //                               return Padding(
+                  //       //                                 padding: const EdgeInsets
+                  //       //                                     .symmetric(
+                  //       //                                     vertical:
+                  //       //                                         4.0), // Add spacing between items
+                  //       //                                 child: Text(
+                  //       //                                   '- ${notes.note}',
+                  //       //                                   style: CustomTextStyle
+                  //       //                                       .textsmall14
+                  //       //                                       .withColorHex(
+                  //       //                                           0xff393939),
+                  //       //                                 ),
+                  //       //                               );
+                  //       //                             },
+                  //       //                           ),
+                  //       //                   ],
+                  //       //                 );
+                  //       //               })),
+
+                  //         Padding(
+                  //           padding: const EdgeInsets.symmetric(
+                  //             horizontal: 16,
+                  //             vertical: 12,
+                  //           ),
+                  //           child: Row(
+                  //             children: [
+                  //               Expanded(
+                  //                 child: Text.rich(
+                  //                   TextSpan(
+                  //                     children: [
+                  //                       TextSpan(
+                  //                         text:
+                  //                             ' ${formatNewDate(widget.screenData.dateOfVisit ?? '')}',
+                  //                         style: const TextStyle(
+                  //                           color: Color(0xFF797979),
+                  //                           fontSize: 13,
+                  //                           fontFamily: 'Inter',
+                  //                           fontWeight: FontWeight.w400,
+                  //                           height: 0,
+                  //                         ),
+                  //                       ),
+                  //                     ],
+                  //                   ),
+                  //                 ),
+                  //               ),
+                  //             ],
+                  //           ),
+                  //         ),
+                  //       ],
+                  //     ],
+                  //   ),
+                  // ),
+                  // tinySpace(),
                   Container(
                     decoration: BoxDecoration(
                       color: const Color(0xffF5F5F5),
@@ -454,23 +455,23 @@ class _NotesPageState extends ConsumerState<NotesPage> {
                                             .withColorHex(0xff393939),
                                       ),
                                       tiny5Space(),
-                                      Text(
-                                        '${widget.screenData.medication}',
-                                        style: CustomTextStyle.textsmall14
-                                            .withColorHex(0xff393939),
-                                      ),
+                                      // Text(
+                                      //   '${widget.screenData.medication}',
+                                      //   style: CustomTextStyle.textsmall14
+                                      //       .withColorHex(0xff393939),
+                                      // ),
                                       smallSpace(),
-                                      Text(
-                                        'Other Treatment:',
-                                        style: CustomTextStyle.labelMedium
-                                            .withColorHex(0xff393939),
-                                      ),
-                                      tiny5Space(),
-                                      Text(
-                                        '${widget.screenData.otherMedication}',
-                                        style: CustomTextStyle.textsmall14
-                                            .withColorHex(0xff393939),
-                                      ),
+                                      // Text(
+                                      //   'Other Treatment:',
+                                      //   style: CustomTextStyle.labelMedium
+                                      //       .withColorHex(0xff393939),
+                                      // ),
+                                      // tiny5Space(),
+                                      // Text(
+                                      //   '${widget.screenData.otherMedication}',
+                                      //   style: CustomTextStyle.textsmall14
+                                      //       .withColorHex(0xff393939),
+                                      // ),
                                       smallSpace(),
                                       // Text(
                                       //   'Treatment:',
@@ -830,31 +831,32 @@ class _NotesPageState extends ConsumerState<NotesPage> {
                               crossAxisAlignment: CrossAxisAlignment
                                   .start, // Ensure alignment starts from the left
                               children: [
-                                tiny5Space(),
+                                // tiny5Space(),
 
-                                widget.screenData.doctorNote!.isEmpty
-                                    ? Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            'No discharge note',
-                                            style: CustomTextStyle.textsmall14
-                                                .withColorHex(0xff393939),
-                                          ),
-                                        ],
-                                      )
-                                    : Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical:
-                                                4.0), // Add spacing between items
-                                        child: Text(
-                                          '${widget.screenData.doctorNote}',
-                                          style: CustomTextStyle.textsmall14
-                                              .withColorHex(0xff393939),
-                                        ),
-                                      ),
-                                smallSpace(),
+                                // widget.screenData.doctorNote!.isEmpty
+                                //     ? Row(
+                                //         mainAxisAlignment:
+                                //             MainAxisAlignment.center,
+                                //         children: [
+                                //           Text(
+                                //             'No discharge note',
+                                //             style: CustomTextStyle.textsmall14
+                                //                 .withColorHex(0xff393939),
+                                //           ),
+                                //         ],
+                                //       )
+                                //     :
+                                //      Padding(
+                                //         padding: const EdgeInsets.symmetric(
+                                //             vertical:
+                                //                 4.0), // Add spacing between items
+                                //         child: Text(
+                                //           '${widget.screenData.doctorNote}',
+                                //           style: CustomTextStyle.textsmall14
+                                //               .withColorHex(0xff393939),
+                                //         ),
+                                //       ),
+                                // smallSpace(),
                                 // Text(
                                 //   'Treatment:',
                                 //   style: CustomTextStyle.labelMedium

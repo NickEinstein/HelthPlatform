@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../constants/app_constant.dart';
+import '../constants/helper.dart';
 import '../provider/all_providers.dart';
 import '../resources/resources.dart';
 import '../resources/textstyles/app_textstyles.dart';
@@ -47,24 +49,32 @@ class CustomAppBar extends ConsumerWidget implements PreferredSizeWidget {
 
           // ✅ Handle loading, error, and data states
           userAsync.when(
-            data: (userData) {
-              final hasPicture = (userData.pictureUrl?.isNotEmpty ?? false);
+            data: (user) {
+              // final hasPicture = (userData.pictureUrl?.isNotEmpty ?? false);
+              final imageUrl = user.pictureUrl!.contains('https')
+                  ? user.pictureUrl!
+                  : user.pictureUrl!.contains('/UploadedFiles')
+                      ? '${AppConstants.noSlashImageURL}${user.pictureUrl!}'
+                      : '${AppConstants.noSlashImageURL}/${user.pictureUrl!}';
+              final initials = '${user.firstName![0]}${user.lastName![0]}';
+
               return Container(
                 width: 50,
                 height: 50,
                 decoration: ShapeDecoration(
-                  color: const Color(0xFFD9D9D9),
-                  shape: const OvalBorder(),
-                  image: hasPicture
-                      ? DecorationImage(
-                          fit: BoxFit.cover,
-                          image: NetworkImage(userData.pictureUrl!),
-                        )
-                      : const DecorationImage(
-                          fit: BoxFit.cover,
-                          image: AssetImage("assets/images/profimg.png"),
-                        ),
-                ),
+                    color: const Color(0xFFD9D9D9),
+                    shape: const OvalBorder(),
+                    image: DecorationImage(
+                      fit: BoxFit.cover,
+                      image: NetworkImage(imageUrl),
+                      onError: (exception, stackTrace) => CircleAvatar(
+                        radius: 20,
+                        backgroundColor:
+                            getAvatarColor(user.firstName! + user.lastName!),
+                        child: Text(initials,
+                            style: const TextStyle(color: Colors.white)),
+                      ),
+                    )),
               );
             },
             loading: () => const SizedBox(
