@@ -83,10 +83,11 @@ class _SignInPageState extends ConsumerState<SignInPage> {
       final bool authenticated = await _localAuth.authenticate(
         localizedReason:
             'Scan your ${_biometricType == BiometricType.face ? "face" : "fingerprint"} to log in',
-        options: const AuthenticationOptions(
-          biometricOnly: true,
-          stickyAuth: true,
-        ),
+        // options: const AuthenticationOptions(
+        biometricOnly: true,
+        persistAcrossBackgrounding: true,
+        // stickyAuth: true,
+        // ),
       );
 
       if (authenticated) {

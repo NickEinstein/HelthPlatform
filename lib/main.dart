@@ -71,7 +71,7 @@ void configLoading() {
     ..indicatorColor = Colors.white
     ..textColor = Colors.white
     ..maskColor =
-        Colors.black.withOpacity(0.3) // ✅ Slightly transparent full-screen mask
+        Colors.black.withValues(alpha: 0.3) // ✅ Slightly transparent full-screen mask
     ..userInteractions = false
     ..dismissOnTap = false
     ..animationStyle = EasyLoadingAnimationStyle.scale;
