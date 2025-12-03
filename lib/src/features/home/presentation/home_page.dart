@@ -3,6 +3,12 @@
 // import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:greenzone_medical/src/features/home/presentation/widget/advert_helper.dart';
+import 'package:greenzone_medical/src/features/home/presentation/widget/friend_request_widget.dart';
+import 'package:greenzone_medical/src/features/home/presentation/widget/personal_goals_widget.dart';
+import 'package:greenzone_medical/src/features/home/presentation/widget/profile_completion_widget.dart';
+import 'package:greenzone_medical/src/resources/colors/colors.dart';
+import 'package:greenzone_medical/src/utils/extensions/extensions.dart';
+import 'package:greenzone_medical/src/utils/extensions/string_extensions.dart';
 
 import '../../../provider/all_providers.dart';
 import '../../../utils/packages.dart';
@@ -24,7 +30,7 @@ class _HomePageState extends ConsumerState<HomePage> {
 
   int cachedHMOCount = 0;
   bool hasLoadedData = false;
-  String _token = '';
+  // String _token = '';
 
   @override
   void initState() {
@@ -164,7 +170,7 @@ class _HomePageState extends ConsumerState<HomePage> {
 
     getAllInterestAsync.whenOrNull(
       data: (interests) {
-        if (interests != null && interests.isNotEmpty) {
+        if (interests.isNotEmpty) {
           hasLoadedData = false; // Reset the flag if we have valid data
           return;
         } else {
@@ -235,50 +241,51 @@ class _HomePageState extends ConsumerState<HomePage> {
           backgroundColor: Colors.white,
           key: _scaffoldKey,
           endDrawer: const HomeDrawer(),
-          appBar: AppBar(
-            backgroundColor: Colors.white,
-            surfaceTintColor: Colors.white,
-            elevation: 0,
-            automaticallyImplyLeading: false, // Removes back button
-            centerTitle: false, // Aligns title to the left
-            title: RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: getGreeting(),
-                    style: const TextStyle(
-                      color: Color(0xff0D0D0D),
-                      fontSize: 20,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  TextSpan(
-                    text: '\n$userName',
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 14,
-                      height: 1.9,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            actions: [
-              InkWell(
-                  onTap: () {
-                    _scaffoldKey.currentState?.openEndDrawer();
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 20),
-                    child: Image.asset(
-                      "assets/icon/menu.png",
-                      height: 23,
-                      width: 37,
-                    ),
-                  ))
-            ],
-          ),
+          // appBar: AppBar(
+          //   backgroundColor: Colors.white,
+          //   surfaceTintColor: Colors.white,
+          //   elevation: 0,
+          //   automaticallyImplyLeading: false, // Removes back button
+          //   centerTitle: false, // Aligns title to the left
+          //   title: RichText(
+          //     text: TextSpan(
+          //       children: [
+          //         TextSpan(
+          //           text: getGreeting(),
+          //           style: const TextStyle(
+          //             color: Color(0xff0D0D0D),
+          //             fontSize: 20,
+          //             fontWeight: FontWeight.w500,
+          //           ),
+          //         ),
+          //         TextSpan(
+          //           text: '\n$userName',
+          //           style: const TextStyle(
+          //             color: Colors.black,
+          //             fontSize: 14,
+          //             height: 1.9,
+          //             fontWeight: FontWeight.w400,
+          //           ),
+          //         ),
+          //       ],
+          //     ),
+          //   ),
+          //   actions: [
+          //     InkWell(
+          //       onTap: () {
+          //         _scaffoldKey.currentState?.openEndDrawer();
+          //       },
+          //       child: Padding(
+          //         padding: const EdgeInsets.only(right: 20),
+          //         child: Image.asset(
+          //           "assets/icon/menu.png",
+          //           height: 23,
+          //           width: 37,
+          //         ),
+          //       ),
+          //     )
+          //   ],
+          // ),
           body: RefreshIndicator(
             onRefresh: () async {
               ref.invalidate(articleProvider); // Refresh articles
@@ -296,6 +303,39 @@ class _HomePageState extends ConsumerState<HomePage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  (context.padding.top + 8).height,
+                  Row(
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            getGreeting(),
+                            style: context.textTheme.displayMedium,
+                          ),
+                          Text(
+                            userName,
+                            style: context.textTheme.bodyMedium,
+                          ),
+                        ],
+                      ),
+                      const Spacer(),
+                      InkWell(
+                        onTap: () {
+                          _scaffoldKey.currentState?.openEndDrawer();
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 20),
+                          child: Image.asset(
+                            "assets/icon/menu.png",
+                            height: 23,
+                            width: 37,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                  12.height,
                   Row(
                     children: [
                       Expanded(
@@ -431,39 +471,139 @@ class _HomePageState extends ConsumerState<HomePage> {
                   const SizedBox(height: 20),
                   _buildStaticBanners(),
                   mediumSpace(),
+                  _drugSearchWidget(context),
+                  mediumSpace(),
+                  const PersonalGoalsWidget(),
+                  mediumSpace(),
                   const ActionButtonsRow(),
+                  mediumSpace(),
+                  const ProfileCompletionWidget(),
+                  mediumSpace(),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFFFE7E6),
+                      border: Border.all(
+                        color: const Color(0xFFFF6159),
+                      ),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    padding: const EdgeInsets.all(12),
+                    child: Row(
+                      children: [
+                        Image.asset('nafdac'.toImg),
+                        8.width,
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Suspended & Canceled Products',
+                                style: context.textTheme.bodyMedium?.copyWith(
+                                  fontSize: 15,
+                                ),
+                              ),
+                              4.height,
+                              Text(
+                                'NAFDAC Approved list',
+                                style: context.textTheme.bodyLarge?.copyWith(
+                                  fontSize: 13,
+                                  color: const Color(0xFFFF6159),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        4.width,
+                        const Icon(
+                          Icons.arrow_forward_ios,
+                          size: 14,
+                          color: Color(0xFFFF6159),
+                        ),
+                      ],
+                    ),
+                  ),
+                  mediumSpace(),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'My Community & Socials',
+                        style: context.textTheme.labelLarge,
+                      ),
+                      12.height,
+                      const Divider(
+                        color: Color(0xFFBABABA),
+                      ),
+                      12.height,
+                      Text(
+                        'Hey Jessica, you have 0 posts',
+                        style: context.textTheme.labelMedium?.copyWith(
+                          color: const Color(0xFF656565),
+                        ),
+                      ),
+                      4.height,
+                      Text(
+                        'Start the conversation by creating the first post',
+                        style: context.textTheme.bodyLarge?.copyWith(
+                          fontSize: 13,
+                        ),
+                      ),
+                      14.height,
+                      Container(
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFEAFFEB),
+                          border: Border.all(color: AppColors.primary),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 16,
+                        ),
+                        alignment: Alignment.center,
+                        child: Text(
+                          'Create your first post',
+                          style: context.textTheme.labelMedium?.copyWith(
+                            color: const Color(0xFF575757),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                  mediumSpace(),
+                  const FriendRequestWidget(),
                   mediumSpace(),
                   Column(
                     children: [
-                      CustomListTile(
-                        imagePath: "assets/icon/appo_icon.png",
-                        title: "Appointment",
-                        subtitle:
-                            "$cachedUpcomingAppointments upcoming Appointment${cachedUpcomingAppointments == 1 ? '' : 's'}",
-                        backgroundColor: const Color(0xffEAF2FF),
-                        onTap: () {
-                          context.push(Routes.APPOINTMENT, extra: true);
-                        },
-                      ),
+                      // CustomListTile(
+                      //   imagePath: "assets/icon/appo_icon.png",
+                      //   title: "Appointment",
+                      //   subtitle:
+                      //       "$cachedUpcomingAppointments upcoming Appointment${cachedUpcomingAppointments == 1 ? '' : 's'}",
+                      //   backgroundColor: const Color(0xffEAF2FF),
+                      //   onTap: () {
+                      //     context.push(Routes.APPOINTMENT, extra: true);
+                      //   },
+                      // ),
 
-                      CustomListTile(
-                        imagePath: "assets/icon/pres_icon.png",
-                        title: "Prescriptions",
-                        subtitle:
-                            "$cachedPrescription Prescription${cachedPrescription == 1 ? '' : 's'}",
-                        backgroundColor: const Color(0xffEAF2FF),
-                        onTap: () {
-                          context.push(Routes.PRESCRIPTION, extra: true);
-                        },
-                      ),
-                      CustomListTile(
-                        imagePath: "assets/icon/health_ins_icon.png",
-                        title: "Health Insurance",
-                        subtitle:
-                            "$cachedHMOCount HMO${cachedHMOCount == 1 ? '' : 's'}",
-                        backgroundColor: const Color(0xffEAF2FF),
-                        onTap: () {},
-                      ),
+                      // CustomListTile(
+                      //   imagePath: "assets/icon/pres_icon.png",
+                      //   title: "Prescriptions",
+                      //   subtitle:
+                      //       "$cachedPrescription Prescription${cachedPrescription == 1 ? '' : 's'}",
+                      //   backgroundColor: const Color(0xffEAF2FF),
+                      //   onTap: () {
+                      //     context.push(Routes.PRESCRIPTION, extra: true);
+                      //   },
+                      // ),
+                      // CustomListTile(
+                      //   imagePath: "assets/icon/health_ins_icon.png",
+                      //   title: "Health Insurance",
+                      //   subtitle:
+                      //       "$cachedHMOCount HMO${cachedHMOCount == 1 ? '' : 's'}",
+                      //   backgroundColor: const Color(0xffEAF2FF),
+                      //   onTap: () {},
+                      // ),
                       const FriendRequestSection(),
                       bannerState.when(
                         loading: () =>
@@ -509,7 +649,7 @@ class _HomePageState extends ConsumerState<HomePage> {
 
                       getAllInterestAsync.when(
                         data: (interests) {
-                          if (interests == null || interests.isEmpty) {
+                          if (interests.isEmpty) {
                             return const SizedBox.shrink();
                           }
 
@@ -635,6 +775,75 @@ class _HomePageState extends ConsumerState<HomePage> {
           ),
         );
       },
+    );
+  }
+
+  _drugSearchWidget(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Expanded(
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                decoration: const BoxDecoration(
+                  color: AppColors.primaryVariant,
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(24),
+                    topLeft: Radius.circular(4),
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    SvgPicture.asset('drugstore'.toSvg),
+                    4.width,
+                    Text(
+                      'CHP Pharmacy eKiosk',
+                      style: context.textTheme.labelMedium?.copyWith(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            (context.screenWidth * .1).width,
+          ],
+        ),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 18),
+          decoration: BoxDecoration(
+            boxShadow: const [
+              BoxShadow(
+                color: Color(0x40A7A7A7),
+                blurRadius: 11,
+                offset: Offset(0, 4),
+              )
+            ],
+            color: Colors.white,
+            border: Border.all(
+              color: AppColors.primaryVariant,
+              width: .7,
+            ),
+            borderRadius: BorderRadius.circular(4),
+          ),
+          child: Row(
+            children: [
+              Text(
+                'Search for any drugs',
+                style: context.textTheme.bodyMedium?.copyWith(
+                  color: const Color(0xFF9D9D9D),
+                ),
+              ),
+              const Spacer(),
+              SvgPicture.asset('search'.toSvg),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

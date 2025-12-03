@@ -2,11 +2,21 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:greenzone_medical/src/utils/responsive.dart';
+
+extension ResponsiveNum on num {
+  double get w => Responsive.w(toDouble());
+  double get h => Responsive.h(toDouble());
+  double get sp => Responsive.sp(toDouble());
+}
 
 extension WidgetSpacing on num {
   SizedBox get spacingW => SizedBox(width: toDouble());
   SizedBox get spacingH => SizedBox(height: toDouble());
   Gap get gap => Gap(toDouble());
+  //
+  SizedBox get height => SizedBox(height: toDouble().h);
+  SizedBox get width => SizedBox(width: toDouble().w);
 }
 
 extension WidgetVisibility on Widget {

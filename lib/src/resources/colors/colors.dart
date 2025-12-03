@@ -15,6 +15,8 @@ class AppColors {
   static const Color primary100 = Color(0xFF91BF91);
   static const Color primary50 = Color(0xFFBDE1BD);
   static const Color primary = Color(0xff17621A);
+  static const Color primaryVariant = Color(0xFF059909);
+  static const Color primaryLight = Color(0xffD9FEAA);
 
   /// Success colors
   static const Color success900 = Color(0xFF102A19);
@@ -64,6 +66,9 @@ class AppColors {
   static const Color greyTertiary = Color(0xFFA1A0A3);
   static const Color greyQuatinary = Color(0xFF5A5C60);
   static const Color greyDisabled = Color(0xFFE0E0E0);
+  static const Color greyTextColor = Color(0xFF8C8C8C);
+  static const Color greyTextColor2 = Color(0xFF6B6B6B);
+  static const Color greyVariant = Color(0xFFD9D9D9);
 
   /// Border colors
   static const Color bordersLight = Color(0xFFEFEFEF);

@@ -17,14 +17,15 @@ Future<void> main() async {
   await StorageServiceImpl().initialize();
   await DependencyInjection.init();
 
-  ErrorWidget.builder = (FlutterErrorDetails details) => Container(
-        padding: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          color: Colors.amberAccent.shade400,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Text(details.exception.toString()),
-      );
+// TODO: revert
+  // ErrorWidget.builder = (FlutterErrorDetails details) => Container(
+  //       padding: const EdgeInsets.all(10),
+  //       decoration: BoxDecoration(
+  //         color: Colors.amberAccent.shade400,
+  //         borderRadius: BorderRadius.circular(12),
+  //       ),
+  //       child: Text(details.exception.toString()),
+  //     );
 
   configLoading();
 
@@ -70,8 +71,8 @@ void configLoading() {
     ..backgroundColor = Colors.transparent // ✅ Fully transparent background
     ..indicatorColor = Colors.white
     ..textColor = Colors.white
-    ..maskColor =
-        Colors.black.withValues(alpha: 0.3) // ✅ Slightly transparent full-screen mask
+    ..maskColor = Colors.black
+        .withValues(alpha: 0.3) // ✅ Slightly transparent full-screen mask
     ..userInteractions = false
     ..dismissOnTap = false
     ..animationStyle = EasyLoadingAnimationStyle.scale;

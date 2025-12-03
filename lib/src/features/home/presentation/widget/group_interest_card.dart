@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:greenzone_medical/src/app_pkg.dart';
+import 'package:greenzone_medical/src/resources/colors/colors.dart';
 
 class GroupInterestCard extends StatelessWidget {
   final String name;
@@ -8,9 +9,11 @@ class GroupInterestCard extends StatelessWidget {
   final VoidCallback onViewProfile;
   final bool isFirst;
   final bool isLast;
+  final bool isFriend;
 
   const GroupInterestCard({
     Key? key,
+    this.isFriend = false,
     required this.name,
     required this.description,
     required this.imageUrl,
@@ -30,12 +33,12 @@ class GroupInterestCard extends StatelessWidget {
 
     return Card(
       shape: RoundedRectangleBorder(
-        side: BorderSide(color: Color(0xffC2C2C2).withOpacity(0.5)),
+        side: BorderSide(color: const Color(0xffC2C2C2).withValues(alpha: 0.5)),
         borderRadius: borderRadius,
       ),
-      color: const Color(0xFFF7F7F7),
+      color: isFriend ? const Color(0xFFEAFFEB) : const Color(0xFFF7F7F7),
       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
-      child: Padding(
+      child: Padding( 
         padding: const EdgeInsets.all(12),
         child: Row(
           children: [
@@ -93,11 +96,12 @@ class GroupInterestCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(20),
                   color: ColorConstant.primaryColor,
                 ),
-                child: const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 5, horizontal: 15),
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
                   child: Text(
-                    'View Group',
-                    style: TextStyle(color: Colors.white, fontSize: 11),
+                    isFriend ? 'View Profile' : 'View Group',
+                    style: const TextStyle(color: Colors.white, fontSize: 11),
                   ),
                 ),
               ),

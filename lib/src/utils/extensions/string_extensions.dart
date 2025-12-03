@@ -1,4 +1,7 @@
 extension StringExtensions on String {
+  String get toSvg => "assets/svgs/$this.svg";
+  String get toImg => "assets/images/$this.png";
+
   bool get isValidEmail {
     final emailRegExp = RegExp(r'^[a-zA-Z0-9.+]+@[a-zA-Z0-9]+\.[a-zA-Z]+');
     return emailRegExp.hasMatch(this);

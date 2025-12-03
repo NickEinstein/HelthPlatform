@@ -50,12 +50,14 @@ class GroupInterestList extends ConsumerWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        "${limitedGroups.length} Groups that might interest you",
-                        style: const TextStyle(
-                          color: Color(0xff343333),
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
+                      Expanded(
+                        child: Text(
+                          "${limitedGroups.length} Groups that might interest you",
+                          style: const TextStyle(
+                            color: Color(0xff343333),
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                          ),
                         ),
                       ),
                       TextButton(
@@ -86,10 +88,11 @@ class GroupInterestList extends ConsumerWidget {
                     ],
                   ),
                 ),
-
+                8.height,
                 // Group List (max 2 groups)
                 ListView.builder(
                   shrinkWrap: true,
+                  padding: EdgeInsets.zero,
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: limitedGroups.length,
                   itemBuilder: (context, index) {
