@@ -1,6 +1,9 @@
-import 'package:flutter/material.dart' show Colors, LinearProgressIndicator;
+import 'package:flutter/material.dart'
+    show Colors, LinearProgressIndicator, InkWell;
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:greenzone_medical/src/features/profile/presentation/my_goals_screen.dart';
 import 'package:greenzone_medical/src/resources/colors/colors.dart';
 import 'package:greenzone_medical/src/utils/extensions/extensions.dart';
 import 'package:greenzone_medical/src/utils/extensions/string_extensions.dart';
@@ -16,6 +19,7 @@ class PersonalGoalsWidget extends StatefulWidget {
 class _PersonalGoalsWidgetState extends State<PersonalGoalsWidget> {
   int currentItem = 1;
   int totalItem = 5;
+  final ScrollController _scrollController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
@@ -43,6 +47,7 @@ class _PersonalGoalsWidgetState extends State<PersonalGoalsWidget> {
         18.height,
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
+          controller: _scrollController,
           child: Row(
             spacing: 12,
             children: List.generate(
@@ -55,10 +60,15 @@ class _PersonalGoalsWidgetState extends State<PersonalGoalsWidget> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              'View all my goals',
-              style: context.textTheme.bodyMedium
-                  ?.copyWith(color: AppColors.greyTextColor2),
+            InkWell(
+              onTap: () {
+                context.push(MyGoalsScreen.routeName);
+              },
+              child: Text(
+                'View all my goals',
+                style: context.textTheme.bodyMedium
+                    ?.copyWith(color: AppColors.greyTextColor2),
+              ),
             ),
             Text(
               'View all my friend\'s goals',

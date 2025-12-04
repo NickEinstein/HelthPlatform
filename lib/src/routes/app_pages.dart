@@ -8,12 +8,14 @@ import 'package:greenzone_medical/src/features/chats/presentation/model/chatcont
 import 'package:greenzone_medical/src/features/health_record/presentation/widget/main_health_record.dart';
 import 'package:greenzone_medical/src/features/notifications/notifications.dart';
 import 'package:greenzone_medical/src/features/prescription/presentation/prescriptions.dart';
+import 'package:greenzone_medical/src/features/profile/presentation/my_goals_screen.dart';
+import 'package:greenzone_medical/src/features/profile/presentation/profile_management.dart';
+import 'package:greenzone_medical/src/features/profile/presentation/widgets/start_plan_screen.dart';
 import 'package:greenzone_medical/src/model/community_list_response.dart';
 import '../features/account/presentation/account_reset_password.dart';
 import '../features/appointment/model/appointment_model.dart';
 import '../features/article/all_articles.dart';
 import '../features/biling/presentation/billings_page.dart';
-import '../features/chats/presentation/model/chatsummary_model.dart';
 import '../features/chats/presentation/model/widget/chat_detail_screen.dart';
 import '../features/chats/presentation/model/widget/contact_info.dart';
 import '../features/community/presentation/community_friends_details.dart';
@@ -47,6 +49,25 @@ final routerProvider = Provider<GoRouter>((ref) {
     debugLogDiagnostics: true,
     initialLocation: _Paths.SPLASH,
     routes: [
+      GoRoute(
+        path: StartPlanScreen.routeName,
+        builder: (context, state) {
+          return const StartPlanScreen();
+        },
+      ),
+      GoRoute(
+        path: MyGoalsScreen.routeName,
+        builder: (context, state) {
+          return const MyGoalsScreen();
+        },
+      ),
+      GoRoute(
+        path: ProfileManagement.routeName,
+        builder: (context, state) {
+          return const ProfileManagement();
+        },
+      ),
+      //  //  //
       GoRoute(
         path: _Paths.SPLASH,
 
