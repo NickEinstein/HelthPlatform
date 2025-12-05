@@ -1,3 +1,4 @@
+import 'package:greenzone_medical/src/features/plan/presentation/single_plan_dashboard.dart';
 import 'package:greenzone_medical/src/resources/colors/colors.dart';
 import 'package:greenzone_medical/src/utils/packages.dart';
 
@@ -118,7 +119,9 @@ class StartPlanScreen extends ConsumerWidget {
                 width: double.infinity,
                 height: 50,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    context.push(SinglePlanDashboard.routeName);
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primaryLight,
                     foregroundColor: AppColors.primaryBlack,

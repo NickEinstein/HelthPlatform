@@ -7,10 +7,16 @@ import 'package:greenzone_medical/src/features/chats/chats.dart';
 import 'package:greenzone_medical/src/features/chats/presentation/model/chatcontact_model.dart';
 import 'package:greenzone_medical/src/features/health_record/presentation/widget/main_health_record.dart';
 import 'package:greenzone_medical/src/features/notifications/notifications.dart';
+import 'package:greenzone_medical/src/features/pharmacy/presentation/delivery_details.dart';
+import 'package:greenzone_medical/src/features/pharmacy/presentation/drug_checkout.dart';
+import 'package:greenzone_medical/src/features/pharmacy/presentation/drug_search_result.dart';
+import 'package:greenzone_medical/src/features/pharmacy/presentation/pharmacy_search_screen.dart';
+import 'package:greenzone_medical/src/features/pharmacy/presentation/single_drug_detail.dart';
+import 'package:greenzone_medical/src/features/plan/presentation/single_plan_dashboard.dart';
 import 'package:greenzone_medical/src/features/prescription/presentation/prescriptions.dart';
-import 'package:greenzone_medical/src/features/profile/presentation/my_goals_screen.dart';
+import 'package:greenzone_medical/src/features/plan/presentation/my_goals_screen.dart';
 import 'package:greenzone_medical/src/features/profile/presentation/profile_management.dart';
-import 'package:greenzone_medical/src/features/profile/presentation/widgets/start_plan_screen.dart';
+import 'package:greenzone_medical/src/features/plan/widgets/start_plan_screen.dart';
 import 'package:greenzone_medical/src/model/community_list_response.dart';
 import '../features/account/presentation/account_reset_password.dart';
 import '../features/appointment/model/appointment_model.dart';
@@ -49,6 +55,42 @@ final routerProvider = Provider<GoRouter>((ref) {
     debugLogDiagnostics: true,
     initialLocation: _Paths.SPLASH,
     routes: [
+      GoRoute(
+        path: DeliveryDetails.routeName,
+        builder: (context, state) {
+          return const DeliveryDetails();
+        },
+      ),
+      GoRoute(
+        path: DrugCheckout.routeName,
+        builder: (context, state) {
+          return const DrugCheckout();
+        },
+      ),
+      GoRoute(
+        path: DrugSearchResult.routeName,
+        builder: (context, state) {
+          return const DrugSearchResult();
+        },
+      ),
+      GoRoute(
+        path: PharmacySearchScreen.routeName,
+        builder: (context, state) {
+          return const PharmacySearchScreen();
+        },
+      ),
+      GoRoute(
+        path: SingleDrugDetail.routeName,
+        builder: (context, state) {
+          return const SingleDrugDetail();
+        },
+      ),
+      GoRoute(
+        path: SinglePlanDashboard.routeName,
+        builder: (context, state) {
+          return const SinglePlanDashboard();
+        },
+      ),
       GoRoute(
         path: StartPlanScreen.routeName,
         builder: (context, state) {

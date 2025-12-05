@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:greenzone_medical/src/features/profile/presentation/widgets/start_plan_screen.dart';
+import 'package:greenzone_medical/src/features/plan/widgets/start_plan_screen.dart';
 import 'package:greenzone_medical/src/resources/colors/colors.dart';
 import 'package:greenzone_medical/src/utils/packages.dart';
 

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart'
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:greenzone_medical/src/features/profile/presentation/my_goals_screen.dart';
+import 'package:greenzone_medical/src/features/plan/presentation/my_goals_screen.dart';
 import 'package:greenzone_medical/src/resources/colors/colors.dart';
 import 'package:greenzone_medical/src/utils/extensions/extensions.dart';
 import 'package:greenzone_medical/src/utils/extensions/string_extensions.dart';
