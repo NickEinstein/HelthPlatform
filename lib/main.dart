@@ -17,15 +17,14 @@ Future<void> main() async {
   await StorageServiceImpl().initialize();
   await DependencyInjection.init();
 
-// TODO: revert
-  // ErrorWidget.builder = (FlutterErrorDetails details) => Container(
-  //       padding: const EdgeInsets.all(10),
-  //       decoration: BoxDecoration(
-  //         color: Colors.amberAccent.shade400,
-  //         borderRadius: BorderRadius.circular(12),
-  //       ),
-  //       child: Text(details.exception.toString()),
-  //     );
+  ErrorWidget.builder = (FlutterErrorDetails details) => Container(
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: Colors.amberAccent.shade400,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Text(details.exception.toString()),
+      );
 
   configLoading();
 

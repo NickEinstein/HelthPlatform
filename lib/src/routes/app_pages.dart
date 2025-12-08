@@ -6,6 +6,7 @@ import 'package:greenzone_medical/src/features/caregivers/presentation/engage_pa
 import 'package:greenzone_medical/src/features/chats/chats.dart';
 import 'package:greenzone_medical/src/features/chats/presentation/model/chatcontact_model.dart';
 import 'package:greenzone_medical/src/features/health_record/presentation/widget/main_health_record.dart';
+import 'package:greenzone_medical/src/features/home/presentation/suspended_products.dart';
 import 'package:greenzone_medical/src/features/notifications/notifications.dart';
 import 'package:greenzone_medical/src/features/pharmacy/presentation/delivery_details.dart';
 import 'package:greenzone_medical/src/features/pharmacy/presentation/drug_checkout.dart';
@@ -55,6 +56,12 @@ final routerProvider = Provider<GoRouter>((ref) {
     debugLogDiagnostics: true,
     initialLocation: _Paths.SPLASH,
     routes: [
+      GoRoute(
+        path: SuspendedProducts.routeName,
+        builder: (context, state) {
+          return const SuspendedProducts();
+        },
+      ),
       GoRoute(
         path: DeliveryDetails.routeName,
         builder: (context, state) {
@@ -564,23 +571,23 @@ final routerProvider = Provider<GoRouter>((ref) {
         },
       ),
     ],
-    redirect: (context, state) {
-      // print(state);
-      // print('router redirect call ');
-      // // If our async state is loading, don't perform redirects, yet
-      // if (authNotifier.isLoading) return null;
-      //
-      // final isAuth = authNotifier.isAuthenticated;
-      //
-      // final isSplash = state.location == SplashPage.routeLocation;
-      // if (isSplash) {
-      //   return isAuth ? HomePage.routeLocation : LoginPage.routeLocation;
-      // }
-      //
-      // final isLoggingIn = state.location == LoginPage.routeLocation;
-      // if (isLoggingIn) return isAuth ? HomePage.routeLocation : null;
-      //
-      // return isAuth ? null : SplashPage.routeLocation;
-    },
+    // redirect: (context, state) {
+    // print(state);
+    // print('router redirect call ');
+    // // If our async state is loading, don't perform redirects, yet
+    // if (authNotifier.isLoading) return null;
+    //
+    // final isAuth = authNotifier.isAuthenticated;
+    //
+    // final isSplash = state.location == SplashPage.routeLocation;
+    // if (isSplash) {
+    //   return isAuth ? HomePage.routeLocation : LoginPage.routeLocation;
+    // }
+    //
+    // final isLoggingIn = state.location == LoginPage.routeLocation;
+    // if (isLoggingIn) return isAuth ? HomePage.routeLocation : null;
+    //
+    // return isAuth ? null : SplashPage.routeLocation;
+    // },
   );
 });

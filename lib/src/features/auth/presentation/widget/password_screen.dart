@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:greenzone_medical/src/utils/extensions/widget_extensions.dart';
 
 import '../../../../constants/helper.dart';
 import 'account_controller_holder.dart';
@@ -7,8 +8,11 @@ class PasswordScreen extends StatefulWidget {
   final GlobalKey<FormState> formKey;
   final AccountCreationController controller;
 
-  const PasswordScreen(
-      {super.key, required this.formKey, required this.controller});
+  const PasswordScreen({
+    super.key,
+    required this.formKey,
+    required this.controller,
+  });
 
   @override
   State<PasswordScreen> createState() => _PasswordScreenState();
@@ -65,6 +69,37 @@ class _PasswordScreenState extends State<PasswordScreen> {
               },
             ),
             const SizedBox(height: 20),
+            Row(
+              children: [
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      widget.controller.toggleRememberMe();
+                    });
+                  },
+                  child: Container(
+                    height: 18,
+                    width: 18,
+                    decoration: BoxDecoration(
+                      color: widget.controller.rememberMe
+                          ? Colors.green
+                          : Colors.grey.withValues(alpha: .4),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    alignment: Alignment.center,
+                    child: widget.controller.rememberMe
+                        ? const Icon(
+                            Icons.check,
+                            color: Colors.white,
+                            size: 12,
+                          )
+                        : null,
+                  ),
+                ),
+                6.width,
+                const Text("Remember me next time"),
+              ],
+            ),
           ],
         ),
       ),

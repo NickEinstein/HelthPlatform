@@ -60,8 +60,7 @@ class ApiUrl {
   //     '/Doctors/list/1/${page * pageSize}';
 
   static String allDoctorsUrl(int pageSize) =>
-      '/ConnectedHealthWebApi/api/Doctors/list';
-
+      '/ConnectedHealthWebApi/api/doctors/list/true?pageNumber=1&pageSize=$pageSize';
   // static const String communityListUrl = '/Community/list';
   static const String communityListUrl =
       '/ConnectedHealthWebApi/api/CommunityGroup/list';

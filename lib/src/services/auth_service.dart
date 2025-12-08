@@ -6,7 +6,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:greenzone_medical/src/app_pkg.dart';
 import 'package:path/path.dart';
-import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 import '../features/auth/model/register_response.dart';
 import '../features/notifications/messaging/firebase_messaging_config.dart';
@@ -79,12 +78,12 @@ class AuthService {
   }
 
   Future<void> signInWithApple() async {
-    final credential = await SignInWithApple.getAppleIDCredential(
-      scopes: [
-        AppleIDAuthorizationScopes.email,
-        AppleIDAuthorizationScopes.fullName,
-      ],
-    );
+    // final credential = await SignInWithApple.getAppleIDCredential(
+    //   scopes: [
+    //     AppleIDAuthorizationScopes.email,
+    //     AppleIDAuthorizationScopes.fullName,
+    //   ],
+    // );
 
     // send credential.identityToken or credential.authorizationCode to backend
   }
@@ -150,17 +149,17 @@ class AuthService {
     required String firstName,
     required String lastName,
     required String dateOfBirth,
-    required String stateOfOrigin,
-    required String lga,
-    required String placeOfBirth,
-    required String nationality,
-    required String stateOfResidence,
-    required String lgaResidence,
-    required String city,
-    required String homeAddress,
+    String? stateOfOrigin,
+    String? lga,
+    String? placeOfBirth,
+    String? nationality,
+    String? stateOfResidence,
+    String? lgaResidence,
+    String? city,
+    String? homeAddress,
     required String phone,
     required String email,
-    required String username,
+    String? username,
     int? referralCode,
   }) async {
     try {

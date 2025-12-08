@@ -125,7 +125,7 @@ class _OTPPageState extends ConsumerState<OTPPage> {
                     otpController.text = pin;
                   },
                   validator: (value) {
-                    if (value == null || value.isEmpty) {
+                    if ( value.isEmpty) {
                       return "Enter a 4-digit PIN";
                     } else if (value.length < 4) {
                       return "OTP must be exactly 4 digits";

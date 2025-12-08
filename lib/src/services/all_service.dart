@@ -25,7 +25,6 @@ import '../features/health_record/model/hmo_model.dart';
 import '../features/home/model/all_interest_model.dart';
 import '../features/home/model/friend_request_receiver.dart';
 import '../features/home/model/friend_request_sender.dart';
-import '../features/home/model/group_interest_model.dart';
 import '../features/home/model/patient_by_id.dart';
 import '../features/notifications/model/notification_model.dart';
 import '../features/prescription/models/get_prescriptions_model.dart';
@@ -57,7 +56,7 @@ class AllService {
     try {
       final storedData = _storageService.getString(StorageConstants.loginData);
 
-      if (storedData == null || storedData.isEmpty) {
+      if (storedData.isEmpty) {
         debugPrint("⚠️ No access token found in storage.");
         return null;
       }
@@ -82,7 +81,7 @@ class AllService {
     try {
       final storedData = _storageService.getString(StorageConstants.loginData);
 
-      if (storedData == null || storedData.isEmpty) {
+      if (storedData.isEmpty) {
         debugPrint("⚠️ No access token found in storage.");
         return null;
       }
@@ -602,7 +601,7 @@ class AllService {
       );
 
       if ((response.statusCode == 200 || response.statusCode == 1)) {
-        final List<dynamic> data = response.data['resultList'];
+        final List<dynamic> data = response.data['data']['recordList'];
 
         if (data.isEmpty) {
           debugPrint('⚠️ No articles found.');

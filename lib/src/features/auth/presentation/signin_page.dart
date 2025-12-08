@@ -287,8 +287,9 @@ class _SignInPageState extends ConsumerState<SignInPage> {
                                       disabledBackgroundColor: const Color(
                                           0xffA8D5BA), // Ensure disabled color is applied
                                       disabledForegroundColor: Colors.white
-                                          .withOpacity(
-                                              0.6), // Lightened text for disabled state
+                                          .withValues(
+                                              alpha:
+                                                  0.6), // Lightened text for disabled state
                                       minimumSize:
                                           const Size(double.infinity, 55),
                                       shape: RoundedRectangleBorder(

@@ -7,8 +7,11 @@ class AccountCreationController {
   final TextEditingController lastNameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
-  final TextEditingController dobController = TextEditingController();
+  final TextEditingController dobDayController = TextEditingController();
+  final TextEditingController dobMonthController = TextEditingController();
+  final TextEditingController dobYearController = TextEditingController();
   final TextEditingController userNameController = TextEditingController();
+  final TextEditingController genderController = TextEditingController();
 
   final TextEditingController addressController = TextEditingController();
   final TextEditingController stateController = TextEditingController();
@@ -28,6 +31,11 @@ class AccountCreationController {
   final TextEditingController emelgaController = TextEditingController();
   final TextEditingController emecityController = TextEditingController();
   final TextEditingController referralCodeController = TextEditingController();
+  bool rememberMe = false;
+
+  toggleRememberMe() {
+    rememberMe = !rememberMe;
+  }
 
   File? imageFile;
   int? patientId;
@@ -40,11 +48,14 @@ class AccountCreationController {
     lastNameController.dispose();
     userNameController.dispose();
     emailController.dispose();
+    genderController.dispose();
     phoneController.dispose();
     referralCodeController.dispose();
     addressController.dispose();
     passwordController.dispose();
-    dobController.dispose();
+    dobDayController.dispose();
+    dobMonthController.dispose();
+    dobYearController.dispose();
 
     confirmPasswordController.dispose();
     otpController.dispose();

@@ -60,4 +60,22 @@ class AppHelper {
       ),
     ),
   );
+
+  static final monthList = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December'
+  ];
+  static int monthToNumber(String month) {
+    return monthList.indexOf(month) + 1;
+  }
 }
