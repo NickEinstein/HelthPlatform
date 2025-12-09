@@ -1,10 +1,12 @@
 import 'package:greenzone_medical/src/features/plan/presentation/single_plan_dashboard.dart';
+import 'package:greenzone_medical/src/model/my_app_model.dart';
 import 'package:greenzone_medical/src/resources/colors/colors.dart';
 import 'package:greenzone_medical/src/utils/packages.dart';
 
 class StartPlanScreen extends ConsumerWidget {
   static const routeName = '/start-plan';
-  const StartPlanScreen({super.key});
+  final MyAppModel app;
+  const StartPlanScreen({super.key, required this.app});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -38,17 +40,17 @@ class StartPlanScreen extends ConsumerWidget {
               const CircleAvatar(
                 radius: 40,
                 backgroundColor: AppColors.primaryLight,
-                child: Icon(Icons.face, color: AppColors.primary, size: 40),
+                child: Icon(Icons.more, color: AppColors.primary, size: 40),
               ),
               10.height,
               // Title
-              const Text(
-                'Hair Care',
+              Text(
+                app.title,
                 style: CustomTextStyle.labelXLBold,
               ),
               4.height,
               Text(
-                'Self-Care Plan',
+                app.category,
                 style: CustomTextStyle.paragraphSmall.copyWith(
                   color: AppColors.greyTextColor,
                 ),
@@ -64,7 +66,7 @@ class StartPlanScreen extends ConsumerWidget {
                   border: Border.all(color: AppColors.primary),
                 ),
                 child: Text(
-                  '333,209 Installs',
+                  '${app.installs} Installs',
                   style: CustomTextStyle.labelMedium.copyWith(
                     color: AppColors.primary,
                     fontWeight: FontWeight.bold,
@@ -73,8 +75,8 @@ class StartPlanScreen extends ConsumerWidget {
               ),
               30.height,
               // Description
-              const Text(
-                'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using \'Content here, content here\', making it look like readable English.',
+              Text(
+                app.description,
                 style: CustomTextStyle.paragraphSmall,
                 textAlign: TextAlign.justify,
               ),
@@ -89,6 +91,7 @@ class StartPlanScreen extends ConsumerWidget {
               ),
               10.height,
               // Benefits List
+              _buildBenefitItem('title', app.benefits),
               _buildBenefitItem(
                 '1. Personalized Haircare:',
                 ' Built around their unique hair needs and goals.',

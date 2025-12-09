@@ -39,9 +39,18 @@ import '../services/all_service.dart';
 final isLoadingProvider = StateProvider<bool>((ref) => false);
 final isAgreedProvider = StateProvider<bool>((ref) => false);
 
+final storageServiceProvider = Provider<StorageService>((ref) {
+  return StorageServiceImpl();
+});
+
+final apiServiceProvider = Provider<ApiService>((ref) {
+  return ApiService();
+});
+
 final allServiceProvider = Provider<AllService>((ref) {
-  final storageService = StorageServiceImpl();
-  return AllService(ApiService(), storageService);
+  final storageService = ref.watch(storageServiceProvider);
+  final apiService = ref.watch(apiServiceProvider);
+  return AllService(apiService, storageService);
 });
 
 // FutureProvider for fetching articles

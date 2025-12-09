@@ -1,9 +1,11 @@
 // ignore_for_file: use_build_context_synchronously
 
 // import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:greenzone_medical/src/features/home/presentation/widget/advert_helper.dart';
 import 'package:greenzone_medical/src/features/pharmacy/presentation/pharmacy_search_screen.dart';
+import 'package:greenzone_medical/src/features/plan/presentation/my_goals_screen.dart';
 import 'package:greenzone_medical/src/resources/colors/colors.dart';
 import 'package:greenzone_medical/src/utils/extensions/extensions.dart';
 import 'package:greenzone_medical/src/utils/extensions/string_extensions.dart';
@@ -319,7 +321,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                       ),
                       const Spacer(),
                       InkWell(
-                        onTap: () {
+                        onTap: () async {
                           _scaffoldKey.currentState?.openEndDrawer();
                         },
                         child: Padding(
@@ -498,6 +500,70 @@ class _HomePageState extends ConsumerState<HomePage> {
                   ),
 
                   mediumSpace(),
+                  // if user has no apps
+                  Text(
+                    'Hey, you don\'t seem to have any health goals',
+                    style: context.textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  12.height,
+                  InkWell(
+                    onTap: () {
+                      context.push(MyGoalsScreen.routeName);
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 16),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        color: const Color(0xffEAFFEB),
+                        border: Border.all(
+                          color: ColorConstant.primaryColor,
+                        ),
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SvgPicture.asset(
+                            'health_goal'.toSvg,
+                          ),
+                          12.width,
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'We have a bank of goals you can select from, starting with simple things like your hair to medical goals.',
+                                  style: context.textTheme.bodyMedium?.copyWith(
+                                    fontSize: 13,
+                                  ),
+                                ),
+                                8.height,
+                                Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(28),
+                                    color: const Color(0xFF29BA2E),
+                                  ),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 16, vertical: 6),
+                                  child: Text(
+                                    'Get started now!',
+                                    style:
+                                        context.textTheme.bodyMedium?.copyWith(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                  mediumSpace(),
+
                   // const ProfileCompletionWidget(),
                   // mediumSpace(),
                   // InkWell(
@@ -610,45 +676,45 @@ class _HomePageState extends ConsumerState<HomePage> {
                       //   onTap: () {},
                       // ),
                       const FriendRequestSection(),
-                      bannerState.when(
-                        loading: () =>
-                            const Center(child: CircularProgressIndicator()),
-                        error: (err, stack) =>
-                            const Center(child: Text("Failed to load banners")),
-                        data: (banners) {
-                          if (banners.isEmpty) {
-                            return const Center(
-                                child: Text("No banners available."));
-                          }
-                          // API banners only
-                          final List<AdvertModel> apiBanners =
-                              banners.map((banner) {
-                            final imageUrl = banner.imageUrl ?? "";
-                            final isVideo = imageUrl.endsWith('.mp4');
-                            return AdvertModel(
-                              title: "",
-                              description: "",
-                              backgroundColor: ColorConstant.primaryColor,
-                              mediaType: isVideo ? 'video' : 'image',
-                              imagePath:
-                                  "${AppConstants.noSlashImageURL}$imageUrl",
-                              onTap: () {
-                                final url = imageUrl.isNotEmpty
-                                    ? "${AppConstants.noSlashImageURL}$imageUrl"
-                                    : "https://edogoverp.com";
+                        bannerState.when(
+                          loading: () =>
+                              const Center(child: CircularProgressIndicator()),
+                          error: (err, stack) => const Center(
+                              child: Text("Failed to load banners")),
+                          data: (banners) {
+                            if (banners.isEmpty) {
+                              return const Center(
+                                  child: Text("No banners available."));
+                            }
+                            // API banners only
+                            final List<AdvertModel> apiBanners =
+                                banners.map((banner) {
+                              final imageUrl = banner.imageUrl ?? "";
+                              final isVideo = imageUrl.endsWith('.mp4');
+                              return AdvertModel(
+                                title: "",
+                                description: "",
+                                backgroundColor: ColorConstant.primaryColor,
+                                mediaType: isVideo ? 'video' : 'image',
+                                imagePath:
+                                    "${AppConstants.noSlashImageURL}$imageUrl",
+                                onTap: () {
+                                  final url = imageUrl.isNotEmpty
+                                      ? "${AppConstants.noSlashImageURL}$imageUrl"
+                                      : "https://edogoverp.com";
 
-                                try {
-                                  launchUrl(Uri.parse(url));
-                                } catch (e) {
-                                  debugPrint("⚠️ Failed to launch URL: $url");
-                                }
-                              },
-                            );
-                          }).toList();
+                                  try {
+                                    launchUrl(Uri.parse(url));
+                                  } catch (e) {
+                                    debugPrint("⚠️ Failed to launch URL: $url");
+                                  }
+                                },
+                              );
+                            }).toList();
 
-                          return AdvertHelper(goals: apiBanners);
-                        },
-                      ),
+                            return AdvertHelper(goals: apiBanners);
+                          },
+                        ),
 
                       getAllInterestAsync.when(
                         data: (interests) {

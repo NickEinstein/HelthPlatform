@@ -149,7 +149,7 @@ class _HomeDrawerState extends ConsumerState<HomeDrawer> {
           ],
         );
       },
-      loading: () => const CircularProgressIndicator(),
+      loading: () => const Center(child: SizedBox()),
       error: (_, __) => const Text('User info unavailable',
           style: TextStyle(color: Colors.white)),
     );

@@ -544,7 +544,7 @@ class AllService {
 
   Future<List<DoctorListResponse>> fetchDoctorListPage(
       int page, int pageSize) async {
-    print("Gotteb are::: ${pageSize}");
+    // print("Gotteb are::: ${pageSize}");
     try {
       final token = await getToken();
 

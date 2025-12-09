@@ -271,7 +271,16 @@ class _SignInPageState extends ConsumerState<SignInPage> {
 
                   // Proceed Button
                   isLoading
-                      ? const Center(child: CircularProgressIndicator())
+                      ? Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            color: ColorConstant.primaryColor,
+                          ),
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          child: const Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                        )
                       : Column(
                           children: [
                             Row(

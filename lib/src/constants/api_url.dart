@@ -220,4 +220,15 @@ class ApiUrl {
   // https://edogoverp.com/ConnectedHealthWebApi/api/HealthCareProvider/list/1/10
 
   //  static String getHome(int id) => "/products/home-product/?country_id=$id";
+
+  //
+
+  static String getAppsByCategory(int id) =>
+      'https://api.greenzonetechnologies.com.ng/ConnectedHealthWebApi/api/apps/appByCategoryId?id=$id';
+  static String getAllApps =
+      'https://api.greenzonetechnologies.com.ng/ConnectedHealthWebApi/api/apps';
+  static String getAppsCategories =
+      'https://api.greenzonetechnologies.com.ng/ConnectedHealthWebApi/api/appCategories';
+  static String getMyApps =
+      'https://api.greenzonetechnologies.com.ng/ConnectedHealthWebApi/api/apps/MyApps';
 }

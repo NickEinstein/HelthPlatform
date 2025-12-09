@@ -19,6 +19,7 @@ import 'package:greenzone_medical/src/features/plan/presentation/my_goals_screen
 import 'package:greenzone_medical/src/features/profile/presentation/profile_management.dart';
 import 'package:greenzone_medical/src/features/plan/widgets/start_plan_screen.dart';
 import 'package:greenzone_medical/src/model/community_list_response.dart';
+import 'package:greenzone_medical/src/model/my_app_model.dart';
 import '../features/account/presentation/account_reset_password.dart';
 import '../features/appointment/model/appointment_model.dart';
 import '../features/article/all_articles.dart';
@@ -101,7 +102,9 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: StartPlanScreen.routeName,
         builder: (context, state) {
-          return const StartPlanScreen();
+          return StartPlanScreen(
+            app: state.extra as MyAppModel,
+          );
         },
       ),
       GoRoute(
