@@ -37,10 +37,16 @@ class StartPlanScreen extends ConsumerWidget {
               ),
               20.height,
               // Icon
-              const CircleAvatar(
-                radius: 40,
-                backgroundColor: AppColors.primaryLight,
-                child: Icon(Icons.more, color: AppColors.primary, size: 40),
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: const Color(0xFF109615)),
+                  shape: BoxShape.circle,
+                ),
+                child: const CircleAvatar(
+                  radius: 40,
+                  backgroundColor: AppColors.primaryLight,
+                  child: Icon(Icons.more, color: Color(0xFF109615), size: 40),
+                ),
               ),
               10.height,
               // Title
@@ -63,12 +69,12 @@ class StartPlanScreen extends ConsumerWidget {
                 decoration: BoxDecoration(
                   color: AppColors.primaryLight,
                   borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: AppColors.primary),
+                  border: Border.all(color: const Color(0xFF109615)),
                 ),
                 child: Text(
-                  '${app.installs} Installs',
+                  '${app.installs?.isNotEmpty == true ? app.installs : 0} Installs',
                   style: CustomTextStyle.labelMedium.copyWith(
-                    color: AppColors.primary,
+                    color: const Color(0xFF109615),
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -91,30 +97,15 @@ class StartPlanScreen extends ConsumerWidget {
               ),
               10.height,
               // Benefits List
-              _buildBenefitItem('title', app.benefits),
-              _buildBenefitItem(
-                '1. Personalized Haircare:',
-                ' Built around their unique hair needs and goals.',
-              ),
-              8.height,
-              _buildBenefitItem(
-                '2. Consistency:',
-                ' Encourages regular care routines through reminders and motivation.',
-              ),
-              8.height,
-              _buildBenefitItem(
-                '3. Education:',
-                ' Empowers users to understand their hair, debunk myths, and make informed choices.',
-              ),
-              8.height,
-              _buildBenefitItem(
-                '4. Support System:',
-                ' Combines solo routines with community-driven encouragement.',
-              ),
-              8.height,
-              _buildBenefitItem(
-                '5. Accountability:',
-                ' Keeps users on track through visual progress and diary reflections.',
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  app.benefits,
+                  style: CustomTextStyle.paragraphSmall.copyWith(
+                    color: AppColors.primaryBlack,
+                    height: 1.5,
+                  ),
+                ),
               ),
               40.height,
               // Start Button
@@ -123,7 +114,10 @@ class StartPlanScreen extends ConsumerWidget {
                 height: 50,
                 child: ElevatedButton(
                   onPressed: () {
-                    context.push(SinglePlanDashboard.routeName);
+                    context.push(
+                      SinglePlanDashboard.routeName,
+                      extra: app,
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primaryLight,
@@ -131,7 +125,7 @@ class StartPlanScreen extends ConsumerWidget {
                     elevation: 0,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
-                      side: const BorderSide(color: AppColors.primary),
+                      side: const BorderSide(color: Color(0xFF109615)),
                     ),
                   ),
                   child: Text(
@@ -145,29 +139,6 @@ class StartPlanScreen extends ConsumerWidget {
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildBenefitItem(String title, String description) {
-    return RichText(
-      text: TextSpan(
-        style: CustomTextStyle.paragraphSmall.copyWith(
-          color: AppColors.primaryBlack,
-          height: 1.5,
-        ),
-        children: [
-          TextSpan(
-            text: title,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          TextSpan(
-            text: description,
-            style: const TextStyle(),
-          ),
-        ],
       ),
     );
   }

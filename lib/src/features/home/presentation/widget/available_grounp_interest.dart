@@ -1,3 +1,5 @@
+import 'package:greenzone_medical/src/utils/loading_widget.dart';
+
 import '../../../../provider/all_providers.dart';
 import '../../../../utils/packages.dart';
 import 'group_interest_card.dart';
@@ -118,13 +120,14 @@ class GroupInterestList extends ConsumerWidget {
               ],
             );
           },
-          loading: () => const Center(child: CircularProgressIndicator()),
-          error: (error, stack) => SizedBox.shrink(),
+          loading: () => const ListLoader(itemCount: 2),
+          error: (error, stack) => const SizedBox.shrink(),
         );
       },
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (error, stack) =>
-          const Center(child: Text('Failed to load load data')),
+      loading: () => const ListLoader(itemCount: 2),
+      error: (error, stack) => const Center(
+        child: Text('Failed to load load data'),
+      ),
     );
   }
 }

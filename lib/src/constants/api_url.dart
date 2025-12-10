@@ -230,5 +230,5 @@ class ApiUrl {
   static String getAppsCategories =
       'https://api.greenzonetechnologies.com.ng/ConnectedHealthWebApi/api/appCategories';
   static String getMyApps =
-      'https://api.greenzonetechnologies.com.ng/ConnectedHealthWebApi/api/apps/MyApps';
+      'https://api.greenzonetechnologies.com.ng/ConnectedHealthWebApi/api/AppPlans';
 }

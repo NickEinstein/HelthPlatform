@@ -1,192 +1,250 @@
 import 'package:flutter/material.dart';
+import 'package:greenzone_medical/src/features/plan/models/routine_view_model.dart';
+import 'package:greenzone_medical/src/model/my_app_model.dart';
 import 'package:greenzone_medical/src/resources/colors/colors.dart';
 import 'package:greenzone_medical/src/utils/extensions/extensions.dart';
+import 'package:greenzone_medical/src/utils/extensions/string_extensions.dart';
 import 'package:greenzone_medical/src/utils/packages.dart';
+import 'package:intl/intl.dart';
 
-class SinglePlanDashboard extends ConsumerWidget {
+class SinglePlanDashboard extends ConsumerStatefulWidget {
   static const routeName = '/single-plan-dashboard';
-  const SinglePlanDashboard({super.key});
+  final MyAppModel myApp;
+  const SinglePlanDashboard({super.key, required this.myApp});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: DefaultTabController(
-          length: 6,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Header Section
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: Column(
-                  children: [
-                    10.height,
-                    Row(
-                      children: [
-                        InkWell(
-                          onTap: () => context.pop(),
-                          child: Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              color: Colors.grey[200],
-                              shape: BoxShape.circle,
-                            ),
-                            child: const Icon(Icons.arrow_back,
-                                color: Colors.grey),
-                          ),
-                        ),
-                      ],
-                    ),
-                    10.height,
-                    Container(
-                      padding: const EdgeInsets.all(15),
-                      decoration: BoxDecoration(
-                        color:
-                            const Color(0xFFE8F5E9), // Light green background
-                        shape: BoxShape.circle,
-                        border: Border.all(color: AppColors.primary, width: 1),
-                      ),
-                      child: const Icon(
-                        Icons.face_3_outlined, // Placeholder for the hair icon
-                        size: 40,
-                        color: AppColors.primary,
-                      ),
-                    ),
-                    10.height,
-                    Text(
-                      'Hair Care',
-                      style: context.textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                      ),
-                    ),
-                    5.height,
-                    Text(
-                      'Self-Care Plan',
-                      style: context.textTheme.bodyMedium?.copyWith(
-                        color: Colors.grey,
-                      ),
-                    ),
-                    15.height,
-                    OutlinedButton(
-                      onPressed: () {},
-                      style: OutlinedButton.styleFrom(
-                        side: const BorderSide(color: AppColors.primary),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        backgroundColor: const Color(0xFFE8F5E9),
-                      ),
-                      child: Text(
-                        'Dashboard',
-                        style: context.textTheme.labelLarge?.copyWith(
-                          color: AppColors.primary,
-                        ),
-                      ),
-                    ),
-                    20.height,
-                  ],
-                ),
-              ),
+  ConsumerState<SinglePlanDashboard> createState() =>
+      _SinglePlanDashboardState();
+}
 
-              // Tab Bar
-              const TabBar(
-                isScrollable: true,
-                indicatorColor: AppColors.primary,
-                labelColor: Colors.black,
-                unselectedLabelColor: Colors.grey,
-                labelStyle: TextStyle(fontWeight: FontWeight.bold),
-                tabAlignment: TabAlignment.start,
-                tabs: [
-                  Tab(text: 'Care, Goal & Plan'),
-                  Tab(text: 'Product'),
-                  Tab(text: 'Knowledge'),
-                  Tab(text: 'Community'),
-                  Tab(text: 'Journals'),
-                  Tab(text: 'Specialists'),
-                ],
-              ),
+class _SinglePlanDashboardState extends ConsumerState<SinglePlanDashboard> {
+  bool isStarted = false;
 
-              // Tab View Content
-              Expanded(
-                child: TabBarView(
-                  children: [
-                    // Care, Goal & Plan Tab
-                    SingleChildScrollView(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Hello Gabriella,',
-                            style: context.textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          20.height,
-                          Text(
-                            'We are excited about your aspiration and desire to give your hair the attention it deserves.',
-                            style: context.textTheme.bodyLarge?.copyWith(
-                              height: 1.5,
-                            ),
-                          ),
-                          20.height,
-                          Text(
-                            "What's most exciting is that we'll be a part of this journey with you.",
-                            style: context.textTheme.bodyLarge?.copyWith(
-                              height: 1.5,
-                            ),
-                          ),
-                          20.height,
-                          Text(
-                            "Let's get you started on a plan for your hair.",
-                            style: context.textTheme.bodyLarge?.copyWith(
-                              height: 1.5,
-                            ),
-                          ),
-                          40.height,
-                          SizedBox(
-                            width: double.infinity,
-                            child: ElevatedButton(
-                              onPressed: () {},
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor:
-                                    const Color(0xFF109615), // Darker green
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 15),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
+  @override
+  Widget build(BuildContext context) {
+    final authService = ref.read(authServiceProvider);
+
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (context.mediaQuery.viewInsets.bottom > 0) {
+          FocusManager.instance.primaryFocus?.unfocus();
+        } else {
+          context.pop();
+        }
+      },
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: FutureBuilder<LoginResponse?>(
+            future: authService.getStoredUser(),
+            builder: (context, snapshot) {
+              String userName = "User"; // Default name
+              if (snapshot.hasData && snapshot.data != null) {
+                userName = snapshot.data!.name;
+              }
+
+              return SafeArea(
+                child: DefaultTabController(
+                  length: 6,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Header Section
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                        child: Column(
+                          children: [
+                            10.height,
+                            Row(
+                              children: [
+                                InkWell(
+                                  onTap: () => context.pop(),
+                                  child: Container(
+                                    padding: const EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey[200],
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: const Icon(Icons.arrow_back,
+                                        color: Colors.grey),
+                                  ),
                                 ),
+                              ],
+                            ),
+                            10.height,
+                            Container(
+                              padding: const EdgeInsets.all(15),
+                              decoration: BoxDecoration(
+                                color: AppColors.primaryLight,
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: AppColors.primaryBorder,
+                                  width: 1,
+                                ),
+                              ),
+                              child: const Icon(
+                                Icons.more,
+                                size: 40,
+                                color: AppColors.primary,
+                              ),
+                            ),
+                            10.height,
+                            Text(
+                              widget.myApp.title,
+                              style: context.textTheme.titleLarge?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                              ),
+                            ),
+                            5.height,
+                            Text(
+                              widget.myApp.category,
+                              style: context.textTheme.bodyMedium?.copyWith(
+                                color: Colors.grey,
+                              ),
+                            ),
+                            15.height,
+                            OutlinedButton(
+                              onPressed: () {},
+                              style: OutlinedButton.styleFrom(
+                                side: const BorderSide(
+                                    color: AppColors.primaryBorder),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                backgroundColor: AppColors.primaryLight,
                               ),
                               child: Text(
-                                "Let's Get Started",
-                                style: context.textTheme.titleMedium?.copyWith(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
+                                'Dashboard',
+                                style: context.textTheme.labelLarge?.copyWith(
+                                  color: AppColors.primaryBorder,
                                 ),
                               ),
                             ),
-                          ),
+                            20.height,
+                          ],
+                        ),
+                      ),
+
+                      // Tab Bar
+                      const TabBar(
+                        isScrollable: true,
+                        indicatorColor: AppColors.primary,
+                        labelColor: Colors.black,
+                        unselectedLabelColor: Colors.grey,
+                        labelStyle: TextStyle(fontWeight: FontWeight.bold),
+                        tabAlignment: TabAlignment.start,
+                        tabs: [
+                          Tab(text: 'Care, Goal & Plan'),
+                          Tab(text: 'Product'),
+                          Tab(text: 'Knowledge'),
+                          Tab(text: 'Community'),
+                          Tab(text: 'Journals'),
+                          Tab(text: 'Specialists'),
                         ],
                       ),
-                    ),
-                    // Placeholders for other tabs
-                    const Center(child: Text('Products Content')),
-                    _buildKnowledgeTab(context),
-                    _buildCommunityTab(context),
-                    _buildJournalsTab(context),
-                    _buildSpecialistsTab(context),
-                  ],
+
+                      // Tab View Content
+                      Expanded(
+                        child: TabBarView(
+                          children: [
+                            // Care, Goal & Plan Tab
+                            SingleChildScrollView(
+                                child: isStarted
+                                    ? const PlanTab()
+                                    // const SizedBox()
+                                    : Padding(
+                                        padding: const EdgeInsets.all(20.0),
+                                        child: _buildGetStartedTab(
+                                          context,
+                                          userName: userName,
+                                        ),
+                                      )),
+                            // Placeholders for other tabs
+                            const Center(child: Text('Products Loading')),
+                            _buildKnowledgeTab(context),
+                            _buildCommunityTab(context),
+                            _buildJournalsTab(context),
+                            _buildSpecialistsTab(context),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          ),
-        ),
+              );
+            }),
       ),
     );
   }
+
+  Widget _buildGetStartedTab(
+    BuildContext context, {
+    required String userName,
+  }) =>
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Hello $userName,',
+            style: context.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          20.height,
+          Text(
+            widget.myApp.description,
+            style: context.textTheme.bodyLarge?.copyWith(
+              height: 1.5,
+            ),
+          ),
+          // Text(
+          //   'We are excited about your aspiration and desire to give your hair the attention it deserves.',
+          //   style: context.textTheme.bodyLarge?.copyWith(
+          //     height: 1.5,
+          //   ),
+          // ),
+          // 20.height,
+          // Text(
+          //   "What's most exciting is that we'll be a part of this journey with you.",
+          //   style: context.textTheme.bodyLarge?.copyWith(
+          //     height: 1.5,
+          //   ),
+          // ),
+          // 20.height,
+          // Text(
+          //   "Let's get you started on a plan for your hair.",
+          //   style: context.textTheme.bodyLarge?.copyWith(
+          //     height: 1.5,
+          //   ),
+          // ),
+          40.height,
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  isStarted = true;
+                });
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF109615), // Darker green
+                padding: const EdgeInsets.symmetric(vertical: 15),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: Text(
+                "Let's Get Started",
+                style: context.textTheme.titleMedium?.copyWith(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+        ],
+      );
 
   Widget _buildKnowledgeTab(BuildContext context) {
     return SingleChildScrollView(
@@ -387,7 +445,7 @@ class SinglePlanDashboard extends ConsumerWidget {
         borderRadius: BorderRadius.circular(15),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.grey.withValues(alpha: 0.1),
             spreadRadius: 1,
             blurRadius: 5,
             offset: const Offset(0, 3),
@@ -957,6 +1015,684 @@ class SinglePlanDashboard extends ConsumerWidget {
         icon,
         size: 18,
         color: filled ? Colors.white : const Color(0xFF109615),
+      ),
+    );
+  }
+}
+
+class PlanTab extends StatefulWidget {
+  const PlanTab({super.key});
+
+  @override
+  State<PlanTab> createState() => _PlanTabState();
+}
+
+class _PlanTabState extends State<PlanTab> {
+  final List<RoutineViewModel> routines = [];
+  TextEditingController goalNameController = TextEditingController();
+  List<String> routineList = [];
+  DateTime? startDate;
+  TimeOfDay? startTime;
+
+  _addRoutine() {
+    final routine = RoutineViewModel(
+      goalName: goalNameController.text,
+      routine: routineList,
+      startDate: startDate,
+      time: startTime,
+    );
+    if (routine.validate()) {
+      goalNameController.clear();
+      routineList.clear();
+      startDate = null;
+      startTime = null;
+      setState(() {
+        routines.add(routine);
+      });
+    } else {
+      context.showFeedBackDialog(message: 'Please fill all fields');
+    }
+  }
+
+  _removeNewRoutine(int index) {
+    setState(() {
+      routines.removeAt(index);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      child: Column(
+        children: [
+          40.height,
+          Container(
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(6),
+              color: Colors.white,
+              border: Border.all(color: AppColors.primaryBorder),
+              boxShadow: const [
+                BoxShadow(
+                  spreadRadius: 0,
+                  blurRadius: 11,
+                  color: Color(0x40CEBDE4),
+                  offset: Offset(1, 4),
+                ),
+              ],
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Select a goal for your hair?',
+                        style: context.textTheme.labelSmall?.copyWith(
+                          color: AppColors.greyTextColor3,
+                        ),
+                      ),
+                      Text(
+                        'Selection an option',
+                        style: context.textTheme.bodyMedium?.copyWith(
+                          color: AppColors.greyTextColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                4.width,
+                SvgPicture.asset('dropdown2'.toSvg),
+              ],
+            ),
+          ),
+          16.height,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Flexible(
+                child: Text(
+                  "Create a Routine:",
+                  style: CustomTextStyle.labelMedium,
+                ),
+              ),
+              InkWell(
+                onTap: _addRoutine,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppColors.primaryLight,
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: AppColors.primaryBorder),
+                  ),
+                  child: Row(
+                    children: [
+                      const Text(
+                        "Add Another Routine",
+                        style: TextStyle(
+                          color: Color(0xFF2E2E2E), // Text color #2E2E2E
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      5.width,
+                      const Icon(Icons.add, size: 16, color: Color(0xFF109615)),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+          12.height,
+          Container(
+            clipBehavior: Clip.antiAlias,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(6),
+              border: Border.all(
+                color: const Color(0xFFA2A2A2),
+                width: 1,
+              ),
+            ),
+            child: Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: const BoxDecoration(
+                    color: Color(0xFFEEEEEE), // Background #EEEEEE
+                    borderRadius:
+                        BorderRadius.vertical(top: Radius.circular(10)),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 6),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(4),
+                          border: Border.all(
+                            color: const Color(0xFF109615),
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Text(
+                                    "Enter routine name?",
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                  TextField(
+                                    controller: goalNameController,
+                                    decoration: const InputDecoration(
+                                      isDense: true,
+                                      border: InputBorder.none,
+                                      hintText: "Enter a routine name",
+                                      hintStyle: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.black54,
+                                      ),
+                                    ),
+                                    style: context.textTheme.bodyMedium,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            // InkWell(
+                            //   onTap: () {
+                            //     final newList = [
+                            //       controllers[index].text,
+                            //       ...?routines[index].routine
+                            //     ];
+                            //     routines[index] = RoutineViewModel(
+                            //       goalName: routines[index].goalName,
+                            //       routine: newList,
+                            //       time: routines[index].time,
+                            //       startDate: routines[index].startDate,
+                            //     );
+                            //   },
+                            //   child: RotatedBox(
+                            //     quarterTurns: 3,
+                            //     child: SvgPicture.asset('dropdown2'.toSvg),
+                            //   ),
+                            // ),
+                          ],
+                        ),
+                      ),
+                      15.height,
+                      const Text(
+                        "What will you do?",
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Color(0xFF2E2E2E),
+                        ),
+                      ),
+                      10.height,
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: routineList.map((activity) {
+                          return Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 8),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(4),
+                              border: Border.all(color: Colors.grey.shade300),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  activity,
+                                  style: const TextStyle(fontSize: 12),
+                                ),
+                                5.width,
+                                InkWell(
+                                  onTap: () {
+                                    routineList.remove(activity);
+                                    setState(() {});
+                                  },
+                                  child: const Icon(Icons.close,
+                                      size: 14, color: Colors.grey),
+                                ),
+                              ],
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                      15.height,
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: InkWell(
+                          onTap: () async {
+                            final item = await showDialog<String>(
+                              context: context,
+                              builder: (context) {
+                                final itemCtrl = TextEditingController();
+                                return Dialog(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  insetPadding: const EdgeInsets.symmetric(
+                                    horizontal: 20,
+                                    vertical: 20,
+                                  ),
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 16, vertical: 12),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        const Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            "Add Activity",
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                        8.height,
+                                        TextField(
+                                          autofocus: true,
+                                          controller: itemCtrl,
+                                          decoration: InputDecoration(
+                                            focusedBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(6),
+                                              borderSide: const BorderSide(
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                            border: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(6),
+                                            ),
+                                          ),
+                                        ),
+                                        8.height,
+                                        Align(
+                                          alignment: Alignment.centerRight,
+                                          child: ElevatedButton(
+                                            onPressed: () {
+                                              final res = itemCtrl.text;
+                                              Navigator.pop(
+                                                context,
+                                                res,
+                                              );
+                                            },
+                                            child: const Text(
+                                              "Add",
+                                              style: TextStyle(
+                                                  color: Colors.black),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                            );
+                            if (item != null) {
+                              setState(() {
+                                routineList.add(item);
+                              });
+                            }
+                            // itemCtrl.dispose();
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 8),
+                            decoration: BoxDecoration(
+                              color: AppColors.primaryLight, // Light green
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(
+                                color: AppColors.primaryBorder,
+                              ),
+                            ),
+                            child: const Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  "Add an Item",
+                                  style: TextStyle(
+                                    color: Color(0xFF2E2E2E),
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                SizedBox(width: 4),
+                                Icon(Icons.add,
+                                    size: 16, color: Color(0xFF109615)),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Row(
+            children: [
+              Expanded(
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+                  decoration: const BoxDecoration(
+                    color: Color(0xffDCF8C6), // Footer green
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(4),
+                      bottomRight: Radius.circular(46),
+                    ),
+                  ),
+                  child: Wrap(
+                    children: [
+                      InkWell(
+                        onTap: () async {
+                          final startTime = await showTimePicker(
+                            context: context,
+                            initialTime: TimeOfDay.now(),
+                          );
+                          if (startTime != null) {
+                            setState(() {
+                              this.startTime = startTime;
+                            });
+                          }
+                        },
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              startTime == null
+                                  ? 'Select start time'
+                                  : "${startTime?.format(context)} Daily",
+                              style: const TextStyle(
+                                color: Color(0xFF2E2E2E),
+                                fontSize: 14,
+                              ),
+                            ),
+                            5.width,
+                            SvgPicture.asset(
+                              'clock'.toSvg,
+                              height: 12,
+                              width: 12,
+                            ),
+                          ],
+                        ),
+                      ),
+                      4.width,
+                      InkWell(
+                        onTap: () async {
+                          final startDate = await showDatePicker(
+                            context: context,
+                            initialDate: DateTime.now(),
+                            firstDate: DateTime.now(),
+                            lastDate: DateTime(DateTime.now().year + 1),
+                          );
+                          if (startDate != null) {
+                            setState(() {
+                              this.startDate = startDate;
+                            });
+                          }
+                        },
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              startDate == null
+                                  ? 'Select start date'
+                                  : DateFormat('dd.MM.yyyy').format(startDate!),
+                              style: context.textTheme.bodyMedium,
+                            ),
+                            5.width,
+                            SvgPicture.asset(
+                              'date'.toSvg,
+                              height: 12,
+                              width: 12,
+                            ),
+                          ],
+                        ),
+                      ),
+                      6.width,
+                    ],
+                  ),
+                ),
+              ),
+              42.width
+            ],
+          ),
+          12.height,
+          ...List.generate(
+            routines.length,
+            (index) => Container(
+              clipBehavior: Clip.antiAlias,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: const Color(0xFFA2A2A2),
+                  width: 2,
+                ),
+              ),
+              child: Column(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: const BoxDecoration(
+                      color: Color(0xFFEEEEEE), // Background #EEEEEE
+                      borderRadius:
+                          BorderRadius.vertical(top: Radius.circular(10)),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 6),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(4),
+                            border: Border.all(
+                              color: const Color(0xFF109615),
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      routines[index].goalName ?? '',
+                                      style: context.textTheme.bodyMedium,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              // InkWell(
+                              //   onTap: () {
+                              //     final newList = [
+                              //       controllers[index].text,
+                              //       ...?routines[index].routine
+                              //     ];
+                              //     routines[index] = RoutineViewModel(
+                              //       goalName: routines[index].goalName,
+                              //       routine: newList,
+                              //       time: routines[index].time,
+                              //       startDate: routines[index].startDate,
+                              //     );
+                              //   },
+                              //   child: RotatedBox(
+                              //     quarterTurns: 3,
+                              //     child: SvgPicture.asset('dropdown2'.toSvg),
+                              //   ),
+                              // ),
+                            ],
+                          ),
+                        ),
+                        15.height,
+                        const Text(
+                          "What you will do",
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Color(0xFF2E2E2E),
+                          ),
+                        ),
+                        10.height,
+                        Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: routines[index].routine?.map((activity) {
+                                return Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 12, vertical: 8),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(4),
+                                    border:
+                                        Border.all(color: Colors.grey.shade300),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text(
+                                        activity,
+                                        style: const TextStyle(fontSize: 12),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }).toList() ??
+                              [],
+                        ),
+                      ],
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 12),
+                          decoration: const BoxDecoration(
+                            color: Color(0xffDCF8C6), // Footer green
+                            borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(4),
+                              bottomRight: Radius.circular(46),
+                            ),
+                          ),
+                          child: Wrap(
+                            children: [
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    "${routines[index].time?.format(context)} Daily",
+                                    style: const TextStyle(
+                                      color: Color(0xFF2E2E2E),
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                  5.width,
+                                  SvgPicture.asset(
+                                    'clock'.toSvg,
+                                    height: 12,
+                                    width: 12,
+                                  ),
+                                ],
+                              ),
+                              4.width,
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    DateFormat('dd.MM.yyyy')
+                                        .format(routines[index].startDate!),
+                                    style: context.textTheme.bodyMedium,
+                                  ),
+                                  5.width,
+                                  SvgPicture.asset(
+                                    'date'.toSvg,
+                                    height: 12,
+                                    width: 12,
+                                  ),
+                                ],
+                              ),
+                              6.width,
+                            ],
+                          ),
+                        ),
+                      ),
+                      30.width,
+                      InkWell(
+                        onTap: () {
+                          _removeNewRoutine(index);
+                        },
+                        child: const Icon(
+                          Icons.delete,
+                          color: Colors.red,
+                          size: 12,
+                        ),
+                      )
+                    ],
+                  ),
+                  // Container(
+                  //   padding:
+                  //       const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  //   decoration: const BoxDecoration(
+                  //     color: Color(0xffDCF8C6), // Footer green
+                  //     borderRadius:
+                  //         BorderRadius.vertical(bottom: Radius.circular(10)),
+                  //   ),
+                  //   child: Row(
+                  //     children: [
+                  //       const Text(
+                  //         "2.00pm Daily",
+                  //         style: TextStyle(
+                  //           color: Color(0xFF2E2E2E),
+                  //           fontSize: 14,
+                  //         ),
+                  //       ),
+                  //       5.width,
+                  //       const Icon(Icons.access_time,
+                  //           color: Color(0xFF109615), size: 20),
+                  //       const Spacer(),
+                  //       const Text(
+                  //         "09.10.2025",
+                  //         style: TextStyle(
+                  //           color: Color(0xFF2E2E2E),
+                  //           fontSize: 14,
+                  //         ),
+                  //       ),
+                  //       5.width,
+                  //       const Icon(Icons.calendar_today,
+                  //           color: Color(0xFF109615), size: 20),
+                  //     ],
+                  //   ),
+                  // ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

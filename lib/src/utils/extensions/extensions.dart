@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:greenzone_medical/src/utils/custom_toast.dart';
 
 extension ContextExtension on BuildContext {
+  showFeedBackDialog({
+    required String message,
+    ToastType toastType = ToastType.warning,
+  }) {
+    CustomToast.show(this, message, type: toastType);
+  }
   ThemeData get theme => Theme.of(this);
   TextTheme get textTheme => Theme.of(this).textTheme;
   ColorScheme get colorScheme => Theme.of(this).colorScheme;
@@ -11,8 +18,6 @@ extension ContextExtension on BuildContext {
   double get screenHeight => MediaQuery.of(this).size.height;
   Size get appScreenSize => MediaQuery.of(this).size;
 }
-
-
 
 extension Lists on List {
   bool hasNextItem(item) {

@@ -6,6 +6,7 @@ import 'package:greenzone_medical/src/model/my_app_model.dart';
 import 'package:greenzone_medical/src/provider/my_app_provider.dart';
 import 'package:greenzone_medical/src/resources/colors/colors.dart';
 import 'package:greenzone_medical/src/utils/extensions/extensions.dart';
+import 'package:greenzone_medical/src/utils/loading_widget.dart';
 import 'package:greenzone_medical/src/utils/packages.dart';
 
 class MyGoalsScreen extends ConsumerStatefulWidget {
@@ -53,15 +54,15 @@ class _MyGoalsScreenState extends ConsumerState<MyGoalsScreen> {
               [];
         });
       }
-    } catch (e, s) {
-      print(e);
-      print(s);
+    } catch (e) {
+      // print(e);
+      // print(s);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final myApps = ref.watch(myAppsProvider);
+    // final myApps = ref.watch(myAppsProvider);
     final authService = ref.watch(authServiceProvider);
     final allAvailableApps = ref.watch(appByCategoryProvider(null));
     final appCategories = ref.watch(appCategoryProvider);
@@ -190,11 +191,13 @@ class _MyGoalsScreenState extends ConsumerState<MyGoalsScreen> {
                               : const SizedBox();
                         },
                         error: (e, s) => Center(child: Text(e.toString())),
-                        loading: () =>
-                            const Center(child: CircularProgressIndicator()),
+                        loading: () => const HorizontalListTileLoader(
+                          itemCount: 4,
+                          height: 160,
+                        ),
                       ),
                     ],
-                    // 20.height,
+                    20.height,
                     // Hospital List
                     allAvailableApps.when(
                       data: (apps) {
@@ -202,8 +205,10 @@ class _MyGoalsScreenState extends ConsumerState<MyGoalsScreen> {
                             ? Column(
                                 children: apps
                                     .sublist(0, 3)
-                                    .map(
-                                        (app) => _appHorizontalWidget(app: app))
+                                    .map((app) => _appHorizontalWidget(
+                                          app: app,
+                                          categories: appCategories.value ?? [],
+                                        ))
                                     .toList(),
                               )
                             : const SizedBox();
@@ -212,8 +217,8 @@ class _MyGoalsScreenState extends ConsumerState<MyGoalsScreen> {
                           child: Text(
                         e.toString(),
                       )),
-                      loading: () => const Center(
-                        child: CircularProgressIndicator(),
+                      loading: () => const ListLoader(
+                        itemCount: 4,
                       ),
                     ),
                     20.height,
@@ -253,9 +258,6 @@ class _MyGoalsScreenState extends ConsumerState<MyGoalsScreen> {
                       ),
                     ),
                     20.height,
-                    // Skin Care Section (Use myApps provider or specific Logic if needed, keeping as original for now but usually specific category)
-                    // The user wanted to replace the "Availble apps" (first list) with categories.
-                    // The "Skin Care Self-Care App" section at bottom seems separate. keeping it.
                     appCategories.when(
                       data: (categories) {
                         return categories.isNotEmpty
@@ -268,8 +270,9 @@ class _MyGoalsScreenState extends ConsumerState<MyGoalsScreen> {
                             : const SizedBox();
                       },
                       error: (e, s) => Center(child: Text(e.toString())),
-                      loading: () => const Center(
-                        child: CircularProgressIndicator(),
+                      loading: () => const HorizontalListTileLoader(
+                        itemCount: 4,
+                        height: 160,
                       ),
                     ),
                     20.height,
@@ -280,7 +283,11 @@ class _MyGoalsScreenState extends ConsumerState<MyGoalsScreen> {
                                 children: apps
                                     .skip(3)
                                     .map(
-                                        (app) => _appHorizontalWidget(app: app))
+                                      (app) => _appHorizontalWidget(
+                                        app: app,
+                                        categories: appCategories.value ?? [],
+                                      ),
+                                    )
                                     .toList(),
                               )
                             : const SizedBox();
@@ -290,9 +297,7 @@ class _MyGoalsScreenState extends ConsumerState<MyGoalsScreen> {
                           child: Text(error.toString()),
                         );
                       },
-                      loading: () => const Center(
-                        child: CircularProgressIndicator(),
-                      ),
+                      loading: () => const ListLoader(),
                     ),
                   ],
                 ),
@@ -302,7 +307,13 @@ class _MyGoalsScreenState extends ConsumerState<MyGoalsScreen> {
         });
   }
 
-  Widget _appHorizontalWidget({required MyAppModel app}) {
+  Widget _appHorizontalWidget({
+    required MyAppModel app,
+    List<MyAppCategoryModel> categories = const [],
+  }) {
+    final category =
+        categories.where((e) => e.id == app.categoryId).firstOrNull;
+
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.all(12),
@@ -330,16 +341,9 @@ class _MyGoalsScreenState extends ConsumerState<MyGoalsScreen> {
                   overflow: TextOverflow.ellipsis,
                 ),
                 2.height,
-                Text(
-                  app.category,
-                  style: CustomTextStyle.paragraphTiny.copyWith(
-                    color: AppColors.greyTextColor,
-                  ),
-                ),
-                2.height,
-                if (app.installs?.isNotEmpty ?? false)
+                if (category != null)
                   Text(
-                    '${app.installs} Installs',
+                    category.name,
                     style: CustomTextStyle.paragraphTiny
                         .copyWith(color: AppColors.greyTextColor),
                   ),
@@ -365,7 +369,8 @@ class _MyGoalsScreenState extends ConsumerState<MyGoalsScreen> {
               backgroundColor: AppColors.primary,
               foregroundColor: Colors.white,
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20)),
+                borderRadius: BorderRadius.circular(20),
+              ),
               minimumSize: const Size(60, 30),
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
             ),
@@ -424,7 +429,7 @@ class CategoryAppsList extends ConsumerWidget {
             loading: () => const Center(child: CircularProgressIndicator()),
           ),
         ),
-        20.height,
+        // 20.height,
       ],
     );
   }

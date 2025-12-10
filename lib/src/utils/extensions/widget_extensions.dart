@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:shimmer/shimmer.dart';
+
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:greenzone_medical/src/utils/responsive.dart';
@@ -41,6 +43,17 @@ extension WidgetExtensions on Widget {
         angle: angle,
         child: this,
       );
+
+  Widget shimmer({
+    Color? baseColor,
+    Color? highlightColor,
+  }) {
+    return Shimmer.fromColors(
+      baseColor: baseColor ?? Colors.grey[300]!,
+      highlightColor: highlightColor ?? Colors.grey[100]!,
+      child: this,
+    );
+  }
 }
 
 extension WidgetPadding on Widget {

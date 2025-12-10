@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:greenzone_medical/src/app_pkg.dart';
+import 'package:greenzone_medical/src/resources/colors/colors.dart';
 
 const kLOGTAG = "[Demo-Flutter]";
 const kLOGENABLE = true;
@@ -17,7 +18,7 @@ class AppHelper {
   static ThemeData theme = ThemeData(
     colorScheme: ColorScheme.fromSeed(
       seedColor: Colors.deepPurple,
-      primary: ColorConstant.primaryLightColor,
+      primary: AppColors.primary,
       secondary: ColorConstant.primaryLightColor,
     ),
     useMaterial3: true,

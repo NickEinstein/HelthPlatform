@@ -96,7 +96,9 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: SinglePlanDashboard.routeName,
         builder: (context, state) {
-          return const SinglePlanDashboard();
+          return SinglePlanDashboard(
+            myApp: state.extra as MyAppModel,
+          );
         },
       ),
       GoRoute(

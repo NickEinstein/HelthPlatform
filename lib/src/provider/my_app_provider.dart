@@ -26,3 +26,4 @@ final myAppsProvider = FutureProvider((ref) {
   final myAppService = ref.watch(myAppServiceProvider);
   return myAppService.getMyApps();
 });
+

@@ -9,6 +9,7 @@ import 'package:greenzone_medical/src/features/plan/presentation/my_goals_screen
 import 'package:greenzone_medical/src/resources/colors/colors.dart';
 import 'package:greenzone_medical/src/utils/extensions/extensions.dart';
 import 'package:greenzone_medical/src/utils/extensions/string_extensions.dart';
+import 'package:greenzone_medical/src/utils/loading_widget.dart';
 
 import '../../../provider/all_providers.dart';
 import '../../../utils/packages.dart';
@@ -296,9 +297,9 @@ class _HomePageState extends ConsumerState<HomePage> {
               ref.watch(userUnreadChatProvider);
               ref.watch(userUnreadNotificationProvider);
             },
-            child: SingleChildScrollView(
-              physics:
-                  const AlwaysScrollableScrollPhysics(), // Allows pulling even when list is short
+            child: Padding(
+              // physics:
+              //     const AlwaysScrollableScrollPhysics(), // Allows pulling even when list is short
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -336,509 +337,528 @@ class _HomePageState extends ConsumerState<HomePage> {
                     ],
                   ),
                   12.height,
-                  Row(
-                    children: [
-                      Expanded(
-                        child: CustomSearchBar(
-                          controller: _searchController,
-                          onCameraTap: () {
-                            context.push(Routes.PRODUCTSCAN);
-                          },
-                          onChanged: (query) {
-                            setState(() {
-                              _searchQuery = query.toLowerCase();
-                            });
-                          },
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      InkWell(
-                        onTap: () async {
-                          await context.push(Routes.NOTIFICATIONPAGE);
-                          ref.invalidate(
-                              userUnreadNotificationProvider); // Force refresh on return
-                        },
-                        child: Stack(
-                          clipBehavior: Clip.none,
-                          children: [
-                            Image.asset(
-                              'assets/images/notification.png',
-                              height: 32,
-                              width: 25,
-                            ),
-                            if (asyncNotifications is AsyncData)
-                              // Count unread notifications
-                              Builder(
-                                builder: (_) {
-                                  final unreadCount =
-                                      asyncNotifications.value?.unreadCount ??
-                                          0;
-
-                                  if (unreadCount == 0) {
-                                    return const SizedBox.shrink();
-                                  }
-
-                                  return Positioned(
-                                    right: -4,
-                                    top: -4,
-                                    child: Container(
-                                      padding: const EdgeInsets.all(3),
-                                      decoration: BoxDecoration(
-                                        color: Colors.red,
-                                        borderRadius: BorderRadius.circular(12),
-                                        border: Border.all(
-                                            color: Colors.white, width: 1.5),
-                                      ),
-                                      constraints: const BoxConstraints(
-                                        minWidth: 18,
-                                        minHeight: 16,
-                                      ),
-                                      child: Text(
-                                        unreadCount > 99
-                                            ? '99+'
-                                            : unreadCount.toString(),
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 10,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      InkWell(
-                        onTap: () async {
-                          await context.push(Routes.CHATPAGE);
-                          ref.invalidate(
-                              userUnreadChatProvider); // Force refresh on return
-                        },
-                        child: Stack(
-                          clipBehavior: Clip.none,
-                          children: [
-                            Image.asset(
-                              'assets/images/message.png',
-                              height: 32,
-                              width: 25,
-                            ),
-                            getUnreadChatAsync.when(
-                              data: (data) {
-                                final count = data.unreadMessages;
-                                if (count == 0) {
-                                  return const SizedBox(); // No badge if 0
-                                }
-                                return Positioned(
-                                  top: -2,
-                                  right: -6,
-                                  child: Container(
-                                    padding: const EdgeInsets.all(3),
-                                    decoration: const BoxDecoration(
-                                      color: Colors.red,
-                                      shape: BoxShape.circle,
-                                    ),
-                                    constraints: const BoxConstraints(
-                                      minWidth: 18,
-                                      minHeight: 18,
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        '$count',
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 10,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              },
-                              loading: () =>
-                                  const SizedBox(), // Or a small loading spinner
-                              error: (_, __) =>
-                                  const SizedBox(), // Or handle the error visually
-                            ),
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  _buildStaticBanners(),
-                  // mediumSpace(),
-                  // _drugSearchWidget(context),
-                  // mediumSpace(),
-                  // const PersonalGoalsWidget(),
-                  mediumSpace(),
-                  const ActionButtonsRow(),
-                  smallSpace(),
-                  CustomListTile(
-                    imagePath: "assets/icon/appo_icon.png",
-                    title: "Appointment",
-                    subtitle:
-                        "$cachedUpcomingAppointments upcoming Appointment${cachedUpcomingAppointments == 1 ? '' : 's'}",
-                    backgroundColor: const Color(0xffEAF2FF),
-                    onTap: () {
-                      context.push(Routes.APPOINTMENT, extra: true);
-                    },
-                  ),
-
-                  CustomListTile(
-                    imagePath: "assets/icon/pres_icon.png",
-                    title: "Prescriptions",
-                    subtitle:
-                        "$cachedPrescription Prescription${cachedPrescription == 1 ? '' : 's'}",
-                    backgroundColor: const Color(0xffEAF2FF),
-                    onTap: () {
-                      context.push(Routes.PRESCRIPTION, extra: true);
-                    },
-                  ),
-
-                  mediumSpace(),
-                  // if user has no apps
-                  Text(
-                    'Hey, you don\'t seem to have any health goals',
-                    style: context.textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  12.height,
-                  InkWell(
-                    onTap: () {
-                      context.push(MyGoalsScreen.routeName);
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 16),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        color: const Color(0xffEAFFEB),
-                        border: Border.all(
-                          color: ColorConstant.primaryColor,
-                        ),
-                      ),
-                      child: Row(
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SvgPicture.asset(
-                            'health_goal'.toSvg,
-                          ),
-                          12.width,
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'We have a bank of goals you can select from, starting with simple things like your hair to medical goals.',
-                                  style: context.textTheme.bodyMedium?.copyWith(
-                                    fontSize: 13,
-                                  ),
-                                ),
-                                8.height,
-                                Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(28),
-                                    color: const Color(0xFF29BA2E),
-                                  ),
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 16, vertical: 6),
-                                  child: Text(
-                                    'Get started now!',
-                                    style:
-                                        context.textTheme.bodyMedium?.copyWith(
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                  mediumSpace(),
-
-                  // const ProfileCompletionWidget(),
-                  // mediumSpace(),
-                  // InkWell(
-                  //   onTap: () {
-                  //     context.push(SuspendedProducts.routeName);
-                  //   },
-                  //   child: Container(
-                  //     decoration: BoxDecoration(
-                  //       color: const Color(0xFFFFE7E6),
-                  //       border: Border.all(
-                  //         color: const Color(0xFFFF6159),
-                  //       ),
-                  //       borderRadius: BorderRadius.circular(8),
-                  //     ),
-                  //     padding: const EdgeInsets.all(12),
-                  //     child: Row(
-                  //       children: [
-                  //         Image.asset('nafdac'.toImg),
-                  //         8.width,
-                  //         Expanded(
-                  //           child: Column(
-                  //             crossAxisAlignment: CrossAxisAlignment.start,
-                  //             children: [
-                  //               Text(
-                  //                 'Suspended & Canceled Products',
-                  //                 style: context.textTheme.bodyMedium?.copyWith(
-                  //                   fontSize: 15,
-                  //                 ),
-                  //               ),
-                  //               4.height,
-                  //               Text(
-                  //                 'NAFDAC Approved list',
-                  //                 style: context.textTheme.bodyLarge?.copyWith(
-                  //                   fontSize: 13,
-                  //                   color: const Color(0xFFFF6159),
-                  //                 ),
-                  //               ),
-                  //             ],
-                  //           ),
-                  //         ),
-                  //         4.width,
-                  //         const Icon(
-                  //           Icons.arrow_forward_ios,
-                  //           size: 14,
-                  //           color: Color(0xFFFF6159),
-                  //         ),
-                  //       ],
-                  //     ),
-                  //   ),
-                  // ),
-                  // mediumSpace(),
-                  // Column(
-                  //   crossAxisAlignment: CrossAxisAlignment.start,
-                  //   children: [
-                  //     Text(
-                  //       'My Community & Socials',
-                  //       style: context.textTheme.labelLarge,
-                  //     ),
-                  //     12.height,
-                  //     const Divider(
-                  //       color: Color(0xFFBABABA),
-                  //     ),
-                  //     12.height,
-                  //     Text(
-                  //       'Hey Jessica, you have 0 posts',
-                  //       style: context.textTheme.labelMedium?.copyWith(
-                  //         color: const Color(0xFF656565),
-                  //       ),
-                  //     ),
-                  //     4.height,
-                  //     Text(
-                  //       'Start the conversation by creating the first post',
-                  //       style: context.textTheme.bodyLarge?.copyWith(
-                  //         fontSize: 13,
-                  //       ),
-                  //     ),
-                  //     14.height,
-                  //     Container(
-                  //       width: double.infinity,
-                  //       decoration: BoxDecoration(
-                  //         color: const Color(0xFFEAFFEB),
-                  //         border: Border.all(color: AppColors.primary),
-                  //         borderRadius: BorderRadius.circular(8),
-                  //       ),
-                  //       padding: const EdgeInsets.symmetric(
-                  //         horizontal: 12,
-                  //         vertical: 16,
-                  //       ),
-                  //       alignment: Alignment.center,
-                  //       child: Text(
-                  //         'Create your first post',
-                  //         style: context.textTheme.labelMedium?.copyWith(
-                  //           color: const Color(0xFF575757),
-                  //         ),
-                  //       ),
-                  //     )
-                  //   ],
-                  // ),
-                  // mediumSpace(),
-                  // const FriendRequestWidget(),
-                  // mediumSpace(),
-                  Column(
-                    children: [
-                      // CustomListTile(
-                      //   imagePath: "assets/icon/health_ins_icon.png",
-                      //   title: "Health Insurance",
-                      //   subtitle:
-                      //       "$cachedHMOCount HMO${cachedHMOCount == 1 ? '' : 's'}",
-                      //   backgroundColor: const Color(0xffEAF2FF),
-                      //   onTap: () {},
-                      // ),
-                      const FriendRequestSection(),
-                        bannerState.when(
-                          loading: () =>
-                              const Center(child: CircularProgressIndicator()),
-                          error: (err, stack) => const Center(
-                              child: Text("Failed to load banners")),
-                          data: (banners) {
-                            if (banners.isEmpty) {
-                              return const Center(
-                                  child: Text("No banners available."));
-                            }
-                            // API banners only
-                            final List<AdvertModel> apiBanners =
-                                banners.map((banner) {
-                              final imageUrl = banner.imageUrl ?? "";
-                              final isVideo = imageUrl.endsWith('.mp4');
-                              return AdvertModel(
-                                title: "",
-                                description: "",
-                                backgroundColor: ColorConstant.primaryColor,
-                                mediaType: isVideo ? 'video' : 'image',
-                                imagePath:
-                                    "${AppConstants.noSlashImageURL}$imageUrl",
-                                onTap: () {
-                                  final url = imageUrl.isNotEmpty
-                                      ? "${AppConstants.noSlashImageURL}$imageUrl"
-                                      : "https://edogoverp.com";
-
-                                  try {
-                                    launchUrl(Uri.parse(url));
-                                  } catch (e) {
-                                    debugPrint("⚠️ Failed to launch URL: $url");
-                                  }
-                                },
-                              );
-                            }).toList();
-
-                            return AdvertHelper(goals: apiBanners);
-                          },
-                        ),
-
-                      getAllInterestAsync.when(
-                        data: (interests) {
-                          if (interests.isEmpty) {
-                            return const SizedBox.shrink();
-                          }
-
-                          final categoryIds = interests
-                              .map((interest) => interest.category?.id)
-                              .whereType<int>()
-                              .toList();
-
-                          return GroupInterestList(categoryIds: categoryIds);
-                        },
-                        loading: () =>
-                            const Center(child: CircularProgressIndicator()),
-                        error: (error, stackTrace) => const SizedBox.shrink(),
-                      ),
-
-                      const SizedBox(height: 20),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          Row(
                             children: [
-                              Padding(
-                                padding: const EdgeInsets.only(left: 10),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    const Text(
-                                      "Articles",
-                                      style: TextStyle(
-                                        color: ColorConstant.secondryColor,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w400,
-                                      ),
-                                    ),
-                                    TextButton(
-                                      onPressed: () {
-                                        context.push(Routes.ARTICLESCREEN);
-                                      },
-                                      child: const Text(
-                                        "See All",
-                                        style: TextStyle(
-                                          decoration: TextDecoration.underline,
-                                          color: ColorConstant.primaryColor,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-
-                              /// **Handle different states (loading, error, data)**
-                              RefreshIndicator(
-                                onRefresh: () async {
-                                  ref.invalidate(articleProvider);
-                                },
-                                child: articleState.when(
-                                  loading: () => const Center(
-                                      child: CircularProgressIndicator()),
-                                  error: (err, stack) => const Center(
-                                      child: Text("No articles available.")),
-                                  data: (articles) {
-                                    // **Filter Articles Based on Search Query**
-                                    final filteredArticles = articles
-                                        .where((article) =>
-                                            article.title!
-                                                .toLowerCase()
-                                                .contains(_searchQuery) ||
-                                            article.shortDescription!
-                                                .toLowerCase()
-                                                .contains(_searchQuery))
-                                        .take(5) // Show only first 5 articles
-                                        .toList();
-
-                                    if (filteredArticles.isEmpty) {
-                                      return const Center(
-                                          child: Text("No articles found."));
-                                    }
-
-                                    return ListView.builder(
-                                      shrinkWrap:
-                                          true, // Ensures ListView only takes necessary space
-                                      physics:
-                                          const NeverScrollableScrollPhysics(), // Prevents nested scrolling conflicts
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 16),
-                                      itemCount: filteredArticles.length,
-                                      itemBuilder: (context, index) {
-                                        final article = filteredArticles[index];
-                                        return ArticleCard(
-                                          title: article.title!,
-                                          subtitle: article.fullDescription!,
-                                          // imageUrl: "assets/images/article_1.png",
-                                          imageUrl: article.featuredImagePath ??
-                                              'assets/images/article_1.png',
-
-                                          onPressed: () => context.push(
-                                            Routes.ARTICLEDETAILS,
-                                            extra: article,
-                                          ),
-                                        );
-                                      },
-                                    );
+                              Expanded(
+                                child: CustomSearchBar(
+                                  controller: _searchController,
+                                  onCameraTap: () {
+                                    context.push(Routes.PRODUCTSCAN);
+                                  },
+                                  onChanged: (query) {
+                                    setState(() {
+                                      _searchQuery = query.toLowerCase();
+                                    });
                                   },
                                 ),
                               ),
+                              const SizedBox(width: 10),
+                              InkWell(
+                                onTap: () async {
+                                  await context.push(Routes.NOTIFICATIONPAGE);
+                                  ref.invalidate(
+                                      userUnreadNotificationProvider); // Force refresh on return
+                                },
+                                child: Stack(
+                                  clipBehavior: Clip.none,
+                                  children: [
+                                    Image.asset(
+                                      'assets/images/notification.png',
+                                      height: 32,
+                                      width: 25,
+                                    ),
+                                    if (asyncNotifications is AsyncData)
+                                      // Count unread notifications
+                                      Builder(
+                                        builder: (_) {
+                                          final unreadCount = asyncNotifications
+                                                  .value?.unreadCount ??
+                                              0;
+
+                                          if (unreadCount == 0) {
+                                            return const SizedBox.shrink();
+                                          }
+
+                                          return Positioned(
+                                            right: -4,
+                                            top: -4,
+                                            child: Container(
+                                              padding: const EdgeInsets.all(3),
+                                              decoration: BoxDecoration(
+                                                color: Colors.red,
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
+                                                border: Border.all(
+                                                    color: Colors.white,
+                                                    width: 1.5),
+                                              ),
+                                              constraints: const BoxConstraints(
+                                                minWidth: 18,
+                                                minHeight: 16,
+                                              ),
+                                              child: Text(
+                                                unreadCount > 99
+                                                    ? '99+'
+                                                    : unreadCount.toString(),
+                                                style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 10,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                              InkWell(
+                                onTap: () async {
+                                  await context.push(Routes.CHATPAGE);
+                                  ref.invalidate(
+                                      userUnreadChatProvider); // Force refresh on return
+                                },
+                                child: Stack(
+                                  clipBehavior: Clip.none,
+                                  children: [
+                                    Image.asset(
+                                      'assets/images/message.png',
+                                      height: 32,
+                                      width: 25,
+                                    ),
+                                    getUnreadChatAsync.when(
+                                      data: (data) {
+                                        final count = data.unreadMessages;
+                                        if (count == 0) {
+                                          return const SizedBox(); // No badge if 0
+                                        }
+                                        return Positioned(
+                                          top: -2,
+                                          right: -6,
+                                          child: Container(
+                                            padding: const EdgeInsets.all(3),
+                                            decoration: const BoxDecoration(
+                                              color: Colors.red,
+                                              shape: BoxShape.circle,
+                                            ),
+                                            constraints: const BoxConstraints(
+                                              minWidth: 18,
+                                              minHeight: 18,
+                                            ),
+                                            child: Center(
+                                              child: Text(
+                                                '$count',
+                                                style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 10,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      loading: () =>
+                                          const SizedBox(), // Or a small loading spinner
+                                      error: (_, __) =>
+                                          const SizedBox(), // Or handle the error visually
+                                    ),
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
+                          const SizedBox(height: 20),
+                          _buildStaticBanners(),
+                          // mediumSpace(),
+                          // _drugSearchWidget(context),
+                          // mediumSpace(),
+                          // const PersonalGoalsWidget(),
+                          mediumSpace(),
+                          const ActionButtonsRow(),
+                          smallSpace(),
+                          CustomListTile(
+                            imagePath: "assets/icon/appo_icon.png",
+                            title: "Appointment",
+                            subtitle:
+                                "$cachedUpcomingAppointments upcoming Appointment${cachedUpcomingAppointments == 1 ? '' : 's'}",
+                            backgroundColor: const Color(0xffEAF2FF),
+                            onTap: () {
+                              context.push(Routes.APPOINTMENT, extra: true);
+                            },
+                          ),
+
+                          CustomListTile(
+                            imagePath: "assets/icon/pres_icon.png",
+                            title: "Prescriptions",
+                            subtitle:
+                                "$cachedPrescription Prescription${cachedPrescription == 1 ? '' : 's'}",
+                            backgroundColor: const Color(0xffEAF2FF),
+                            onTap: () {
+                              context.push(Routes.PRESCRIPTION, extra: true);
+                            },
+                          ),
+
+                          mediumSpace(),
+                          // if user has no apps
+                          Text(
+                            'Hey, you don\'t seem to have any health goals',
+                            style: context.textTheme.bodyMedium?.copyWith(
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          12.height,
+                          InkWell(
+                            onTap: () {
+                              context.push(MyGoalsScreen.routeName);
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 16),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12),
+                                color: const Color(0xffEAFFEB),
+                                border: Border.all(
+                                  color: ColorConstant.primaryColor,
+                                ),
+                              ),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SvgPicture.asset(
+                                    'health_goal'.toSvg,
+                                  ),
+                                  12.width,
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'We have a bank of goals you can select from, starting with simple things like your hair to medical goals.',
+                                          style: context.textTheme.bodyMedium
+                                              ?.copyWith(
+                                            fontSize: 13,
+                                          ),
+                                        ),
+                                        8.height,
+                                        Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(28),
+                                            color: const Color(0xFF29BA2E),
+                                          ),
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 16, vertical: 6),
+                                          child: Text(
+                                            'Get started now!',
+                                            style: context.textTheme.bodyMedium
+                                                ?.copyWith(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                          mediumSpace(),
+
+                          // const ProfileCompletionWidget(),
+                          // mediumSpace(),
+                          // InkWell(
+                          //   onTap: () {
+                          //     context.push(SuspendedProducts.routeName);
+                          //   },
+                          //   child: Container(
+                          //     decoration: BoxDecoration(
+                          //       color: const Color(0xFFFFE7E6),
+                          //       border: Border.all(
+                          //         color: const Color(0xFFFF6159),
+                          //       ),
+                          //       borderRadius: BorderRadius.circular(8),
+                          //     ),
+                          //     padding: const EdgeInsets.all(12),
+                          //     child: Row(
+                          //       children: [
+                          //         Image.asset('nafdac'.toImg),
+                          //         8.width,
+                          //         Expanded(
+                          //           child: Column(
+                          //             crossAxisAlignment: CrossAxisAlignment.start,
+                          //             children: [
+                          //               Text(
+                          //                 'Suspended & Canceled Products',
+                          //                 style: context.textTheme.bodyMedium?.copyWith(
+                          //                   fontSize: 15,
+                          //                 ),
+                          //               ),
+                          //               4.height,
+                          //               Text(
+                          //                 'NAFDAC Approved list',
+                          //                 style: context.textTheme.bodyLarge?.copyWith(
+                          //                   fontSize: 13,
+                          //                   color: const Color(0xFFFF6159),
+                          //                 ),
+                          //               ),
+                          //             ],
+                          //           ),
+                          //         ),
+                          //         4.width,
+                          //         const Icon(
+                          //           Icons.arrow_forward_ios,
+                          //           size: 14,
+                          //           color: Color(0xFFFF6159),
+                          //         ),
+                          //       ],
+                          //     ),
+                          //   ),
+                          // ),
+                          // mediumSpace(),
+                          // Column(
+                          //   crossAxisAlignment: CrossAxisAlignment.start,
+                          //   children: [
+                          //     Text(
+                          //       'My Community & Socials',
+                          //       style: context.textTheme.labelLarge,
+                          //     ),
+                          //     12.height,
+                          //     const Divider(
+                          //       color: Color(0xFFBABABA),
+                          //     ),
+                          //     12.height,
+                          //     Text(
+                          //       'Hey Jessica, you have 0 posts',
+                          //       style: context.textTheme.labelMedium?.copyWith(
+                          //         color: const Color(0xFF656565),
+                          //       ),
+                          //     ),
+                          //     4.height,
+                          //     Text(
+                          //       'Start the conversation by creating the first post',
+                          //       style: context.textTheme.bodyLarge?.copyWith(
+                          //         fontSize: 13,
+                          //       ),
+                          //     ),
+                          //     14.height,
+                          //     Container(
+                          //       width: double.infinity,
+                          //       decoration: BoxDecoration(
+                          //         color: const Color(0xFFEAFFEB),
+                          //         border: Border.all(color: AppColors.primary),
+                          //         borderRadius: BorderRadius.circular(8),
+                          //       ),
+                          //       padding: const EdgeInsets.symmetric(
+                          //         horizontal: 12,
+                          //         vertical: 16,
+                          //       ),
+                          //       alignment: Alignment.center,
+                          //       child: Text(
+                          //         'Create your first post',
+                          //         style: context.textTheme.labelMedium?.copyWith(
+                          //           color: const Color(0xFF575757),
+                          //         ),
+                          //       ),
+                          //     )
+                          //   ],
+                          // ),
+                          // mediumSpace(),
+                          // const FriendRequestWidget(),
+                          // mediumSpace(),
+                          // Column(
+                          //   children: [
+                          // CustomListTile(
+                          //   imagePath: "assets/icon/health_ins_icon.png",
+                          //   title: "Health Insurance",
+                          //   subtitle:
+                          //       "$cachedHMOCount HMO${cachedHMOCount == 1 ? '' : 's'}",
+                          //   backgroundColor: const Color(0xffEAF2FF),
+                          //   onTap: () {},
+                          // ),
+                          const FriendRequestSection(),
+                          // TODO: uncomment
+                          // bannerState.when(
+                          //   loading: () =>
+                          // const ListLoader(itemCount: 1, height: 120,),
+                          //   error: (err, stack) => const Center(
+                          //       child: Text("Failed to load banners")),
+                          //   data: (banners) {
+                          //     if (banners.isEmpty) {
+                          //       return const Center(
+                          //           child: Text("No banners available."));
+                          //     }
+                          //     // API banners only
+                          //     final List<AdvertModel> apiBanners =
+                          //         banners.map((banner) {
+                          //       final imageUrl = banner.imageUrl ?? "";
+                          //       final isVideo = imageUrl.endsWith('.mp4');
+                          //       return AdvertModel(
+                          //         title: "",
+                          //         description: "",
+                          //         backgroundColor: ColorConstant.primaryColor,
+                          //         mediaType: isVideo ? 'video' : 'image',
+                          //         imagePath:
+                          //             "${AppConstants.noSlashImageURL}$imageUrl",
+                          //         onTap: () {
+                          //           final url = imageUrl.isNotEmpty
+                          //               ? "${AppConstants.noSlashImageURL}$imageUrl"
+                          //               : "https://edogoverp.com";
+                          //           try {
+                          //             launchUrl(Uri.parse(url));
+                          //           } catch (e) {
+                          //             debugPrint("⚠️ Failed to launch URL: $url");
+                          //           }
+                          //         },
+                          //       );
+                          //     }).toList();
+                          //     return AdvertHelper(goals: apiBanners);
+                          //   },
+                          // ),
+
+                          getAllInterestAsync.when(
+                            data: (interests) {
+                              if (interests.isEmpty) {
+                                return const SizedBox.shrink();
+                              }
+
+                              final categoryIds = interests
+                                  .map((interest) => interest.category?.id)
+                                  .whereType<int>()
+                                  .toList();
+
+                              return GroupInterestList(
+                                categoryIds: categoryIds,
+                              );
+                            },
+                            loading: () => const ListLoader(itemCount: 2),
+                            error: (error, stackTrace) =>
+                                const SizedBox.shrink(),
+                          ),
+                          const SizedBox(height: 20),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 10),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        const Text(
+                                          "Articles",
+                                          style: TextStyle(
+                                            color: ColorConstant.secondryColor,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+                                            context.push(Routes.ARTICLESCREEN);
+                                          },
+                                          child: const Text(
+                                            "See All",
+                                            style: TextStyle(
+                                              decoration:
+                                                  TextDecoration.underline,
+                                              color: ColorConstant.primaryColor,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+
+                                  /// **Handle different states (loading, error, data)**
+                                  RefreshIndicator(
+                                    onRefresh: () async {
+                                      ref.invalidate(articleProvider);
+                                    },
+                                    child: articleState.when(
+                                      loading: () =>
+                                          const ListLoader(itemCount: 4),
+                                      error: (err, stack) => const Center(
+                                          child:
+                                              Text("No articles available.")),
+                                      data: (articles) {
+                                        // **Filter Articles Based on Search Query**
+                                        final filteredArticles = articles
+                                            .where((article) =>
+                                                article.title!
+                                                    .toLowerCase()
+                                                    .contains(_searchQuery) ||
+                                                article.shortDescription!
+                                                    .toLowerCase()
+                                                    .contains(_searchQuery))
+                                            .take(
+                                                5) // Show only first 5 articles
+                                            .toList();
+
+                                        if (filteredArticles.isEmpty) {
+                                          return const Center(
+                                              child:
+                                                  Text("No articles found."));
+                                        }
+
+                                        return ListView.builder(
+                                          shrinkWrap:
+                                              true, // Ensures ListView only takes necessary space
+                                          physics:
+                                              const NeverScrollableScrollPhysics(), // Prevents nested scrolling conflicts
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 16),
+                                          itemCount: filteredArticles.length,
+                                          itemBuilder: (context, index) {
+                                            final article =
+                                                filteredArticles[index];
+                                            return ArticleCard(
+                                              title: article.title!,
+                                              subtitle:
+                                                  article.fullDescription!,
+                                              // imageUrl: "assets/images/article_1.png",
+                                              imageUrl: article
+                                                      .featuredImagePath ??
+                                                  'assets/images/article_1.png',
+
+                                              onPressed: () => context.push(
+                                                Routes.ARTICLEDETAILS,
+                                                extra: article,
+                                              ),
+                                            );
+                                          },
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              )
                             ],
                           )
+
+                          // Articles will now refresh when pulled down
                         ],
                       )
-
-                      // Articles will now refresh when pulled down
-                    ],
+                          .animate()
+                          .slideY(begin: 1.0, end: 0, duration: 600.ms)
+                          .fadeIn(),
+                    ),
                   )
-                      .animate()
-                      .slideY(begin: 1.0, end: 0, duration: 600.ms)
-                      .fadeIn()
                 ],
               ),
             ),
