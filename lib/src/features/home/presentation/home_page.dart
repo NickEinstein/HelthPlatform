@@ -3,7 +3,11 @@
 // import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:greenzone_medical/src/features/home/presentation/suspended_products.dart';
 import 'package:greenzone_medical/src/features/home/presentation/widget/advert_helper.dart';
+import 'package:greenzone_medical/src/features/home/presentation/widget/friend_request_widget.dart';
+import 'package:greenzone_medical/src/features/home/presentation/widget/personal_goals_widget.dart';
+import 'package:greenzone_medical/src/features/home/presentation/widget/profile_completion_widget.dart';
 import 'package:greenzone_medical/src/features/pharmacy/presentation/pharmacy_search_screen.dart';
 import 'package:greenzone_medical/src/features/plan/presentation/my_goals_screen.dart';
 import 'package:greenzone_medical/src/resources/colors/colors.dart';
@@ -478,10 +482,10 @@ class _HomePageState extends ConsumerState<HomePage> {
                           ),
                           const SizedBox(height: 20),
                           _buildStaticBanners(),
-                          // mediumSpace(),
-                          // _drugSearchWidget(context),
-                          // mediumSpace(),
-                          // const PersonalGoalsWidget(),
+                          mediumSpace(),
+                          _drugSearchWidget(context),
+                          mediumSpace(),
+                          const PersonalGoalsWidget(),
                           mediumSpace(),
                           const ActionButtonsRow(),
                           smallSpace(),
@@ -575,107 +579,111 @@ class _HomePageState extends ConsumerState<HomePage> {
                           ),
                           mediumSpace(),
 
-                          // const ProfileCompletionWidget(),
-                          // mediumSpace(),
-                          // InkWell(
-                          //   onTap: () {
-                          //     context.push(SuspendedProducts.routeName);
-                          //   },
-                          //   child: Container(
-                          //     decoration: BoxDecoration(
-                          //       color: const Color(0xFFFFE7E6),
-                          //       border: Border.all(
-                          //         color: const Color(0xFFFF6159),
-                          //       ),
-                          //       borderRadius: BorderRadius.circular(8),
-                          //     ),
-                          //     padding: const EdgeInsets.all(12),
-                          //     child: Row(
-                          //       children: [
-                          //         Image.asset('nafdac'.toImg),
-                          //         8.width,
-                          //         Expanded(
-                          //           child: Column(
-                          //             crossAxisAlignment: CrossAxisAlignment.start,
-                          //             children: [
-                          //               Text(
-                          //                 'Suspended & Canceled Products',
-                          //                 style: context.textTheme.bodyMedium?.copyWith(
-                          //                   fontSize: 15,
-                          //                 ),
-                          //               ),
-                          //               4.height,
-                          //               Text(
-                          //                 'NAFDAC Approved list',
-                          //                 style: context.textTheme.bodyLarge?.copyWith(
-                          //                   fontSize: 13,
-                          //                   color: const Color(0xFFFF6159),
-                          //                 ),
-                          //               ),
-                          //             ],
-                          //           ),
-                          //         ),
-                          //         4.width,
-                          //         const Icon(
-                          //           Icons.arrow_forward_ios,
-                          //           size: 14,
-                          //           color: Color(0xFFFF6159),
-                          //         ),
-                          //       ],
-                          //     ),
-                          //   ),
-                          // ),
-                          // mediumSpace(),
-                          // Column(
-                          //   crossAxisAlignment: CrossAxisAlignment.start,
-                          //   children: [
-                          //     Text(
-                          //       'My Community & Socials',
-                          //       style: context.textTheme.labelLarge,
-                          //     ),
-                          //     12.height,
-                          //     const Divider(
-                          //       color: Color(0xFFBABABA),
-                          //     ),
-                          //     12.height,
-                          //     Text(
-                          //       'Hey Jessica, you have 0 posts',
-                          //       style: context.textTheme.labelMedium?.copyWith(
-                          //         color: const Color(0xFF656565),
-                          //       ),
-                          //     ),
-                          //     4.height,
-                          //     Text(
-                          //       'Start the conversation by creating the first post',
-                          //       style: context.textTheme.bodyLarge?.copyWith(
-                          //         fontSize: 13,
-                          //       ),
-                          //     ),
-                          //     14.height,
-                          //     Container(
-                          //       width: double.infinity,
-                          //       decoration: BoxDecoration(
-                          //         color: const Color(0xFFEAFFEB),
-                          //         border: Border.all(color: AppColors.primary),
-                          //         borderRadius: BorderRadius.circular(8),
-                          //       ),
-                          //       padding: const EdgeInsets.symmetric(
-                          //         horizontal: 12,
-                          //         vertical: 16,
-                          //       ),
-                          //       alignment: Alignment.center,
-                          //       child: Text(
-                          //         'Create your first post',
-                          //         style: context.textTheme.labelMedium?.copyWith(
-                          //           color: const Color(0xFF575757),
-                          //         ),
-                          //       ),
-                          //     )
-                          //   ],
-                          // ),
-                          // mediumSpace(),
-                          // const FriendRequestWidget(),
-                          // mediumSpace(),
+                          const ProfileCompletionWidget(),
+                          mediumSpace(),
+                          InkWell(
+                            onTap: () {
+                              context.push(SuspendedProducts.routeName);
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFFFE7E6),
+                                border: Border.all(
+                                  color: const Color(0xFFFF6159),
+                                ),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              padding: const EdgeInsets.all(12),
+                              child: Row(
+                                children: [
+                                  Image.asset('nafdac'.toImg),
+                                  8.width,
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Suspended & Canceled Products',
+                                          style: context.textTheme.bodyMedium
+                                              ?.copyWith(
+                                            fontSize: 15,
+                                          ),
+                                        ),
+                                        4.height,
+                                        Text(
+                                          'NAFDAC Approved list',
+                                          style: context.textTheme.bodyLarge
+                                              ?.copyWith(
+                                            fontSize: 13,
+                                            color: const Color(0xFFFF6159),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  4.width,
+                                  const Icon(
+                                    Icons.arrow_forward_ios,
+                                    size: 14,
+                                    color: Color(0xFFFF6159),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          mediumSpace(),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'My Community & Socials',
+                                style: context.textTheme.labelLarge,
+                              ),
+                              12.height,
+                              const Divider(
+                                color: Color(0xFFBABABA),
+                              ),
+                              12.height,
+                              Text(
+                                'Hey Jessica, you have 0 posts',
+                                style: context.textTheme.labelMedium?.copyWith(
+                                  color: const Color(0xFF656565),
+                                ),
+                              ),
+                              4.height,
+                              Text(
+                                'Start the conversation by creating the first post',
+                                style: context.textTheme.bodyLarge?.copyWith(
+                                  fontSize: 13,
+                                ),
+                              ),
+                              14.height,
+                              Container(
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFFEAFFEB),
+                                  border: Border.all(color: AppColors.primary),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 16,
+                                ),
+                                alignment: Alignment.center,
+                                child: Text(
+                                  'Create your first post',
+                                  style:
+                                      context.textTheme.labelMedium?.copyWith(
+                                    color: const Color(0xFF575757),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                          mediumSpace(),
+                          const FriendRequestWidget(),
+                          mediumSpace(),
                           // Column(
                           //   children: [
                           // CustomListTile(
@@ -687,44 +695,47 @@ class _HomePageState extends ConsumerState<HomePage> {
                           //   onTap: () {},
                           // ),
                           const FriendRequestSection(),
-                          // TODO: uncomment
-                          // bannerState.when(
-                          //   loading: () =>
-                          // const ListLoader(itemCount: 1, height: 120,),
-                          //   error: (err, stack) => const Center(
-                          //       child: Text("Failed to load banners")),
-                          //   data: (banners) {
-                          //     if (banners.isEmpty) {
-                          //       return const Center(
-                          //           child: Text("No banners available."));
-                          //     }
-                          //     // API banners only
-                          //     final List<AdvertModel> apiBanners =
-                          //         banners.map((banner) {
-                          //       final imageUrl = banner.imageUrl ?? "";
-                          //       final isVideo = imageUrl.endsWith('.mp4');
-                          //       return AdvertModel(
-                          //         title: "",
-                          //         description: "",
-                          //         backgroundColor: ColorConstant.primaryColor,
-                          //         mediaType: isVideo ? 'video' : 'image',
-                          //         imagePath:
-                          //             "${AppConstants.noSlashImageURL}$imageUrl",
-                          //         onTap: () {
-                          //           final url = imageUrl.isNotEmpty
-                          //               ? "${AppConstants.noSlashImageURL}$imageUrl"
-                          //               : "https://edogoverp.com";
-                          //           try {
-                          //             launchUrl(Uri.parse(url));
-                          //           } catch (e) {
-                          //             debugPrint("⚠️ Failed to launch URL: $url");
-                          //           }
-                          //         },
-                          //       );
-                          //     }).toList();
-                          //     return AdvertHelper(goals: apiBanners);
-                          //   },
-                          // ),
+                          if (!kDebugMode)
+                            bannerState.when(
+                              loading: () => const ListLoader(
+                                itemCount: 1,
+                                height: 120,
+                              ),
+                              error: (err, stack) => const Center(
+                                  child: Text("Failed to load banners")),
+                              data: (banners) {
+                                if (banners.isEmpty) {
+                                  return const Center(
+                                      child: Text("No banners available."));
+                                }
+                                // API banners only
+                                final List<AdvertModel> apiBanners =
+                                    banners.map((banner) {
+                                  final imageUrl = banner.imageUrl ?? "";
+                                  final isVideo = imageUrl.endsWith('.mp4');
+                                  return AdvertModel(
+                                    title: "",
+                                    description: "",
+                                    backgroundColor: ColorConstant.primaryColor,
+                                    mediaType: isVideo ? 'video' : 'image',
+                                    imagePath:
+                                        "${AppConstants.noSlashImageURL}$imageUrl",
+                                    onTap: () {
+                                      final url = imageUrl.isNotEmpty
+                                          ? "${AppConstants.noSlashImageURL}$imageUrl"
+                                          : "https://edogoverp.com";
+                                      try {
+                                        launchUrl(Uri.parse(url));
+                                      } catch (e) {
+                                        debugPrint(
+                                            "⚠️ Failed to launch URL: $url");
+                                      }
+                                    },
+                                  );
+                                }).toList();
+                                return AdvertHelper(goals: apiBanners);
+                              },
+                            ),
 
                           getAllInterestAsync.when(
                             data: (interests) {

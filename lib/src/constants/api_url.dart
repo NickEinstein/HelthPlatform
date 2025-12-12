@@ -13,7 +13,11 @@ class ApiUrl {
 
   static const String updateDeviceTokenUrl =
       '/ConnectedHealthWebApi/api/Auth/update-device-token';
-
+  
+  static String getImmunizationResult(String id) =>
+      '/ConnectedHealthWebApi/api/Patient/immunization/$id';
+  static String getPatientProfile(String id) =>
+      '/ConnectedHealthWebApi/api/Patient/single/$id';
   static const String profileGetUrl =
       '/ConnectedHealthWebApi/api/Patient/myprofile';
   static const String contactGetUrl =

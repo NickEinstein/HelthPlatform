@@ -126,7 +126,7 @@ class ApiService {
   }
 
   dynamic _handleError(error) {
-    if (error is DioError) {
+    if (error is DioException) {
       if (error.response != null) {
         // Handle Dio specific errors with response here
         print(

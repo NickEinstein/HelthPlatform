@@ -19,7 +19,7 @@ class _AdvertHelperState extends State<AdvertHelper>
   int _currentIndex = 0;
   late Timer _autoSlideTimer;
   late AnimationController _pulseController;
-  late Animation<double> _pulseAnimation;
+  // late Animation<double> _pulseAnimation;
 
   // Map index -> GlobalKey to control VideoPlayerWidgets
   final Map<int, GlobalKey<VideoPlayerWidgetState>> _videoKeys = {};
@@ -41,13 +41,13 @@ class _AdvertHelperState extends State<AdvertHelper>
       duration: const Duration(seconds: 1),
     )..repeat(reverse: true);
 
-    _pulseAnimation = Tween<double>(
-      begin: 1.0,
-      end: 1.05,
-    ).animate(CurvedAnimation(
-      parent: _pulseController,
-      curve: Curves.easeInOut,
-    ));
+    // _pulseAnimation = Tween<double>(
+    //   begin: 1.0,
+    //   end: 1.05,
+    // ).animate(CurvedAnimation(
+    //   parent: _pulseController,
+    //   curve: Curves.easeInOut,
+    // ));
 
     _autoSlideTimer =
         Timer.periodic(const Duration(seconds: 15), (Timer timer) {
@@ -130,7 +130,7 @@ class _AdvertHelperState extends State<AdvertHelper>
             image: AssetImage(goal.imagePath),
             fit: BoxFit.cover,
             colorFilter: ColorFilter.mode(
-              Colors.black.withOpacity(0.3),
+              Colors.black.withValues(alpha: 0.3),
               BlendMode.darken,
             ),
           ),
@@ -144,7 +144,7 @@ class _AdvertHelperState extends State<AdvertHelper>
             image: NetworkImage(goal.imagePath),
             fit: BoxFit.cover,
             colorFilter: ColorFilter.mode(
-              Colors.black.withOpacity(0.3),
+              Colors.black.withValues(alpha: 0.3),
               BlendMode.darken,
             ),
           ),

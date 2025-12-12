@@ -21,6 +21,7 @@ class AppHelper {
       primary: AppColors.primary,
       secondary: ColorConstant.primaryLightColor,
     ),
+    splashColor: Colors.transparent,
     useMaterial3: true,
     textTheme: TextTheme(
       displayLarge: GoogleFonts.inter(

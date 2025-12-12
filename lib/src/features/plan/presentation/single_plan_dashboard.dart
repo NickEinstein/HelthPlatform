@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:greenzone_medical/src/features/plan/models/routine_view_model.dart';
 import 'package:greenzone_medical/src/model/my_app_model.dart';
 import 'package:greenzone_medical/src/resources/colors/colors.dart';
@@ -1028,27 +1027,33 @@ class PlanTab extends StatefulWidget {
 }
 
 class _PlanTabState extends State<PlanTab> {
-  final List<RoutineViewModel> routines = [];
+  List<RoutineViewModel> routines = [];
   TextEditingController goalNameController = TextEditingController();
-  List<String> routineList = [];
+  List<String> currentRoutineList = [];
   DateTime? startDate;
   TimeOfDay? startTime;
 
   _addRoutine() {
+    if (startDate == null || startTime == null) {
+      return;
+    }
     final routine = RoutineViewModel(
       goalName: goalNameController.text,
-      routine: routineList,
-      startDate: startDate,
-      time: startTime,
+      routineItems: currentRoutineList,
+      startDate: startDate!,
+      time: startTime!,
     );
+    print(routine.routineItems);
+    print(currentRoutineList);
     if (routine.validate()) {
-      goalNameController.clear();
-      routineList.clear();
-      startDate = null;
-      startTime = null;
       setState(() {
         routines.add(routine);
       });
+      print(routines.map((e) => e.routineItems).toString());
+      goalNameController.clear();
+      currentRoutineList.clear();
+      startDate = null;
+      startTime = null;
     } else {
       context.showFeedBackDialog(message: 'Please fill all fields');
     }
@@ -1243,7 +1248,7 @@ class _PlanTabState extends State<PlanTab> {
                       Wrap(
                         spacing: 8,
                         runSpacing: 8,
-                        children: routineList.map((activity) {
+                        children: currentRoutineList.map((activity) {
                           return Container(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 12, vertical: 8),
@@ -1262,7 +1267,7 @@ class _PlanTabState extends State<PlanTab> {
                                 5.width,
                                 InkWell(
                                   onTap: () {
-                                    routineList.remove(activity);
+                                    currentRoutineList.remove(activity);
                                     setState(() {});
                                   },
                                   child: const Icon(Icons.close,
@@ -1350,7 +1355,7 @@ class _PlanTabState extends State<PlanTab> {
                             );
                             if (item != null) {
                               setState(() {
-                                routineList.add(item);
+                                currentRoutineList.add(item);
                               });
                             }
                             // itemCtrl.dispose();
@@ -1482,85 +1487,90 @@ class _PlanTabState extends State<PlanTab> {
           12.height,
           ...List.generate(
             routines.length,
-            (index) => Container(
-              clipBehavior: Clip.antiAlias,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                  color: const Color(0xFFA2A2A2),
-                  width: 2,
+            (index) {
+              final thisRoutine = routines[index];
+              return Container(
+                margin: const EdgeInsets.only(bottom: 12),
+                clipBehavior: Clip.antiAlias,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: const Color(0xFFA2A2A2),
+                    width: 2,
+                  ),
                 ),
-              ),
-              child: Column(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: const BoxDecoration(
-                      color: Color(0xFFEEEEEE), // Background #EEEEEE
-                      borderRadius:
-                          BorderRadius.vertical(top: Radius.circular(10)),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 6),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(4),
-                            border: Border.all(
-                              color: const Color(0xFF109615),
+                child: Column(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: const BoxDecoration(
+                        color: Color(0xFFEEEEEE), // Background #EEEEEE
+                        borderRadius:
+                            BorderRadius.vertical(top: Radius.circular(10)),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 6),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(4),
+                              border: Border.all(
+                                color: const Color(0xFF109615),
+                              ),
+                            ),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        thisRoutine.goalName,
+                                        style: context.textTheme.bodyMedium,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                // InkWell(
+                                //   onTap: () {
+                                //     final newList = [
+                                //       controllers[index].text,
+                                //       ...?routines[index].routine
+                                //     ];
+                                //     routines[index] = RoutineViewModel(
+                                //       goalName: routines[index].goalName,
+                                //       routine: newList,
+                                //       time: routines[index].time,
+                                //       startDate: routines[index].startDate,
+                                //     );
+                                //   },
+                                //   child: RotatedBox(
+                                //     quarterTurns: 3,
+                                //     child: SvgPicture.asset('dropdown2'.toSvg),
+                                //   ),
+                                // ),
+                              ],
                             ),
                           ),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      routines[index].goalName ?? '',
-                                      style: context.textTheme.bodyMedium,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              // InkWell(
-                              //   onTap: () {
-                              //     final newList = [
-                              //       controllers[index].text,
-                              //       ...?routines[index].routine
-                              //     ];
-                              //     routines[index] = RoutineViewModel(
-                              //       goalName: routines[index].goalName,
-                              //       routine: newList,
-                              //       time: routines[index].time,
-                              //       startDate: routines[index].startDate,
-                              //     );
-                              //   },
-                              //   child: RotatedBox(
-                              //     quarterTurns: 3,
-                              //     child: SvgPicture.asset('dropdown2'.toSvg),
-                              //   ),
-                              // ),
-                            ],
+                          15.height,
+                          const Text(
+                            "What you will do",
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Color(0xFF2E2E2E),
+                            ),
                           ),
-                        ),
-                        15.height,
-                        const Text(
-                          "What you will do",
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Color(0xFF2E2E2E),
-                          ),
-                        ),
-                        10.height,
-                        Wrap(
-                          spacing: 8,
-                          runSpacing: 8,
-                          children: routines[index].routine?.map((activity) {
+                          10.height,
+                          Wrap(
+                            spacing: 8,
+                            runSpacing: 8,
+                            children: thisRoutine.routineItems.map(
+                              (activity) {
                                 return Container(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 12, vertical: 8),
@@ -1580,118 +1590,122 @@ class _PlanTabState extends State<PlanTab> {
                                     ],
                                   ),
                                 );
-                              }).toList() ??
-                              [],
-                        ),
-                      ],
+                              },
+                            ).toList(),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 12),
-                          decoration: const BoxDecoration(
-                            color: Color(0xffDCF8C6), // Footer green
-                            borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(4),
-                              bottomRight: Radius.circular(46),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 12),
+                            decoration: const BoxDecoration(
+                              color: Color(0xffDCF8C6), // Footer green
+                              borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(4),
+                                bottomRight: Radius.circular(46),
+                              ),
+                            ),
+                            child: Wrap(
+                              children: [
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      "${thisRoutine.time.format(context)} Daily",
+                                      style: const TextStyle(
+                                        color: Color(0xFF2E2E2E),
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                    5.width,
+                                    SvgPicture.asset(
+                                      'clock'.toSvg,
+                                      height: 12,
+                                      width: 12,
+                                    ),
+                                  ],
+                                ),
+                                4.width,
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      DateFormat('dd.MM.yyyy')
+                                          .format(thisRoutine.startDate!),
+                                      style: context.textTheme.bodyMedium,
+                                    ),
+                                    5.width,
+                                    SvgPicture.asset(
+                                      'date'.toSvg,
+                                      height: 12,
+                                      width: 12,
+                                    ),
+                                  ],
+                                ),
+                                6.width,
+                              ],
                             ),
                           ),
-                          child: Wrap(
-                            children: [
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    "${routines[index].time?.format(context)} Daily",
-                                    style: const TextStyle(
-                                      color: Color(0xFF2E2E2E),
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                  5.width,
-                                  SvgPicture.asset(
-                                    'clock'.toSvg,
-                                    height: 12,
-                                    width: 12,
-                                  ),
-                                ],
-                              ),
-                              4.width,
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    DateFormat('dd.MM.yyyy')
-                                        .format(routines[index].startDate!),
-                                    style: context.textTheme.bodyMedium,
-                                  ),
-                                  5.width,
-                                  SvgPicture.asset(
-                                    'date'.toSvg,
-                                    height: 12,
-                                    width: 12,
-                                  ),
-                                ],
-                              ),
-                              6.width,
-                            ],
+                        ),
+                        16.width,
+                        InkWell(
+                          onTap: () {
+                            print(thisRoutine.routineItems);
+                            _removeNewRoutine(index);
+                          },
+                          child: const Icon(
+                            Icons.delete,
+                            color: Colors.red,
+                            size: 16,
                           ),
                         ),
-                      ),
-                      30.width,
-                      InkWell(
-                        onTap: () {
-                          _removeNewRoutine(index);
-                        },
-                        child: const Icon(
-                          Icons.delete,
-                          color: Colors.red,
-                          size: 12,
-                        ),
-                      )
-                    ],
-                  ),
-                  // Container(
-                  //   padding:
-                  //       const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                  //   decoration: const BoxDecoration(
-                  //     color: Color(0xffDCF8C6), // Footer green
-                  //     borderRadius:
-                  //         BorderRadius.vertical(bottom: Radius.circular(10)),
-                  //   ),
-                  //   child: Row(
-                  //     children: [
-                  //       const Text(
-                  //         "2.00pm Daily",
-                  //         style: TextStyle(
-                  //           color: Color(0xFF2E2E2E),
-                  //           fontSize: 14,
-                  //         ),
-                  //       ),
-                  //       5.width,
-                  //       const Icon(Icons.access_time,
-                  //           color: Color(0xFF109615), size: 20),
-                  //       const Spacer(),
-                  //       const Text(
-                  //         "09.10.2025",
-                  //         style: TextStyle(
-                  //           color: Color(0xFF2E2E2E),
-                  //           fontSize: 14,
-                  //         ),
-                  //       ),
-                  //       5.width,
-                  //       const Icon(Icons.calendar_today,
-                  //           color: Color(0xFF109615), size: 20),
-                  //     ],
-                  //   ),
-                  // ),
-                ],
-              ),
-            ),
+                        12.width,
+                      ],
+                    ),
+                    // Container(
+                    //   padding:
+                    //       const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    //   decoration: const BoxDecoration(
+                    //     color: Color(0xffDCF8C6), // Footer green
+                    //     borderRadius:
+                    //         BorderRadius.vertical(bottom: Radius.circular(10)),
+                    //   ),
+                    //   child: Row(
+                    //     children: [
+                    //       const Text(
+                    //         "2.00pm Daily",
+                    //         style: TextStyle(
+                    //           color: Color(0xFF2E2E2E),
+                    //           fontSize: 14,
+                    //         ),
+                    //       ),
+                    //       5.width,
+                    //       const Icon(Icons.access_time,
+                    //           color: Color(0xFF109615), size: 20),
+                    //       const Spacer(),
+                    //       const Text(
+                    //         "09.10.2025",
+                    //         style: TextStyle(
+                    //           color: Color(0xFF2E2E2E),
+                    //           fontSize: 14,
+                    //         ),
+                    //       ),
+                    //       5.width,
+                    //       const Icon(Icons.calendar_today,
+                    //           color: Color(0xFF109615), size: 20),
+                    //     ],
+                    //   ),
+                    // ),
+                  ],
+                ),
+              );
+            },
           ),
+          (context.padding.bottom + 16).height,
         ],
       ),
     );

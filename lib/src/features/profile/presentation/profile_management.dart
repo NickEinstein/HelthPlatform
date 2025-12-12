@@ -1,5 +1,7 @@
+import 'package:greenzone_medical/src/provider/profile_provider.dart';
 import 'package:greenzone_medical/src/resources/colors/colors.dart';
 import 'package:greenzone_medical/src/utils/extensions/extensions.dart';
+import 'package:greenzone_medical/src/utils/loading_widget.dart';
 import 'package:greenzone_medical/src/utils/packages.dart';
 
 class ProfileManagement extends ConsumerWidget {
@@ -8,26 +10,18 @@ class ProfileManagement extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final profile = ref.watch(patientProfileProvider);
+    final immunization = ref.watch(immunizationProvider);
+    
     return Scaffold(
       backgroundColor: Colors.white,
-      // appBar: AppBar(
-      //   backgroundColor: Colors.white,
-      //   elevation: 0,
-      //   leading: IconButton(
-      //     icon: const Icon(Icons.arrow_back, color: Colors.black),
-      //     onPressed: () => Navigator.of(context).pop(),
-      //   ),
-      //   title: Text(
-      //     'Profile Management',
-      //     style: CustomTextStyle.labelXLBold.copyWith(fontSize: 18),
-      //   ),
-      //   centerTitle: false,
-      // ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           (context.padding.top + 16).height,
           InkWell(
+            splashColor: Colors.transparent,
+            highlightColor: Colors.transparent,
             onTap: context.pop,
             child: const Padding(
               padding: EdgeInsets.symmetric(horizontal: 20.0),
@@ -42,62 +36,119 @@ class ProfileManagement extends ConsumerWidget {
               style: CustomTextStyle.labelXLBold.copyWith(fontSize: 18),
             ),
           ),
-          Expanded(
-            child: ListView(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              children: [
-                _buildProfileItem(
-                  icon: Icons.badge_outlined,
-                  title: 'Personal Information',
-                  subtitle: 'Missing: Profile picture',
-                  isComplete: true,
+          12.height,
+          profile.when(
+            error: (_, __) => const Text('An error occurred'),
+            loading: () => const Expanded(
+              child: SingleChildScrollView(
+                padding: EdgeInsets.symmetric(horizontal: 20.0),
+                child: ListLoader(
+                  height: 80,
                 ),
-                _buildProfileItem(
-                  icon: Icons.contact_page_outlined,
-                  title: 'Contact',
-                  subtitle: 'Complete',
-                  isComplete: true,
-                ),
-                _buildProfileItem(
-                  icon: Icons.perm_identity_outlined,
-                  title: 'Identity',
-                  subtitle: 'Missing: National ID (NIN)',
-                  isComplete: false,
-                ),
-                _buildProfileItem(
-                  icon: Icons.menu_book_outlined,
-                  title: 'Demographics',
-                  subtitle: 'Complete',
-                  isComplete: true,
-                ),
-                _buildProfileItem(
-                  icon: Icons.location_on_outlined,
-                  title: 'Location',
-                  subtitle: 'Missing: LGA, Place of Birth',
-                  isComplete: true,
-                ),
-                _buildProfileItem(
-                  icon: Icons.medical_services_outlined,
-                  title: 'Medical/Misc',
-                  subtitle: 'Missing: Weight',
-                  isComplete: true,
-                ),
-                _buildProfileItem(
-                  icon: Icons.vaccines_outlined,
-                  title: 'Immunizations',
-                  subtitle: 'Missing: Add at least on immunization record',
-                  isComplete: false,
-                  svgAsset: SvgAssets.immunization,
-                ),
-                _buildProfileItem(
-                  icon: Icons.back_hand_outlined,
-                  title: 'Allergies',
-                  subtitle: 'Missing: Add at least on immunization record',
-                  isComplete: false,
-                  svgAsset: SvgAssets.homeAllergy,
-                ),
-              ],
+              ),
             ),
+            data: (profile) {
+              bool isFirstCompleted =
+                  ((profile?.data?.firstName?.isNotEmpty == true) &&
+                          (profile?.data?.lastName?.isNotEmpty == true)) ||
+                      (profile?.data?.fullName?.isNotEmpty == true);
+              bool isSecondCompleted = profile?.data?.phoneNumber != null;
+              bool isThirdCompleted = profile?.data?.nin != null;
+              bool isFourthCompleted = profile?.data?.dateOfBirth != null &&
+                  profile?.data?.gender?.isNotEmpty == true &&
+                  profile?.data?.nationality?.isNotEmpty == true;
+              List<String> fourthMissing = [
+                if (profile?.data?.dateOfBirth == null) 'Date of Birth',
+                if (profile?.data?.gender?.isNotEmpty != true) 'Gender',
+                if (profile?.data?.nationality?.isNotEmpty != true)
+                  'Nationality',
+              ];
+              bool isFifthCompleted =
+                  profile?.data?.stateOfOrigin?.isNotEmpty == true &&
+                      profile?.data?.lga?.isNotEmpty == true &&
+                      profile?.data?.placeOfBirth?.isNotEmpty == true;
+              List<String> fifthMissing = [
+                if (profile?.data?.stateOfOrigin?.isNotEmpty != true)
+                  'State of Origin',
+                if (profile?.data?.lga?.isNotEmpty != true) 'LGA',
+                if (profile?.data?.placeOfBirth?.isNotEmpty != true)
+                  'Place of Birth',
+              ];
+              bool isSixthCompleted = profile?.data?.weight != null &&
+                  profile?.data?.patientRef?.isNotEmpty == true;
+              bool isSeventhCompleted = false;
+              bool isEightCompleted = false;
+
+              return Expanded(
+                child: ListView(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+                  children: [
+                    _buildProfileItem(
+                      icon: Icons.badge_outlined,
+                      title: 'Personal Information',
+                      subtitle: isFirstCompleted
+                          ? 'Complete'
+                          : 'Missing: First Name, Last Name',
+                      isComplete: isFirstCompleted,
+                    ),
+                    _buildProfileItem(
+                      icon: Icons.contact_page_outlined,
+                      title: 'Contact',
+                      subtitle: isSecondCompleted
+                          ? 'Complete'
+                          : 'Missing: Phone Number',
+                      isComplete: isSecondCompleted,
+                    ),
+                    _buildProfileItem(
+                      icon: Icons.perm_identity_outlined,
+                      title: 'Identity',
+                      subtitle: isThirdCompleted
+                          ? 'Complete'
+                          : 'Missing: National ID (NIN)',
+                      isComplete: isThirdCompleted,
+                    ),
+                    _buildProfileItem(
+                      icon: Icons.menu_book_outlined,
+                      title: 'Demographics',
+                      subtitle: isFourthCompleted
+                          ? 'Complete'
+                          : 'Missing: ${fourthMissing.join(", ")}',
+                      isComplete: isFourthCompleted,
+                    ),
+                    _buildProfileItem(
+                      icon: Icons.location_on_outlined,
+                      title: 'Location',
+                      subtitle: isFifthCompleted
+                          ? 'Complete'
+                          : 'Missing: ${fifthMissing.join(", ")}',
+                      isComplete: isFifthCompleted,
+                    ),
+                    _buildProfileItem(
+                      icon: Icons.medical_services_outlined,
+                      title: 'Medical/Misc',
+                      subtitle:
+                          isSixthCompleted ? 'Complete' : 'Missing: Weight',
+                      isComplete: isSixthCompleted,
+                    ),
+                    _buildProfileItem(
+                      icon: Icons.vaccines_outlined,
+                      title: 'Immunizations',
+                      subtitle: 'Missing: Add at least on immunization record',
+                      isComplete: isSeventhCompleted,
+                      svgAsset: SvgAssets.immunization,
+                    ),
+                    _buildProfileItem(
+                      icon: Icons.back_hand_outlined,
+                      title: 'Allergies',
+                      subtitle: 'Missing: Add at least on immunization record',
+                      isComplete: isEightCompleted,
+                      svgAsset: SvgAssets.homeAllergy,
+                    ),
+                  ],
+                ),
+              );
+            },
           ),
           Padding(
             padding: const EdgeInsets.all(20.0),
