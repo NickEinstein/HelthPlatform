@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:greenzone_medical/src/features/profile/model/allergy_result.dart';
 import 'package:greenzone_medical/src/features/profile/model/immunization_result.dart';
 import 'package:greenzone_medical/src/features/profile/model/patient_profile_result.dart';
 import 'package:greenzone_medical/src/provider/all_providers.dart';
@@ -23,4 +24,9 @@ final immunizationProvider =
   return patientProfileService.getImmunizationResult();
 });
 
+final allergyProvider =
+    FutureProvider.autoDispose<List<AllergyResult>?>((ref) async {
+  final patientProfileService = ref.watch(profileServiceProvider);
+  return patientProfileService.getAllergyResult();
+});
 

@@ -1,3 +1,4 @@
+import 'package:greenzone_medical/src/features/profile/model/profile_management_screen_model.dart';
 import 'package:greenzone_medical/src/provider/profile_provider.dart';
 import 'package:greenzone_medical/src/resources/colors/colors.dart';
 import 'package:greenzone_medical/src/utils/extensions/extensions.dart';
@@ -6,13 +7,15 @@ import 'package:greenzone_medical/src/utils/packages.dart';
 
 class ProfileManagement extends ConsumerWidget {
   static const routeName = '/profile-management';
-  const ProfileManagement({super.key});
+  final ProfileManagementScreenModel model;
+  const ProfileManagement({super.key, required this.model});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final profile = ref.watch(patientProfileProvider);
     final immunization = ref.watch(immunizationProvider);
-    
+    final allergy = ref.watch(allergyProvider);
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(
@@ -76,8 +79,6 @@ class ProfileManagement extends ConsumerWidget {
               ];
               bool isSixthCompleted = profile?.data?.weight != null &&
                   profile?.data?.patientRef?.isNotEmpty == true;
-              bool isSeventhCompleted = false;
-              bool isEightCompleted = false;
 
               return Expanded(
                 child: ListView(
@@ -131,19 +132,38 @@ class ProfileManagement extends ConsumerWidget {
                           isSixthCompleted ? 'Complete' : 'Missing: Weight',
                       isComplete: isSixthCompleted,
                     ),
-                    _buildProfileItem(
-                      icon: Icons.vaccines_outlined,
-                      title: 'Immunizations',
-                      subtitle: 'Missing: Add at least on immunization record',
-                      isComplete: isSeventhCompleted,
-                      svgAsset: SvgAssets.immunization,
+                    // Seventh
+                    immunization.when(
+                      data: (immunizations) {
+                        return _buildProfileItem(
+                          icon: Icons.vaccines_outlined,
+                          title: 'Immunizations',
+                          subtitle: (immunizations?.isNotEmpty == true)
+                              ? 'Complete'
+                              : 'Missing: Add at least one immunization record',
+                          isComplete: immunizations?.isNotEmpty ?? false,
+                          svgAsset: SvgAssets.immunization,
+                        );
+                      },
+                      error: (_, __) => const SizedBox(),
+                      loading: () => const ListLoader(itemCount: 1),
                     ),
-                    _buildProfileItem(
-                      icon: Icons.back_hand_outlined,
-                      title: 'Allergies',
-                      subtitle: 'Missing: Add at least on immunization record',
-                      isComplete: isEightCompleted,
-                      svgAsset: SvgAssets.homeAllergy,
+                    allergy.when(
+                      data: (allergies) {
+                        return _buildProfileItem(
+                          icon: Icons.vaccines_outlined,
+                          title: 'Allergies',
+                          subtitle: (allergies?.isNotEmpty == true)
+                              ? 'Complete'
+                              : 'Missing: Add at least one allergy record',
+                          isComplete: allergies?.isNotEmpty ?? false,
+                          svgAsset: SvgAssets.immunization,
+                        );
+                      },
+                      error: (_, __) {
+                        return const SizedBox();
+                      },
+                      loading: () => const ListLoader(itemCount: 1),
                     ),
                   ],
                 ),

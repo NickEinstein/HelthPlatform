@@ -5,11 +5,10 @@ import 'package:greenzone_medical/src/app_pkg.dart';
 import '../../../constants/helper.dart';
 import '../../../provider/all_providers.dart';
 import '../../../utils/custom_header.dart';
-import '../../community/post/presentation/group_post_list.dart';
 import 'widget/flagged_post.dart';
 
 class FlaggedContentPage extends ConsumerStatefulWidget {
-  FlaggedContentPage({
+  const FlaggedContentPage({
     super.key,
   });
 

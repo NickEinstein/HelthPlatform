@@ -16,6 +16,7 @@ import 'package:greenzone_medical/src/features/pharmacy/presentation/single_drug
 import 'package:greenzone_medical/src/features/plan/presentation/single_plan_dashboard.dart';
 import 'package:greenzone_medical/src/features/prescription/presentation/prescriptions.dart';
 import 'package:greenzone_medical/src/features/plan/presentation/my_goals_screen.dart';
+import 'package:greenzone_medical/src/features/profile/model/profile_management_screen_model.dart';
 import 'package:greenzone_medical/src/features/profile/presentation/profile_management.dart';
 import 'package:greenzone_medical/src/features/plan/widgets/start_plan_screen.dart';
 import 'package:greenzone_medical/src/model/community_list_response.dart';
@@ -118,7 +119,9 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: ProfileManagement.routeName,
         builder: (context, state) {
-          return const ProfileManagement();
+          return ProfileManagement(
+            model: state.extra as ProfileManagementScreenModel,
+          );
         },
       ),
       //  //  //

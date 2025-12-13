@@ -16,6 +16,8 @@ class ApiUrl {
   
   static String getImmunizationResult(String id) =>
       '/ConnectedHealthWebApi/api/Patient/immunization/$id';
+  static String getAllergyResult(String id) =>
+      '/ConnectedHealthWebApi/api/Patient/allergy/$id';
   static String getPatientProfile(String id) =>
       '/ConnectedHealthWebApi/api/Patient/single/$id';
   static const String profileGetUrl =

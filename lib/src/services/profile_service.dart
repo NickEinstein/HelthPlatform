@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:greenzone_medical/src/app_pkg.dart';
+import 'package:greenzone_medical/src/features/profile/model/allergy_result.dart';
 import 'package:greenzone_medical/src/features/profile/model/immunization_result.dart';
 import 'package:greenzone_medical/src/features/profile/model/patient_profile_result.dart';
 
@@ -41,6 +42,39 @@ class ProfileService {
     }
   }
 
+  Future<List<AllergyResult>?> getAllergyResult() async {
+    try {
+      final token = await getToken();
+      final userId = await getUserId();
+
+      if (token == null || token.isEmpty || userId == null) {
+        debugPrint('⚠️ No access token found.');
+        return null;
+      }
+
+      final response = await _apiService.get(
+        ApiUrl.getAllergyResult(userId),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+      if ((response.statusCode == 200 || response.data['code'] == 1)) {
+        final List<AllergyResult> allergyResult =
+            (response.data['data'] as List)
+                .map((e) => AllergyResult.fromJson(e))
+                .toList();
+
+        return allergyResult;
+      } else {
+        return [];
+      }
+    } catch (error) {
+      debugPrint(' Error fetching get immunization: $error');
+      return [];
+    }
+  }
+
   Future<List<ImmunizationResult>?> getImmunizationResult() async {
     try {
       final token = await getToken();
@@ -58,7 +92,7 @@ class ProfileService {
           'Content-Type': 'application/json',
         },
       );
-      if ((response.statusCode == 200 || response.statusCode == 1)) {
+      if ((response.statusCode == 200 || response.data['code'] == 1)) {
         final List<ImmunizationResult> immunizationResult =
             (response.data['data'] as List)
                 .map((e) => ImmunizationResult.fromJson(e))

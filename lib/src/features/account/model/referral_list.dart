@@ -17,8 +17,8 @@ class ReferralList {
   bool? hasHmo;
   bool? isReferred;
   int? userId;
-  Null? nurseId;
-  Null? doctorId;
+  Null nurseId;
+  Null doctorId;
   String? createdAt;
   String? updatedAt;
   int? createdBy;

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:greenzone_medical/src/app_pkg.dart';
-import 'package:greenzone_medical/src/resources/colors/colors.dart';
 
 class GroupInterestCard extends StatelessWidget {
   final String name;

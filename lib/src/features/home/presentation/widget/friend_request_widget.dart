@@ -1,4 +1,3 @@
-import '../../../../provider/all_providers.dart';
 import '../../../../utils/packages.dart';
 import 'group_interest_card.dart';
 
@@ -10,7 +9,7 @@ class FriendRequestWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // final groupInterestAsync = ref.watch(userGroupInterestProvider([]));
-    final loginDataAsync = ref.watch(loginDataProvider);
+    // final loginDataAsync = ref.watch(loginDataProvider);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -24,7 +23,7 @@ class FriendRequestWidget extends ConsumerWidget {
               const Expanded(
                 child: Text(
                   "87 New Friends Request",
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: Color(0xff343333),
                     fontSize: 16,
                     fontWeight: FontWeight.w400,
