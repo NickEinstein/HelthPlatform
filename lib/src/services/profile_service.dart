@@ -1,10 +1,11 @@
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:greenzone_medical/src/app_pkg.dart';
 import 'package:greenzone_medical/src/features/profile/model/allergy_result.dart';
 import 'package:greenzone_medical/src/features/profile/model/immunization_result.dart';
 import 'package:greenzone_medical/src/features/profile/model/patient_profile_result.dart';
+import 'package:greenzone_medical/src/features/profile/model/update_patient_payload.dart';
 
 class ProfileService {
   final ApiService _apiService;
@@ -39,6 +40,36 @@ class ProfileService {
     } catch (error) {
       debugPrint(" Error decoding userID: $error");
       return null;
+    }
+  }
+
+  Future<String?> updatePatientProfile(UpdatePatientPayload payload) async {
+    try {
+      final token = await getToken();
+      final userId = await getUserId();
+
+      if (token == null || token.isEmpty || userId == null) {
+        debugPrint('⚠️ No access token found.');
+        return null;
+      }
+
+      final response = await _apiService.put(
+        ApiUrl.updatePatientProfile(userId),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        data: payload.toJson(),
+      );
+      if ((response.statusCode == 200 || response.statusCode == 1)) {
+        return response.data['message'];
+      } else {
+        debugPrint(' Failed to update profile: ${response.statusCode}');
+        throw Exception('Failed to update profile: ${response.statusCode}');
+      }
+    } catch (error) {
+      debugPrint(' Error fetching update profile: $error');
+      throw Exception('Error fetching update profile: $error');
     }
   }
 

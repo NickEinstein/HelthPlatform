@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:greenzone_medical/src/features/profile/model/patient_profile_result.dart';
-import 'package:greenzone_medical/src/features/profile/model/profile_management_screen_model.dart';
 import 'package:greenzone_medical/src/features/profile/presentation/profile_management.dart';
 import 'package:greenzone_medical/src/provider/profile_provider.dart';
 import 'package:greenzone_medical/src/utils/extensions/extensions.dart';
@@ -20,13 +19,21 @@ class ProfileCompletionWidget extends ConsumerStatefulWidget {
 
 class _ProfileCompletionWidgetState
     extends ConsumerState<ProfileCompletionWidget> {
-  bool isOpen = false;
+  bool isOpen = true;
+
+  @override
+  initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(profileProvider.notifier).fetchAll();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    final profile = ref.watch(patientProfileProvider);
-    final immunization = ref.watch(immunizationProvider);
-    final allergy = ref.watch(allergyProvider);
+    final state = ref.watch(profileProvider);
+    final immunizations = state.immunizations;
+    final allergies = state.allergies;
 
     final loading = Container(
       decoration: BoxDecoration(
@@ -70,12 +77,7 @@ class _ProfileCompletionWidgetState
             14.height,
             InkWell(
               onTap: () {
-                context.push(ProfileManagement.routeName,
-                    extra: ProfileManagementScreenModel(
-                      profile: profile,
-                      immunization: immunization,
-                      allergies: allergy,
-                    ));
+                context.push(ProfileManagement.routeName);
               },
               child: Row(
                 children: [
@@ -93,7 +95,7 @@ class _ProfileCompletionWidgetState
                           backgroundColor: AppColors.greyVariant,
                           borderRadius: BorderRadius.circular(4),
                           minHeight: 8,
-                        ),
+                        ).shimmer(),
                       ],
                     ),
                   ),
@@ -105,7 +107,7 @@ class _ProfileCompletionWidgetState
                         style: context.textTheme.displayLarge?.copyWith(
                           fontSize: 46,
                         ),
-                      ),
+                      ).shimmer(),
                       4.height,
                       Container(
                         decoration: BoxDecoration(
@@ -120,7 +122,7 @@ class _ProfileCompletionWidgetState
                             color: Colors.white,
                           ),
                         ),
-                      )
+                      ).shimmer(),
                     ],
                   )
                 ],
@@ -147,14 +149,8 @@ class _ProfileCompletionWidgetState
               profileValue?.data?.placeOfBirth?.isNotEmpty == true;
       bool isSixthCompleted = profileValue?.data?.weight != null &&
           profileValue?.data?.patientRef?.isNotEmpty == true;
-      bool isSeventhCompleted = immunization.maybeWhen(
-        data: (value) => value?.isNotEmpty == true,
-        orElse: () => false,
-      );
-      bool isEightCompleted = allergy.maybeWhen(
-        data: (value) => value?.isNotEmpty == true,
-        orElse: () => false,
-      );
+      bool isSeventhCompleted = immunizations?.isNotEmpty == true;
+      bool isEightCompleted = allergies?.isNotEmpty == true;
       final numCompleted = [
         isFirstCompleted,
         isSecondCompleted,
@@ -212,12 +208,7 @@ class _ProfileCompletionWidgetState
               14.height,
               InkWell(
                 onTap: () {
-                  context.push(ProfileManagement.routeName,
-                      extra: ProfileManagementScreenModel(
-                        profile: profile,
-                        immunization: immunization,
-                        allergies: allergy,
-                      ));
+                  context.push(ProfileManagement.routeName);
                 },
                 child: Row(
                   children: [
@@ -274,10 +265,9 @@ class _ProfileCompletionWidgetState
       );
     }
 
-    return profile.when(
-      loading: () => loading,
-      error: (_, __) => const SizedBox(),
-      data: (profile) => body(profile),
-    );
+    if (state.isLoading) {
+      return loading;
+    }
+    return body(state.patientProfile);
   }
 }

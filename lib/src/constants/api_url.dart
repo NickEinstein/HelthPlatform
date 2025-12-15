@@ -13,7 +13,7 @@ class ApiUrl {
 
   static const String updateDeviceTokenUrl =
       '/ConnectedHealthWebApi/api/Auth/update-device-token';
-  
+
   static String getImmunizationResult(String id) =>
       '/ConnectedHealthWebApi/api/Patient/immunization/$id';
   static String getAllergyResult(String id) =>
@@ -237,4 +237,7 @@ class ApiUrl {
       'https://api.greenzonetechnologies.com.ng/ConnectedHealthWebApi/api/appCategories';
   static String getMyApps =
       'https://api.greenzonetechnologies.com.ng/ConnectedHealthWebApi/api/AppPlans';
+
+  static String updatePatientProfile(String id) =>
+      '/ConnectedHealthWebApi/api/patient/$id';
 }

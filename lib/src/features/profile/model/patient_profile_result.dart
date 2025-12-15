@@ -100,44 +100,46 @@ class PatientProfileData {
     this.socialRoleId,
   });
 
-  factory PatientProfileData.fromJson(Map<String, dynamic> json) =>
-      PatientProfileData(
-        id: json['id'],
-        usersType: json['usersType'],
-        email: json['email'],
-        userName: json['userName'],
-        pictureUrl: json['pictureUrl'],
-        firstName: json['firstName'],
-        middleName: json['middleName'],
-        lastName: json['lastName'],
-        gender: json['gender'],
-        dateOfBirth: json['dateOfBirth'] == null
-            ? null
-            : DateTime.tryParse(json['dateOfBirth']),
-        phoneNumber: json['phoneNumber'],
-        stateOfOrigin: json['stateOfOrigin'],
-        lga: json['lga'],
-        placeOfBirth: json['placeOfBirth'],
-        maritalStatus: json['maritalStatus'],
-        nationality: json['nationality'],
-        socialAccountsJson: json['socialAccountsJson'],
-        nin: json['nin'],
-        weight: (json['weight'] as num?)?.toDouble(),
-        deviceToken: json['deviceToken'],
-        lastLoginTime: json['lastLoginTime'] == null
-            ? null
-            : DateTime.tryParse(json['lastLoginTime']),
-        socialAccounts: json['socialAccounts'] == null
-            ? []
-            : List<dynamic>.from(json['socialAccounts'].map((x) => x)),
-        fullName: json['fullName'],
-        clinic: json['clinic'],
-        clinicId: json['clinicId'],
-        hasHmo: json['hasHmo'],
-        isReferred: json['isReferred'],
-        patientRef: json['patientRef'],
-        socialRoleId: json['socialRoleId'],
-      );
+  factory PatientProfileData.fromJson(Map<String, dynamic> json) {
+    // json.entries.forEach(print);
+    return PatientProfileData(
+      id: json['id'],
+      usersType: json['usersType'],
+      email: json['email'],
+      userName: json['userName'],
+      pictureUrl: json['pictureUrl'],
+      firstName: json['firstName'],
+      middleName: json['middleName'],
+      lastName: json['lastName'],
+      gender: json['gender'],
+      dateOfBirth: json['dateOfBirth'] == null
+          ? null
+          : DateTime.tryParse(json['dateOfBirth']),
+      phoneNumber: json['phoneNumber'],
+      stateOfOrigin: json['stateOfOrigin'],
+      lga: json['lga'],
+      placeOfBirth: json['placeOfBirth'],
+      maritalStatus: json['maritalStatus'],
+      nationality: json['nationality'],
+      socialAccountsJson: json['socialAccountsJson'],
+      nin: json['nin'],
+      weight: (json['weight'] as num?)?.toDouble(),
+      deviceToken: json['deviceToken'],
+      lastLoginTime: json['lastLoginTime'] == null
+          ? null
+          : DateTime.tryParse(json['lastLoginTime']),
+      socialAccounts: json['socialAccounts'] == null
+          ? []
+          : List<dynamic>.from(json['socialAccounts'].map((x) => x)),
+      fullName: json['fullName'],
+      clinic: json['clinic'],
+      clinicId: json['clinicId'],
+      hasHmo: json['hasHmo'],
+      isReferred: json['isReferred'],
+      patientRef: json['patientRef'],
+      socialRoleId: json['socialRoleId'],
+    );
+  }
 
   Map<String, dynamic> toJson() => {
         'id': id,

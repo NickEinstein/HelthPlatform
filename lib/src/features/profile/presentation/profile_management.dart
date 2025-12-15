@@ -1,20 +1,34 @@
-import 'package:greenzone_medical/src/features/profile/model/profile_management_screen_model.dart';
 import 'package:greenzone_medical/src/provider/profile_provider.dart';
 import 'package:greenzone_medical/src/resources/colors/colors.dart';
 import 'package:greenzone_medical/src/utils/extensions/extensions.dart';
 import 'package:greenzone_medical/src/utils/loading_widget.dart';
 import 'package:greenzone_medical/src/utils/packages.dart';
 
-class ProfileManagement extends ConsumerWidget {
+class ProfileManagement extends ConsumerStatefulWidget {
   static const routeName = '/profile-management';
-  final ProfileManagementScreenModel model;
-  const ProfileManagement({super.key, required this.model});
+  const ProfileManagement({
+    super.key,
+  });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final profile = ref.watch(patientProfileProvider);
-    final immunization = ref.watch(immunizationProvider);
-    final allergy = ref.watch(allergyProvider);
+  ConsumerState<ProfileManagement> createState() => _ProfileManagementState();
+}
+
+class _ProfileManagementState extends ConsumerState<ProfileManagement> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(profileProvider.notifier).fetchAll();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final state = ref.watch(profileProvider);
+    final profile = state.patientProfile;
+    final immunizations = state.immunizations;
+    final allergies = state.allergies;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -31,6 +45,9 @@ class ProfileManagement extends ConsumerWidget {
               child: Icon(Icons.arrow_back),
             ),
           ),
+          InkWell(onTap: () {
+            print(state.patientProfile?.data?.gender);
+          },child: Text('GAINRAINABNE'),),
           8.height,
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -40,136 +57,128 @@ class ProfileManagement extends ConsumerWidget {
             ),
           ),
           12.height,
-          profile.when(
-            error: (_, __) => const Text('An error occurred'),
-            loading: () => const Expanded(
+          if (state.isLoading && profile == null)
+            const Expanded(
               child: SingleChildScrollView(
                 padding: EdgeInsets.symmetric(horizontal: 20.0),
                 child: ListLoader(
                   height: 80,
                 ),
               ),
-            ),
-            data: (profile) {
-              bool isFirstCompleted =
-                  ((profile?.data?.firstName?.isNotEmpty == true) &&
-                          (profile?.data?.lastName?.isNotEmpty == true)) ||
-                      (profile?.data?.fullName?.isNotEmpty == true);
-              bool isSecondCompleted = profile?.data?.phoneNumber != null;
-              bool isThirdCompleted = profile?.data?.nin != null;
-              bool isFourthCompleted = profile?.data?.dateOfBirth != null &&
-                  profile?.data?.gender?.isNotEmpty == true &&
-                  profile?.data?.nationality?.isNotEmpty == true;
-              List<String> fourthMissing = [
-                if (profile?.data?.dateOfBirth == null) 'Date of Birth',
-                if (profile?.data?.gender?.isNotEmpty != true) 'Gender',
-                if (profile?.data?.nationality?.isNotEmpty != true)
-                  'Nationality',
-              ];
-              bool isFifthCompleted =
-                  profile?.data?.stateOfOrigin?.isNotEmpty == true &&
-                      profile?.data?.lga?.isNotEmpty == true &&
-                      profile?.data?.placeOfBirth?.isNotEmpty == true;
-              List<String> fifthMissing = [
-                if (profile?.data?.stateOfOrigin?.isNotEmpty != true)
-                  'State of Origin',
-                if (profile?.data?.lga?.isNotEmpty != true) 'LGA',
-                if (profile?.data?.placeOfBirth?.isNotEmpty != true)
-                  'Place of Birth',
-              ];
-              bool isSixthCompleted = profile?.data?.weight != null &&
-                  profile?.data?.patientRef?.isNotEmpty == true;
+            )
+          else
+            Expanded(
+              child: ListView(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+                children: [
+                  Builder(builder: (context) {
+                    bool isFirstCompleted =
+                        ((profile?.data?.firstName?.isNotEmpty == true) &&
+                                (profile?.data?.lastName?.isNotEmpty ==
+                                    true)) ||
+                            (profile?.data?.fullName?.isNotEmpty == true);
+                    bool isSecondCompleted = profile?.data?.phoneNumber != null;
+                    bool isThirdCompleted = profile?.data?.nin != null;
+                    bool isFourthCompleted =
+                        profile?.data?.dateOfBirth != null &&
+                            profile?.data?.gender?.isNotEmpty == true &&
+                            profile?.data?.nationality?.isNotEmpty == true;
+                    List<String> fourthMissing = [
+                      if (profile?.data?.dateOfBirth == null) 'Date of Birth',
+                      if (profile?.data?.gender?.isNotEmpty != true) 'Gender',
+                      if (profile?.data?.nationality?.isNotEmpty != true)
+                        'Nationality',
+                    ];
+                    bool isFifthCompleted =
+                        profile?.data?.stateOfOrigin?.isNotEmpty == true &&
+                            profile?.data?.lga?.isNotEmpty == true &&
+                            profile?.data?.placeOfBirth?.isNotEmpty == true;
+                    List<String> fifthMissing = [
+                      if (profile?.data?.stateOfOrigin?.isNotEmpty != true)
+                        'State of Origin',
+                      if (profile?.data?.lga?.isNotEmpty != true) 'LGA',
+                      if (profile?.data?.placeOfBirth?.isNotEmpty != true)
+                        'Place of Birth',
+                    ];
+                    bool isSixthCompleted = profile?.data?.weight != null &&
+                        profile?.data?.patientRef?.isNotEmpty == true;
 
-              return Expanded(
-                child: ListView(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-                  children: [
-                    _buildProfileItem(
-                      icon: Icons.badge_outlined,
-                      title: 'Personal Information',
-                      subtitle: isFirstCompleted
-                          ? 'Complete'
-                          : 'Missing: First Name, Last Name',
-                      isComplete: isFirstCompleted,
-                    ),
-                    _buildProfileItem(
-                      icon: Icons.contact_page_outlined,
-                      title: 'Contact',
-                      subtitle: isSecondCompleted
-                          ? 'Complete'
-                          : 'Missing: Phone Number',
-                      isComplete: isSecondCompleted,
-                    ),
-                    _buildProfileItem(
-                      icon: Icons.perm_identity_outlined,
-                      title: 'Identity',
-                      subtitle: isThirdCompleted
-                          ? 'Complete'
-                          : 'Missing: National ID (NIN)',
-                      isComplete: isThirdCompleted,
-                    ),
-                    _buildProfileItem(
-                      icon: Icons.menu_book_outlined,
-                      title: 'Demographics',
-                      subtitle: isFourthCompleted
-                          ? 'Complete'
-                          : 'Missing: ${fourthMissing.join(", ")}',
-                      isComplete: isFourthCompleted,
-                    ),
-                    _buildProfileItem(
-                      icon: Icons.location_on_outlined,
-                      title: 'Location',
-                      subtitle: isFifthCompleted
-                          ? 'Complete'
-                          : 'Missing: ${fifthMissing.join(", ")}',
-                      isComplete: isFifthCompleted,
-                    ),
-                    _buildProfileItem(
-                      icon: Icons.medical_services_outlined,
-                      title: 'Medical/Misc',
-                      subtitle:
-                          isSixthCompleted ? 'Complete' : 'Missing: Weight',
-                      isComplete: isSixthCompleted,
-                    ),
-                    // Seventh
-                    immunization.when(
-                      data: (immunizations) {
-                        return _buildProfileItem(
-                          icon: Icons.vaccines_outlined,
-                          title: 'Immunizations',
-                          subtitle: (immunizations?.isNotEmpty == true)
+                    return Column(
+                      children: [
+                        _buildProfileItem(
+                          icon: Icons.badge_outlined,
+                          title: 'Personal Information',
+                          subtitle: isFirstCompleted
                               ? 'Complete'
-                              : 'Missing: Add at least one immunization record',
-                          isComplete: immunizations?.isNotEmpty ?? false,
-                          svgAsset: SvgAssets.immunization,
-                        );
-                      },
-                      error: (_, __) => const SizedBox(),
-                      loading: () => const ListLoader(itemCount: 1),
-                    ),
-                    allergy.when(
-                      data: (allergies) {
-                        return _buildProfileItem(
-                          icon: Icons.vaccines_outlined,
-                          title: 'Allergies',
-                          subtitle: (allergies?.isNotEmpty == true)
+                              : 'Missing: First Name, Last Name',
+                          isComplete: isFirstCompleted,
+                        ),
+                        _buildProfileItem(
+                          icon: Icons.contact_page_outlined,
+                          title: 'Contact',
+                          subtitle: isSecondCompleted
                               ? 'Complete'
-                              : 'Missing: Add at least one allergy record',
-                          isComplete: allergies?.isNotEmpty ?? false,
-                          svgAsset: SvgAssets.immunization,
-                        );
-                      },
-                      error: (_, __) {
-                        return const SizedBox();
-                      },
-                      loading: () => const ListLoader(itemCount: 1),
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
+                              : 'Missing: Phone Number',
+                          isComplete: isSecondCompleted,
+                        ),
+                        _buildProfileItem(
+                          icon: Icons.perm_identity_outlined,
+                          title: 'Identity',
+                          subtitle: isThirdCompleted
+                              ? 'Complete'
+                              : 'Missing: National ID (NIN)',
+                          isComplete: isThirdCompleted,
+                        ),
+                        _buildProfileItem(
+                          icon: Icons.menu_book_outlined,
+                          title: 'Demographics',
+                          subtitle: isFourthCompleted
+                              ? 'Complete'
+                              : 'Missing: ${fourthMissing.join(", ")}',
+                          isComplete: isFourthCompleted,
+                        ),
+                        _buildProfileItem(
+                          icon: Icons.location_on_outlined,
+                          title: 'Location',
+                          subtitle: isFifthCompleted
+                              ? 'Complete'
+                              : 'Missing: ${fifthMissing.join(", ")}',
+                          isComplete: isFifthCompleted,
+                        ),
+                        _buildProfileItem(
+                          icon: Icons.medical_services_outlined,
+                          title: 'Medical/Misc',
+                          subtitle:
+                              isSixthCompleted ? 'Complete' : 'Missing: Weight',
+                          isComplete: isSixthCompleted,
+                        ),
+                      ],
+                    );
+                  }),
+                  // Seventh - Immunization
+                  _buildProfileItem(
+                    icon: Icons.vaccines_outlined,
+                    title: 'Immunizations',
+                    subtitle: (immunizations?.isNotEmpty == true)
+                        ? 'Complete'
+                        : 'Missing: Add at least one immunization record',
+                    isComplete: immunizations?.isNotEmpty ?? false,
+                    svgAsset: SvgAssets.immunization,
+                  ),
+                  // Eighth - Allergy
+                  _buildProfileItem(
+                    icon: Icons.vaccines_outlined,
+                    title: 'Allergies',
+                    subtitle: (allergies?.isNotEmpty == true)
+                        ? 'Complete'
+                        : 'Missing: Add at least one allergy record',
+                    isComplete: allergies?.isNotEmpty ?? false,
+                    svgAsset: SvgAssets.immunization,
+                  ),
+                ],
+              ),
+            ),
           Padding(
             padding: const EdgeInsets.all(20.0),
             child: SizedBox(
@@ -209,73 +218,78 @@ class ProfileManagement extends ConsumerWidget {
   }) {
     final color = isComplete ? AppColors.primary : AppColors.greyTextColor;
 
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 16),
-      decoration: const BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-            color: AppColors.bordersLight,
-            width: 1,
+    return InkWell(
+      onTap: () {
+context.push(Routes.UPDATE_PROFILE);
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        decoration: const BoxDecoration(
+          border: Border(
+            bottom: BorderSide(
+              color: AppColors.bordersLight,
+              width: 1,
+            ),
           ),
         ),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            width: 40,
-            height: 40,
-            alignment: Alignment.center,
-            child: svgAsset != null
-                ? SvgPicture.asset(
-                    svgAsset,
-                    width: 24,
-                    height: 24,
-                    colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
-                  )
-                : Icon(
-                    icon,
-                    color: color,
-                    size: 24,
-                  ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: CustomTextStyle.labelMedium.copyWith(
-                    color: color,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  subtitle,
-                  style: CustomTextStyle.paragraphSmall.copyWith(
-                    color: AppColors.greyTextColor,
-                  ),
-                ),
-              ],
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              width: 40,
+              height: 40,
+              alignment: Alignment.center,
+              child: svgAsset != null
+                  ? SvgPicture.asset(
+                      svgAsset,
+                      width: 24,
+                      height: 24,
+                      colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
+                    )
+                  : Icon(
+                      icon,
+                      color: color,
+                      size: 24,
+                    ),
             ),
-          ),
-          const SizedBox(width: 12),
-          if (isComplete)
-            const Icon(
-              Icons.check_circle_outline,
-              color: AppColors.primary,
-              size: 24,
-            )
-          else
-            const Icon(
-              Icons.radio_button_unchecked,
-              color: AppColors
-                  .greyPrimary, // Keep the circle grey even if text is grey
-              size: 24,
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: CustomTextStyle.labelMedium.copyWith(
+                      color: color,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    subtitle,
+                    style: CustomTextStyle.paragraphSmall.copyWith(
+                      color: AppColors.greyTextColor,
+                    ),
+                  ),
+                ],
+              ),
             ),
-        ],
+            const SizedBox(width: 12),
+            if (isComplete)
+              const Icon(
+                Icons.check_circle_outline,
+                color: AppColors.primary,
+                size: 24,
+              )
+            else
+              const Icon(
+                Icons.radio_button_unchecked,
+                color: AppColors
+                    .greyPrimary, // Keep the circle grey even if text is grey
+                size: 24,
+              ),
+          ],
+        ),
       ),
     );
   }
