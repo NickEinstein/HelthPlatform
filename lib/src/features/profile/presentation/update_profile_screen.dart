@@ -4,7 +4,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:greenzone_medical/src/constants/helper.dart';
 import 'package:greenzone_medical/src/features/profile/model/update_patient_payload.dart';
+import 'package:greenzone_medical/src/features/profile/widget/show_gender_dialog.dart';
 import 'package:greenzone_medical/src/provider/profile_provider.dart';
+import 'package:greenzone_medical/src/utils/extensions/primary_button.dart';
+import 'package:greenzone_medical/src/utils/extensions/widget_extensions.dart';
 import 'package:intl/intl.dart';
 
 class UpdateProfileScreen extends ConsumerStatefulWidget {
@@ -25,6 +28,7 @@ class _UpdateProfileScreenState extends ConsumerState<UpdateProfileScreen> {
   late TextEditingController _lgaController;
   late TextEditingController _placeOfBirthController;
   late TextEditingController _maritalStatusController;
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -88,6 +92,9 @@ class _UpdateProfileScreenState extends ConsumerState<UpdateProfileScreen> {
   }
 
   void _submit() async {
+    if (!(_formKey.currentState?.validate() ?? false)) {
+      return;
+    }
     // Basic validation could be added here
     final payload = UpdatePatientPayload(
       firstName: _firstNameController.text,
@@ -165,139 +172,157 @@ class _UpdateProfileScreenState extends ConsumerState<UpdateProfileScreen> {
       ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
-          : ListView(
-              padding: const EdgeInsets.all(20),
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    TextButton(
-                        onPressed: () {
-                          // Navigate to Contact Details if route known
-                          _submit();
-                        },
-                        child: const Row(
-                          children: [
-                            Text('Contact Details',
-                                style: TextStyle(color: Colors.black)),
-                            Icon(Icons.arrow_forward,
-                                size: 16, color: Colors.black),
-                          ],
-                        ))
-                  ],
-                ),
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: const Color(
-                        0xFFE8EAF6), // Light indigo/purple from image
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Row(
+          : Form(
+              key: _formKey,
+              child: ListView(
+                padding: const EdgeInsets.all(20),
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.5),
-                          shape: BoxShape.circle,
-                        ),
-                        padding: const EdgeInsets.all(8),
-                        child: const Icon(Icons.badge_outlined,
-                            color: Colors.indigo), // Icon from image
-                      ),
-                      const SizedBox(width: 12),
-                      const Text('Personal Data',
-                          style: TextStyle(fontSize: 14)),
-                      const Spacer(),
-                      const Icon(Icons.keyboard_arrow_down,
-                          color: Colors.indigo),
+                      TextButton(
+                          onPressed: () {
+                            // Navigate to Contact Details if route known
+                            _submit();
+                          },
+                          child: const Row(
+                            children: [
+                              Text('Contact Details',
+                                  style: TextStyle(color: Colors.black)),
+                              Icon(Icons.arrow_forward,
+                                  size: 16, color: Colors.black),
+                            ],
+                          ))
                     ],
                   ),
-                ),
-                const SizedBox(height: 20),
-                CustomTextField(
-                  label: 'Firstname',
-                  hint: '',
-                  controller: _firstNameController,
-                ),
-                const SizedBox(height: 12),
-                CustomTextField(
-                  label: 'Lastname',
-                  hint: '',
-                  controller: _lastNameController,
-                ),
-                const SizedBox(height: 12),
-                // Assuming Gender is a dropdown or text. Image shows text field style.
-                CustomTextField(
-                  label: 'Gender',
-                  hint: '',
-                  controller: _genderController,
-                ),
-                const SizedBox(height: 12),
-                GestureDetector(
-                  onTap: () => _selectDate(context),
-                  child: AbsorbPointer(
-                    child: CustomTextField(
-                      label: 'Date of Birth',
-                      hint: '',
-                      controller: _dobController,
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: const Color(
+                          0xFFE8EAF6), // Light indigo/purple from image
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Row(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white.withValues(alpha: 0.5),
+                            shape: BoxShape.circle,
+                          ),
+                          padding: const EdgeInsets.all(8),
+                          child: const Icon(Icons.badge_outlined,
+                              color: Colors.indigo), // Icon from image
+                        ),
+                        12.width,
+                        const Text('Personal Data',
+                            style: TextStyle(fontSize: 14)),
+                        const Spacer(),
+                        const Icon(Icons.keyboard_arrow_down,
+                            color: Colors.indigo),
+                      ],
                     ),
                   ),
-                ),
-                const SizedBox(height: 12),
-                CSCPickerPlus(
-                  stateSearchPlaceholder: 'Search State/City/County',
-                  countryStateLanguage: CountryStateLanguage.englishOrNative,
-                  stateDropdownLabel: 'State/City/County',
-                  currentCity: _lgaController.text,
-                  currentState: _stateOriginController.text,
-                  currentCountry: _nationalityController.text,
-                  onCountryChanged: (value) {
-                    setState(() {
-                      _nationalityController.text = value;
-                    });
-                  },
-                  onStateChanged: (value) {
-                    setState(() {
-                      _stateOriginController.text = value ?? '';
-                    });
-                  },
-                  onCityChanged: (value) {
-                    setState(() {
-                      _lgaController.text = value ?? '';
-                    });
-                  },
-                ),
-                // CustomTextField(
-                //   label: 'Nationality',
-                //   hint: '',
-                //   controller: _nationalityController,
-                // ),
-                // const SizedBox(height: 12),
-                // CustomTextField(
-                //   label: 'State of Origin',
-                //   hint: '',
-                //   controller: _stateOriginController,
-                // ),
-                // const SizedBox(height: 12),
-                // CustomTextField(
-                //   label: 'LGA',
-                //   hint: '',
-                //   controller: _lgaController,
-                // ),
-                const SizedBox(height: 12),
-                CustomTextField(
-                  label: 'Place of Birth',
-                  hint: '',
-                  controller: _placeOfBirthController,
-                ),
-                const SizedBox(height: 12),
-                CustomTextField(
-                  label: 'Marital Status',
-                  hint: '',
-                  controller: _maritalStatusController,
-                ),
-                const SizedBox(height: 30),
-              ],
+                  20.height,
+                  CustomTextField(
+                    label: 'Firstname',
+                    hint: '',
+                    controller: _firstNameController,
+                  ),
+                  12.height,
+                  CustomTextField(
+                    label: 'Lastname',
+                    hint: '',
+                    controller: _lastNameController,
+                  ),
+                  12.height,
+                  // Assuming Gender is a dropdown or text. Image shows text field style.
+                  CustomTextField(
+                    label: 'Gender',
+                    hint: '',
+                    controller: _genderController,
+                    readOnly: true,
+                    onTap: () async {
+                      final gender = await showGenderDialog(context);
+                      if (gender != null) {
+                        setState(() {
+                          _genderController.text = gender;
+                        });
+                      }
+                    },
+                  ),
+                  12.height,
+                  GestureDetector(
+                    onTap: () => _selectDate(context),
+                    child: AbsorbPointer(
+                      child: CustomTextField(
+                        label: 'Date of Birth',
+                        hint: '',
+                        controller: _dobController,
+                      ),
+                    ),
+                  ),
+                  12.height,
+                  CSCPickerPlus(
+                    stateSearchPlaceholder: 'Search State/City/County',
+                    countryStateLanguage: CountryStateLanguage.englishOrNative,
+                    stateDropdownLabel: 'State/City/County',
+                    currentCity: _lgaController.text,
+                    currentState: _stateOriginController.text,
+                    currentCountry: _nationalityController.text,
+                    onCountryChanged: (value) {
+                      setState(() {
+                        _nationalityController.text = value;
+                      });
+                    },
+                    onStateChanged: (value) {
+                      setState(() {
+                        _stateOriginController.text = value ?? '';
+                      });
+                    },
+                    onCityChanged: (value) {
+                      setState(() {
+                        _lgaController.text = value ?? '';
+                      });
+                    },
+                  ),
+                  // CustomTextField(
+                  //   label: 'Nationality',
+                  //   hint: '',
+                  //   controller: _nationalityController,
+                  // ),
+                  // const SizedBox(height: 12),
+                  // CustomTextField(
+                  //   label: 'State of Origin',
+                  //   hint: '',
+                  //   controller: _stateOriginController,
+                  // ),
+                  // const SizedBox(height: 12),
+                  // CustomTextField(
+                  //   label: 'LGA',
+                  //   hint: '',
+                  //   controller: _lgaController,
+                  // ),
+                  12.height,
+                  CustomTextField(
+                    label: 'Place of Birth',
+                    hint: '',
+                    controller: _placeOfBirthController,
+                  ),
+                  12.height,
+                  CustomTextField(
+                    label: 'Marital Status',
+                    hint: '',
+                    controller: _maritalStatusController,
+                  ),
+                  30.height,
+                  AppButton(
+                    child: const Text('Update Profile'),
+                    onPressed: () {
+                      _submit();
+                    },
+                  ),
+                ],
+              ),
             ),
     );
   }
