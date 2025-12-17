@@ -240,4 +240,22 @@ class ApiUrl {
 
   static String updatePatientProfile(String id) =>
       '/ConnectedHealthWebApi/api/patient/$id';
+
+  static String getPatientContact(String id) =>
+      '/ConnectedHealthWebApi/api/patient/contact/$id';
+  static String updatePatientContact(String id) =>
+      '/ConnectedHealthWebApi/api/patient/$id/contact-update';
+
+  static String getEmergencyContactInfo(String id) =>
+      '/ConnectedHealthWebApi/api/patient/emergencyContact/$id';
+
+  static String updateEmergencyContactInfo(String id) =>
+      '/ConnectedHealthWebApi/api/patient/$id/emergency-contact-update';
+
+  static String addImmunization(String id) =>
+      '/ConnectedHealthWebApi/api/immunization/$id';
+
+  static String getCountry = '/ConnectedHealthWebApi/api/Geography/countries/';
+  static String getState(String cid) =>
+      '/ConnectedHealthWebApi/api/Geography/countries/$cid/states';
 }

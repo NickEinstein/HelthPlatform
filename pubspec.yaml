@@ -35,7 +35,7 @@ dependencies:
   csc_picker_plus:
     git:
       url: https://github.com/Dreymidroid/csc_picker_plus.git
-      ref: main
+      ref: master
   cupertino_icons: ^1.0.6
   dio: ^5.3.3
   dio_smart_retry: ^6.0.0

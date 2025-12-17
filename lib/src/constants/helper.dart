@@ -24,7 +24,7 @@ class CustomTextField extends StatefulWidget {
   const CustomTextField({
     Key? key,
     this.label,
-    required this.hint,
+    this.hint = '',
     this.controller,
     this.validator,
     this.onChanged,

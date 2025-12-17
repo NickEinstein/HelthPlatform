@@ -2,8 +2,8 @@ class UpdatePatientPayload {
   final String firstName;
   final String lastName;
   final String gender;
-  final int weight;
-  final String dateOfBirth;
+  final double? weight;
+  final DateTime? dateOfBirth;
   final String pictureUrl;
   final String nin;
   final String stateOfOrigin;
@@ -34,13 +34,15 @@ class UpdatePatientPayload {
         "firstName": firstName,
         "lastName": lastName,
         "gender": gender,
+        if(weight != null)
         "weight": weight,
-        "dateOfBirth": dateOfBirth,
+        if(dateOfBirth != null)
+        "dateOfBirth": dateOfBirth?.toIso8601String(),
         "pictureUrl": pictureUrl,
         "nin": nin,
-        "stateOfOrigin": stateOfOrigin,
+        "stateOfOrigin": stateOfOrigin, 
         "lga": lga,
-        "placeOfBirth": placeOfBirth,
+        "placeOfBirth": lga,
         "maritalStatus": maritalStatus,
         "nationality": nationality
       };

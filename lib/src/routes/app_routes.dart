@@ -43,7 +43,6 @@ abstract class Routes {
   static const USEREMERGENCY = _Paths.USEREMERGENCY;
   static const MAINHEALTHGOAL = _Paths.MAINHEALTHRECORD;
   static const NOTESPAGE = _Paths.NOTESPAGE;
-  static const UPDATE_PROFILE = _Paths.UPDATE_PROFILE;
   static const PRESCRIPTION = _Paths.PRESCRIPTION;
   static const APPOINTMENT = _Paths.APPOINTMENT;
   static const REASONCANCELAPPOINTMENT = _Paths.REASONCANCELAPPOINTMENT;
@@ -105,7 +104,6 @@ abstract class _Paths {
   static const MAINHEALTHRECORD = '/main_health_record';
   static const NOTESPAGE = '/note_page';
   static const PRESCRIPTION = '/prescription';
-  static const UPDATE_PROFILE = '/update_profile';
 
   static const APPOINTMENT = '/appointment';
   static const REASONCANCELAPPOINTMENT = '/reason_cancel_appointment';

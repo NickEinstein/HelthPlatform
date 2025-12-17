@@ -17,7 +17,9 @@ import 'package:greenzone_medical/src/features/plan/presentation/single_plan_das
 import 'package:greenzone_medical/src/features/prescription/presentation/prescriptions.dart';
 import 'package:greenzone_medical/src/features/plan/presentation/my_goals_screen.dart';
 import 'package:greenzone_medical/src/features/profile/presentation/profile_management.dart';
-import 'package:greenzone_medical/src/features/profile/presentation/update_profile_screen.dart';
+import 'package:greenzone_medical/src/features/profile/presentation/update_contact_details.dart';
+import 'package:greenzone_medical/src/features/profile/presentation/update_emergency_contact.dart';
+import 'package:greenzone_medical/src/features/profile/presentation/update_personal_info_screen.dart';
 import 'package:greenzone_medical/src/features/plan/widgets/start_plan_screen.dart';
 import 'package:greenzone_medical/src/model/community_list_response.dart';
 import 'package:greenzone_medical/src/model/my_app_model.dart';
@@ -58,6 +60,24 @@ final routerProvider = Provider<GoRouter>((ref) {
     debugLogDiagnostics: true,
     initialLocation: _Paths.SPLASH,
     routes: [
+      GoRoute(
+        path: UpdateEmergencyContact.routeName,
+        builder: (context, state) {
+          return const UpdateEmergencyContact();
+        },
+      ),
+      GoRoute(
+        path: UpdateContactDetailsScreen.routeName,
+        builder: (context, state) {
+          return const UpdateContactDetailsScreen();
+        },
+      ),
+      GoRoute(
+        path: UpdatePersonalDetailsScreen.routeName,
+        builder: (context, state) {
+          return const UpdatePersonalDetailsScreen();
+        },
+      ),
       GoRoute(
         path: SuspendedProducts.routeName,
         builder: (context, state) {
@@ -121,8 +141,8 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const ProfileManagement(),
       ),
       GoRoute(
-        path: Routes.UPDATE_PROFILE,
-        builder: (context, state) => const UpdateProfileScreen(),
+        path: UpdatePersonalDetailsScreen.routeName,
+        builder: (context, state) => const UpdatePersonalDetailsScreen(),
       ),
       //  //  //
       GoRoute(

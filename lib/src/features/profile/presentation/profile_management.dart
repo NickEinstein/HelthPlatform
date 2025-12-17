@@ -1,3 +1,4 @@
+import 'package:greenzone_medical/src/features/profile/presentation/update_personal_info_screen.dart';
 import 'package:greenzone_medical/src/provider/profile_provider.dart';
 import 'package:greenzone_medical/src/resources/colors/colors.dart';
 import 'package:greenzone_medical/src/utils/extensions/extensions.dart';
@@ -45,9 +46,6 @@ class _ProfileManagementState extends ConsumerState<ProfileManagement> {
               child: Icon(Icons.arrow_back),
             ),
           ),
-          InkWell(onTap: () {
-            print(state.patientProfile?.data?.gender);
-          },child: Text('GAINRAINABNE'),),
           8.height,
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -220,7 +218,7 @@ class _ProfileManagementState extends ConsumerState<ProfileManagement> {
 
     return InkWell(
       onTap: () {
-context.push(Routes.UPDATE_PROFILE);
+        context.push(UpdatePersonalDetailsScreen.routeName);
       },
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 16),

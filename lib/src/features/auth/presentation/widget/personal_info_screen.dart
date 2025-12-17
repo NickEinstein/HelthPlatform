@@ -332,6 +332,12 @@ class _PersonalInfoScreenState extends ConsumerState<PersonalInfoScreen> {
               ],
             ),
             16.height,
+            CustomTextField(
+              hint: "Referral Code (optional)",
+              keyboardType: TextInputType.number,
+              controller: widget.controller.referralCodeController,
+            ),
+            16.height,
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [

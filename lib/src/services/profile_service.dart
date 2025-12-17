@@ -3,7 +3,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:greenzone_medical/src/app_pkg.dart';
 import 'package:greenzone_medical/src/features/profile/model/allergy_result.dart';
+import 'package:greenzone_medical/src/features/profile/model/emergency_contact_info.dart';
 import 'package:greenzone_medical/src/features/profile/model/immunization_result.dart';
+import 'package:greenzone_medical/src/features/profile/model/patient_contact_model.dart';
 import 'package:greenzone_medical/src/features/profile/model/patient_profile_result.dart';
 import 'package:greenzone_medical/src/features/profile/model/update_patient_payload.dart';
 
@@ -29,6 +31,7 @@ class ProfileService {
 
       // Decode JSON safely
       final decodedData = jsonDecode(storedData);
+      // print('Login Data: $decodedData');
 
       if (decodedData is Map<String, dynamic> &&
           decodedData.containsKey("userID")) {
@@ -43,6 +46,167 @@ class ProfileService {
     }
   }
 
+  Future<String?> addImmunization(ImmunizationResult payload) async {
+    try {
+      final token = await getToken();
+      final userId = await getUserId();
+
+      if (token == null || token.isEmpty || userId == null) {
+        debugPrint('⚠️ No access token found.');
+        return null;
+      }
+      // payload.toJson().entries.forEach(print);
+
+      final response = await _apiService.put(
+        ApiUrl.addImmunization(userId),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        data: payload.toJson(),
+      );
+      if ((response.statusCode == 200 || response.statusCode == 1)) {
+        return response.data['data']['message'];
+      } else {
+        debugPrint(
+            ' Failed to update emergency contact: ${response.statusCode}');
+        throw Exception(
+            'Failed to update emergency contact: ${response.statusCode}');
+      }
+    } catch (error) {
+      debugPrint(' Error fetching update emergency contact: $error');
+      throw Exception('Error fetching update emergency contact: $error');
+    }
+  }
+
+  Future<EmergencyContactInfo?> getEmergencyContactInfo() async {
+    try {
+      final token = await getToken();
+      final userId = await getUserId();
+
+      if (token == null || token.isEmpty || userId == null) {
+        debugPrint('⚠️ No access token found.');
+        return null;
+      }
+
+      final response = await _apiService.get(
+        ApiUrl.getEmergencyContactInfo(userId),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+      if ((response.statusCode == 200 || response.statusCode == 1)) {
+        final EmergencyContactInfo emergencyContactInfo =
+            EmergencyContactInfo.fromJson(response.data);
+        return emergencyContactInfo;
+      } else {
+        debugPrint(' Failed to get emergency contact: ${response.statusCode}');
+        throw Exception(
+            'Failed to get emergency contact: ${response.statusCode}');
+      }
+    } catch (error) {
+      debugPrint(' Error fetching get emergency contact: $error');
+      throw Exception('Error fetching get emergency contact: $error');
+    }
+  }
+
+  Future<String?> updateEmergencyContactInfo(
+      EmergencyContactInfo payload) async {
+    try {
+      final token = await getToken();
+      final userId = await getUserId();
+
+      if (token == null || token.isEmpty || userId == null) {
+        debugPrint('⚠️ No access token found.');
+        return null;
+      }
+      // payload.toJson().entries.forEach(print);
+
+      final response = await _apiService.put(
+        ApiUrl.updateEmergencyContactInfo(userId),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        data: payload.toJson(),
+      );
+      if ((response.statusCode == 200 || response.statusCode == 1)) {
+        return response.data['data']['message'];
+      } else {
+        debugPrint(
+            ' Failed to update emergency contact: ${response.statusCode}');
+        throw Exception(
+            'Failed to update emergency contact: ${response.statusCode}');
+      }
+    } catch (error) {
+      debugPrint(' Error fetching update emergency contact: $error');
+      throw Exception('Error fetching update emergency contact: $error');
+    }
+  }
+
+  Future<PatientContactModel?> getPatientContact() async {
+    try {
+      final token = await getToken();
+      final userId = await getUserId();
+
+      if (token == null || token.isEmpty || userId == null) {
+        debugPrint('⚠️ No access token found.');
+        return null;
+      }
+
+      final response = await _apiService.get(
+        ApiUrl.getPatientContact(userId),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+      if ((response.statusCode == 200 || response.statusCode == 1)) {
+        final PatientContactModel patientContact =
+            PatientContactModel.fromJson(response.data);
+        return patientContact;
+      } else {
+        debugPrint(' Failed to get contact: ${response.statusCode}');
+        throw Exception('Failed to get contact: ${response.statusCode}');
+      }
+    } catch (error) {
+      debugPrint(' Error fetching get contact: $error');
+      throw Exception('Error fetching get contact: $error');
+    }
+  }
+
+  Future<String?> updateContact(PatientContactModel payload) async {
+    try {
+      final token = await getToken();
+      final userId = await getUserId();
+
+      if (token == null || token.isEmpty || userId == null) {
+        debugPrint('⚠️ No access token found.');
+        return null;
+      }
+      // payload.toJson().entries.forEach(print);
+
+      final response = await _apiService.put(
+        ApiUrl.updatePatientContact(userId),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        data: payload.toJson(),
+      );
+      if ((response.statusCode == 200 || response.statusCode == 1)) {
+        return response.data['data']['message'];
+      } else {
+        debugPrint(' Failed to update profile: ${response.statusCode}');
+        throw Exception('Failed to update profile: ${response.statusCode}');
+      }
+    } catch (error) {
+      debugPrint(' Error fetching update profile: $error');
+      throw Exception('Error fetching update profile: $error');
+    }
+  }
+
   Future<String?> updatePatientProfile(UpdatePatientPayload payload) async {
     try {
       final token = await getToken();
@@ -52,6 +216,7 @@ class ProfileService {
         debugPrint('⚠️ No access token found.');
         return null;
       }
+      // payload.toJson().entries.forEach(print);
 
       final response = await _apiService.put(
         ApiUrl.updatePatientProfile(userId),

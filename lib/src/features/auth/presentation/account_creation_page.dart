@@ -56,7 +56,7 @@ class _AccountCreationScreenState extends ConsumerState<AccountCreationScreen> {
   void _nextPage() async {
     final currentFormState = _formKeys[_currentIndex].currentState;
     if (currentFormState != null && currentFormState.validate()) {
-      if (_currentIndex == 0) {
+      if (_currentIndex == 0) { 
         if (_controller.isChecked == false) {
           CustomToast.show(
             context,
@@ -92,7 +92,9 @@ class _AccountCreationScreenState extends ConsumerState<AccountCreationScreen> {
           final authService = ref.read(authServiceProvider);
 
           final result = await authService.validateOtpUrl(
-              _controller.emailController.text, _controller.otpController.text);
+            _controller.emailController.text,
+            _controller.otpController.text,
+          );
           if (!context.mounted) return; // ✅ Prevents using context if unmounted
           ref.read(isLoadingProvider.notifier).state = false;
           if (mounted) {
@@ -133,7 +135,7 @@ class _AccountCreationScreenState extends ConsumerState<AccountCreationScreen> {
       firstName: _controller.firstNameController.text,
       lastName: _controller.lastNameController.text,
       dateOfBirth: dob,
-      email: _controller.emailController.text,
+      email: _controller.emailController.text,  
       referralCode: _controller.referralCodeController.text.isNotEmpty
           ? int.parse(_controller.referralCodeController.text)
           : null,
