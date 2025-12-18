@@ -8,10 +8,13 @@ OverlayEntry profileSwitchOverlay({
   required LayerLink layerLink,
   required String currentScreen,
   required VoidCallback hideOverlay,
+  List<String>? list,
+  String? nextRoute,
 }) {
-  final appList = ['Personal Data', 'Contact Details', 'Emergency Contact']
-      .where((e) => e != currentScreen)
-      .toList();
+  final appList = list ??
+      ['Personal Data', 'Contact Details', 'Emergency Contact']
+          .where((e) => e != currentScreen)
+          .toList();
   Map<String, String> route = {
     'Personal Data': UpdatePersonalDetailsScreen.routeName,
     'Contact Details': UpdateContactDetailsScreen.routeName,
@@ -53,7 +56,8 @@ OverlayEntry profileSwitchOverlay({
                       (index) {
                         return InkWell(
                           onTap: () {
-                            final singleRoute = route[appList[index]];
+                            final singleRoute =
+                                nextRoute ?? route[appList[index]];
                             if (singleRoute != null) {
                               context.pushReplacement(singleRoute);
                             }

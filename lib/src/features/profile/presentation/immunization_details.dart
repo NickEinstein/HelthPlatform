@@ -1,10 +1,12 @@
 import 'package:greenzone_medical/src/features/profile/model/immunization_result.dart';
-import 'package:greenzone_medical/src/features/profile/presentation/update_emergency_contact.dart';
+import 'package:greenzone_medical/src/features/profile/presentation/allergy_details.dart';
 import 'package:greenzone_medical/src/features/profile/widget/immunization_widget.dart';
 import 'package:greenzone_medical/src/features/profile/widget/profile_switch_overlay.dart';
 import 'package:greenzone_medical/src/provider/profile_provider.dart';
+import 'package:greenzone_medical/src/utils/extensions/date_extensions.dart';
 import 'package:greenzone_medical/src/utils/extensions/extensions.dart';
 import 'package:greenzone_medical/src/utils/extensions/primary_button.dart';
+import 'package:greenzone_medical/src/utils/extensions/string_extensions.dart';
 import 'package:greenzone_medical/src/utils/packages.dart';
 
 class ImmunizationDetailsScreen extends ConsumerStatefulWidget {
@@ -31,6 +33,7 @@ class _ImmunizationDetailsScreenState
   late TextEditingController _tempController;
   late TextEditingController _dateController;
   late TextEditingController _noteController;
+  DateTime? _selectedDate;
 
   @override
   void initState() {
@@ -61,7 +64,8 @@ class _ImmunizationDetailsScreenState
   }
 
   void _submitImmunizationDetails() async {
-    if (!(_formKey.currentState?.validate() ?? false)) {
+    if (!(_formKey.currentState?.validate() ?? false) ||
+        _selectedDate == null) {
       return;
     }
     context.pop();
@@ -73,7 +77,7 @@ class _ImmunizationDetailsScreenState
       age: int.parse(_ageController.text),
       weight: double.parse(_weightController.text),
       temperature: double.parse(_tempController.text),
-      dateGiven: DateTime.parse(_dateController.text),
+      dateGiven: _selectedDate!,
       notes: _noteController.text,
     );
 
@@ -127,91 +131,18 @@ class _ImmunizationDetailsScreenState
         floatingActionButton: isLoading
             ? const SizedBox()
             : FloatingActionButton(
+                backgroundColor: ColorConstant.primaryColor,
                 onPressed: () async {
-                  await showDialog(
-                    context: context,
-                    builder: (_) {
-                      return Dialog(
-                        child: Column(
-                          children: [
-                            const Text('Add Immunization'),
-                            16.height,
-                            CustomTextField(
-                              controller: _vaccinationNameController,
-                              label: 'Vaccination Name',
-                            ),
-                            16.height,
-                            CustomTextField(
-                              controller: _vaccineBrandController,
-                              label: 'Vaccine Brand',
-                            ),
-                            16.height,
-                            CustomTextField(
-                              controller: _batchIdController,
-                              label: 'Batch ID',
-                            ),
-                            16.height,
-                            CustomTextField(
-                              controller: _qtyController,
-                              label: 'Quantity',
-                              keyboardType: TextInputType.number,
-                            ),
-                            16.height,
-                            CustomTextField(
-                              controller: _ageController,
-                              label: 'Age',
-                              keyboardType: TextInputType.number,
-                            ),
-                            16.height,
-                            CustomTextField(
-                              controller: _weightController,
-                              label: 'Weight',
-                              keyboardType: TextInputType.number,
-                            ),
-                            16.height,
-                            CustomTextField(
-                              controller: _tempController,
-                              label: 'Temperature',
-                              keyboardType: TextInputType.number,
-                            ),
-                            16.height,
-                            CustomTextField(
-                              controller: _dateController,
-                              label: 'Date',
-                              readOnly: true,
-                              onTap: () async {
-                                final date = await showDatePicker(
-                                  context: context,
-                                  initialDate: DateTime.now(),
-                                  firstDate: DateTime(2000),
-                                  lastDate: DateTime(2100),
-                                );
-                                if (date != null) {
-                                  _dateController.text = date.toString();
-                                }
-                              },
-                            ),
-                            16.height,
-                            CustomTextField(
-                              controller: _noteController,
-                              label: 'Note',
-                            ),
-                            20.height,
-                            AppButton(
-                              onPressed: _submitImmunizationDetails,
-                              child: const Text('Submit'),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  );
+                  _showAddImmunizationSheet();
                 },
-                child: const Icon(Icons.add),
+                child: const Icon(
+                  Icons.add,
+                  color: Colors.white,
+                ),
               ),
         appBar: AppBar(
           title: const Text(
-            'Contact Details',
+            'Immunization Details',
             style: TextStyle(
               color: Colors.black,
               fontWeight: FontWeight.bold,
@@ -223,47 +154,34 @@ class _ImmunizationDetailsScreenState
             icon: const Icon(Icons.arrow_back, color: Colors.black),
             onPressed: () => context.pop(),
           ),
-          //   actions: [
-          //     Padding(
-          //       padding: const EdgeInsets.only(right: 16.0),
-          //       child: CircleAvatar(
-          //         backgroundColor: Colors.grey.shade200,
-          //         backgroundImage: profilePic != null && profilePic.isNotEmpty
-          //             ? NetworkImage(profilePic)
-          //             : null,
-          //         child: profilePic == null || profilePic.isEmpty
-          //             ? const Icon(Icons.person, color: Colors.grey)
-          //             : null,
-          //       ),
-          //     )
-          //   ],
         ),
         body: isLoading
             ? const Center(child: CircularProgressIndicator())
             : Form(
                 key: _formKey,
                 child: ListView(
-                  padding: const EdgeInsets.all(20),
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         TextButton(
-                            onPressed: () {
-                              context.pushNamed(
-                                UpdateEmergencyContact.routeName,
-                              );
-                            },
-                            child: const Row(
-                              children: [
-                                Text(
-                                  'Emergency Contact',
-                                  style: TextStyle(color: Colors.black),
-                                ),
-                                Icon(Icons.arrow_forward,
-                                    size: 16, color: Colors.black),
-                              ],
-                            ))
+                          onPressed: () {
+                            context.pushNamed(
+                              AllergyDetailsScreen.routeName,
+                            );
+                          },
+                          child: const Row(
+                            children: [
+                              Text(
+                                'Allergies',
+                                style: TextStyle(color: Colors.black),
+                              ),
+                              Icon(Icons.arrow_forward,
+                                  size: 16, color: Colors.black),
+                            ],
+                          ),
+                        )
                       ],
                     ),
                     InkWell(
@@ -285,38 +203,46 @@ class _ImmunizationDetailsScreenState
                           ),
                           child: Row(
                             children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withValues(alpha: 0.5),
-                                  shape: BoxShape.circle,
-                                ),
-                                padding: const EdgeInsets.all(8),
-                                child: const Icon(Icons.badge_outlined,
-                                    color: Colors.indigo), // Icon from image
-                              ),
+                              SvgPicture.asset('clinic'.toSvg),
+                              // Container(
+                              //   decoration: BoxDecoration(
+                              //     color: Colors.white.withValues(alpha: 0.5),
+                              //     shape: BoxShape.circle,
+                              //   ),
+                              //   padding: const EdgeInsets.all(8),
+                              //   child: const Icon(Icons.badge_outlined,
+                              //       color: Colors.indigo), // Icon from image
+                              // ),
                               12.width,
-                              const Text('Contact Details',
-                                  style: TextStyle(fontSize: 14)),
+                              const Text(
+                                'Immunization',
+                                style: TextStyle(fontSize: 14),
+                              ),
                               const Spacer(),
-                              const Icon(Icons.keyboard_arrow_down,
-                                  color: Colors.indigo),
+                              const Icon(
+                                Icons.keyboard_arrow_down,
+                                color: Colors.indigo,
+                              ),
                             ],
                           ),
                         ),
                       ),
                     ),
                     20.height,
-                    if (immunization?.isEmpty ?? false)
+                    if (immunization?.isEmpty ?? true)
                       const Center(
                         child: Text('No immunization details found'),
                       ),
                     if (immunization?.isNotEmpty ?? false)
-                      ...List.generate(
-                        immunization?.length ?? 0,
-                        (index) => ImmunizationWidget(
-                          immunization: immunization![index],
+                      Column(
+                        spacing: 16,
+                        children: List.generate(
+                          immunization?.length ?? 0,
+                          (index) => ImmunizationWidget(
+                            immunization: immunization![index],
+                          ),
                         ),
-                      ),
+                      )
                   ],
                 ),
               ),
@@ -324,11 +250,109 @@ class _ImmunizationDetailsScreenState
     );
   }
 
+  void _showAddImmunizationSheet() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.white,
+      showDragHandle: true,
+      isScrollControlled: true,
+      useSafeArea: true,
+      builder: (_) {
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: context.mediaQuery.viewInsets.bottom,
+          ),
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 20,
+              vertical: 8,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Add Immunization', style: context.textTheme.titleMedium),
+                16.height,
+                CustomTextField(
+                  controller: _vaccinationNameController,
+                  label: 'Vaccination Name',
+                ),
+                16.height,
+                CustomTextField(
+                  controller: _vaccineBrandController,
+                  label: 'Vaccine Brand',
+                ),
+                16.height,
+                CustomTextField(
+                  controller: _batchIdController,
+                  label: 'Batch ID',
+                ),
+                16.height,
+                CustomTextField(
+                  controller: _qtyController,
+                  label: 'Quantity',
+                  keyboardType: TextInputType.number,
+                ),
+                16.height,
+                CustomTextField(
+                  controller: _ageController,
+                  label: 'Age',
+                  keyboardType: TextInputType.number,
+                ),
+                16.height,
+                CustomTextField(
+                  controller: _weightController,
+                  label: 'Weight',
+                  keyboardType: TextInputType.number,
+                ),
+                16.height,
+                CustomTextField(
+                  controller: _tempController,
+                  label: 'Temperature',
+                  keyboardType: TextInputType.number,
+                ),
+                16.height,
+                CustomTextField(
+                  controller: _dateController,
+                  label: 'Date',
+                  readOnly: true,
+                  onTap: () async {
+                    final date = await showDatePicker(
+                      context: context,
+                      initialDate: DateTime.now(),
+                      firstDate: DateTime(2000),
+                      lastDate: DateTime.now(),
+                    );
+                    if (date != null) {
+                      _dateController.text = date.formatDatePretty;
+                      _selectedDate = date;
+                    }
+                  },
+                ),
+                16.height,
+                CustomTextField(
+                  controller: _noteController,
+                  label: 'Note',
+                ),
+                20.height,
+                AppButton(
+                  onPressed: _submitImmunizationDetails,
+                  child: const Text('Submit'),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   void _showOverlay() {
     _overlayEntry = profileSwitchOverlay(
-      currentScreen: 'Contact Details',
+      currentScreen: 'Immunization Details',
       hideOverlay: _hideOverlay,
       layerLink: _layerLink,
+      list: ['Allergies'],
+      nextRoute: AllergyDetailsScreen.routeName,
     );
     Overlay.of(context).insert(_overlayEntry!);
   }

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import '../../../model/safe_json.dart';
 
 PatientProfileResult patientProfileResultFromJson(String str) =>
     PatientProfileResult.fromJson(json.decode(str));
@@ -21,9 +22,9 @@ class PatientProfileResult {
 
   factory PatientProfileResult.fromJson(Map<String, dynamic> json) =>
       PatientProfileResult(
-        code: json['code'],
-        status: json['status'],
-        message: json['message'],
+        code: SafeJson.asInt(json['code']),
+        status: SafeJson.asString(json['status']),
+        message: SafeJson.asString(json['message']),
         data: json['data'] == null
             ? null
             : PatientProfileData.fromJson(json['data']),
@@ -103,41 +104,39 @@ class PatientProfileData {
   factory PatientProfileData.fromJson(Map<String, dynamic> json) {
     // json.entries.forEach(print);
     return PatientProfileData(
-      id: json['id'],
-      usersType: json['usersType'],
-      email: json['email'],
-      userName: json['userName'],
-      pictureUrl: json['pictureUrl'],
-      firstName: json['firstName'],
-      middleName: json['middleName'],
-      lastName: json['lastName'],
-      gender: json['gender'],
+      id: SafeJson.asInt(json['id']),
+      usersType: SafeJson.asInt(json['usersType']),
+      email: SafeJson.asString(json['email']),
+      userName: SafeJson.asString(json['userName']),
+      pictureUrl: SafeJson.asString(json['pictureUrl']),
+      firstName: SafeJson.asString(json['firstName']),
+      middleName: SafeJson.asString(json['middleName']),
+      lastName: SafeJson.asString(json['lastName']),
+      gender: SafeJson.asString(json['gender']),
       dateOfBirth: json['dateOfBirth'] == null
           ? null
-          : DateTime.tryParse(json['dateOfBirth']),
-      phoneNumber: json['phoneNumber'],
-      stateOfOrigin: json['stateOfOrigin'],
-      lga: json['lga'],
-      placeOfBirth: json['placeOfBirth'],
-      maritalStatus: json['maritalStatus'],
-      nationality: json['nationality'],
-      socialAccountsJson: json['socialAccountsJson'],
-      nin: json['nin'],
-      weight: (json['weight'] as num?)?.toDouble(),
-      deviceToken: json['deviceToken'],
+          : DateTime.tryParse(SafeJson.asString(json['dateOfBirth'])),
+      phoneNumber: SafeJson.asString(json['phoneNumber']),
+      stateOfOrigin: SafeJson.asString(json['stateOfOrigin']),
+      lga: SafeJson.asString(json['lga']),
+      placeOfBirth: SafeJson.asString(json['placeOfBirth']),
+      maritalStatus: SafeJson.asString(json['maritalStatus']),
+      nationality: SafeJson.asString(json['nationality']),
+      socialAccountsJson: SafeJson.asString(json['socialAccountsJson']),
+      nin: json['nin'], // Keeping dynamic as it was
+      weight: SafeJson.asDouble(json['weight']),
+      deviceToken: SafeJson.asString(json['deviceToken']),
       lastLoginTime: json['lastLoginTime'] == null
           ? null
-          : DateTime.tryParse(json['lastLoginTime']),
-      socialAccounts: json['socialAccounts'] == null
-          ? []
-          : List<dynamic>.from(json['socialAccounts'].map((x) => x)),
-      fullName: json['fullName'],
-      clinic: json['clinic'],
-      clinicId: json['clinicId'],
-      hasHmo: json['hasHmo'],
-      isReferred: json['isReferred'],
-      patientRef: json['patientRef'],
-      socialRoleId: json['socialRoleId'],
+          : DateTime.tryParse(SafeJson.asString(json['lastLoginTime'])),
+      socialAccounts: SafeJson.asList(json['socialAccounts']),
+      fullName: SafeJson.asString(json['fullName']),
+      clinic: json['clinic'], // Keeping dynamic
+      clinicId: SafeJson.asInt(json['clinicId']),
+      hasHmo: SafeJson.asBool(json['hasHmo']),
+      isReferred: json['isReferred'], // Keeping dynamic
+      patientRef: SafeJson.asString(json['patientRef']),
+      socialRoleId: SafeJson.asInt(json['socialRoleId']),
     );
   }
 

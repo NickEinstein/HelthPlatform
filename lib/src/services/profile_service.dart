@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:greenzone_medical/src/app_pkg.dart';
-import 'package:greenzone_medical/src/features/profile/model/allergy_result.dart';
+import 'package:greenzone_medical/src/features/profile/model/allergy_list_model.dart';
 import 'package:greenzone_medical/src/features/profile/model/emergency_contact_info.dart';
 import 'package:greenzone_medical/src/features/profile/model/immunization_result.dart';
 import 'package:greenzone_medical/src/features/profile/model/patient_contact_model.dart';
@@ -45,6 +45,63 @@ class ProfileService {
       return null;
     }
   }
+  Future<String?> addAllergy(Map<String, dynamic> payload) async {
+    try {
+      final token = await getToken();
+      final userId = await getUserId();
+
+      if (token == null || token.isEmpty || userId == null) {
+        debugPrint('⚠️ No access token found.');
+        return null;
+      }
+      final endpoint = ApiUrl.addAllergy(userId);
+      final response = await _apiService.post(
+        endpoint,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        data: payload,
+      );
+      if ((response.statusCode == 200 || response.statusCode == 1)) {
+        return response.data['data']['message'];
+      } else {
+        debugPrint(' Failed to add allergy: ${response.statusCode}');
+        throw Exception('Failed to add allergy: ${response.statusCode}');
+      }
+    } catch (error, s) {
+      debugPrint(' Error adding allergy: $error');
+      print(s);
+      throw Exception('Error adding allergy: $error');
+    }
+  }
+
+
+
+  Future<List<AllergyListModel>> getAllAllergyList() async {
+    try {
+      final response = await _apiService.get(
+        ApiUrl.getAllAllergies,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      );
+      if ((response.statusCode == 200 || response.data['code'] == 1)) {
+        final List<AllergyListModel> allAllergies =
+            (response.data['data'] as List)
+                .map((e) => AllergyListModel.fromJson(e))
+                .toList();
+
+        return allAllergies;
+      } else {
+        return [];
+      }
+    } catch (error,s) {
+      debugPrint(' Error getting all allergies: $error');
+      print(s);
+      return [];
+    }
+  }
 
   Future<String?> addImmunization(ImmunizationResult payload) async {
     try {
@@ -55,10 +112,9 @@ class ProfileService {
         debugPrint('⚠️ No access token found.');
         return null;
       }
-      // payload.toJson().entries.forEach(print);
-
-      final response = await _apiService.put(
-        ApiUrl.addImmunization(userId),
+      final endpoint = ApiUrl.addImmunization(userId);
+      final response = await _apiService.post(
+        endpoint,
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
@@ -68,14 +124,12 @@ class ProfileService {
       if ((response.statusCode == 200 || response.statusCode == 1)) {
         return response.data['data']['message'];
       } else {
-        debugPrint(
-            ' Failed to update emergency contact: ${response.statusCode}');
-        throw Exception(
-            'Failed to update emergency contact: ${response.statusCode}');
+        debugPrint(' Failed to add immunization: ${response.statusCode}');
+        throw Exception('Failed to add immunization: ${response.statusCode}');
       }
     } catch (error) {
-      debugPrint(' Error fetching update emergency contact: $error');
-      throw Exception('Error fetching update emergency contact: $error');
+      debugPrint(' Error adding immunization: $error');
+      throw Exception('Error adding immunization: $error');
     }
   }
 
@@ -238,7 +292,7 @@ class ProfileService {
     }
   }
 
-  Future<List<AllergyResult>?> getAllergyResult() async {
+  Future<List<UserAllergyModel>?> getAllergyResult() async {
     try {
       final token = await getToken();
       final userId = await getUserId();
@@ -256,17 +310,18 @@ class ProfileService {
         },
       );
       if ((response.statusCode == 200 || response.data['code'] == 1)) {
-        final List<AllergyResult> allergyResult =
+        final List<UserAllergyModel> allergyResult =
             (response.data['data'] as List)
-                .map((e) => AllergyResult.fromJson(e))
+                .map((e) => UserAllergyModel.fromJson(e))
                 .toList();
 
         return allergyResult;
       } else {
         return [];
       }
-    } catch (error) {
-      debugPrint(' Error fetching get immunization: $error');
+    } catch (error,s) {
+      debugPrint(' Error getting allergy: $error');
+      print(s);
       return [];
     }
   }

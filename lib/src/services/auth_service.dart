@@ -292,12 +292,20 @@ class AuthService {
   //     return _handleError(error);
   //   }
   // }
-  Future<String> otpSendUrl(String email) async {
+  Future<String> otpSendUrl({
+    String? userId,
+    String? sendChannel,
+    String? email,
+  }) async {
     try {
+      final url = email == null
+          ? ApiUrl.otpSendUrlWithChannel(userId ?? '', sendChannel ?? '')
+          : ApiUrl.otpSendUrl(email);
       final response = await _apiService.post(
-        ApiUrl.otpSendUrl + email,
+        url,
       );
-
+      print('Url: $url');
+      print('Response: ${response.data}');
       // Check if the status code is 200 and the response body has a failure code
       if (response.statusCode == 200 && response.data != null) {
         if (response.data['code'] == 4) {

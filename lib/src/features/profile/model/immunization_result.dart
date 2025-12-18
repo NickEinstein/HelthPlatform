@@ -1,4 +1,5 @@
- import 'dart:convert';
+import 'dart:convert';
+import '../../../model/safe_json.dart';
 
 ImmunizationResult immunizationResultFromJson(String str) =>
     ImmunizationResult.fromJson(json.decode(str));
@@ -35,18 +36,19 @@ class ImmunizationResult {
 
   factory ImmunizationResult.fromJson(Map<String, dynamic> json) =>
       ImmunizationResult(
-        id: json['id'],
-        vaccine: json['vaccine'],
-        vaccineBrand: json['vaccineBrand'],
-        batchId: json['batchId'],
-        quantity: json['quantity'],
-        age: json['age'],
-        weight: (json['weight'] as num?)?.toDouble(),
-        temperature: (json['temperature'] as num?)?.toDouble(),
-        dateGiven:
-            json['dateGiven'] == null ? null : DateTime.tryParse(json['dateGiven']),
-        notes: json['notes'],
-        patientId: json['patientId'],
+        id: SafeJson.asInt(json['id']),
+        vaccine: SafeJson.asString(json['vaccine']),
+        vaccineBrand: SafeJson.asString(json['vaccineBrand']),
+        batchId: SafeJson.asString(json['batchId']),
+        quantity: SafeJson.asInt(json['quantity']),
+        age: SafeJson.asInt(json['age']),
+        weight: SafeJson.asDouble(json['weight']),
+        temperature: SafeJson.asDouble(json['temperature']),
+        dateGiven: json['dateGiven'] == null
+            ? null
+            : DateTime.tryParse(SafeJson.asString(json['dateGiven'])),
+        notes: SafeJson.asString(json['notes']),
+        patientId: SafeJson.asInt(json['patientId']),
       );
 
   Map<String, dynamic> toJson() => {
@@ -61,5 +63,6 @@ class ImmunizationResult {
         'dateGiven': dateGiven?.toIso8601String(),
         'notes': notes,
         'patientId': patientId,
+        'immunizationDocuments': [],
       };
 }

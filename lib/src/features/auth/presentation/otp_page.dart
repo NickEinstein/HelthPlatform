@@ -162,7 +162,7 @@ class _OTPPageState extends ConsumerState<OTPPage> {
                       ref.read(isLoadingProvider.notifier).state = true;
 
                       final authService = ref.read(authServiceProvider);
-                      final result = await authService.otpSendUrl(widget.email);
+                      final result = await authService.otpSendUrl(email:widget.email);
 
                       if (!context.mounted) return;
                       ref.read(isLoadingProvider.notifier).state = false;

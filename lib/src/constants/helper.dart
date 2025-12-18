@@ -20,10 +20,12 @@ class CustomTextField extends StatefulWidget {
   final bool isDropdown;
   final VoidCallback? onTap;
   final TextInputType? keyboardType;
+  final AutovalidateMode? autoValidateMode;
 
   const CustomTextField({
     Key? key,
     this.label,
+    this.autoValidateMode,
     this.hint = '',
     this.controller,
     this.validator,
@@ -100,6 +102,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
             ),
           ),
         TextFormField(
+          autovalidateMode:
+              widget.autoValidateMode ?? AutovalidateMode.disabled,
           keyboardType: widget.keyboardType,
           onTap: widget.onTap,
           readOnly: widget.readOnly,

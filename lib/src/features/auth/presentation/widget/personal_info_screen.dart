@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:greenzone_medical/src/provider/all_providers.dart';
+import 'package:greenzone_medical/src/utils/enum.dart';
+import 'package:greenzone_medical/src/utils/extensions/extensions.dart';
+import 'package:greenzone_medical/src/utils/extensions/string_extensions.dart';
 import 'package:greenzone_medical/src/utils/packages.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:greenzone_medical/src/constants/color_constant.dart';
@@ -194,7 +197,7 @@ class _PersonalInfoScreenState extends ConsumerState<PersonalInfoScreen> {
               ],
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return "Email cannot be empty";
+                  return null;
                 }
                 if (!RegExp(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}")
                     .hasMatch(value)) {
@@ -333,9 +336,162 @@ class _PersonalInfoScreenState extends ConsumerState<PersonalInfoScreen> {
             ),
             16.height,
             CustomTextField(
-              hint: "Referral Code (optional)",
+              hint: "Enter referral code",
               keyboardType: TextInputType.number,
               controller: widget.controller.referralCodeController,
+              label: 'Referral Code (optional)',
+            ),
+            16.height,
+            Text(
+              'How would you like to receive your OTP?',
+              style: context.textTheme.bodyMedium,
+            ),
+            8.height,
+            Row(
+              children: [
+                Expanded(
+                  child: InkWell(
+                    onTap: () {
+                      if (widget.controller.emailController.text.isEmpty) {
+                        return;
+                      }
+                      setState(() {
+                        widget.controller.changeOTPChannel(OTPChannel.email);
+                      });
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      decoration: BoxDecoration(
+                        color: widget.controller.channel == OTPChannel.email
+                            ? ColorConstant.primaryLightColor
+                                .withValues(alpha: .4)
+                            : Colors.white,
+                        border: Border.all(
+                          color: widget.controller.channel == OTPChannel.email
+                              ? ColorConstant.primaryColor
+                              : Colors.grey,
+                        ),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Column(
+                        children: [
+                          Icon(
+                            Icons.email,
+                            color: widget.controller.channel == OTPChannel.email
+                                ? ColorConstant.primaryColor
+                                : Colors.grey,
+                          ),
+                          4.height,
+                          Text(
+                            'Email',
+                            style: context.textTheme.bodyMedium?.copyWith(
+                              color:
+                                  widget.controller.channel == OTPChannel.email
+                                      ? ColorConstant.primaryColor
+                                      : Colors.grey,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                8.width,
+                Expanded(
+                  child: InkWell(
+                    onTap: () {
+                      setState(() {
+                        widget.controller.changeOTPChannel(OTPChannel.sms);
+                      });
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      decoration: BoxDecoration(
+                        color: widget.controller.channel == OTPChannel.sms
+                            ? ColorConstant.primaryLightColor
+                                .withValues(alpha: .4)
+                            : Colors.white,
+                        border: Border.all(
+                          color: widget.controller.channel == OTPChannel.sms
+                              ? ColorConstant.primaryColor
+                              : Colors.grey,
+                        ),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Column(
+                        children: [
+                          Icon(
+                            Icons.phone_android,
+                            color: widget.controller.channel == OTPChannel.sms
+                                ? ColorConstant.primaryColor
+                                : Colors.grey,
+                          ),
+                          4.height,
+                          Text(
+                            'SMS',
+                            style: context.textTheme.bodyMedium?.copyWith(
+                              color: widget.controller.channel == OTPChannel.sms
+                                  ? ColorConstant.primaryColor
+                                  : Colors.grey,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                8.width,
+                Expanded(
+                  child: InkWell(
+                    onTap: () {
+                      setState(() {
+                        widget.controller.changeOTPChannel(OTPChannel.whatsapp);
+                      });
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      decoration: BoxDecoration(
+                        color: widget.controller.channel == OTPChannel.whatsapp
+                            ? ColorConstant.primaryLightColor
+                                .withValues(alpha: .4)
+                            : Colors.white,
+                        border: Border.all(
+                          color:
+                              widget.controller.channel == OTPChannel.whatsapp
+                                  ? ColorConstant.primaryColor
+                                  : Colors.grey,
+                        ),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Column(
+                        children: [
+                          SvgPicture.asset(
+                            'whatsapp'.toSvg,
+                            colorFilter: ColorFilter.mode(
+                              widget.controller.channel == OTPChannel.whatsapp
+                                  ? ColorConstant.primaryColor
+                                  : Colors.grey,
+                              BlendMode.srcIn,
+                            ),
+                            height: 24,
+                            width: 24,
+                          ),
+                          4.height,
+                          Text(
+                            'Whatsapp',
+                            style: context.textTheme.bodyMedium?.copyWith(
+                              color: widget.controller.channel ==
+                                      OTPChannel.whatsapp
+                                  ? ColorConstant.primaryColor
+                                  : Colors.grey,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                )
+              ],
             ),
             16.height,
             Row(

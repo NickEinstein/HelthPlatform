@@ -3,7 +3,12 @@ import 'dart:async';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:greenzone_medical/src/app_pkg.dart';
+import 'package:greenzone_medical/src/utils/enum.dart';
+import 'package:greenzone_medical/src/utils/extensions/extensions.dart';
+import 'package:greenzone_medical/src/utils/extensions/string_extensions.dart';
+import 'package:greenzone_medical/src/utils/extensions/widget_extensions.dart';
 
 import '../../../../constants/helper.dart';
 import '../../../../provider/all_providers.dart';
@@ -114,12 +119,193 @@ class _RegisterOTPPageState extends ConsumerState<RegisterOTPPage> {
                 ),
                 smallSpace(),
                 Text(
-                  "A four-digit code has been sent to this email address ${maskEmail(widget.controller.emailController.text)}",
+                  "We've sent a 4-digit verification code via ${widget.controller.channel.name.capitalizeFirst} to ${(widget.controller.channel == OTPChannel.email ? maskEmail(widget.controller.emailController.text) : widget.controller.phoneController.text)}",
                   style: const TextStyle(
                       color: ColorConstant.secondryColor,
                       fontSize: 14,
                       fontWeight: FontWeight.w400),
                 ),
+                smallSpace(),
+                Text(
+                  'Change OTP delivery method',
+                  style: context.textTheme.bodyMedium,
+                ),
+                12.height,
+
+                Row(
+                  children: [
+                    Expanded(
+                      child: InkWell(
+                        onTap: () {
+                          // if (widget.controller.emailController.text.isEmpty) {
+                          //   return;
+                          // }
+                          setState(() {
+                            widget.controller
+                                .changeOTPChannel(OTPChannel.email);
+                          });
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          decoration: BoxDecoration(
+                            color: widget.controller.channel == OTPChannel.email
+                                ? ColorConstant.primaryLightColor
+                                    .withValues(alpha: .4)
+                                : Colors.white,
+                            border: Border.all(
+                              color:
+                                  widget.controller.channel == OTPChannel.email
+                                      ? ColorConstant.primaryColor
+                                      : Colors.grey,
+                            ),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Column(
+                            children: [
+                              Icon(
+                                Icons.email,
+                                color: widget.controller.channel ==
+                                        OTPChannel.email
+                                    ? ColorConstant.primaryColor
+                                    : Colors.grey,
+                              ),
+                              4.height,
+                              Text(
+                                'Email',
+                                style: context.textTheme.bodyMedium?.copyWith(
+                                  color: widget.controller.channel ==
+                                          OTPChannel.email
+                                      ? ColorConstant.primaryColor
+                                      : Colors.grey,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    8.width,
+                    Expanded(
+                      child: InkWell(
+                        onTap: () {
+                          setState(() {
+                            widget.controller.changeOTPChannel(OTPChannel.sms);
+                          });
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          decoration: BoxDecoration(
+                            color: widget.controller.channel == OTPChannel.sms
+                                ? ColorConstant.primaryLightColor
+                                    .withValues(alpha: .4)
+                                : Colors.white,
+                            border: Border.all(
+                              color: widget.controller.channel == OTPChannel.sms
+                                  ? ColorConstant.primaryColor
+                                  : Colors.grey,
+                            ),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Column(
+                            children: [
+                              Icon(
+                                Icons.phone_android,
+                                color:
+                                    widget.controller.channel == OTPChannel.sms
+                                        ? ColorConstant.primaryColor
+                                        : Colors.grey,
+                              ),
+                              4.height,
+                              Text(
+                                'SMS',
+                                style: context.textTheme.bodyMedium?.copyWith(
+                                  color: widget.controller.channel ==
+                                          OTPChannel.sms
+                                      ? ColorConstant.primaryColor
+                                      : Colors.grey,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    8.width,
+                    Expanded(
+                      child: InkWell(
+                        onTap: () {
+                          setState(() {
+                            widget.controller
+                                .changeOTPChannel(OTPChannel.whatsapp);
+                          });
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          decoration: BoxDecoration(
+                            color:
+                                widget.controller.channel == OTPChannel.whatsapp
+                                    ? ColorConstant.primaryLightColor
+                                        .withValues(alpha: .4)
+                                    : Colors.white,
+                            border: Border.all(
+                              color: widget.controller.channel ==
+                                      OTPChannel.whatsapp
+                                  ? ColorConstant.primaryColor
+                                  : Colors.grey,
+                            ),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Column(
+                            children: [
+                              SvgPicture.asset(
+                                'whatsapp'.toSvg,
+                                colorFilter: ColorFilter.mode(
+                                  widget.controller.channel ==
+                                          OTPChannel.whatsapp
+                                      ? ColorConstant.primaryColor
+                                      : Colors.grey,
+                                  BlendMode.srcIn,
+                                ),
+                                height: 24,
+                                width: 24,
+                              ),
+                              4.height,
+                              Text(
+                                'Whatsapp',
+                                style: context.textTheme.bodyMedium?.copyWith(
+                                  color: widget.controller.channel ==
+                                          OTPChannel.whatsapp
+                                      ? ColorConstant.primaryColor
+                                      : Colors.grey,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+                if (widget.controller.emailIsEmpty &&
+                    widget.controller.channel == OTPChannel.email) ...[
+                  smallSpace(),
+                  CustomTextField(
+                    label: 'Email',
+                    controller: widget.controller.emailController,
+                    autoValidateMode: AutovalidateMode.always,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'This field cannot be empty';
+                      }
+                      if (!RegExp(
+                              r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}")
+                          .hasMatch(value)) {
+                        return "Enter a valid email address";
+                      }
+                      return null;
+                    },
+                  ),
+                ],
                 mediumSpace(),
                 PinInputField(
                   length: 4,
@@ -198,8 +384,16 @@ class _RegisterOTPPageState extends ConsumerState<RegisterOTPPage> {
                               final email =
                                   widget.controller.emailController.text;
 
-                              final result =
-                                  await authService.otpSendUrl(email);
+                              final result = await authService.otpSendUrl(
+                                email: widget.controller.patientId == null ||
+                                        (widget.controller.channel ==
+                                                OTPChannel.email &&
+                                            widget.controller.emailIsEmpty)
+                                    ? email
+                                    : null,
+                                sendChannel: widget.controller.channel.name,
+                                userId: widget.controller.patientId?.toString(),
+                              );
 
                               if (!context.mounted) {
                                 return;

@@ -17,7 +17,7 @@ class ApiUrl {
   static String getImmunizationResult(String id) =>
       '/ConnectedHealthWebApi/api/Patient/immunization/$id';
   static String getAllergyResult(String id) =>
-      '/ConnectedHealthWebApi/api/Patient/allergy/$id';
+      '/ConnectedHealthWebApi/api/UserAllergies/list/patient/$id';
   static String getPatientProfile(String id) =>
       '/ConnectedHealthWebApi/api/Patient/single/$id';
   static const String profileGetUrl =
@@ -33,8 +33,11 @@ class ApiUrl {
       '/ConnectedHealthWebApi/api/Auth/forgot-password';
   static const String resetPasswordPostUrl =
       '/ConnectedHealthWebApi/api/Auth/reset-password';
-  static const String otpSendUrl =
-      '/ConnectedHealthWebApi/api/Auth/generate-otp?email=';
+  static String otpSendUrlWithChannel(String userId, String sendChannel) =>
+      '/ConnectedHealthWebApi/api/Auth/generate-my-otp?userId=$userId&sendChannel=$sendChannel';
+  static String otpSendUrl(String email) =>
+      '/ConnectedHealthWebApi/api/Auth/generate-otp?email=$email';
+  //   '/ConnectedHealthWebApi/api/Auth/generate-otp?email=';
   static const String allArticleUrl =
       '/ConnectedHealthWebApi/api/Articles?page=1&pageSize=100000';
   // static const String allBannersUrl = '/Banners';
@@ -253,7 +256,13 @@ class ApiUrl {
       '/ConnectedHealthWebApi/api/patient/$id/emergency-contact-update';
 
   static String addImmunization(String id) =>
-      '/ConnectedHealthWebApi/api/immunization/$id';
+      '/ConnectedHealthDoctorApi/api/immunization/$id';
+  static String getAllAllergies =
+      'ConnectedHealthWebApi/api/UserAllergies/list/allergies';
+  static String getPatientAllergies(String id) =>
+      'ConnectedHealthWebApi/api/UserAllergies/list/patient/$id';
+  static String addAllergy(String id) =>
+      'ConnectedHealthWebApi/api/UserAllergies/create/patient/$id';
 
   static String getCountry = '/ConnectedHealthWebApi/api/Geography/countries/';
   static String getState(String cid) =>

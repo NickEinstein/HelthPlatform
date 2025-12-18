@@ -16,6 +16,8 @@ import 'package:greenzone_medical/src/features/pharmacy/presentation/single_drug
 import 'package:greenzone_medical/src/features/plan/presentation/single_plan_dashboard.dart';
 import 'package:greenzone_medical/src/features/prescription/presentation/prescriptions.dart';
 import 'package:greenzone_medical/src/features/plan/presentation/my_goals_screen.dart';
+import 'package:greenzone_medical/src/features/profile/presentation/allergy_details.dart';
+import 'package:greenzone_medical/src/features/profile/presentation/immunization_details.dart';
 import 'package:greenzone_medical/src/features/profile/presentation/profile_management.dart';
 import 'package:greenzone_medical/src/features/profile/presentation/update_contact_details.dart';
 import 'package:greenzone_medical/src/features/profile/presentation/update_emergency_contact.dart';
@@ -60,6 +62,14 @@ final routerProvider = Provider<GoRouter>((ref) {
     debugLogDiagnostics: true,
     initialLocation: _Paths.SPLASH,
     routes: [
+      GoRoute(
+        path: AllergyDetailsScreen.routeName,
+        builder: (context, state) => const AllergyDetailsScreen(),
+      ),
+      GoRoute(
+        path: ImmunizationDetailsScreen.routeName,
+        builder: (context, state) => const ImmunizationDetailsScreen(),
+      ),
       GoRoute(
         path: UpdateEmergencyContact.routeName,
         builder: (context, state) {

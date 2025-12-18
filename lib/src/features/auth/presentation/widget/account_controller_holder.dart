@@ -1,11 +1,13 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:greenzone_medical/src/utils/enum.dart';
 
 class AccountCreationController {
   final TextEditingController firstNameController = TextEditingController();
   final TextEditingController lastNameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
+  bool emailIsEmpty = true;
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController dobDayController = TextEditingController();
   final TextEditingController dobMonthController = TextEditingController();
@@ -31,6 +33,12 @@ class AccountCreationController {
   final TextEditingController emelgaController = TextEditingController();
   final TextEditingController emecityController = TextEditingController();
   final TextEditingController referralCodeController = TextEditingController();
+
+  OTPChannel channel = OTPChannel.sms;
+  changeOTPChannel(OTPChannel newChannel) {
+    channel = newChannel;
+  }
+
   bool rememberMe = false;
 
   toggleRememberMe() {

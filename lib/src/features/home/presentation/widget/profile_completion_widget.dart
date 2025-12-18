@@ -33,7 +33,7 @@ class _ProfileCompletionWidgetState
   Widget build(BuildContext context) {
     final state = ref.watch(profileProvider);
     final immunizations = state.immunizations;
-    final allergies = state.allergies;
+    final allergies = state.userAllergies;
 
     final loading = Container(
       decoration: BoxDecoration(

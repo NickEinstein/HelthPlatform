@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:greenzone_medical/src/features/profile/model/allergy_result.dart';
+import 'package:greenzone_medical/src/features/profile/model/allergy_list_model.dart';
 import 'package:greenzone_medical/src/features/profile/model/emergency_contact_info.dart';
 import 'package:greenzone_medical/src/features/profile/model/immunization_result.dart';
 import 'package:greenzone_medical/src/features/profile/model/patient_contact_model.dart';
@@ -28,7 +28,7 @@ final immunizationProvider =
 });
 
 final allergyProvider =
-    FutureProvider.autoDispose<List<AllergyResult>?>((ref) async {
+    FutureProvider.autoDispose<List<UserAllergyModel>?>((ref) async {
   final patientProfileService = ref.watch(profileServiceProvider);
   return patientProfileService.getAllergyResult();
 });
@@ -37,8 +37,9 @@ class ProfileState {
   final PatientProfileResult? patientProfile;
   final PatientContactModel? patientContact;
   final List<ImmunizationResult>? immunizations;
-  final List<AllergyResult>? allergies;
+  final List<UserAllergyModel>? userAllergies;
   final EmergencyContactInfo? emergencyContactInfo;
+  final List<AllergyListModel>? allAllergies;
   final bool isLoading;
 
   ProfileState({
@@ -46,7 +47,8 @@ class ProfileState {
     this.patientContact,
     this.patientProfile,
     this.immunizations,
-    this.allergies,
+    this.userAllergies,
+    this.allAllergies,
     this.isLoading = false,
   });
 
@@ -54,15 +56,17 @@ class ProfileState {
     PatientProfileResult? patientProfile,
     PatientContactModel? patientContact,
     List<ImmunizationResult>? immunizations,
-    List<AllergyResult>? allergies,
+    List<UserAllergyModel>? allergies,
     EmergencyContactInfo? emergencyContactInfo,
+    List<AllergyListModel>? allAllergies,
     bool? isLoading,
   }) {
     return ProfileState(
+      allAllergies: allAllergies ?? this.allAllergies,
       patientProfile: patientProfile ?? this.patientProfile,
       patientContact: patientContact ?? this.patientContact,
       immunizations: immunizations ?? this.immunizations,
-      allergies: allergies ?? this.allergies,
+      userAllergies: allergies ?? this.userAllergies,
       isLoading: isLoading ?? this.isLoading,
       emergencyContactInfo: emergencyContactInfo ?? this.emergencyContactInfo,
     );
@@ -76,6 +80,20 @@ class ProfileProvider extends Notifier<ProfileState> {
   @override
   ProfileState build() {
     return ProfileState();
+  }
+
+  Future<(bool, String?)> addAllergy(Map<String, dynamic> payload) async {
+    state = state.copyWith(isLoading: true);
+    try {
+      final service = ref.read(profileServiceProvider);
+      final result = await service.addAllergy(payload);
+      state = state.copyWith(isLoading: false);
+      await getAllergyResult();
+      return (true, result);
+    } catch (e) {
+      state = state.copyWith(isLoading: false);
+      return (false, e.toString());
+    }
   }
 
   Future<(bool, String?)> addImmunization(ImmunizationResult payload) async {
@@ -137,33 +155,6 @@ class ProfileProvider extends Notifier<ProfileState> {
     }
   }
 
-  Future<void> fetchAll() async {
-    state = state.copyWith(isLoading: true);
-    try {
-      final service = ref.read(profileServiceProvider);
-
-      // Fetch concurrently for better performance
-      final results = await Future.wait([
-        service.getPatientProfile(),
-        service.getImmunizationResult(),
-        service.getAllergyResult(),
-        service.getPatientContact(),
-        service.getEmergencyContactInfo(),
-      ]);
-
-      state = state.copyWith(
-        patientProfile: results[0] as PatientProfileResult?,
-        immunizations: results[1] as List<ImmunizationResult>?,
-        allergies: results[2] as List<AllergyResult>?,
-        patientContact: results[3] as PatientContactModel?,
-        emergencyContactInfo: results[4] as EmergencyContactInfo?,
-        isLoading: false,
-      );
-    } catch (e) {
-      state = state.copyWith(isLoading: false);
-    }
-  }
-
   Future<(bool, String?)> updateEmergencyContact(
     EmergencyContactInfo payload,
   ) async {
@@ -202,6 +193,46 @@ class ProfileProvider extends Notifier<ProfileState> {
     } catch (e) {
       state = state.copyWith(isLoading: false);
       return (false, e.toString());
+    }
+  }
+
+  Future<void> fetchAllAllergies() async {
+    state = state.copyWith(isLoading: true);
+    try {
+      final service = ref.read(profileServiceProvider);
+      final result = await service.getAllAllergyList();
+      state = state.copyWith(allAllergies: result, isLoading: false);
+    } catch (e,s) {
+      print(e);
+      print(s);
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
+  Future<void> fetchAll() async {
+    state = state.copyWith(isLoading: true);
+    try {
+      final service = ref.read(profileServiceProvider);
+
+      // Fetch concurrently for better performance
+      final results = await Future.wait([
+        service.getPatientProfile(),
+        service.getImmunizationResult(),
+        service.getAllergyResult(),
+        service.getPatientContact(),
+        service.getEmergencyContactInfo(),
+      ]);
+
+      state = state.copyWith(
+        patientProfile: results[0] as PatientProfileResult?,
+        immunizations: results[1] as List<ImmunizationResult>?,
+        allergies: results[2] as List<UserAllergyModel>?,
+        patientContact: results[3] as PatientContactModel?,
+        emergencyContactInfo: results[4] as EmergencyContactInfo?,
+        isLoading: false,
+      );
+    } catch (e) {
+      state = state.copyWith(isLoading: false);
     }
   }
 }

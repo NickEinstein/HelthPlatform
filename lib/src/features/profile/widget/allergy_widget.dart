@@ -1,18 +1,20 @@
-import 'package:greenzone_medical/src/features/profile/model/immunization_result.dart';
+import 'package:greenzone_medical/src/features/profile/model/allergy_list_model.dart';
 import 'package:greenzone_medical/src/utils/extensions/extensions.dart';
 import 'package:greenzone_medical/src/utils/packages.dart';
 import 'package:intl/intl.dart';
 
-class ImmunizationWidget extends StatefulWidget {
-  final ImmunizationResult immunization;
-  const ImmunizationWidget({super.key, required this.immunization});
+class AllergyWidget extends ConsumerStatefulWidget {
+  final UserAllergyModel allergy;
+  final AllergyListModel? otherAllergy;
+  const AllergyWidget({super.key, required this.allergy, this.otherAllergy});
 
   @override
-  State<ImmunizationWidget> createState() => _ImmunizationWidgetState();
+  ConsumerState<AllergyWidget> createState() => _AllergyWidgetState();
 }
 
-class _ImmunizationWidgetState extends State<ImmunizationWidget> {
+class _AllergyWidgetState extends ConsumerState<AllergyWidget> {
   bool isOpen = false;
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -42,7 +44,7 @@ class _ImmunizationWidgetState extends State<ImmunizationWidget> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          widget.immunization.vaccine ?? '   ',
+                          widget.allergy.allergy,
                           style: context.textTheme.labelLarge,
                         ),
                         const RotatedBox(
@@ -74,7 +76,7 @@ class _ImmunizationWidgetState extends State<ImmunizationWidget> {
                             ),
                             Expanded(
                               child: Text(
-                                widget.immunization.age.toString(),
+                                widget.allergy.allergy,
                                 style: context.textTheme.bodyMedium,
                               ),
                             ),
@@ -91,7 +93,8 @@ class _ImmunizationWidgetState extends State<ImmunizationWidget> {
                             ),
                             Expanded(
                               child: Text(
-                                widget.immunization.batchId ?? '',
+                                // widget.immunization.batchId ?? '',
+                                '',
                                 style: context.textTheme.bodyMedium,
                               ),
                             ),
@@ -108,7 +111,8 @@ class _ImmunizationWidgetState extends State<ImmunizationWidget> {
                             ),
                             Expanded(
                               child: Text(
-                                widget.immunization.vaccineBrand ?? '',
+                                // widget.immunization.vaccineBrand ?? '',
+                                '',
                                 style: context.textTheme.bodyMedium,
                               ),
                             ),
@@ -132,7 +136,8 @@ class _ImmunizationWidgetState extends State<ImmunizationWidget> {
                     ),
                     child: Text(
                       DateFormat('MMMM dd, yyyy').format(
-                        widget.immunization.dateGiven ?? DateTime.now(),
+                        // widget.immunization.dateGiven ??
+                        DateTime.now(),
                       ),
                       style: context.textTheme.bodyMedium?.copyWith(
                         color: const Color(0xFF797979),
@@ -152,7 +157,8 @@ class _ImmunizationWidgetState extends State<ImmunizationWidget> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    widget.immunization.vaccine ?? '',
+                    // widget.immunization.vaccine ??
+                    '',
                     style: context.textTheme.labelLarge,
                   ),
                   const Icon(

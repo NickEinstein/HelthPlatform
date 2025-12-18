@@ -1,3 +1,4 @@
+import 'package:greenzone_medical/src/features/profile/presentation/immunization_details.dart';
 import 'package:greenzone_medical/src/features/profile/presentation/update_personal_info_screen.dart';
 import 'package:greenzone_medical/src/provider/profile_provider.dart';
 import 'package:greenzone_medical/src/resources/colors/colors.dart';
@@ -29,7 +30,7 @@ class _ProfileManagementState extends ConsumerState<ProfileManagement> {
     final state = ref.watch(profileProvider);
     final profile = state.patientProfile;
     final immunizations = state.immunizations;
-    final allergies = state.allergies;
+    final allergies = state.userAllergies;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -156,6 +157,7 @@ class _ProfileManagementState extends ConsumerState<ProfileManagement> {
                   }),
                   // Seventh - Immunization
                   _buildProfileItem(
+                    route: ImmunizationDetailsScreen.routeName,
                     icon: Icons.vaccines_outlined,
                     title: 'Immunizations',
                     subtitle: (immunizations?.isNotEmpty == true)
@@ -212,13 +214,14 @@ class _ProfileManagementState extends ConsumerState<ProfileManagement> {
     required String title,
     required String subtitle,
     required bool isComplete,
+    String? route,
     String? svgAsset,
   }) {
     final color = isComplete ? AppColors.primary : AppColors.greyTextColor;
 
     return InkWell(
       onTap: () {
-        context.push(UpdatePersonalDetailsScreen.routeName);
+        context.push(route ?? UpdatePersonalDetailsScreen.routeName);
       },
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 16),
