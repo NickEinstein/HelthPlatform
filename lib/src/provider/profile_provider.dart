@@ -202,7 +202,7 @@ class ProfileProvider extends Notifier<ProfileState> {
       final service = ref.read(profileServiceProvider);
       final result = await service.getAllAllergyList();
       state = state.copyWith(allAllergies: result, isLoading: false);
-    } catch (e,s) {
+    } catch (e, s) {
       print(e);
       print(s);
       state = state.copyWith(isLoading: false);

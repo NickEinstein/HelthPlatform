@@ -157,8 +157,7 @@ class _AllergyWidgetState extends ConsumerState<AllergyWidget> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    // widget.immunization.vaccine ??
-                    '',
+                    widget.allergy.allergy,
                     style: context.textTheme.labelLarge,
                   ),
                   const Icon(

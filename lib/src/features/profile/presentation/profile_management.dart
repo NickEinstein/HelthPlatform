@@ -1,3 +1,4 @@
+import 'package:greenzone_medical/src/features/profile/presentation/allergy_details.dart';
 import 'package:greenzone_medical/src/features/profile/presentation/immunization_details.dart';
 import 'package:greenzone_medical/src/features/profile/presentation/update_personal_info_screen.dart';
 import 'package:greenzone_medical/src/provider/profile_provider.dart';
@@ -175,6 +176,7 @@ class _ProfileManagementState extends ConsumerState<ProfileManagement> {
                         : 'Missing: Add at least one allergy record',
                     isComplete: allergies?.isNotEmpty ?? false,
                     svgAsset: SvgAssets.immunization,
+                    route: AllergyDetailsScreen.routeName,
                   ),
                 ],
               ),

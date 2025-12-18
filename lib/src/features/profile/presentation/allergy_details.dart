@@ -28,9 +28,12 @@ class _ImmunizationDetailsScreenState
   void initState() {
     super.initState();
     _otherAllergyController = TextEditingController();
-    if ((ref.read(profileProvider).allAllergies?.isEmpty ?? true) && mounted) {
-      ref.read(profileProvider.notifier).fetchAllAllergies();
-    }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if ((ref.read(profileProvider).allAllergies?.isEmpty ?? true) &&
+          mounted) {
+        ref.read(profileProvider.notifier).fetchAllAllergies();
+      }
+    });
   }
 
   @override
@@ -125,6 +128,7 @@ class _ImmunizationDetailsScreenState
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Row(
+                            mainAxisSize: MainAxisSize.min,
                             children: [
                               Checkbox(
                                 value:
@@ -214,18 +218,20 @@ class _ImmunizationDetailsScreenState
       },
       child: Scaffold(
         backgroundColor: Colors.white,
-        floatingActionButton: isLoading
-            ? const SizedBox()
-            : FloatingActionButton(
-                backgroundColor: ColorConstant.primaryColor,
-                onPressed: () async {
-                  showAddAllergySheet();
-                },
-                child: const Icon(
-                  Icons.add,
-                  color: Colors.white,
-                ),
-              ),
+        // floatingActionButton:
+        // isLoading
+        //     ? const SizedBox()
+        //     : FloatingActionButton(
+        //         backgroundColor: ColorConstant.primaryColor,
+        //         onPressed: () async {
+        //           // showAddAllergySheet();
+        //           await ref.read(profileProvider.notifier).getAllergyResult();
+        //         },
+        //         child: const Icon(
+        //           Icons.add,
+        //           color: Colors.white,
+        //         ),
+        //       ),
         appBar: AppBar(
           title: const Text(
             'Allergy Details',
@@ -313,11 +319,11 @@ class _ImmunizationDetailsScreenState
                     ),
                   ),
                   20.height,
-                  if (allergy?.isEmpty ?? true)
+                  if (userAllergies?.isEmpty ?? true)
                     const Center(
                       child: Text('No allergy found'),
                     ),
-                  if (allergy?.isNotEmpty ?? false)
+                  if (userAllergies?.isNotEmpty ?? false)
                     Column(
                       spacing: 16,
                       children: List.generate(
