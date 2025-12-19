@@ -483,10 +483,12 @@ class _HomePageState extends ConsumerState<HomePage> {
                           const SizedBox(height: 20),
                           _buildStaticBanners(),
                           mediumSpace(),
-                          _drugSearchWidget(context),
+                          // _drugSearchWidget(context),
+
+                          const ProfileCompletionWidget(),
                           mediumSpace(),
-                          const PersonalGoalsWidget(),
-                          mediumSpace(),
+                          // const PersonalGoalsWidget(),
+                          // mediumSpace(),
                           const ActionButtonsRow(),
                           smallSpace(),
                           CustomListTile(
@@ -513,177 +515,177 @@ class _HomePageState extends ConsumerState<HomePage> {
 
                           mediumSpace(),
                           // if user has no apps
-                          Text(
-                            'Hey, you don\'t seem to have any health goals',
-                            style: context.textTheme.bodyMedium?.copyWith(
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                          12.height,
-                          InkWell(
-                            onTap: () {
-                              context.push(MyGoalsScreen.routeName);
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 16),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12),
-                                color: const Color(0xffEAFFEB),
-                                border: Border.all(
-                                  color: ColorConstant.primaryColor,
-                                ),
-                              ),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SvgPicture.asset(
-                                    'health_goal'.toSvg,
-                                  ),
-                                  12.width,
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'We have a bank of goals you can select from, starting with simple things like your hair to medical goals.',
-                                          style: context.textTheme.bodyMedium
-                                              ?.copyWith(
-                                            fontSize: 13,
-                                          ),
-                                        ),
-                                        8.height,
-                                        Container(
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(28),
-                                            color: const Color(0xFF29BA2E),
-                                          ),
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 16, vertical: 6),
-                                          child: Text(
-                                            'Get started now!',
-                                            style: context.textTheme.bodyMedium
-                                                ?.copyWith(
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                          mediumSpace(),
+                          // Text(
+                          //   'Hey, you don\'t seem to have any health goals',
+                          //   style: context.textTheme.bodyMedium?.copyWith(
+                          //     fontWeight: FontWeight.w700,
+                          //   ),
+                          // ),
+                          // 12.height,
+                          // InkWell(
+                          //   onTap: () {
+                          //     context.push(MyGoalsScreen.routeName);
+                          //   },
+                          //   child: Container(
+                          //     padding: const EdgeInsets.symmetric(
+                          //         horizontal: 16, vertical: 16),
+                          //     decoration: BoxDecoration(
+                          //       borderRadius: BorderRadius.circular(12),
+                          //       color: const Color(0xffEAFFEB),
+                          //       border: Border.all(
+                          //         color: ColorConstant.primaryColor,
+                          //       ),
+                          //     ),
+                          //     child: Row(
+                          //       crossAxisAlignment: CrossAxisAlignment.start,
+                          //       children: [
+                          //         SvgPicture.asset(
+                          //           'health_goal'.toSvg,
+                          //         ),
+                          //         12.width,
+                          //         Expanded(
+                          //           child: Column(
+                          //             crossAxisAlignment:
+                          //                 CrossAxisAlignment.start,
+                          //             children: [
+                          //               Text(
+                          //                 'We have a bank of goals you can select from, starting with simple things like your hair to medical goals.',
+                          //                 style: context.textTheme.bodyMedium
+                          //                     ?.copyWith(
+                          //                   fontSize: 13,
+                          //                 ),
+                          //               ),
+                          //               8.height,
+                          //               Container(
+                          //                 decoration: BoxDecoration(
+                          //                   borderRadius:
+                          //                       BorderRadius.circular(28),
+                          //                   color: const Color(0xFF29BA2E),
+                          //                 ),
+                          //                 padding: const EdgeInsets.symmetric(
+                          //                     horizontal: 16, vertical: 6),
+                          //                 child: Text(
+                          //                   'Get started now!',
+                          //                   style: context.textTheme.bodyMedium
+                          //                       ?.copyWith(
+                          //                     color: Colors.white,
+                          //                   ),
+                          //                 ),
+                          //               )
+                          //             ],
+                          //           ),
+                          //         )
+                          //       ],
+                          //     ),
+                          //   ),
+                          // ),
+                          // mediumSpace(),
 
-                          const ProfileCompletionWidget(),
+                          // const ProfileCompletionWidget(),
                           mediumSpace(),
-                          InkWell(
-                            onTap: () {
-                              context.push(SuspendedProducts.routeName);
-                            },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: const Color(0xFFFFE7E6),
-                                border: Border.all(
-                                  color: const Color(0xFFFF6159),
-                                ),
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              padding: const EdgeInsets.all(12),
-                              child: Row(
-                                children: [
-                                  Image.asset('nafdac'.toImg),
-                                  8.width,
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'Suspended & Canceled Products',
-                                          style: context.textTheme.bodyMedium
-                                              ?.copyWith(
-                                            fontSize: 15,
-                                          ),
-                                        ),
-                                        4.height,
-                                        Text(
-                                          'NAFDAC Approved list',
-                                          style: context.textTheme.bodyLarge
-                                              ?.copyWith(
-                                            fontSize: 13,
-                                            color: const Color(0xFFFF6159),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  4.width,
-                                  const Icon(
-                                    Icons.arrow_forward_ios,
-                                    size: 14,
-                                    color: Color(0xFFFF6159),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          mediumSpace(),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'My Community & Socials',
-                                style: context.textTheme.labelLarge,
-                              ),
-                              12.height,
-                              const Divider(
-                                color: Color(0xFFBABABA),
-                              ),
-                              12.height,
-                              Text(
-                                'Hey Jessica, you have 0 posts',
-                                style: context.textTheme.labelMedium?.copyWith(
-                                  color: const Color(0xFF656565),
-                                ),
-                              ),
-                              4.height,
-                              Text(
-                                'Start the conversation by creating the first post',
-                                style: context.textTheme.bodyLarge?.copyWith(
-                                  fontSize: 13,
-                                ),
-                              ),
-                              14.height,
-                              Container(
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFFEAFFEB),
-                                  border: Border.all(color: AppColors.primary),
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 16,
-                                ),
-                                alignment: Alignment.center,
-                                child: Text(
-                                  'Create your first post',
-                                  style:
-                                      context.textTheme.labelMedium?.copyWith(
-                                    color: const Color(0xFF575757),
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                          mediumSpace(),
-                          const FriendRequestWidget(),
-                          mediumSpace(),
+                          // InkWell(
+                          //   onTap: () {
+                          //     context.push(SuspendedProducts.routeName);
+                          //   },
+                          //   child: Container(
+                          //     decoration: BoxDecoration(
+                          //       color: const Color(0xFFFFE7E6),
+                          //       border: Border.all(
+                          //         color: const Color(0xFFFF6159),
+                          //       ),
+                          //       borderRadius: BorderRadius.circular(8),
+                          //     ),
+                          //     padding: const EdgeInsets.all(12),
+                          //     child: Row(
+                          //       children: [
+                          //         Image.asset('nafdac'.toImg),
+                          //         8.width,
+                          //         Expanded(
+                          //           child: Column(
+                          //             crossAxisAlignment:
+                          //                 CrossAxisAlignment.start,
+                          //             children: [
+                          //               Text(
+                          //                 'Suspended & Canceled Products',
+                          //                 style: context.textTheme.bodyMedium
+                          //                     ?.copyWith(
+                          //                   fontSize: 15,
+                          //                 ),
+                          //               ),
+                          //               4.height,
+                          //               Text(
+                          //                 'NAFDAC Approved list',
+                          //                 style: context.textTheme.bodyLarge
+                          //                     ?.copyWith(
+                          //                   fontSize: 13,
+                          //                   color: const Color(0xFFFF6159),
+                          //                 ),
+                          //               ),
+                          //             ],
+                          //           ),
+                          //         ),
+                          //         4.width,
+                          //         const Icon(
+                          //           Icons.arrow_forward_ios,
+                          //           size: 14,
+                          //           color: Color(0xFFFF6159),
+                          //         ),
+                          //       ],
+                          //     ),
+                          //   ),
+                          // ),
+                          // mediumSpace(),
+                          // Column(
+                          //   crossAxisAlignment: CrossAxisAlignment.start,
+                          //   children: [
+                          //     Text(
+                          //       'My Community & Socials',
+                          //       style: context.textTheme.labelLarge,
+                          //     ),
+                          //     12.height,
+                          //     const Divider(
+                          //       color: Color(0xFFBABABA),
+                          //     ),
+                          //     12.height,
+                          //     Text(
+                          //       'Hey Jessica, you have 0 posts',
+                          //       style: context.textTheme.labelMedium?.copyWith(
+                          //         color: const Color(0xFF656565),
+                          //       ),
+                          //     ),
+                          //     4.height,
+                          //     Text(
+                          //       'Start the conversation by creating the first post',
+                          //       style: context.textTheme.bodyLarge?.copyWith(
+                          //         fontSize: 13,
+                          //       ),
+                          //     ),
+                          //     14.height,
+                          //     Container(
+                          //       width: double.infinity,
+                          //       decoration: BoxDecoration(
+                          //         color: const Color(0xFFEAFFEB),
+                          //         border: Border.all(color: AppColors.primary),
+                          //         borderRadius: BorderRadius.circular(8),
+                          //       ),
+                          //       padding: const EdgeInsets.symmetric(
+                          //         horizontal: 12,
+                          //         vertical: 16,
+                          //       ),
+                          //       alignment: Alignment.center,
+                          //       child: Text(
+                          //         'Create your first post',
+                          //         style:
+                          //             context.textTheme.labelMedium?.copyWith(
+                          //           color: const Color(0xFF575757),
+                          //         ),
+                          //       ),
+                          //     )
+                          //   ],
+                          // ),
+                          // mediumSpace(),
+                          // const FriendRequestWidget(),
+                          // mediumSpace(),
                           // Column(
                           //   children: [
                           // CustomListTile(

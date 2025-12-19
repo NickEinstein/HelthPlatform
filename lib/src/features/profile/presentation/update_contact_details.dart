@@ -152,14 +152,14 @@ class _UpdateContactDetailsScreenState
             : Form(
                 key: _formKey,
                 child: ListView(
-                  padding: const EdgeInsets.all(20),
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         TextButton(
                             onPressed: () {
-                              context.pushNamed(
+                              context.pushReplacement(
                                 UpdateEmergencyContact.routeName,
                               );
                             },

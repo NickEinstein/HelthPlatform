@@ -36,7 +36,7 @@ class CompletedAppointments extends StatelessWidget {
           const SizedBox(height: 16),
           // Iterate over the list of appointments
           ...appointments.asMap().entries.map((entry) {
-            final index = entry.key;
+            // final index = entry.key;
             final appointment = entry.value;
 
             final dateTime = DateFormat('M/d/yyyy HH:mm')

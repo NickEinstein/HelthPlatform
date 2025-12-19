@@ -1,4 +1,6 @@
 import 'package:greenzone_medical/src/features/profile/model/allergy_list_model.dart';
+import 'package:greenzone_medical/src/features/profile/widget/delete_dialog.dart';
+import 'package:greenzone_medical/src/provider/profile_provider.dart';
 import 'package:greenzone_medical/src/utils/extensions/extensions.dart';
 import 'package:greenzone_medical/src/utils/packages.dart';
 import 'package:intl/intl.dart';
@@ -66,57 +68,9 @@ class _AllergyWidgetState extends ConsumerState<AllergyWidget> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                'Age:',
-                                style: context.textTheme.labelLarge,
-                              ),
-                            ),
-                            Expanded(
-                              child: Text(
-                                widget.allergy.allergy,
-                                style: context.textTheme.bodyMedium,
-                              ),
-                            ),
-                          ],
-                        ),
-                        8.height,
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                'Batch Number:',
-                                style: context.textTheme.labelLarge,
-                              ),
-                            ),
-                            Expanded(
-                              child: Text(
-                                // widget.immunization.batchId ?? '',
-                                '',
-                                style: context.textTheme.bodyMedium,
-                              ),
-                            ),
-                          ],
-                        ),
-                        8.height,
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                'Brand:',
-                                style: context.textTheme.labelLarge,
-                              ),
-                            ),
-                            Expanded(
-                              child: Text(
-                                // widget.immunization.vaccineBrand ?? '',
-                                '',
-                                style: context.textTheme.bodyMedium,
-                              ),
-                            ),
-                          ],
+                        Text(
+                          widget.otherAllergy?.description ?? '',
+                          style: context.textTheme.bodyMedium,
                         ),
                       ],
                     ),
@@ -134,14 +88,38 @@ class _AllergyWidgetState extends ConsumerState<AllergyWidget> {
                         bottomRight: Radius.circular(8),
                       ),
                     ),
-                    child: Text(
-                      DateFormat('MMMM dd, yyyy').format(
-                        // widget.immunization.dateGiven ??
-                        DateTime.now(),
-                      ),
-                      style: context.textTheme.bodyMedium?.copyWith(
-                        color: const Color(0xFF797979),
-                      ),
+                    child: Row(
+                      children: [
+                        Text(
+                          DateFormat('MMMM dd, yyyy').format(
+                            // widget.immunization.dateGiven ??
+                            DateTime.now(),
+                          ),
+                          style: context.textTheme.bodyMedium?.copyWith(
+                            color: const Color(0xFF797979),
+                          ),
+                        ),
+                        const Spacer(),
+                        InkWell(
+                          onTap: () async {
+                            final shouldDelete = await showDeleteDialog(
+                              context,
+                              title: 'Delete Allergy',
+                              content:
+                                  'Are you sure you want to delete this allergy?',
+                            );
+                            if (shouldDelete) {
+                              ref.read(profileProvider.notifier).deleteAllergy(
+                                    widget.allergy.id.toString(),
+                                  );
+                            }
+                          },
+                          child: const Icon(
+                            Icons.delete,
+                            color: Color(0xFF797979),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],

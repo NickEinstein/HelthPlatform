@@ -89,7 +89,7 @@ class _AllArticleScreenState extends ConsumerState<AllArticleScreen> {
                     onTap: () async {
                       final categoryNames = categoryState.maybeWhen(
                         data: (categories) =>
-                            categories.map((c) => c.name as String).toList(),
+                            categories.map((c) => c.name).toList(),
                         orElse: () => <String>[],
                       );
 
@@ -127,7 +127,7 @@ class _AllArticleScreenState extends ConsumerState<AllArticleScreen> {
                               selectedCategories.remove(cat);
                             });
                           },
-                          backgroundColor: Color(0xffD9FEAA),
+                          backgroundColor: const Color(0xffD9FEAA),
                           shape: RoundedRectangleBorder(
                             borderRadius:
                                 BorderRadius.circular(20), // Set radius to 20

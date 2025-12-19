@@ -9,6 +9,7 @@ class AccountCreationController {
   final TextEditingController emailController = TextEditingController();
   bool emailIsEmpty = true;
   final TextEditingController phoneController = TextEditingController();
+  String completePhoneNumber = '';
   final TextEditingController dobDayController = TextEditingController();
   final TextEditingController dobMonthController = TextEditingController();
   final TextEditingController dobYearController = TextEditingController();

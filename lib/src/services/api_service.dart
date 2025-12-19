@@ -45,6 +45,7 @@ class ApiService {
   }) async {
     try {
       final options = Options(headers: headers);
+      print(path);
       final response = await dio.get<T>(path,
           queryParameters: queryParameters, options: options);
       return _handleResponse<T>(response);

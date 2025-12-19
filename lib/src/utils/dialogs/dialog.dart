@@ -15,8 +15,8 @@ class Dialogs {
 
     showDialog(
       context: context,
-      barrierColor:
-          Colors.black.withOpacity(0.5), // Full-screen semi-transparent overlay
+      barrierColor: Colors.black
+          .withValues(alpha: 0.5), // Full-screen semi-transparent overlay
       barrierDismissible: false, // Prevent dismissing by tapping outside
       builder: (context) => const Center(
         child: CircularProgressIndicator.adaptive(),

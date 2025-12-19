@@ -57,7 +57,8 @@ class _UploadSelfieScreenState extends ConsumerState<UploadSelfieScreen> {
           ? Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.camera_alt_outlined, size: 60, color: Colors.green),
+                const Icon(Icons.camera_alt_outlined,
+                    size: 60, color: Colors.green),
                 const SizedBox(height: 10),
                 ElevatedButton.icon(
                   style: ElevatedButton.styleFrom(

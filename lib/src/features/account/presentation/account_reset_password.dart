@@ -11,7 +11,7 @@ import '../../../utils/custom_toast.dart';
 import '../../../utils/dialogs/dialog.dart';
 
 class AccountResetPasswordPage extends ConsumerStatefulWidget {
-  AccountResetPasswordPage({
+  const AccountResetPasswordPage({
     super.key,
   });
 
@@ -52,7 +52,7 @@ class _AccountResetPasswordPageState
         key: _formKey,
         onChanged: _validateForm,
         child: SingleChildScrollView(
-          physics: ScrollPhysics(),
+          physics: const ScrollPhysics(),
           child: SafeArea(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
@@ -184,8 +184,9 @@ class _AccountResetPasswordPageState
                                     await authService.resetPasswordUrl(
                                         email, oldPassword, password);
 
-                                if (!context.mounted)
-                                  return; // ✅ Prevents using context if unmounted
+                                if (!context.mounted) {
+                                  return;
+                                } // ✅ Prevents using context if unmounted
                                 ref.read(isLoadingProvider.notifier).state =
                                     false;
 

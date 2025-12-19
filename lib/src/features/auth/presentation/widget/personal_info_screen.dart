@@ -31,13 +31,13 @@ class PersonalInfoScreen extends ConsumerStatefulWidget {
 }
 
 class _PersonalInfoScreenState extends ConsumerState<PersonalInfoScreen> {
-  bool _isValid = false;
+  // bool _isValid = false;
 
-  void _validateForm() {
-    setState(() {
-      _isValid = widget.formKey.currentState?.validate() ?? false;
-    });
-  }
+  // void _validateForm() {
+  //   setState(() {
+  //     _isValid = widget.formKey.currentState?.validate() ?? false;
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -177,7 +177,7 @@ class _PersonalInfoScreenState extends ConsumerState<PersonalInfoScreen> {
                 return null;
               },
               onChanged: (phone) {
-                print(phone.completeNumber);
+                widget.controller.completePhoneNumber = phone.completeNumber;
               },
               inputFormatters: [
                 FilteringTextInputFormatter.digitsOnly, // ✅ Allow only numbers

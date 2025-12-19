@@ -167,7 +167,7 @@ class _ImmunizationDetailsScreenState
                       children: [
                         TextButton(
                           onPressed: () {
-                            context.pushNamed(
+                            context.pushReplacement(
                               AllergyDetailsScreen.routeName,
                             );
                           },

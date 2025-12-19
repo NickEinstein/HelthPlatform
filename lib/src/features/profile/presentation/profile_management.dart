@@ -1,8 +1,10 @@
 import 'package:greenzone_medical/src/features/profile/presentation/allergy_details.dart';
 import 'package:greenzone_medical/src/features/profile/presentation/immunization_details.dart';
+import 'package:greenzone_medical/src/features/profile/presentation/update_contact_details.dart';
 import 'package:greenzone_medical/src/features/profile/presentation/update_personal_info_screen.dart';
 import 'package:greenzone_medical/src/provider/profile_provider.dart';
 import 'package:greenzone_medical/src/resources/colors/colors.dart';
+import 'package:greenzone_medical/src/utils/dialogs/auth_bottom_sheet.dart';
 import 'package:greenzone_medical/src/utils/extensions/extensions.dart';
 import 'package:greenzone_medical/src/utils/loading_widget.dart';
 import 'package:greenzone_medical/src/utils/packages.dart';
@@ -72,93 +74,107 @@ class _ProfileManagementState extends ConsumerState<ProfileManagement> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
                 children: [
-                  Builder(builder: (context) {
-                    bool isFirstCompleted =
-                        ((profile?.data?.firstName?.isNotEmpty == true) &&
-                                (profile?.data?.lastName?.isNotEmpty ==
-                                    true)) ||
-                            (profile?.data?.fullName?.isNotEmpty == true);
-                    bool isSecondCompleted = profile?.data?.phoneNumber != null;
-                    bool isThirdCompleted = profile?.data?.nin != null;
-                    bool isFourthCompleted =
-                        profile?.data?.dateOfBirth != null &&
-                            profile?.data?.gender?.isNotEmpty == true &&
-                            profile?.data?.nationality?.isNotEmpty == true;
-                    List<String> fourthMissing = [
-                      if (profile?.data?.dateOfBirth == null) 'Date of Birth',
-                      if (profile?.data?.gender?.isNotEmpty != true) 'Gender',
-                      if (profile?.data?.nationality?.isNotEmpty != true)
-                        'Nationality',
-                    ];
-                    bool isFifthCompleted =
-                        profile?.data?.stateOfOrigin?.isNotEmpty == true &&
-                            profile?.data?.lga?.isNotEmpty == true &&
-                            profile?.data?.placeOfBirth?.isNotEmpty == true;
-                    List<String> fifthMissing = [
-                      if (profile?.data?.stateOfOrigin?.isNotEmpty != true)
-                        'State of Origin',
-                      if (profile?.data?.lga?.isNotEmpty != true) 'LGA',
-                      if (profile?.data?.placeOfBirth?.isNotEmpty != true)
-                        'Place of Birth',
-                    ];
-                    bool isSixthCompleted = profile?.data?.weight != null &&
-                        profile?.data?.patientRef?.isNotEmpty == true;
+                  Builder(
+                    builder: (context) {
+                      bool isFirstCompleted =
+                          ((profile?.data?.firstName?.isNotEmpty == true) &&
+                                  (profile?.data?.lastName?.isNotEmpty ==
+                                      true)) ||
+                              (profile?.data?.fullName?.isNotEmpty == true);
+                      bool isSecondCompleted =
+                          profile?.data?.phoneNumber != null;
+                      bool isThirdCompleted = profile?.data?.nin != null;
+                      bool isFourthCompleted =
+                          profile?.data?.dateOfBirth != null &&
+                              profile?.data?.gender?.isNotEmpty == true &&
+                              profile?.data?.nationality?.isNotEmpty == true;
+                      List<String> fourthMissing = [
+                        if (profile?.data?.dateOfBirth == null) 'Date of Birth',
+                        if (profile?.data?.gender?.isNotEmpty != true) 'Gender',
+                        if (profile?.data?.nationality?.isNotEmpty != true)
+                          'Nationality',
+                      ];
+                      bool isFifthCompleted =
+                          profile?.data?.stateOfOrigin?.isNotEmpty == true &&
+                              profile?.data?.lga?.isNotEmpty == true &&
+                              profile?.data?.placeOfBirth?.isNotEmpty == true;
+                      List<String> fifthMissing = [
+                        if (profile?.data?.stateOfOrigin?.isNotEmpty != true)
+                          'State of Origin',
+                        if (profile?.data?.lga?.isNotEmpty != true) 'LGA',
+                        if (profile?.data?.placeOfBirth?.isNotEmpty != true)
+                          'Place of Birth',
+                      ];
+                      bool isSixthCompleted = profile?.data?.weight != null &&
+                          profile?.data?.patientRef?.isNotEmpty == true;
 
-                    return Column(
-                      children: [
-                        _buildProfileItem(
-                          icon: Icons.badge_outlined,
-                          title: 'Personal Information',
-                          subtitle: isFirstCompleted
-                              ? 'Complete'
-                              : 'Missing: First Name, Last Name',
-                          isComplete: isFirstCompleted,
-                        ),
-                        _buildProfileItem(
-                          icon: Icons.contact_page_outlined,
-                          title: 'Contact',
-                          subtitle: isSecondCompleted
-                              ? 'Complete'
-                              : 'Missing: Phone Number',
-                          isComplete: isSecondCompleted,
-                        ),
-                        _buildProfileItem(
-                          icon: Icons.perm_identity_outlined,
-                          title: 'Identity',
-                          subtitle: isThirdCompleted
-                              ? 'Complete'
-                              : 'Missing: National ID (NIN)',
-                          isComplete: isThirdCompleted,
-                        ),
-                        _buildProfileItem(
-                          icon: Icons.menu_book_outlined,
-                          title: 'Demographics',
-                          subtitle: isFourthCompleted
-                              ? 'Complete'
-                              : 'Missing: ${fourthMissing.join(", ")}',
-                          isComplete: isFourthCompleted,
-                        ),
-                        _buildProfileItem(
-                          icon: Icons.location_on_outlined,
-                          title: 'Location',
-                          subtitle: isFifthCompleted
-                              ? 'Complete'
-                              : 'Missing: ${fifthMissing.join(", ")}',
-                          isComplete: isFifthCompleted,
-                        ),
-                        _buildProfileItem(
-                          icon: Icons.medical_services_outlined,
-                          title: 'Medical/Misc',
-                          subtitle:
-                              isSixthCompleted ? 'Complete' : 'Missing: Weight',
-                          isComplete: isSixthCompleted,
-                        ),
-                      ],
-                    );
-                  }),
+                      return Column(
+                        children: [
+                          _buildProfileItem(
+                            icon: Icons.badge_outlined,
+                            title: 'Personal Information',
+                            subtitle: isFirstCompleted
+                                ? 'Complete'
+                                : 'Missing: First Name, Last Name',
+                            isComplete: isFirstCompleted,
+                            route: UpdatePersonalDetailsScreen.routeName,
+                          ),
+                          _buildProfileItem(
+                            icon: Icons.contact_page_outlined,
+                            title: 'Contact',
+                            subtitle: isSecondCompleted
+                                ? 'Complete'
+                                : 'Missing: Phone Number',
+                            isComplete: isSecondCompleted,
+                            route: UpdateContactDetailsScreen.routeName,
+                          ),
+                          _buildProfileItem(
+                            icon: Icons.perm_identity_outlined,
+                            title: 'Identity',
+                            subtitle: isThirdCompleted
+                                ? 'Complete'
+                                : 'Missing: National ID (NIN)',
+                            isComplete: isThirdCompleted,
+                            route: UpdatePersonalDetailsScreen.routeName,
+                          ),
+                          _buildProfileItem(
+                            icon: Icons.menu_book_outlined,
+                            title: 'Demographics',
+                            subtitle: isFourthCompleted
+                                ? 'Complete'
+                                : 'Missing: ${fourthMissing.join(", ")}',
+                            isComplete: isFourthCompleted,
+                            route: UpdatePersonalDetailsScreen.routeName,
+                          ),
+                          _buildProfileItem(
+                            icon: Icons.location_on_outlined,
+                            title: 'Location',
+                            subtitle: isFifthCompleted
+                                ? 'Complete'
+                                : 'Missing: ${fifthMissing.join(", ")}',
+                            isComplete: isFifthCompleted,
+                            route: UpdatePersonalDetailsScreen.routeName,
+                          ),
+                          _buildProfileItem(
+                            icon: Icons.medical_services_outlined,
+                            title: 'Medical/Misc',
+                            subtitle: isSixthCompleted
+                                ? 'Complete'
+                                : 'Missing: Weight',
+                            isComplete: isSixthCompleted,
+                          ),
+                        ],
+                      );
+                    },
+                  ),
                   // Seventh - Immunization
                   _buildProfileItem(
-                    route: ImmunizationDetailsScreen.routeName,
+                    onTap: () {
+                      showAuthBottomSheet(
+                        context,
+                        nextRoute: ImmunizationDetailsScreen.routeName,
+                      );
+                    },
                     icon: Icons.vaccines_outlined,
                     title: 'Immunizations',
                     subtitle: (immunizations?.isNotEmpty == true)
@@ -169,6 +185,12 @@ class _ProfileManagementState extends ConsumerState<ProfileManagement> {
                   ),
                   // Eighth - Allergy
                   _buildProfileItem(
+                    onTap: () {
+                      showAuthBottomSheet(
+                        context,
+                        nextRoute: AllergyDetailsScreen.routeName,
+                      );
+                    },
                     icon: Icons.vaccines_outlined,
                     title: 'Allergies',
                     subtitle: (allergies?.isNotEmpty == true)
@@ -176,7 +198,6 @@ class _ProfileManagementState extends ConsumerState<ProfileManagement> {
                         : 'Missing: Add at least one allergy record',
                     isComplete: allergies?.isNotEmpty ?? false,
                     svgAsset: SvgAssets.immunization,
-                    route: AllergyDetailsScreen.routeName,
                   ),
                 ],
               ),
@@ -218,13 +239,15 @@ class _ProfileManagementState extends ConsumerState<ProfileManagement> {
     required bool isComplete,
     String? route,
     String? svgAsset,
+    Function()? onTap,
   }) {
     final color = isComplete ? AppColors.primary : AppColors.greyTextColor;
 
     return InkWell(
-      onTap: () {
-        context.push(route ?? UpdatePersonalDetailsScreen.routeName);
-      },
+      onTap: onTap ??
+          () {
+            context.push(route ?? UpdatePersonalDetailsScreen.routeName);
+          },
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 16),
         decoration: const BoxDecoration(

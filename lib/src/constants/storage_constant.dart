@@ -25,4 +25,7 @@ class StorageConstants {
   static const String refferedListData = "refferedListData";
 
   static const String countries = "countries";
+
+  static const String savedEmail = "saved_email";
+  static const String savedPassword = "saved_password";
 }

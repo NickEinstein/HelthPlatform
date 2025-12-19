@@ -967,7 +967,7 @@ class _LoginPasswordTextFieldState extends State<LoginPasswordTextField> {
           decoration: InputDecoration(
             filled: true,
             fillColor: widget.controller.text.isNotEmpty
-                ? ColorConstant.primaryLightColor.withOpacity(0.3)
+                ? ColorConstant.primaryLightColor.withValues(alpha: 0.3)
                 : Colors.transparent,
             hintText: 'Enter password',
             hintStyle: const TextStyle(

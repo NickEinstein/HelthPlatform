@@ -45,6 +45,7 @@ class ProfileService {
       return null;
     }
   }
+
   Future<String?> addAllergy(Map<String, dynamic> payload) async {
     try {
       final token = await getToken();
@@ -76,16 +77,17 @@ class ProfileService {
     }
   }
 
-
-
   Future<List<AllergyListModel>> getAllAllergyList() async {
     try {
+      final url = ApiUrl.getAllAllergies;
+      print('----------Starting: $url');
       final response = await _apiService.get(
-        ApiUrl.getAllAllergies,
+        url,
         headers: {
           'Content-Type': 'application/json',
         },
       );
+      print(response.data);
       if ((response.statusCode == 200 || response.data['code'] == 1)) {
         final List<AllergyListModel> allAllergies =
             (response.data['data'] as List)
@@ -96,9 +98,9 @@ class ProfileService {
       } else {
         return [];
       }
-    } catch (error,s) {
+    } catch (error) {
       debugPrint(' Error getting all allergies: $error');
-      print(s);
+
       return [];
     }
   }
@@ -292,6 +294,124 @@ class ProfileService {
     }
   }
 
+  Future<List<AllergyOtherModel>?> getOtherAllergyResult() async {
+    try {
+      final token = await getToken();
+      final userId = await getUserId();
+
+      if (token == null || token.isEmpty || userId == null) {
+        debugPrint('⚠️ No access token found.');
+        return null;
+      }
+      final url = ApiUrl.getOtherAllergyResult(userId);
+      final response = await _apiService.get(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+      if ((response.statusCode == 200 || response.data['code'] == 1)) {
+        final List<AllergyOtherModel> allergyResult =
+            (response.data['data'] as List)
+                .map((e) => AllergyOtherModel.fromJson(e))
+                .toList();
+
+        return allergyResult;
+      } else {
+        return [];
+      }
+    } catch (error, s) {
+      debugPrint(' Error getting allergy: $error');
+      print(s);
+      return [];
+    }
+  }
+
+  Future<bool> deleteImmunization(String id) async {
+    try {
+      final token = await getToken();
+
+      if (token == null || token.isEmpty) {
+        debugPrint('⚠️ No access token found.');
+        return false;
+      }
+      final url = ApiUrl.deleteImmunization(id);
+      final response = await _apiService.delete(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+      if ((response.statusCode == 200 || response.data['code'] == 1)) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (error, s) {
+      debugPrint(' Error deleting allergy: $error');
+      print(s);
+      return false;
+    }
+  }
+
+  Future<bool> deleteOtherAllergy(String id) async {
+    try {
+      final token = await getToken();
+
+      if (token == null || token.isEmpty) {
+        debugPrint('⚠️ No access token found.');
+        return false;
+      }
+      final url = ApiUrl.deleteOtherAllergy(id);
+      final response = await _apiService.delete(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+      if ((response.statusCode == 200 || response.data['code'] == 1)) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (error, s) {
+      debugPrint(' Error deleting allergy: $error');
+      print(s);
+      return false;
+    }
+  }
+
+  Future<bool> deleteAllergy(String id) async {
+    try {
+      final token = await getToken();
+
+      if (token == null || token.isEmpty) {
+        debugPrint('⚠️ No access token found.');
+        return false;
+      }
+      final url = ApiUrl.deleteAllergy(id);
+      final response = await _apiService.delete(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+      if ((response.statusCode == 200 || response.data['code'] == 1)) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (error, s) {
+      debugPrint(' Error deleting allergy: $error');
+      print(s);
+      return false;
+    }
+  }
+
   Future<List<UserAllergyModel>?> getAllergyResult() async {
     try {
       final token = await getToken();
@@ -301,9 +421,9 @@ class ProfileService {
         debugPrint('⚠️ No access token found.');
         return null;
       }
-
+      final url = ApiUrl.getAllergyResult(userId);
       final response = await _apiService.get(
-        ApiUrl.getAllergyResult(userId),
+        url,
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
@@ -319,7 +439,7 @@ class ProfileService {
       } else {
         return [];
       }
-    } catch (error,s) {
+    } catch (error, s) {
       debugPrint(' Error getting allergy: $error');
       print(s);
       return [];

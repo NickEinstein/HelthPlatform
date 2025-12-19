@@ -186,7 +186,8 @@ class _UpdateEmergencyContactState
                           TextButton(
                               onPressed: () {
                                 context.pushReplacement(
-                                    UpdatePersonalDetailsScreen.routeName);
+                                  UpdatePersonalDetailsScreen.routeName,
+                                );
                               },
                               child: const Row(
                                 children: [

@@ -100,7 +100,7 @@ class _FlaggedPostListState extends ConsumerState<FlaggedPostList> {
                           // CustomToast.show(
                           //     context, 'Reaction recorded successfully',
                           //     type: ToastType.success);
-                          ref.refresh(userAllFlaggedPostProvider);
+                          ref.invalidate(userAllFlaggedPostProvider);
                         } else {
                           // CustomToast.show(context, result,
                           //     type: ToastType.error);
@@ -376,7 +376,7 @@ class _PostItemState extends ConsumerState<PostItem> {
                                   false;
 
                               if (result == 'successful') {
-                                ref.refresh(userAllFlaggedPostProvider);
+                                ref.invalidate(userAllFlaggedPostProvider);
                               } else {
                                 // Handle error or show message
                               }

@@ -35,6 +35,7 @@ class _UpdatePersonalDetailsScreenState
   late TextEditingController _weightController;
   late TextEditingController _ninController;
   late TextEditingController _emailController;
+  String? fullPhoneNumber;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   DateTime? dateOfBirth;
 
@@ -59,9 +60,11 @@ class _UpdatePersonalDetailsScreenState
         final state = ref.read(profileProvider);
         final profile = state.patientProfile?.data;
         if (profile != null) {
-          print(profile.toJson());
           _emailController.text = profile.email ?? '';
-          _mobileController.text = profile.phoneNumber ?? '';
+          _mobileController.text = profile.phoneNumber?.isEmpty ?? true
+              ? ''
+              : profile.phoneNumber?.substring(4) ?? '';
+          fullPhoneNumber = profile.phoneNumber;
           _firstNameController.text = profile.firstName ?? '';
           _lastNameController.text = profile.lastName ?? '';
           _genderController.text = profile.gender ?? '';
@@ -71,10 +74,7 @@ class _UpdatePersonalDetailsScreenState
               : '';
           _nationalityController.text = profile.nationality ?? '';
           _stateOriginController.text = profile.stateOfOrigin ?? '';
-          print('-------------------------------');
-          print(profile.stateOfOrigin);
-          print(_stateOriginController.text);
-          print('-------------------------------');
+
           _lgaController.text = profile.placeOfBirth ?? '';
           _maritalStatusController.text = profile.maritalStatus ?? '';
           _weightController.text = profile.weight?.toString() ?? '';
@@ -140,7 +140,7 @@ class _UpdatePersonalDetailsScreenState
       pictureUrl:
           ref.read(profileProvider).patientProfile?.data?.pictureUrl ?? '',
       nin: _ninController.text,
-      phoneNumber: _mobileController.text,
+      phoneNumber: fullPhoneNumber ?? _mobileController.text,
     );
 
     final result =
@@ -209,7 +209,7 @@ class _UpdatePersonalDetailsScreenState
             : Form(
                 key: _formKey,
                 child: ListView(
-                  padding: const EdgeInsets.all(20),
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
@@ -340,6 +340,9 @@ class _UpdatePersonalDetailsScreenState
                       ),
                       initialCountryCode: 'NG',
                       controller: _mobileController,
+                      onChanged: (phone) {
+                        fullPhoneNumber = phone.completeNumber;
+                      },
                     ),
                     // IntlMobileField(
                     //   favorite: const ['NG'],

@@ -18,6 +18,8 @@ class ApiUrl {
       '/ConnectedHealthWebApi/api/Patient/immunization/$id';
   static String getAllergyResult(String id) =>
       '/ConnectedHealthWebApi/api/UserAllergies/list/patient/$id';
+  static String getOtherAllergyResult(String id) =>
+      '/ConnectedHealthWebApi/api/UserAllergies/list/others/patient/$id';
   static String getPatientProfile(String id) =>
       '/ConnectedHealthWebApi/api/Patient/single/$id';
   static const String profileGetUrl =
@@ -258,11 +260,17 @@ class ApiUrl {
   static String addImmunization(String id) =>
       '/ConnectedHealthDoctorApi/api/immunization/$id';
   static String getAllAllergies =
-      'ConnectedHealthWebApi/api/UserAllergies/list/allergies';
+      '/ConnectedHealthWebApi/api/UserAllergies/list/allergies/';
   static String getPatientAllergies(String id) =>
-      'ConnectedHealthWebApi/api/UserAllergies/list/patient/$id';
+      '/ConnectedHealthWebApi/api/UserAllergies/list/patient/$id';
   static String addAllergy(String id) =>
-      'ConnectedHealthWebApi/api/UserAllergies/create/patient/$id';
+      '/ConnectedHealthWebApi/api/UserAllergies/create/patient/$id';
+  static String deleteOtherAllergy(String id) =>
+      '/ConnectedHealthWebApi/api/UserAllergies/others/$id';
+  static String deleteAllergy(String id) =>
+      '/ConnectedHealthWebApi/api/UserAllergies/$id';
+  static String deleteImmunization(String id) =>
+      '/ConnectedHealthDoctorApi/api/immunization/$id';
 
   static String getCountry = '/ConnectedHealthWebApi/api/Geography/countries/';
   static String getState(String cid) =>

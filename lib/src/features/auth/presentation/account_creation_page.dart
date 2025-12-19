@@ -139,8 +139,8 @@ class _AccountCreationScreenState extends ConsumerState<AccountCreationScreen> {
       referralCode: _controller.referralCodeController.text.isNotEmpty
           ? int.parse(_controller.referralCodeController.text)
           : null,
-      nationality: 'Nigeria',
-      phone: _controller.phoneController.text,
+      nationality: '',
+      phone: _controller.completePhoneNumber,
       // homeAddress: _controller.addressController.text,
       // lga: _controller.lgaController.text,
       // lgaResidence: _controller.lgaController.text,
@@ -239,6 +239,7 @@ class _AccountCreationScreenState extends ConsumerState<AccountCreationScreen> {
                 children: [
                   smallSpace(),
                   // Title & Page Indicator
+                  Text(_controller.completePhoneNumber),
                   if (_currentIndex != 2)
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -1,10 +1,10 @@
 import 'package:greenzone_medical/src/features/profile/model/allergy_list_model.dart';
 import 'package:greenzone_medical/src/features/profile/presentation/immunization_details.dart';
 import 'package:greenzone_medical/src/features/profile/widget/allergy_widget.dart';
+import 'package:greenzone_medical/src/features/profile/widget/delete_dialog.dart';
 import 'package:greenzone_medical/src/features/profile/widget/profile_switch_overlay.dart';
 import 'package:greenzone_medical/src/provider/profile_provider.dart';
 import 'package:greenzone_medical/src/utils/extensions/extensions.dart';
-import 'package:greenzone_medical/src/utils/extensions/primary_button.dart';
 import 'package:greenzone_medical/src/utils/extensions/string_extensions.dart';
 import 'package:greenzone_medical/src/utils/packages.dart';
 
@@ -14,11 +14,10 @@ class AllergyDetailsScreen extends ConsumerStatefulWidget {
 
   @override
   ConsumerState<AllergyDetailsScreen> createState() =>
-      _ImmunizationDetailsScreenState();
+      _AllergyDetailsScreenState();
 }
 
-class _ImmunizationDetailsScreenState
-    extends ConsumerState<AllergyDetailsScreen> {
+class _AllergyDetailsScreenState extends ConsumerState<AllergyDetailsScreen> {
   OverlayEntry? _overlayEntry;
   final LayerLink _layerLink = LayerLink();
   Set<AllergyListModel> selectedAllergies = {};
@@ -47,7 +46,9 @@ class _ImmunizationDetailsScreenState
     final payload = {
       'allergies': selectedAllergies.map((e) => e.toJson()).toList(),
       if (_otherAllergyController.text.isNotEmpty)
-        'others': [_otherAllergyController.text]
+        'others': [
+          {'allergicTo': _otherAllergyController.text}
+        ]
     };
 
     final result = await ref.read(profileProvider.notifier).addAllergy(
@@ -72,139 +73,9 @@ class _ImmunizationDetailsScreenState
   Widget build(BuildContext context) {
     final isLoading = ref.watch(profileProvider).isLoading;
     final userAllergies = ref.watch(profileProvider).userAllergies;
+    final userOtherAllergies = ref.watch(profileProvider).userOtherAllergies;
     final userAllergiesIds = userAllergies?.map((e) => e.allergyId).toList();
-    final allergy = ref
-        .watch(profileProvider)
-        .allAllergies
-        ?.where((e) => !(userAllergiesIds?.contains(e.id) ?? false))
-        .toList();
-
-    void showAddAllergySheet() {
-      showModalBottomSheet(
-        context: context,
-        backgroundColor: Colors.white,
-        showDragHandle: true,
-        isScrollControlled: true,
-        useSafeArea: true,
-        builder: (_) {
-          return Padding(
-            padding: EdgeInsets.only(
-              bottom: context.mediaQuery.viewInsets.bottom,
-            ),
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 20,
-                vertical: 8,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Add Allergies',
-                    style: context.textTheme.titleMedium,
-                  ),
-                  8.height,
-                  Text(
-                    'Medical Allergies',
-                    style: context.textTheme.titleMedium,
-                  ),
-                  8.height,
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.grey.withValues(alpha: .4),
-                      ),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Wrap(
-                      spacing: 12,
-                      runSpacing: 12,
-                      children: List.generate(
-                        allergy?.length ?? 0,
-                        (index) => Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: Colors.grey.withValues(alpha: .4),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Checkbox(
-                                value:
-                                    selectedAllergies.contains(allergy?[index]),
-                                onChanged: (value) {
-                                  setState(() {
-                                    if (value == true &&
-                                        !selectedAllergies
-                                            .contains(allergy?[index]) &&
-                                        allergy?[index] != null) {
-                                      selectedAllergies.add(allergy![index]);
-                                    } else {
-                                      selectedAllergies.remove(allergy?[index]);
-                                    }
-                                  });
-                                },
-                              ),
-                              2.width,
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    allergy?[index]
-                                            .allergyOrIntolleranceSource ??
-                                        '',
-                                    style: context.textTheme.bodyMedium,
-                                  ),
-                                  4.height,
-                                  Text(
-                                    allergy?[index].description ?? '',
-                                    style: context.textTheme.bodySmall,
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  16.height,
-                  Text(
-                    'Other Allergies',
-                    style: context.textTheme.titleMedium,
-                  ),
-                  CustomTextField(
-                    hint: 'Enter allergy (e.g Peanuts, Shellfish)',
-                    controller: _otherAllergyController,
-                  ),
-                  20.height,
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          context.pop();
-                        },
-                        child: Text(
-                          'Cancel',
-                          style: context.textTheme.bodyLarge,
-                        ),
-                      ),
-                      8.width,
-                      AppButton(
-                        onPressed: _submitAllergyDetails,
-                        child: const Text('Add Allergies'),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
-      );
-    }
+    final allergy = ref.watch(profileProvider).allAllergies;
 
     return PopScope(
       canPop: false,
@@ -218,20 +89,186 @@ class _ImmunizationDetailsScreenState
       },
       child: Scaffold(
         backgroundColor: Colors.white,
-        // floatingActionButton:
-        // isLoading
-        //     ? const SizedBox()
-        //     : FloatingActionButton(
-        //         backgroundColor: ColorConstant.primaryColor,
-        //         onPressed: () async {
-        //           // showAddAllergySheet();
-        //           await ref.read(profileProvider.notifier).getAllergyResult();
-        //         },
-        //         child: const Icon(
-        //           Icons.add,
-        //           color: Colors.white,
-        //         ),
-        //       ),
+        floatingActionButton: isLoading
+            ? const SizedBox()
+            : FloatingActionButton(
+                backgroundColor: ColorConstant.primaryColor,
+                onPressed: () async {
+                  final allergyAddList = allergy
+                      ?.where(
+                          (e) => !(userAllergiesIds?.contains(e.id) ?? false))
+                      .toList();
+
+                  showModalBottomSheet(
+                    context: context,
+                    backgroundColor: Colors.white,
+                    showDragHandle: true,
+                    isScrollControlled: true,
+                    useSafeArea: true,
+                    builder: (_) {
+                      return StatefulBuilder(builder: (context, setModalState) {
+                        return Padding(
+                          padding: EdgeInsets.only(
+                            bottom: context.mediaQuery.viewInsets.bottom,
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 20,
+                              vertical: 8,
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Add Allergies',
+                                  style: context.textTheme.titleMedium,
+                                ),
+                                8.height,
+                                Text(
+                                  'Medical Allergies',
+                                  style: context.textTheme.titleMedium,
+                                ),
+                                8.height,
+                                Expanded(
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: SingleChildScrollView(
+                                      child: Column(
+                                        spacing: 12,
+                                        // runSpacing: 12,
+                                        children: List.generate(
+                                          allergyAddList?.length ?? 0,
+                                          (index) => Container(
+                                            padding: const EdgeInsets.all(8),
+                                            decoration: BoxDecoration(
+                                              color: Colors.grey
+                                                  .withValues(alpha: .2),
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                            ),
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Checkbox(
+                                                  value: selectedAllergies
+                                                      .contains(allergyAddList?[
+                                                          index]),
+                                                  onChanged: (value) {
+                                                    setModalState(() {
+                                                      if (value == true &&
+                                                          !selectedAllergies
+                                                              .contains(
+                                                                  allergyAddList?[
+                                                                      index]) &&
+                                                          allergyAddList?[
+                                                                  index] !=
+                                                              null) {
+                                                        selectedAllergies.add(
+                                                            allergyAddList![
+                                                                index]);
+                                                      } else {
+                                                        selectedAllergies
+                                                            .remove(
+                                                                allergyAddList?[
+                                                                    index]);
+                                                      }
+                                                    });
+                                                  },
+                                                ),
+                                                2.width,
+                                                Expanded(
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Text(
+                                                        allergyAddList?[index]
+                                                                .allergyOrIntolleranceSource ??
+                                                            '',
+                                                        style: context.textTheme
+                                                            .bodyMedium,
+                                                      ),
+                                                      4.height,
+                                                      Text(
+                                                        allergyAddList?[index]
+                                                                .description ??
+                                                            '',
+                                                        style: context.textTheme
+                                                            .bodySmall,
+                                                        maxLines: 4,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                16.height,
+                                Text(
+                                  'Other Allergies',
+                                  style: context.textTheme.titleMedium,
+                                ),
+                                6.height,
+                                CustomTextField(
+                                  hint:
+                                      'Enter allergy (e.g Peanuts, Shellfish)',
+                                  controller: _otherAllergyController,
+                                ),
+                                20.height,
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    InkWell(
+                                      onTap: () {
+                                        context.pop();
+                                      },
+                                      child: Text(
+                                        'Cancel',
+                                        style: context.textTheme.bodyLarge,
+                                      ),
+                                    ),
+                                    8.width,
+                                    InkWell(
+                                      onTap: _submitAllergyDetails,
+                                      child: Container(
+                                        padding: const EdgeInsets.all(14),
+                                        decoration: BoxDecoration(
+                                          color: ColorConstant.primaryColor,
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                        ),
+                                        child: Text(
+                                          'Add Allergies',
+                                          style: context.textTheme.bodyMedium
+                                              ?.copyWith(
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      });
+                    },
+                  );
+                },
+                child: const Icon(
+                  Icons.add,
+                  color: Colors.white,
+                ),
+              ),
         appBar: AppBar(
           title: const Text(
             'Allergy Details',
@@ -257,7 +294,7 @@ class _ImmunizationDetailsScreenState
                     children: [
                       TextButton(
                         onPressed: () {
-                          context.pushNamed(
+                          context.pushReplacement(
                             ImmunizationDetailsScreen.routeName,
                           );
                         },
@@ -323,19 +360,81 @@ class _ImmunizationDetailsScreenState
                     const Center(
                       child: Text('No allergy found'),
                     ),
-                  if (userAllergies?.isNotEmpty ?? false)
+                  if (userAllergies?.isNotEmpty ?? false) ...[
+                    Text(
+                      'Medical Allergies',
+                      style: context.textTheme.titleMedium,
+                    ),
+                    8.height,
                     Column(
                       spacing: 16,
                       children: List.generate(
                         userAllergies?.length ?? 0,
                         (index) => AllergyWidget(
                           allergy: userAllergies![index],
-                          otherAllergy: allergy
-                              ?.where((e) => e.id == userAllergies[index].id)
-                              .firstOrNull,
+                          otherAllergy: allergy?.where((e) {
+                            return e.id == userAllergies[index].allergyId;
+                          }).firstOrNull,
                         ),
                       ),
                     )
+                  ],
+                  if (userOtherAllergies?.isNotEmpty ?? false) ...[
+                    12.height,
+                    Text(
+                      'Other Allergies',
+                      style: context.textTheme.titleMedium,
+                    ),
+                    8.height,
+                    Wrap(
+                      spacing: 12,
+                      runSpacing: 12,
+                      children: List.generate(
+                        userOtherAllergies?.length ?? 0,
+                        (index) => Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(48),
+                            border:
+                                Border.all(color: ColorConstant.primaryColor),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                userOtherAllergies![index].allergicTo,
+                                style: context.textTheme.bodyMedium,
+                              ),
+                              6.width,
+                              InkWell(
+                                onTap: () async {
+                                  final shouldDelete = await showDeleteDialog(
+                                    context,
+                                    title: 'Delete Allergy',
+                                    content:
+                                        'Are you sure you want to delete this allergy?',
+                                  );
+                                  if (shouldDelete) {
+                                    ref
+                                        .read(profileProvider.notifier)
+                                        .deleteOtherAllergy(
+                                          userOtherAllergies[index]
+                                              .id
+                                              .toString(),
+                                        );
+                                  }
+                                },
+                                child: const Icon(
+                                  Icons.cancel,
+                                  color: ColorConstant.primaryColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
                 ],
               ),
       ),
@@ -347,7 +446,8 @@ class _ImmunizationDetailsScreenState
       currentScreen: 'Immunization Details',
       hideOverlay: _hideOverlay,
       layerLink: _layerLink,
-      list: ['Allergies'],
+      list: ['Immunization'],
+      nextRoute: ImmunizationDetailsScreen.routeName,
     );
     Overlay.of(context).insert(_overlayEntry!);
   }

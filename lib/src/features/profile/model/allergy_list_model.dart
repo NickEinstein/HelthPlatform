@@ -50,3 +50,29 @@ class UserAllergyModel {
     );
   }
 }
+
+class AllergyOtherModel {
+  final int id;
+  final String allergicTo;
+  final int userId;
+  final String createdAt;
+  final String? updatedAt;
+
+  AllergyOtherModel({
+    required this.id,
+    required this.allergicTo,
+    required this.userId,
+    required this.createdAt,
+    this.updatedAt,
+  });
+
+  factory AllergyOtherModel.fromJson(Map<String, dynamic> json) {
+    return AllergyOtherModel(
+      id: SafeJson.asInt(json['id']),
+      allergicTo: SafeJson.asString(json['allergicTo']),
+      userId: SafeJson.asInt(json['userId']),
+      createdAt: SafeJson.asString(json['createdAt']),
+      updatedAt: SafeJson.asString(json['updatedAt']),
+    );
+  }
+}

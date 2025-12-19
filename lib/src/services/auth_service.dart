@@ -18,6 +18,15 @@ class AuthService {
 
   AuthService(this._apiService, this._storageService);
 
+  Future<bool> authenticateUserLocally(String password) async {
+    final savedPassword =
+        _storageService.getString(StorageConstants.savedPassword);
+    if (savedPassword == password) {
+      return true;
+    }
+    return false;
+  }
+
   Future<String> login(String email, String password) async {
     try {
       final response = await _apiService.post(
@@ -30,8 +39,8 @@ class AuthService {
         if (resData['status'] == 'success' && resData['data'] != null) {
           final loginResponse = LoginResponse.fromJson(resData['data']);
 
-          _storageService.setString('saved_email', email);
-          _storageService.setString('saved_password', password);
+          _storageService.setString(StorageConstants.savedEmail, email);
+          _storageService.setString(StorageConstants.savedPassword, password);
 
           await _storageService.setString(
               StorageConstants.loginData, jsonEncode(loginResponse.toJson()));

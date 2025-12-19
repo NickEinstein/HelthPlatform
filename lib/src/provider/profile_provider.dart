@@ -40,6 +40,7 @@ class ProfileState {
   final List<UserAllergyModel>? userAllergies;
   final EmergencyContactInfo? emergencyContactInfo;
   final List<AllergyListModel>? allAllergies;
+  final List<AllergyOtherModel>? userOtherAllergies;
   final bool isLoading;
 
   ProfileState({
@@ -50,23 +51,26 @@ class ProfileState {
     this.userAllergies,
     this.allAllergies,
     this.isLoading = false,
+    this.userOtherAllergies,
   });
 
   ProfileState copyWith({
     PatientProfileResult? patientProfile,
     PatientContactModel? patientContact,
     List<ImmunizationResult>? immunizations,
-    List<UserAllergyModel>? allergies,
+    List<UserAllergyModel>? userAllergies,
     EmergencyContactInfo? emergencyContactInfo,
     List<AllergyListModel>? allAllergies,
     bool? isLoading,
+    List<AllergyOtherModel>? userOtherAllergies,
   }) {
     return ProfileState(
+      userOtherAllergies: userOtherAllergies ?? this.userOtherAllergies,
       allAllergies: allAllergies ?? this.allAllergies,
       patientProfile: patientProfile ?? this.patientProfile,
       patientContact: patientContact ?? this.patientContact,
       immunizations: immunizations ?? this.immunizations,
-      userAllergies: allergies ?? this.userAllergies,
+      userAllergies: userAllergies ?? this.userAllergies,
       isLoading: isLoading ?? this.isLoading,
       emergencyContactInfo: emergencyContactInfo ?? this.emergencyContactInfo,
     );
@@ -149,7 +153,12 @@ class ProfileProvider extends Notifier<ProfileState> {
     try {
       final service = ref.read(profileServiceProvider);
       final result = await service.getAllergyResult();
-      state = state.copyWith(allergies: result, isLoading: false);
+      final otherResult = await service.getOtherAllergyResult();
+      state = state.copyWith(
+        userAllergies: result,
+        userOtherAllergies: otherResult,
+        isLoading: false,
+      );
     } catch (e) {
       state = state.copyWith(isLoading: false);
     }
@@ -202,10 +211,47 @@ class ProfileProvider extends Notifier<ProfileState> {
       final service = ref.read(profileServiceProvider);
       final result = await service.getAllAllergyList();
       state = state.copyWith(allAllergies: result, isLoading: false);
-    } catch (e, s) {
-      print(e);
-      print(s);
+    } catch (e) {
       state = state.copyWith(isLoading: false);
+    }
+  }
+
+  Future<bool> deleteImmunization(String id) async {
+    state = state.copyWith(isLoading: true);
+    try {
+      final service = ref.read(profileServiceProvider);
+      final result = await service.deleteImmunization(id);
+      await fetchImmunizationResult(); // Refresh data
+      return result;
+    } catch (e) {
+      state = state.copyWith(isLoading: false);
+      return false;
+    }
+  }
+
+  Future<bool> deleteAllergy(String id) async {
+    state = state.copyWith(isLoading: true);
+    try {
+      final service = ref.read(profileServiceProvider);
+      final result = await service.deleteAllergy(id);
+      await getAllergyResult(); // Refresh data
+      return result;
+    } catch (e) {
+      state = state.copyWith(isLoading: false);
+      return false;
+    }
+  }
+
+  Future<bool> deleteOtherAllergy(String id) async {
+    state = state.copyWith(isLoading: true);
+    try {
+      final service = ref.read(profileServiceProvider);
+      final result = await service.deleteOtherAllergy(id);
+      await getAllergyResult(); // Refresh data
+      return result;
+    } catch (e) {
+      state = state.copyWith(isLoading: false);
+      return false;
     }
   }
 
@@ -219,6 +265,7 @@ class ProfileProvider extends Notifier<ProfileState> {
         service.getPatientProfile(),
         service.getImmunizationResult(),
         service.getAllergyResult(),
+        service.getOtherAllergyResult(),
         service.getPatientContact(),
         service.getEmergencyContactInfo(),
       ]);
@@ -226,9 +273,10 @@ class ProfileProvider extends Notifier<ProfileState> {
       state = state.copyWith(
         patientProfile: results[0] as PatientProfileResult?,
         immunizations: results[1] as List<ImmunizationResult>?,
-        allergies: results[2] as List<UserAllergyModel>?,
-        patientContact: results[3] as PatientContactModel?,
-        emergencyContactInfo: results[4] as EmergencyContactInfo?,
+        userAllergies: results[2] as List<UserAllergyModel>?,
+        userOtherAllergies: results[3] as List<AllergyOtherModel>?,
+        patientContact: results[4] as PatientContactModel?,
+        emergencyContactInfo: results[5] as EmergencyContactInfo?,
         isLoading: false,
       );
     } catch (e) {
