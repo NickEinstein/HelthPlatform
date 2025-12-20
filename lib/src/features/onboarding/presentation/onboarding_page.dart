@@ -50,8 +50,8 @@ class _OnBoardingPageState extends State<OnBoardingPage>
 
   @override
   Widget build(BuildContext context) {
-    final screenSize = MediaQuery.of(context).size;
-    final itemWidth = screenSize.width * viewportFraction;
+    // final screenSize = MediaQuery.of(context).size;
+    // final itemWidth = screenSize.width * viewportFraction;
 
     return Scaffold(
         body: SafeArea(

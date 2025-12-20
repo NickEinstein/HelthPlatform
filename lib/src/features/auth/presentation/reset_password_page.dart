@@ -151,8 +151,9 @@ class _ResetPasswordPageState extends ConsumerState<ResetPasswordPage> {
                                 if (_formKey.currentState!.validate()) {
                                   final email = _emailController.text.trim();
 
-                                  final result =
-                                      await authService.otpSendUrl(email);
+                                  final result = await authService.otpSendUrl(
+                                    email: email,
+                                  );
 
                                   if (!context.mounted)
                                     return; // ✅ Prevents using context if unmounted

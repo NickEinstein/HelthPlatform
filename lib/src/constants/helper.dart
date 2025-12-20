@@ -1,29 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:greenzone_medical/src/constants/color_constant.dart';
 import 'package:dropdown_search/dropdown_search.dart';
+import 'package:greenzone_medical/src/utils/extensions/string_extensions.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class CustomTextField extends StatefulWidget {
-  final String label;
+  final String? label;
   final String hint;
   final TextEditingController? controller;
   final String? Function(String?)? validator;
   final ValueChanged<String>? onChanged;
   final bool obscureText; // Added for password fields
   final List<TextInputFormatter>? inputFormatters;
+  final bool readOnly;
+  final bool isDropdown;
+  final VoidCallback? onTap;
+  final TextInputType? keyboardType;
+  final AutovalidateMode? autoValidateMode;
 
   const CustomTextField({
     Key? key,
-    required this.label,
-    required this.hint,
+    this.label,
+    this.autoValidateMode,
+    this.hint = '',
     this.controller,
     this.validator,
     this.onChanged,
     this.obscureText = false, // Default to false
     this.inputFormatters,
+    this.readOnly = false,
+    this.isDropdown = false,
+    this.onTap,
+    this.keyboardType,
   }) : super(key: key);
 
   @override
@@ -77,18 +89,24 @@ class _CustomTextFieldState extends State<CustomTextField> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.only(bottom: 8),
-          child: Text(
-            widget.label,
-            style: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w400,
-              color: Color(0xff3C3B3B),
+        if (widget.label != null)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: Text(
+              widget.label!,
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+                color: Color(0xff3C3B3B),
+              ),
             ),
           ),
-        ),
         TextFormField(
+          autovalidateMode:
+              widget.autoValidateMode ?? AutovalidateMode.disabled,
+          keyboardType: widget.keyboardType,
+          onTap: widget.onTap,
+          readOnly: widget.readOnly,
           controller: _controller,
           obscureText: widget.obscureText,
           validator: widget.validator,
@@ -98,6 +116,16 @@ class _CustomTextFieldState extends State<CustomTextField> {
           }),
           onFieldSubmitted: (_) => _validate(),
           decoration: InputDecoration(
+            suffixIcon: widget.isDropdown
+                ? Padding(
+                    padding: const EdgeInsets.all(14),
+                    child: SvgPicture.asset(
+                      'dropdown'.toSvg,
+                      // height: 12,
+                      // width: 12,
+                    ),
+                  )
+                : null,
             hintText: widget.hint,
             hintStyle: const TextStyle(
               color: Color(0xffB3B3B3),
@@ -121,7 +149,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
             ),
             filled: true,
             fillColor: _hasText
-                ? ColorConstant.primaryLightColor.withOpacity(0.3)
+                ? ColorConstant.primaryLightColor.withValues(alpha: 0.3)
                 : Colors.transparent,
             errorText: _errorText,
           ),
@@ -733,8 +761,10 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
           padding: const EdgeInsets.only(top: 4),
           child: Row(
             children: [
-              Icon(valid ? Icons.check_circle : Icons.cancel,
-                  color: valid ? Colors.green : Colors.red),
+              Icon(
+                valid ? Icons.check_box : Icons.cancel,
+                color: valid ? Colors.green : Colors.red,
+              ),
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
@@ -937,7 +967,7 @@ class _LoginPasswordTextFieldState extends State<LoginPasswordTextField> {
           decoration: InputDecoration(
             filled: true,
             fillColor: widget.controller.text.isNotEmpty
-                ? ColorConstant.primaryLightColor.withOpacity(0.3)
+                ? ColorConstant.primaryLightColor.withValues(alpha: 0.3)
                 : Colors.transparent,
             hintText: 'Enter password',
             hintStyle: const TextStyle(

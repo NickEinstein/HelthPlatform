@@ -10,9 +10,9 @@ class FormDataInterceptor extends Interceptor {
 
     if (data is FormData) {
       ///print form data
-      for (final item in data.fields) {
-        // talker.log('${item.key} : ${item.value}');
-      }
+      // for (final item in data.fields) {
+      //   // talker.log('${item.key} : ${item.value}');
+      // }
     }
     super.onRequest(options, handler);
   }

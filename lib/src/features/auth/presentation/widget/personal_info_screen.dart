@@ -1,6 +1,12 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:greenzone_medical/src/provider/all_providers.dart';
+import 'package:greenzone_medical/src/utils/enum.dart';
+import 'package:greenzone_medical/src/utils/extensions/extensions.dart';
+import 'package:greenzone_medical/src/utils/extensions/string_extensions.dart';
+import 'package:greenzone_medical/src/utils/packages.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:greenzone_medical/src/constants/color_constant.dart';
 
@@ -25,43 +31,63 @@ class PersonalInfoScreen extends ConsumerStatefulWidget {
 }
 
 class _PersonalInfoScreenState extends ConsumerState<PersonalInfoScreen> {
-  bool _isValid = false;
+  // bool _isValid = false;
 
-  void _validateForm() {
-    setState(() {
-      _isValid = widget.formKey.currentState?.validate() ?? false;
-    });
-  }
+  // void _validateForm() {
+  //   setState(() {
+  //     _isValid = widget.formKey.currentState?.validate() ?? false;
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Form(
         key: widget.formKey,
-        onChanged: _validateForm,
+        // onChanged: _validateForm,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text("Personal Information",
-                style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.black)),
-            const SizedBox(height: 20),
+            // const Text("Personal Information",
+            //     style: TextStyle(
+            //         fontSize: 16,
+            //         fontWeight: FontWeight.w400,
+            //         color: Colors.black)),
+            // const SizedBox(height: 20),
+            // CustomTextField(
+            //   label: "Username",
+            //   hint: "Username",
+            //   inputFormatters: [
+            //     FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z\s]')),
+            //   ],
+            //   controller: widget.controller.userNameController,
+            //   onChanged: (_) => _validateForm(),
+            //   validator: (value) {
+            //     if (value == null || value.isEmpty) {
+            //       return "Username empty";
+            //     }
+            //     if (value.length < 4) {
+            //       return "Enter a valid Username";
+            //     }
+            //     return null;
+            //   },
+            // ),
+
+            // smallSpace(),
             CustomTextField(
-              label: "Username",
-              hint: "Username",
+              label: "First Name",
+              hint: "First name",
               inputFormatters: [
                 FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z\s]')),
               ],
-              controller: widget.controller.userNameController,
-              onChanged: (_) => _validateForm(),
+              controller: widget.controller.firstNameController,
+              // onChanged: (_) => _validateForm(),
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return "Username empty";
+                  return "First Name cannot be empty";
                 }
-                if (value.length < 4) {
-                  return "Enter a valid Username";
+                if (value.length < 5) {
+                  return "Enter a valid First Name";
                 }
                 return null;
               },
@@ -69,19 +95,19 @@ class _PersonalInfoScreenState extends ConsumerState<PersonalInfoScreen> {
 
             smallSpace(),
             CustomTextField(
-              label: "Full Name",
-              hint: "First name, Last name",
+              label: "Last Name",
+              hint: "Last name",
               inputFormatters: [
                 FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z\s]')),
               ],
-              controller: widget.controller.firstNameController,
-              onChanged: (_) => _validateForm(),
+              controller: widget.controller.lastNameController,
+              // onChanged: (_) => _validateForm(),
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return "Full Name cannot be empty";
+                  return "Last Name cannot be empty";
                 }
                 if (value.length < 5) {
-                  return "Enter a valid full name";
+                  return "Enter a valid Last Name";
                 }
                 return null;
               },
@@ -107,7 +133,8 @@ class _PersonalInfoScreenState extends ConsumerState<PersonalInfoScreen> {
               dropdownIconPosition: IconPosition.trailing,
               decoration: InputDecoration(
                 filled: true,
-                fillColor: ColorConstant.primaryLightColor.withOpacity(0.3),
+                fillColor:
+                    ColorConstant.primaryLightColor.withValues(alpha: 0.3),
                 counterText: "",
                 hintText: 'Phone number',
                 hintStyle: const TextStyle(
@@ -150,7 +177,7 @@ class _PersonalInfoScreenState extends ConsumerState<PersonalInfoScreen> {
                 return null;
               },
               onChanged: (phone) {
-                print(phone.completeNumber);
+                widget.controller.completePhoneNumber = phone.completeNumber;
               },
               inputFormatters: [
                 FilteringTextInputFormatter.digitsOnly, // ✅ Allow only numbers
@@ -164,13 +191,13 @@ class _PersonalInfoScreenState extends ConsumerState<PersonalInfoScreen> {
               label: "Email Address",
               hint: "example@example.com",
               controller: widget.controller.emailController,
-              onChanged: (_) => _validateForm(),
+              // onChanged: (_) => _validateForm(),
               inputFormatters: [
                 FilteringTextInputFormatter.allow(RegExp(r'.*')),
               ],
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return "Email cannot be empty";
+                  return null;
                 }
                 if (!RegExp(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}")
                     .hasMatch(value)) {
@@ -184,10 +211,353 @@ class _PersonalInfoScreenState extends ConsumerState<PersonalInfoScreen> {
             //   label: "Date of Birth",
             //   hint: "Enter your full name",
             // ),
+            CustomTextField(
+              isDropdown: true,
+              onTap: () async {
+                final gender = await showDialog<String>(
+                  context: context,
+                  builder: (context) => SimpleDialog(
+                    title: const Text('Select Gender'),
+                    children: [
+                      SimpleDialogOption(
+                        onPressed: () {
+                          Navigator.pop(context, 'Male');
+                        },
+                        child: const Text('Male'),
+                      ),
+                      SimpleDialogOption(
+                        onPressed: () {
+                          Navigator.pop(context, 'Female');
+                        },
+                        child: const Text('Female'),
+                      ),
+                    ],
+                  ),
+                );
+                if (gender != null) {
+                  widget.controller.genderController.text = gender;
+                  // _validateForm();
+                }
+              },
+              readOnly: true,
+              label: "Gender",
+              hint: "Select gender",
+              controller: widget.controller.genderController,
+              // onChanged: (_) => _validateForm(),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return "Gender cannot be empty";
+                }
+                return null;
+              },
+            ),
 
-            DateOfBirthField(
-                label: "Date of Birth",
-                controller: widget.controller.dobController),
+            smallSpace(),
+            const Text(
+              'Date of Birth',
+            ),
+            4.height,
+            Row(
+              children: [
+                Expanded(
+                  child: CustomTextField(
+                    hint: "Day",
+                    keyboardType: TextInputType.number,
+                    controller: widget.controller.dobDayController,
+                    // onChanged: (_) => _validateForm(),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Day cannot be empty";
+                      }
+                      if (value.length > 2) {
+                        return "Invalid day";
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+                4.width,
+                Expanded(
+                  child: CustomTextField(
+                    isDropdown: true,
+                    hint: "Month",
+                    readOnly: true,
+                    controller: widget.controller.dobMonthController,
+                    // onChanged: (_) => _validateForm(),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Month cannot be empty";
+                      }
+                      return null;
+                    },
+                    onTap: () async {
+                      final monthList = AppHelper.monthList;
+                      final month = await showDialog<String>(
+                        context: context,
+                        builder: (context) => SimpleDialog(
+                          title: const Text('Select Month'),
+                          children: List.generate(
+                            monthList.length,
+                            (index) => SimpleDialogOption(
+                              onPressed: () {
+                                Navigator.pop(context, monthList[index]);
+                              },
+                              child: Text(monthList[index]),
+                            ),
+                          ),
+                        ),
+                      );
+                      if (month != null) {
+                        widget.controller.dobMonthController.text = month;
+                        // _validateForm();
+                      }
+                    },
+                  ),
+                ),
+                4.width,
+                Expanded(
+                  child: CustomTextField(
+                    hint: "Year",
+                    keyboardType: TextInputType.number,
+                    controller: widget.controller.dobYearController,
+                    // onChanged: (_) => _validateForm(),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Year cannot be empty";
+                      }
+                      if (value.length < 4 || value.length > 4) {
+                        return 'Enter valid year';
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+              ],
+            ),
+            16.height,
+            CustomTextField(
+              hint: "Enter referral code",
+              keyboardType: TextInputType.number,
+              controller: widget.controller.referralCodeController,
+              label: 'Referral Code (optional)',
+            ),
+            16.height,
+            Text(
+              'How would you like to receive your OTP?',
+              style: context.textTheme.bodyMedium,
+            ),
+            8.height,
+            Row(
+              children: [
+                Expanded(
+                  child: InkWell(
+                    onTap: () {
+                      if (widget.controller.emailController.text.isEmpty) {
+                        return;
+                      }
+                      setState(() {
+                        widget.controller.changeOTPChannel(OTPChannel.email);
+                      });
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      decoration: BoxDecoration(
+                        color: widget.controller.channel == OTPChannel.email
+                            ? ColorConstant.primaryLightColor
+                                .withValues(alpha: .4)
+                            : Colors.white,
+                        border: Border.all(
+                          color: widget.controller.channel == OTPChannel.email
+                              ? ColorConstant.primaryColor
+                              : Colors.grey,
+                        ),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Column(
+                        children: [
+                          Icon(
+                            Icons.email,
+                            color: widget.controller.channel == OTPChannel.email
+                                ? ColorConstant.primaryColor
+                                : Colors.grey,
+                          ),
+                          4.height,
+                          Text(
+                            'Email',
+                            style: context.textTheme.bodyMedium?.copyWith(
+                              color:
+                                  widget.controller.channel == OTPChannel.email
+                                      ? ColorConstant.primaryColor
+                                      : Colors.grey,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                8.width,
+                Expanded(
+                  child: InkWell(
+                    onTap: () {
+                      setState(() {
+                        widget.controller.changeOTPChannel(OTPChannel.sms);
+                      });
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      decoration: BoxDecoration(
+                        color: widget.controller.channel == OTPChannel.sms
+                            ? ColorConstant.primaryLightColor
+                                .withValues(alpha: .4)
+                            : Colors.white,
+                        border: Border.all(
+                          color: widget.controller.channel == OTPChannel.sms
+                              ? ColorConstant.primaryColor
+                              : Colors.grey,
+                        ),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Column(
+                        children: [
+                          Icon(
+                            Icons.phone_android,
+                            color: widget.controller.channel == OTPChannel.sms
+                                ? ColorConstant.primaryColor
+                                : Colors.grey,
+                          ),
+                          4.height,
+                          Text(
+                            'SMS',
+                            style: context.textTheme.bodyMedium?.copyWith(
+                              color: widget.controller.channel == OTPChannel.sms
+                                  ? ColorConstant.primaryColor
+                                  : Colors.grey,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                8.width,
+                Expanded(
+                  child: InkWell(
+                    onTap: () {
+                      setState(() {
+                        widget.controller.changeOTPChannel(OTPChannel.whatsapp);
+                      });
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      decoration: BoxDecoration(
+                        color: widget.controller.channel == OTPChannel.whatsapp
+                            ? ColorConstant.primaryLightColor
+                                .withValues(alpha: .4)
+                            : Colors.white,
+                        border: Border.all(
+                          color:
+                              widget.controller.channel == OTPChannel.whatsapp
+                                  ? ColorConstant.primaryColor
+                                  : Colors.grey,
+                        ),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Column(
+                        children: [
+                          SvgPicture.asset(
+                            'whatsapp'.toSvg,
+                            colorFilter: ColorFilter.mode(
+                              widget.controller.channel == OTPChannel.whatsapp
+                                  ? ColorConstant.primaryColor
+                                  : Colors.grey,
+                              BlendMode.srcIn,
+                            ),
+                            height: 24,
+                            width: 24,
+                          ),
+                          4.height,
+                          Text(
+                            'Whatsapp',
+                            style: context.textTheme.bodyMedium?.copyWith(
+                              color: widget.controller.channel ==
+                                      OTPChannel.whatsapp
+                                  ? ColorConstant.primaryColor
+                                  : Colors.grey,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
+            16.height,
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Checkbox(
+                  value: widget.controller.isChecked,
+                  onChanged: (value) {
+                    widget.controller.isChecked = value!;
+                    ref.read(isAgreedProvider.notifier).state =
+                        !ref.read(isAgreedProvider.notifier).state;
+                  },
+                  activeColor: ColorConstant.primaryColor,
+                  visualDensity: VisualDensity.compact,
+                ),
+                8.width,
+                Expanded(
+                  child: RichText(
+                    text: TextSpan(
+                      style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                          color: Color(0xff616060)),
+                      children: [
+                        const TextSpan(text: "I agree with the "),
+                        TextSpan(
+                          text: "Terms & Conditions",
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () async {
+                              // CustomToast.show(context, "Coming soon...",
+                              //     type: ToastType.error);
+                              //               String onTapValue = goal.onTap.toString();
+
+                              // if (Uri.tryParse(onTapValue)?.hasAbsolutePath == true) {
+                              //   if (await canLaunchUrl(Uri.parse(onTapValue))) {
+                              //     await launchUrl(Uri.parse(onTapValue));
+                              //   }
+                              // }
+                            },
+                          style: const TextStyle(
+                              color: Color(0xffF04D22),
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400),
+                        ),
+                        const TextSpan(text: " and "),
+                        TextSpan(
+                          text: "Privacy Policy statement",
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              CustomToast.show(context, "Coming soon...",
+                                  type: ToastType.error);
+                            },
+                          style: const TextStyle(
+                              color: Color(0xffF04D22),
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            // DateOfBirthField(
+            //     label: "Date of Birth",
+            //     controller: widget.controller.dobController),
           ],
         ),
       ),

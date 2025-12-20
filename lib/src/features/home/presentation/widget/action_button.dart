@@ -3,6 +3,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:greenzone_medical/src/app_pkg.dart';
 import 'package:greenzone_medical/src/routes/routes.dart';
+import 'package:greenzone_medical/src/utils/extensions/extensions.dart';
 
 class ActionButtonsRow extends StatefulWidget {
   const ActionButtonsRow({super.key});
@@ -61,13 +62,9 @@ class _ActionButtonsRowState extends State<ActionButtonsRow> {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           "What will you like to do today?",
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w400,
-            color: Color(0xff444444),
-          ),
+          style: context.textTheme.labelLarge,
         ),
         smallSpace(),
         SingleChildScrollView(

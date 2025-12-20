@@ -1,8 +1,19 @@
 // ignore_for_file: use_build_context_synchronously
 
 // import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:greenzone_medical/src/features/home/presentation/suspended_products.dart';
 import 'package:greenzone_medical/src/features/home/presentation/widget/advert_helper.dart';
+import 'package:greenzone_medical/src/features/home/presentation/widget/friend_request_widget.dart';
+import 'package:greenzone_medical/src/features/home/presentation/widget/personal_goals_widget.dart';
+import 'package:greenzone_medical/src/features/home/presentation/widget/profile_completion_widget.dart';
+import 'package:greenzone_medical/src/features/pharmacy/presentation/pharmacy_search_screen.dart';
+import 'package:greenzone_medical/src/features/plan/presentation/my_goals_screen.dart';
+import 'package:greenzone_medical/src/resources/colors/colors.dart';
+import 'package:greenzone_medical/src/utils/extensions/extensions.dart';
+import 'package:greenzone_medical/src/utils/extensions/string_extensions.dart';
+import 'package:greenzone_medical/src/utils/loading_widget.dart';
 
 import '../../../provider/all_providers.dart';
 import '../../../utils/packages.dart';
@@ -24,7 +35,7 @@ class _HomePageState extends ConsumerState<HomePage> {
 
   int cachedHMOCount = 0;
   bool hasLoadedData = false;
-  String _token = '';
+  // String _token = '';
 
   @override
   void initState() {
@@ -164,7 +175,7 @@ class _HomePageState extends ConsumerState<HomePage> {
 
     getAllInterestAsync.whenOrNull(
       data: (interests) {
-        if (interests != null && interests.isNotEmpty) {
+        if (interests.isNotEmpty) {
           hasLoadedData = false; // Reset the flag if we have valid data
           return;
         } else {
@@ -235,50 +246,51 @@ class _HomePageState extends ConsumerState<HomePage> {
           backgroundColor: Colors.white,
           key: _scaffoldKey,
           endDrawer: const HomeDrawer(),
-          appBar: AppBar(
-            backgroundColor: Colors.white,
-            surfaceTintColor: Colors.white,
-            elevation: 0,
-            automaticallyImplyLeading: false, // Removes back button
-            centerTitle: false, // Aligns title to the left
-            title: RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: getGreeting(),
-                    style: const TextStyle(
-                      color: Color(0xff0D0D0D),
-                      fontSize: 20,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  TextSpan(
-                    text: '\n$userName',
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 14,
-                      height: 1.9,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            actions: [
-              InkWell(
-                  onTap: () {
-                    _scaffoldKey.currentState?.openEndDrawer();
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 20),
-                    child: Image.asset(
-                      "assets/icon/menu.png",
-                      height: 23,
-                      width: 37,
-                    ),
-                  ))
-            ],
-          ),
+          // appBar: AppBar(
+          //   backgroundColor: Colors.white,
+          //   surfaceTintColor: Colors.white,
+          //   elevation: 0,
+          //   automaticallyImplyLeading: false, // Removes back button
+          //   centerTitle: false, // Aligns title to the left
+          //   title: RichText(
+          //     text: TextSpan(
+          //       children: [
+          //         TextSpan(
+          //           text: getGreeting(),
+          //           style: const TextStyle(
+          //             color: Color(0xff0D0D0D),
+          //             fontSize: 20,
+          //             fontWeight: FontWeight.w500,
+          //           ),
+          //         ),
+          //         TextSpan(
+          //           text: '\n$userName',
+          //           style: const TextStyle(
+          //             color: Colors.black,
+          //             fontSize: 14,
+          //             height: 1.9,
+          //             fontWeight: FontWeight.w400,
+          //           ),
+          //         ),
+          //       ],
+          //     ),
+          //   ),
+          //   actions: [
+          //     InkWell(
+          //       onTap: () {
+          //         _scaffoldKey.currentState?.openEndDrawer();
+          //       },
+          //       child: Padding(
+          //         padding: const EdgeInsets.only(right: 20),
+          //         child: Image.asset(
+          //           "assets/icon/menu.png",
+          //           height: 23,
+          //           width: 37,
+          //         ),
+          //       ),
+          //     )
+          //   ],
+          // ),
           body: RefreshIndicator(
             onRefresh: () async {
               ref.invalidate(articleProvider); // Refresh articles
@@ -289,352 +301,657 @@ class _HomePageState extends ConsumerState<HomePage> {
               ref.watch(userUnreadChatProvider);
               ref.watch(userUnreadNotificationProvider);
             },
-            child: SingleChildScrollView(
-              physics:
-                  const AlwaysScrollableScrollPhysics(), // Allows pulling even when list is short
+            child: Padding(
+              // physics:
+              //     const AlwaysScrollableScrollPhysics(), // Allows pulling even when list is short
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  (context.padding.top + 14).height,
                   Row(
                     children: [
-                      Expanded(
-                        child: CustomSearchBar(
-                          controller: _searchController,
-                          onCameraTap: () {
-                            context.push(Routes.PRODUCTSCAN);
-                          },
-                          onChanged: (query) {
-                            setState(() {
-                              _searchQuery = query.toLowerCase();
-                            });
-                          },
-                        ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            getGreeting(),
+                            style: context.textTheme.displayMedium,
+                          ),
+                          Text(
+                            userName,
+                            style: context.textTheme.bodyMedium,
+                          ),
+                        ],
                       ),
-                      const SizedBox(width: 10),
+                      const Spacer(),
                       InkWell(
                         onTap: () async {
-                          await context.push(Routes.NOTIFICATIONPAGE);
-                          ref.invalidate(
-                              userUnreadNotificationProvider); // Force refresh on return
+                          _scaffoldKey.currentState?.openEndDrawer();
                         },
-                        child: Stack(
-                          clipBehavior: Clip.none,
-                          children: [
-                            Image.asset(
-                              'assets/images/notification.png',
-                              height: 32,
-                              width: 25,
-                            ),
-                            if (asyncNotifications is AsyncData)
-                              // Count unread notifications
-                              Builder(
-                                builder: (_) {
-                                  final unreadCount =
-                                      asyncNotifications.value?.unreadCount ??
-                                          0;
-
-                                  if (unreadCount == 0) {
-                                    return const SizedBox.shrink();
-                                  }
-
-                                  return Positioned(
-                                    right: -4,
-                                    top: -4,
-                                    child: Container(
-                                      padding: const EdgeInsets.all(3),
-                                      decoration: BoxDecoration(
-                                        color: Colors.red,
-                                        borderRadius: BorderRadius.circular(12),
-                                        border: Border.all(
-                                            color: Colors.white, width: 1.5),
-                                      ),
-                                      constraints: const BoxConstraints(
-                                        minWidth: 18,
-                                        minHeight: 16,
-                                      ),
-                                      child: Text(
-                                        unreadCount > 99
-                                            ? '99+'
-                                            : unreadCount.toString(),
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 10,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      InkWell(
-                        onTap: () async {
-                          await context.push(Routes.CHATPAGE);
-                          ref.invalidate(
-                              userUnreadChatProvider); // Force refresh on return
-                        },
-                        child: Stack(
-                          clipBehavior: Clip.none,
-                          children: [
-                            Image.asset(
-                              'assets/images/message.png',
-                              height: 32,
-                              width: 25,
-                            ),
-                            getUnreadChatAsync.when(
-                              data: (data) {
-                                final count = data.unreadMessages;
-                                if (count == 0) {
-                                  return const SizedBox(); // No badge if 0
-                                }
-                                return Positioned(
-                                  top: -2,
-                                  right: -6,
-                                  child: Container(
-                                    padding: const EdgeInsets.all(3),
-                                    decoration: const BoxDecoration(
-                                      color: Colors.red,
-                                      shape: BoxShape.circle,
-                                    ),
-                                    constraints: const BoxConstraints(
-                                      minWidth: 18,
-                                      minHeight: 18,
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        '$count',
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 10,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              },
-                              loading: () =>
-                                  const SizedBox(), // Or a small loading spinner
-                              error: (_, __) =>
-                                  const SizedBox(), // Or handle the error visually
-                            ),
-                          ],
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 20),
+                          child: Image.asset(
+                            "assets/icon/menu.png",
+                            height: 23,
+                            width: 37,
+                          ),
                         ),
                       )
                     ],
                   ),
-                  const SizedBox(height: 20),
-                  _buildStaticBanners(),
-                  mediumSpace(),
-                  const ActionButtonsRow(),
-                  mediumSpace(),
-                  Column(
-                    children: [
-                      CustomListTile(
-                        imagePath: "assets/icon/appo_icon.png",
-                        title: "Appointment",
-                        subtitle:
-                            "$cachedUpcomingAppointments upcoming Appointment${cachedUpcomingAppointments == 1 ? '' : 's'}",
-                        backgroundColor: const Color(0xffEAF2FF),
-                        onTap: () {
-                          context.push(Routes.APPOINTMENT, extra: true);
-                        },
-                      ),
-
-                      CustomListTile(
-                        imagePath: "assets/icon/pres_icon.png",
-                        title: "Prescriptions",
-                        subtitle:
-                            "$cachedPrescription Prescription${cachedPrescription == 1 ? '' : 's'}",
-                        backgroundColor: const Color(0xffEAF2FF),
-                        onTap: () {
-                          context.push(Routes.PRESCRIPTION, extra: true);
-                        },
-                      ),
-                      CustomListTile(
-                        imagePath: "assets/icon/health_ins_icon.png",
-                        title: "Health Insurance",
-                        subtitle:
-                            "$cachedHMOCount HMO${cachedHMOCount == 1 ? '' : 's'}",
-                        backgroundColor: const Color(0xffEAF2FF),
-                        onTap: () {},
-                      ),
-                      const FriendRequestSection(),
-                      bannerState.when(
-                        loading: () =>
-                            const Center(child: CircularProgressIndicator()),
-                        error: (err, stack) =>
-                            const Center(child: Text("Failed to load banners")),
-                        data: (banners) {
-                          if (banners.isEmpty) {
-                            return const Center(
-                                child: Text("No banners available."));
-                          }
-
-                          // API banners only
-                          final List<AdvertModel> apiBanners =
-                              banners.map((banner) {
-                            final imageUrl = banner.imageUrl ?? "";
-                            final isVideo = imageUrl.endsWith('.mp4');
-
-                            return AdvertModel(
-                              title: "",
-                              description: "",
-                              backgroundColor: ColorConstant.primaryColor,
-                              mediaType: isVideo ? 'video' : 'image',
-                              imagePath:
-                                  "${AppConstants.noSlashImageURL}$imageUrl",
-                              onTap: () {
-                                final url = imageUrl.isNotEmpty
-                                    ? "${AppConstants.noSlashImageURL}$imageUrl"
-                                    : "https://edogoverp.com";
-
-                                try {
-                                  launchUrl(Uri.parse(url));
-                                } catch (e) {
-                                  debugPrint("⚠️ Failed to launch URL: $url");
-                                }
-                              },
-                            );
-                          }).toList();
-
-                          return AdvertHelper(goals: apiBanners);
-                        },
-                      ),
-
-                      getAllInterestAsync.when(
-                        data: (interests) {
-                          if (interests == null || interests.isEmpty) {
-                            return const SizedBox.shrink();
-                          }
-
-                          final categoryIds = interests
-                              .map((interest) => interest.category?.id)
-                              .whereType<int>()
-                              .toList();
-
-                          return GroupInterestList(categoryIds: categoryIds);
-                        },
-                        loading: () =>
-                            const Center(child: CircularProgressIndicator()),
-                        error: (error, stackTrace) => const SizedBox.shrink(),
-                      ),
-
-                      const SizedBox(height: 20),
-                      Column(
+                  12.height,
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          Row(
                             children: [
-                              Padding(
-                                padding: const EdgeInsets.only(left: 10),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    const Text(
-                                      "Articles",
-                                      style: TextStyle(
-                                        color: ColorConstant.secondryColor,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w400,
-                                      ),
-                                    ),
-                                    TextButton(
-                                      onPressed: () {
-                                        context.push(Routes.ARTICLESCREEN);
-                                      },
-                                      child: const Text(
-                                        "See All",
-                                        style: TextStyle(
-                                          decoration: TextDecoration.underline,
-                                          color: ColorConstant.primaryColor,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-
-                              /// **Handle different states (loading, error, data)**
-                              RefreshIndicator(
-                                onRefresh: () async {
-                                  ref.invalidate(articleProvider);
-                                },
-                                child: articleState.when(
-                                  loading: () => const Center(
-                                      child: CircularProgressIndicator()),
-                                  error: (err, stack) => const Center(
-                                      child: Text("No articles available.")),
-                                  data: (articles) {
-                                    // **Filter Articles Based on Search Query**
-                                    final filteredArticles = articles
-                                        .where((article) =>
-                                            article.title!
-                                                .toLowerCase()
-                                                .contains(_searchQuery) ||
-                                            article.shortDescription!
-                                                .toLowerCase()
-                                                .contains(_searchQuery))
-                                        .take(5) // Show only first 5 articles
-                                        .toList();
-
-                                    if (filteredArticles.isEmpty) {
-                                      return const Center(
-                                          child: Text("No articles found."));
-                                    }
-
-                                    return ListView.builder(
-                                      shrinkWrap:
-                                          true, // Ensures ListView only takes necessary space
-                                      physics:
-                                          const NeverScrollableScrollPhysics(), // Prevents nested scrolling conflicts
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 16),
-                                      itemCount: filteredArticles.length,
-                                      itemBuilder: (context, index) {
-                                        final article = filteredArticles[index];
-                                        return ArticleCard(
-                                          title: article.title!,
-                                          subtitle: article.fullDescription!,
-                                          // imageUrl: "assets/images/article_1.png",
-                                          imageUrl: article.featuredImagePath ??
-                                              'assets/images/article_1.png',
-
-                                          onPressed: () => context.push(
-                                            Routes.ARTICLEDETAILS,
-                                            extra: article,
-                                          ),
-                                        );
-                                      },
-                                    );
+                              Expanded(
+                                child: CustomSearchBar(
+                                  controller: _searchController,
+                                  onCameraTap: () {
+                                    context.push(Routes.PRODUCTSCAN);
+                                  },
+                                  onChanged: (query) {
+                                    setState(() {
+                                      _searchQuery = query.toLowerCase();
+                                    });
                                   },
                                 ),
                               ),
+                              const SizedBox(width: 10),
+                              InkWell(
+                                onTap: () async {
+                                  await context.push(Routes.NOTIFICATIONPAGE);
+                                  ref.invalidate(
+                                      userUnreadNotificationProvider); // Force refresh on return
+                                },
+                                child: Stack(
+                                  clipBehavior: Clip.none,
+                                  children: [
+                                    Image.asset(
+                                      'assets/images/notification.png',
+                                      height: 32,
+                                      width: 25,
+                                    ),
+                                    if (asyncNotifications is AsyncData)
+                                      // Count unread notifications
+                                      Builder(
+                                        builder: (_) {
+                                          final unreadCount = asyncNotifications
+                                                  .value?.unreadCount ??
+                                              0;
+
+                                          if (unreadCount == 0) {
+                                            return const SizedBox.shrink();
+                                          }
+
+                                          return Positioned(
+                                            right: -4,
+                                            top: -4,
+                                            child: Container(
+                                              padding: const EdgeInsets.all(3),
+                                              decoration: BoxDecoration(
+                                                color: Colors.red,
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
+                                                border: Border.all(
+                                                    color: Colors.white,
+                                                    width: 1.5),
+                                              ),
+                                              constraints: const BoxConstraints(
+                                                minWidth: 18,
+                                                minHeight: 16,
+                                              ),
+                                              child: Text(
+                                                unreadCount > 99
+                                                    ? '99+'
+                                                    : unreadCount.toString(),
+                                                style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 10,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                              InkWell(
+                                onTap: () async {
+                                  await context.push(Routes.CHATPAGE);
+                                  ref.invalidate(
+                                      userUnreadChatProvider); // Force refresh on return
+                                },
+                                child: Stack(
+                                  clipBehavior: Clip.none,
+                                  children: [
+                                    Image.asset(
+                                      'assets/images/message.png',
+                                      height: 32,
+                                      width: 25,
+                                    ),
+                                    getUnreadChatAsync.when(
+                                      data: (data) {
+                                        final count = data.unreadMessages;
+                                        if (count == 0) {
+                                          return const SizedBox(); // No badge if 0
+                                        }
+                                        return Positioned(
+                                          top: -2,
+                                          right: -6,
+                                          child: Container(
+                                            padding: const EdgeInsets.all(3),
+                                            decoration: const BoxDecoration(
+                                              color: Colors.red,
+                                              shape: BoxShape.circle,
+                                            ),
+                                            constraints: const BoxConstraints(
+                                              minWidth: 18,
+                                              minHeight: 18,
+                                            ),
+                                            child: Center(
+                                              child: Text(
+                                                '$count',
+                                                style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 10,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      loading: () =>
+                                          const SizedBox(), // Or a small loading spinner
+                                      error: (_, __) =>
+                                          const SizedBox(), // Or handle the error visually
+                                    ),
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
+                          const SizedBox(height: 20),
+                          _buildStaticBanners(),
+                          mediumSpace(),
+                          // _drugSearchWidget(context),
+
+                          const ProfileCompletionWidget(),
+                          mediumSpace(),
+                          // const PersonalGoalsWidget(),
+                          // mediumSpace(),
+                          const ActionButtonsRow(),
+                          smallSpace(),
+                          CustomListTile(
+                            imagePath: "assets/icon/appo_icon.png",
+                            title: "Appointment",
+                            subtitle:
+                                "$cachedUpcomingAppointments upcoming Appointment${cachedUpcomingAppointments == 1 ? '' : 's'}",
+                            backgroundColor: const Color(0xffEAF2FF),
+                            onTap: () {
+                              context.push(Routes.APPOINTMENT, extra: true);
+                            },
+                          ),
+
+                          CustomListTile(
+                            imagePath: "assets/icon/pres_icon.png",
+                            title: "Prescriptions",
+                            subtitle:
+                                "$cachedPrescription Prescription${cachedPrescription == 1 ? '' : 's'}",
+                            backgroundColor: const Color(0xffEAF2FF),
+                            onTap: () {
+                              context.push(Routes.PRESCRIPTION, extra: true);
+                            },
+                          ),
+
+                          mediumSpace(),
+                          // if user has no apps
+                          // Text(
+                          //   'Hey, you don\'t seem to have any health goals',
+                          //   style: context.textTheme.bodyMedium?.copyWith(
+                          //     fontWeight: FontWeight.w700,
+                          //   ),
+                          // ),
+                          // 12.height,
+                          // InkWell(
+                          //   onTap: () {
+                          //     context.push(MyGoalsScreen.routeName);
+                          //   },
+                          //   child: Container(
+                          //     padding: const EdgeInsets.symmetric(
+                          //         horizontal: 16, vertical: 16),
+                          //     decoration: BoxDecoration(
+                          //       borderRadius: BorderRadius.circular(12),
+                          //       color: const Color(0xffEAFFEB),
+                          //       border: Border.all(
+                          //         color: ColorConstant.primaryColor,
+                          //       ),
+                          //     ),
+                          //     child: Row(
+                          //       crossAxisAlignment: CrossAxisAlignment.start,
+                          //       children: [
+                          //         SvgPicture.asset(
+                          //           'health_goal'.toSvg,
+                          //         ),
+                          //         12.width,
+                          //         Expanded(
+                          //           child: Column(
+                          //             crossAxisAlignment:
+                          //                 CrossAxisAlignment.start,
+                          //             children: [
+                          //               Text(
+                          //                 'We have a bank of goals you can select from, starting with simple things like your hair to medical goals.',
+                          //                 style: context.textTheme.bodyMedium
+                          //                     ?.copyWith(
+                          //                   fontSize: 13,
+                          //                 ),
+                          //               ),
+                          //               8.height,
+                          //               Container(
+                          //                 decoration: BoxDecoration(
+                          //                   borderRadius:
+                          //                       BorderRadius.circular(28),
+                          //                   color: const Color(0xFF29BA2E),
+                          //                 ),
+                          //                 padding: const EdgeInsets.symmetric(
+                          //                     horizontal: 16, vertical: 6),
+                          //                 child: Text(
+                          //                   'Get started now!',
+                          //                   style: context.textTheme.bodyMedium
+                          //                       ?.copyWith(
+                          //                     color: Colors.white,
+                          //                   ),
+                          //                 ),
+                          //               )
+                          //             ],
+                          //           ),
+                          //         )
+                          //       ],
+                          //     ),
+                          //   ),
+                          // ),
+                          // mediumSpace(),
+
+                          // const ProfileCompletionWidget(),
+                          mediumSpace(),
+                          // InkWell(
+                          //   onTap: () {
+                          //     context.push(SuspendedProducts.routeName);
+                          //   },
+                          //   child: Container(
+                          //     decoration: BoxDecoration(
+                          //       color: const Color(0xFFFFE7E6),
+                          //       border: Border.all(
+                          //         color: const Color(0xFFFF6159),
+                          //       ),
+                          //       borderRadius: BorderRadius.circular(8),
+                          //     ),
+                          //     padding: const EdgeInsets.all(12),
+                          //     child: Row(
+                          //       children: [
+                          //         Image.asset('nafdac'.toImg),
+                          //         8.width,
+                          //         Expanded(
+                          //           child: Column(
+                          //             crossAxisAlignment:
+                          //                 CrossAxisAlignment.start,
+                          //             children: [
+                          //               Text(
+                          //                 'Suspended & Canceled Products',
+                          //                 style: context.textTheme.bodyMedium
+                          //                     ?.copyWith(
+                          //                   fontSize: 15,
+                          //                 ),
+                          //               ),
+                          //               4.height,
+                          //               Text(
+                          //                 'NAFDAC Approved list',
+                          //                 style: context.textTheme.bodyLarge
+                          //                     ?.copyWith(
+                          //                   fontSize: 13,
+                          //                   color: const Color(0xFFFF6159),
+                          //                 ),
+                          //               ),
+                          //             ],
+                          //           ),
+                          //         ),
+                          //         4.width,
+                          //         const Icon(
+                          //           Icons.arrow_forward_ios,
+                          //           size: 14,
+                          //           color: Color(0xFFFF6159),
+                          //         ),
+                          //       ],
+                          //     ),
+                          //   ),
+                          // ),
+                          // mediumSpace(),
+                          // Column(
+                          //   crossAxisAlignment: CrossAxisAlignment.start,
+                          //   children: [
+                          //     Text(
+                          //       'My Community & Socials',
+                          //       style: context.textTheme.labelLarge,
+                          //     ),
+                          //     12.height,
+                          //     const Divider(
+                          //       color: Color(0xFFBABABA),
+                          //     ),
+                          //     12.height,
+                          //     Text(
+                          //       'Hey Jessica, you have 0 posts',
+                          //       style: context.textTheme.labelMedium?.copyWith(
+                          //         color: const Color(0xFF656565),
+                          //       ),
+                          //     ),
+                          //     4.height,
+                          //     Text(
+                          //       'Start the conversation by creating the first post',
+                          //       style: context.textTheme.bodyLarge?.copyWith(
+                          //         fontSize: 13,
+                          //       ),
+                          //     ),
+                          //     14.height,
+                          //     Container(
+                          //       width: double.infinity,
+                          //       decoration: BoxDecoration(
+                          //         color: const Color(0xFFEAFFEB),
+                          //         border: Border.all(color: AppColors.primary),
+                          //         borderRadius: BorderRadius.circular(8),
+                          //       ),
+                          //       padding: const EdgeInsets.symmetric(
+                          //         horizontal: 12,
+                          //         vertical: 16,
+                          //       ),
+                          //       alignment: Alignment.center,
+                          //       child: Text(
+                          //         'Create your first post',
+                          //         style:
+                          //             context.textTheme.labelMedium?.copyWith(
+                          //           color: const Color(0xFF575757),
+                          //         ),
+                          //       ),
+                          //     )
+                          //   ],
+                          // ),
+                          // mediumSpace(),
+                          // const FriendRequestWidget(),
+                          // mediumSpace(),
+                          // Column(
+                          //   children: [
+                          // CustomListTile(
+                          //   imagePath: "assets/icon/health_ins_icon.png",
+                          //   title: "Health Insurance",
+                          //   subtitle:
+                          //       "$cachedHMOCount HMO${cachedHMOCount == 1 ? '' : 's'}",
+                          //   backgroundColor: const Color(0xffEAF2FF),
+                          //   onTap: () {},
+                          // ),
+                          const FriendRequestSection(),
+                          if (!kDebugMode)
+                            bannerState.when(
+                              loading: () => const ListLoader(
+                                itemCount: 1,
+                                height: 120,
+                              ),
+                              error: (err, stack) => const Center(
+                                  child: Text("Failed to load banners")),
+                              data: (banners) {
+                                if (banners.isEmpty) {
+                                  return const Center(
+                                      child: Text("No banners available."));
+                                }
+                                // API banners only
+                                final List<AdvertModel> apiBanners =
+                                    banners.map((banner) {
+                                  final imageUrl = banner.imageUrl ?? "";
+                                  final isVideo = imageUrl.endsWith('.mp4');
+                                  return AdvertModel(
+                                    title: "",
+                                    description: "",
+                                    backgroundColor: ColorConstant.primaryColor,
+                                    mediaType: isVideo ? 'video' : 'image',
+                                    imagePath:
+                                        "${AppConstants.noSlashImageURL}$imageUrl",
+                                    onTap: () {
+                                      final url = imageUrl.isNotEmpty
+                                          ? "${AppConstants.noSlashImageURL}$imageUrl"
+                                          : "https://edogoverp.com";
+                                      try {
+                                        launchUrl(Uri.parse(url));
+                                      } catch (e) {
+                                        debugPrint(
+                                            "⚠️ Failed to launch URL: $url");
+                                      }
+                                    },
+                                  );
+                                }).toList();
+                                return AdvertHelper(goals: apiBanners);
+                              },
+                            ),
+
+                          getAllInterestAsync.when(
+                            data: (interests) {
+                              if (interests.isEmpty) {
+                                return const SizedBox.shrink();
+                              }
+
+                              final categoryIds = interests
+                                  .map((interest) => interest.category?.id)
+                                  .whereType<int>()
+                                  .toList();
+
+                              return GroupInterestList(
+                                categoryIds: categoryIds,
+                              );
+                            },
+                            loading: () => const ListLoader(itemCount: 2),
+                            error: (error, stackTrace) =>
+                                const SizedBox.shrink(),
+                          ),
+                          const SizedBox(height: 20),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 10),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        const Text(
+                                          "Articles",
+                                          style: TextStyle(
+                                            color: ColorConstant.secondryColor,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+                                            context.push(Routes.ARTICLESCREEN);
+                                          },
+                                          child: const Text(
+                                            "See All",
+                                            style: TextStyle(
+                                              decoration:
+                                                  TextDecoration.underline,
+                                              color: ColorConstant.primaryColor,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+
+                                  /// **Handle different states (loading, error, data)**
+                                  RefreshIndicator(
+                                    onRefresh: () async {
+                                      ref.invalidate(articleProvider);
+                                    },
+                                    child: articleState.when(
+                                      loading: () =>
+                                          const ListLoader(itemCount: 4),
+                                      error: (err, stack) => const Center(
+                                          child:
+                                              Text("No articles available.")),
+                                      data: (articles) {
+                                        // **Filter Articles Based on Search Query**
+                                        final filteredArticles = articles
+                                            .where((article) =>
+                                                article.title!
+                                                    .toLowerCase()
+                                                    .contains(_searchQuery) ||
+                                                article.shortDescription!
+                                                    .toLowerCase()
+                                                    .contains(_searchQuery))
+                                            .take(
+                                                5) // Show only first 5 articles
+                                            .toList();
+
+                                        if (filteredArticles.isEmpty) {
+                                          return const Center(
+                                              child:
+                                                  Text("No articles found."));
+                                        }
+
+                                        return ListView.builder(
+                                          shrinkWrap:
+                                              true, // Ensures ListView only takes necessary space
+                                          physics:
+                                              const NeverScrollableScrollPhysics(), // Prevents nested scrolling conflicts
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 16),
+                                          itemCount: filteredArticles.length,
+                                          itemBuilder: (context, index) {
+                                            final article =
+                                                filteredArticles[index];
+                                            return ArticleCard(
+                                              title: article.title!,
+                                              subtitle:
+                                                  article.fullDescription!,
+                                              // imageUrl: "assets/images/article_1.png",
+                                              imageUrl: article
+                                                      .featuredImagePath ??
+                                                  'assets/images/article_1.png',
+
+                                              onPressed: () => context.push(
+                                                Routes.ARTICLEDETAILS,
+                                                extra: article,
+                                              ),
+                                            );
+                                          },
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              )
                             ],
                           )
+
+                          // Articles will now refresh when pulled down
                         ],
                       )
-                      // Articles will now refresh when pulled down
-                    ],
+                          .animate()
+                          .slideY(begin: 1.0, end: 0, duration: 600.ms)
+                          .fadeIn(),
+                    ),
                   )
-                      .animate()
-                      .slideY(begin: 1.0, end: 0, duration: 600.ms)
-                      .fadeIn()
                 ],
               ),
             ),
           ),
         );
       },
+    );
+  }
+
+  _drugSearchWidget(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        context.push(PharmacySearchScreen.routeName);
+      },
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Expanded(
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  decoration: const BoxDecoration(
+                    color: AppColors.primaryVariant,
+                    borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(24),
+                      topLeft: Radius.circular(4),
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      SvgPicture.asset('drugstore'.toSvg),
+                      4.width,
+                      Text(
+                        'CHP Pharmacy eKiosk',
+                        style: context.textTheme.labelMedium?.copyWith(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              (context.screenWidth * .1).width,
+            ],
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 18),
+            decoration: BoxDecoration(
+              boxShadow: const [
+                BoxShadow(
+                  color: Color(0x40A7A7A7),
+                  blurRadius: 11,
+                  offset: Offset(0, 4),
+                )
+              ],
+              color: Colors.white,
+              border: Border.all(
+                color: AppColors.primaryVariant,
+                width: .7,
+              ),
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: Row(
+              children: [
+                Text(
+                  'Search for any drugs',
+                  style: context.textTheme.bodyMedium?.copyWith(
+                    color: const Color(0xFF9D9D9D),
+                  ),
+                ),
+                const Spacer(),
+                SvgPicture.asset('search'.toSvg),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -14,6 +14,14 @@ class ApiUrl {
   static const String updateDeviceTokenUrl =
       '/ConnectedHealthWebApi/api/Auth/update-device-token';
 
+  static String getImmunizationResult(String id) =>
+      '/ConnectedHealthWebApi/api/Patient/immunization/$id';
+  static String getAllergyResult(String id) =>
+      '/ConnectedHealthWebApi/api/UserAllergies/list/patient/$id';
+  static String getOtherAllergyResult(String id) =>
+      '/ConnectedHealthWebApi/api/UserAllergies/list/others/patient/$id';
+  static String getPatientProfile(String id) =>
+      '/ConnectedHealthWebApi/api/Patient/single/$id';
   static const String profileGetUrl =
       '/ConnectedHealthWebApi/api/Patient/myprofile';
   static const String contactGetUrl =
@@ -27,8 +35,11 @@ class ApiUrl {
       '/ConnectedHealthWebApi/api/Auth/forgot-password';
   static const String resetPasswordPostUrl =
       '/ConnectedHealthWebApi/api/Auth/reset-password';
-  static const String otpSendUrl =
-      '/ConnectedHealthWebApi/api/Auth/generate-otp?email=';
+  static String otpSendUrlWithChannel(String userId, String sendChannel) =>
+      '/ConnectedHealthWebApi/api/Auth/generate-my-otp?userId=$userId&sendChannel=$sendChannel';
+  static String otpSendUrl(String email) =>
+      '/ConnectedHealthWebApi/api/Auth/generate-otp?email=$email';
+  //   '/ConnectedHealthWebApi/api/Auth/generate-otp?email=';
   static const String allArticleUrl =
       '/ConnectedHealthWebApi/api/Articles?page=1&pageSize=100000';
   // static const String allBannersUrl = '/Banners';
@@ -60,8 +71,7 @@ class ApiUrl {
   //     '/Doctors/list/1/${page * pageSize}';
 
   static String allDoctorsUrl(int pageSize) =>
-      '/ConnectedHealthWebApi/api/Doctors/list';
-
+      '/ConnectedHealthWebApi/api/doctors/list/true?pageNumber=1&pageSize=$pageSize';
   // static const String communityListUrl = '/Community/list';
   static const String communityListUrl =
       '/ConnectedHealthWebApi/api/CommunityGroup/list';
@@ -221,4 +231,48 @@ class ApiUrl {
   // https://edogoverp.com/ConnectedHealthWebApi/api/HealthCareProvider/list/1/10
 
   //  static String getHome(int id) => "/products/home-product/?country_id=$id";
+
+  //
+
+  static String getAppsByCategory(int id) =>
+      'https://api.greenzonetechnologies.com.ng/ConnectedHealthWebApi/api/apps/appByCategoryId?id=$id';
+  static String getAllApps =
+      'https://api.greenzonetechnologies.com.ng/ConnectedHealthWebApi/api/apps';
+  static String getAppsCategories =
+      'https://api.greenzonetechnologies.com.ng/ConnectedHealthWebApi/api/appCategories';
+  static String getMyApps =
+      'https://api.greenzonetechnologies.com.ng/ConnectedHealthWebApi/api/AppPlans';
+
+  static String updatePatientProfile(String id) =>
+      '/ConnectedHealthWebApi/api/patient/$id';
+
+  static String getPatientContact(String id) =>
+      '/ConnectedHealthWebApi/api/patient/contact/$id';
+  static String updatePatientContact(String id) =>
+      '/ConnectedHealthWebApi/api/patient/$id/contact-update';
+
+  static String getEmergencyContactInfo(String id) =>
+      '/ConnectedHealthWebApi/api/patient/emergencyContact/$id';
+
+  static String updateEmergencyContactInfo(String id) =>
+      '/ConnectedHealthWebApi/api/patient/$id/emergency-contact-update';
+
+  static String addImmunization(String id) =>
+      '/ConnectedHealthDoctorApi/api/immunization/$id';
+  static String getAllAllergies =
+      '/ConnectedHealthWebApi/api/UserAllergies/list/allergies/';
+  static String getPatientAllergies(String id) =>
+      '/ConnectedHealthWebApi/api/UserAllergies/list/patient/$id';
+  static String addAllergy(String id) =>
+      '/ConnectedHealthWebApi/api/UserAllergies/create/patient/$id';
+  static String deleteOtherAllergy(String id) =>
+      '/ConnectedHealthWebApi/api/UserAllergies/others/$id';
+  static String deleteAllergy(String id) =>
+      '/ConnectedHealthWebApi/api/UserAllergies/$id';
+  static String deleteImmunization(String id) =>
+      '/ConnectedHealthDoctorApi/api/immunization/$id';
+
+  static String getCountry = '/ConnectedHealthWebApi/api/Geography/countries/';
+  static String getState(String cid) =>
+      '/ConnectedHealthWebApi/api/Geography/countries/$cid/states';
 }

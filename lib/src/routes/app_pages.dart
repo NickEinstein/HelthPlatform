@@ -6,14 +6,29 @@ import 'package:greenzone_medical/src/features/caregivers/presentation/engage_pa
 import 'package:greenzone_medical/src/features/chats/chats.dart';
 import 'package:greenzone_medical/src/features/chats/presentation/model/chatcontact_model.dart';
 import 'package:greenzone_medical/src/features/health_record/presentation/widget/main_health_record.dart';
+import 'package:greenzone_medical/src/features/home/presentation/suspended_products.dart';
 import 'package:greenzone_medical/src/features/notifications/notifications.dart';
+import 'package:greenzone_medical/src/features/pharmacy/presentation/delivery_details.dart';
+import 'package:greenzone_medical/src/features/pharmacy/presentation/drug_checkout.dart';
+import 'package:greenzone_medical/src/features/pharmacy/presentation/drug_search_result.dart';
+import 'package:greenzone_medical/src/features/pharmacy/presentation/pharmacy_search_screen.dart';
+import 'package:greenzone_medical/src/features/pharmacy/presentation/single_drug_detail.dart';
+import 'package:greenzone_medical/src/features/plan/presentation/single_plan_dashboard.dart';
 import 'package:greenzone_medical/src/features/prescription/presentation/prescriptions.dart';
+import 'package:greenzone_medical/src/features/plan/presentation/my_goals_screen.dart';
+import 'package:greenzone_medical/src/features/profile/presentation/allergy_details.dart';
+import 'package:greenzone_medical/src/features/profile/presentation/immunization_details.dart';
+import 'package:greenzone_medical/src/features/profile/presentation/profile_management.dart';
+import 'package:greenzone_medical/src/features/profile/presentation/update_contact_details.dart';
+import 'package:greenzone_medical/src/features/profile/presentation/update_emergency_contact.dart';
+import 'package:greenzone_medical/src/features/profile/presentation/update_personal_info_screen.dart';
+import 'package:greenzone_medical/src/features/plan/widgets/start_plan_screen.dart';
 import 'package:greenzone_medical/src/model/community_list_response.dart';
+import 'package:greenzone_medical/src/model/my_app_model.dart';
 import '../features/account/presentation/account_reset_password.dart';
 import '../features/appointment/model/appointment_model.dart';
 import '../features/article/all_articles.dart';
 import '../features/biling/presentation/billings_page.dart';
-import '../features/chats/presentation/model/chatsummary_model.dart';
 import '../features/chats/presentation/model/widget/chat_detail_screen.dart';
 import '../features/chats/presentation/model/widget/contact_info.dart';
 import '../features/community/presentation/community_friends_details.dart';
@@ -47,6 +62,99 @@ final routerProvider = Provider<GoRouter>((ref) {
     debugLogDiagnostics: true,
     initialLocation: _Paths.SPLASH,
     routes: [
+      GoRoute(
+        path: AllergyDetailsScreen.routeName,
+        builder: (context, state) => const AllergyDetailsScreen(),
+      ),
+      GoRoute(
+        path: ImmunizationDetailsScreen.routeName,
+        builder: (context, state) => const ImmunizationDetailsScreen(),
+      ),
+      GoRoute(
+        path: UpdateEmergencyContact.routeName,
+        builder: (context, state) {
+          return const UpdateEmergencyContact();
+        },
+      ),
+      GoRoute(
+        path: UpdateContactDetailsScreen.routeName,
+        builder: (context, state) {
+          return const UpdateContactDetailsScreen();
+        },
+      ),
+      GoRoute(
+        path: UpdatePersonalDetailsScreen.routeName,
+        builder: (context, state) {
+          return const UpdatePersonalDetailsScreen();
+        },
+      ),
+      GoRoute(
+        path: SuspendedProducts.routeName,
+        builder: (context, state) {
+          return const SuspendedProducts();
+        },
+      ),
+      GoRoute(
+        path: DeliveryDetails.routeName,
+        builder: (context, state) {
+          return const DeliveryDetails();
+        },
+      ),
+      GoRoute(
+        path: DrugCheckout.routeName,
+        builder: (context, state) {
+          return const DrugCheckout();
+        },
+      ),
+      GoRoute(
+        path: DrugSearchResult.routeName,
+        builder: (context, state) {
+          return const DrugSearchResult();
+        },
+      ),
+      GoRoute(
+        path: PharmacySearchScreen.routeName,
+        builder: (context, state) {
+          return const PharmacySearchScreen();
+        },
+      ),
+      GoRoute(
+        path: SingleDrugDetail.routeName,
+        builder: (context, state) {
+          return const SingleDrugDetail();
+        },
+      ),
+      GoRoute(
+        path: SinglePlanDashboard.routeName,
+        builder: (context, state) {
+          return SinglePlanDashboard(
+            myApp: state.extra as MyAppModel,
+          );
+        },
+      ),
+      GoRoute(
+        path: StartPlanScreen.routeName,
+        builder: (context, state) {
+          return StartPlanScreen(
+            app: state.extra as MyAppModel,
+          );
+        },
+      ),
+      GoRoute(
+        path: MyGoalsScreen.routeName,
+        builder: (context, state) {
+          return const MyGoalsScreen();
+        },
+      ),
+      GoRoute(
+        path: ProfileManagement.routeName,
+        builder: (context, state) => const ProfileManagement(),
+      ),
+      GoRoute(
+        path: UpdatePersonalDetailsScreen.routeName,
+        builder: (context, state) => const UpdatePersonalDetailsScreen(),
+      ),
+      //  //  //
       GoRoute(
         path: _Paths.SPLASH,
 
@@ -501,23 +609,23 @@ final routerProvider = Provider<GoRouter>((ref) {
         },
       ),
     ],
-    redirect: (context, state) {
-      // print(state);
-      // print('router redirect call ');
-      // // If our async state is loading, don't perform redirects, yet
-      // if (authNotifier.isLoading) return null;
-      //
-      // final isAuth = authNotifier.isAuthenticated;
-      //
-      // final isSplash = state.location == SplashPage.routeLocation;
-      // if (isSplash) {
-      //   return isAuth ? HomePage.routeLocation : LoginPage.routeLocation;
-      // }
-      //
-      // final isLoggingIn = state.location == LoginPage.routeLocation;
-      // if (isLoggingIn) return isAuth ? HomePage.routeLocation : null;
-      //
-      // return isAuth ? null : SplashPage.routeLocation;
-    },
+    // redirect: (context, state) {
+    // print(state);
+    // print('router redirect call ');
+    // // If our async state is loading, don't perform redirects, yet
+    // if (authNotifier.isLoading) return null;
+    //
+    // final isAuth = authNotifier.isAuthenticated;
+    //
+    // final isSplash = state.location == SplashPage.routeLocation;
+    // if (isSplash) {
+    //   return isAuth ? HomePage.routeLocation : LoginPage.routeLocation;
+    // }
+    //
+    // final isLoggingIn = state.location == LoginPage.routeLocation;
+    // if (isLoggingIn) return isAuth ? HomePage.routeLocation : null;
+    //
+    // return isAuth ? null : SplashPage.routeLocation;
+    // },
   );
 });

@@ -1,4 +1,3 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -125,7 +124,7 @@ class _OTPPageState extends ConsumerState<OTPPage> {
                     otpController.text = pin;
                   },
                   validator: (value) {
-                    if (value == null || value.isEmpty) {
+                    if ( value.isEmpty) {
                       return "Enter a 4-digit PIN";
                     } else if (value.length < 4) {
                       return "OTP must be exactly 4 digits";
@@ -163,7 +162,7 @@ class _OTPPageState extends ConsumerState<OTPPage> {
                       ref.read(isLoadingProvider.notifier).state = true;
 
                       final authService = ref.read(authServiceProvider);
-                      final result = await authService.otpSendUrl(widget.email);
+                      final result = await authService.otpSendUrl(email:widget.email);
 
                       if (!context.mounted) return;
                       ref.read(isLoadingProvider.notifier).state = false;

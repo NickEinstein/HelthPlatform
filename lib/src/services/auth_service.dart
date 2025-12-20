@@ -6,7 +6,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:greenzone_medical/src/app_pkg.dart';
 import 'package:path/path.dart';
-import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 import '../features/auth/model/register_response.dart';
 import '../features/notifications/messaging/firebase_messaging_config.dart';
@@ -18,6 +17,15 @@ class AuthService {
   final StorageService _storageService;
 
   AuthService(this._apiService, this._storageService);
+
+  Future<bool> authenticateUserLocally(String password) async {
+    final savedPassword =
+        _storageService.getString(StorageConstants.savedPassword);
+    if (savedPassword == password) {
+      return true;
+    }
+    return false;
+  }
 
   Future<String> login(String email, String password) async {
     try {
@@ -31,8 +39,8 @@ class AuthService {
         if (resData['status'] == 'success' && resData['data'] != null) {
           final loginResponse = LoginResponse.fromJson(resData['data']);
 
-          _storageService.setString('saved_email', email);
-          _storageService.setString('saved_password', password);
+          _storageService.setString(StorageConstants.savedEmail, email);
+          _storageService.setString(StorageConstants.savedPassword, password);
 
           await _storageService.setString(
               StorageConstants.loginData, jsonEncode(loginResponse.toJson()));
@@ -79,12 +87,12 @@ class AuthService {
   }
 
   Future<void> signInWithApple() async {
-    final credential = await SignInWithApple.getAppleIDCredential(
-      scopes: [
-        AppleIDAuthorizationScopes.email,
-        AppleIDAuthorizationScopes.fullName,
-      ],
-    );
+    // final credential = await SignInWithApple.getAppleIDCredential(
+    //   scopes: [
+    //     AppleIDAuthorizationScopes.email,
+    //     AppleIDAuthorizationScopes.fullName,
+    //   ],
+    // );
 
     // send credential.identityToken or credential.authorizationCode to backend
   }
@@ -150,17 +158,17 @@ class AuthService {
     required String firstName,
     required String lastName,
     required String dateOfBirth,
-    required String stateOfOrigin,
-    required String lga,
-    required String placeOfBirth,
-    required String nationality,
-    required String stateOfResidence,
-    required String lgaResidence,
-    required String city,
-    required String homeAddress,
+    String? stateOfOrigin,
+    String? lga,
+    String? placeOfBirth,
+    String? nationality,
+    String? stateOfResidence,
+    String? lgaResidence,
+    String? city,
+    String? homeAddress,
     required String phone,
     required String email,
-    required String username,
+    String? username,
     int? referralCode,
   }) async {
     try {
@@ -293,12 +301,20 @@ class AuthService {
   //     return _handleError(error);
   //   }
   // }
-  Future<String> otpSendUrl(String email) async {
+  Future<String> otpSendUrl({
+    String? userId,
+    String? sendChannel,
+    String? email,
+  }) async {
     try {
+      final url = email == null
+          ? ApiUrl.otpSendUrlWithChannel(userId ?? '', sendChannel ?? '')
+          : ApiUrl.otpSendUrl(email);
       final response = await _apiService.post(
-        ApiUrl.otpSendUrl + email,
+        url,
       );
-
+      print('Url: $url');
+      print('Response: ${response.data}');
       // Check if the status code is 200 and the response body has a failure code
       if (response.statusCode == 200 && response.data != null) {
         if (response.data['code'] == 4) {

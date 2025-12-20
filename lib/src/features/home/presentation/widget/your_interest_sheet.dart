@@ -83,7 +83,8 @@ class _YourInterestSheetState extends ConsumerState<YourInterestSheet> {
                             decoration: BoxDecoration(
                               color: isSelected
                                   ? ColorConstant.primaryColor
-                                  : Color(0xffE3E5E5).withOpacity(0.1),
+                                  : const Color(0xffE3E5E5)
+                                      .withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(5),
                               border: Border.all(
                                 color: isSelected
@@ -92,7 +93,7 @@ class _YourInterestSheetState extends ConsumerState<YourInterestSheet> {
                               ),
                             ),
                             child: Text(
-                              community.name ?? '',
+                              community.name,
                               style: TextStyle(
                                 color:
                                     isSelected ? Colors.white : Colors.black87,

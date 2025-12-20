@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 import '../app_pkg.dart';
 
@@ -46,6 +45,7 @@ class ApiService {
   }) async {
     try {
       final options = Options(headers: headers);
+      print(path);
       final response = await dio.get<T>(path,
           queryParameters: queryParameters, options: options);
       return _handleResponse<T>(response);
@@ -127,7 +127,7 @@ class ApiService {
   }
 
   dynamic _handleError(error) {
-    if (error is DioError) {
+    if (error is DioException) {
       if (error.response != null) {
         // Handle Dio specific errors with response here
         print(

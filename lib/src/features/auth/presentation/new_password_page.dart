@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:greenzone_medical/src/app_pkg.dart';
-import 'package:greenzone_medical/src/constants/dimens.dart';
 
 import '../../../constants/helper.dart';
 import '../../../provider/all_providers.dart';
@@ -167,8 +166,9 @@ class _NewPasswordPageState extends ConsumerState<NewPasswordPage> {
                                         password,
                                         _confirmPasswordController.text);
 
-                                if (!context.mounted)
-                                  return; // ✅ Prevents using context if unmounted
+                                if (!context.mounted) {
+                                  return;
+                                } // ✅ Prevents using context if unmounted
                                 ref.read(isLoadingProvider.notifier).state =
                                     false;
 

@@ -176,7 +176,7 @@ class _DoctorPageState extends ConsumerState<DoctorPage> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
+                                  const Text(
                                     "View Engaged Doctors",
                                     style: const TextStyle(
                                       color: Color(0xff737373),

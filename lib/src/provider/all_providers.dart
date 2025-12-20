@@ -8,7 +8,6 @@ import 'package:greenzone_medical/src/model/community_list_response.dart';
 import 'package:greenzone_medical/src/model/contact_model.dart';
 import 'package:greenzone_medical/src/model/doctord_list_response.dart';
 import 'package:greenzone_medical/src/model/nationality_model.dart';
-import 'package:greenzone_medical/src/model/state_model.dart';
 import 'package:greenzone_medical/src/model/user_model.dart';
 
 import '../app_pkg.dart';
@@ -28,7 +27,6 @@ import '../features/health_record/model/hmo_model.dart';
 import '../features/home/model/all_interest_model.dart';
 import '../features/home/model/friend_request_receiver.dart';
 import '../features/home/model/friend_request_sender.dart';
-import '../features/home/model/group_interest_model.dart';
 import '../features/home/model/patient_by_id.dart';
 import '../features/notifications/model/notification_model.dart';
 import '../features/prescription/models/media_post_model.dart';
@@ -41,9 +39,18 @@ import '../services/all_service.dart';
 final isLoadingProvider = StateProvider<bool>((ref) => false);
 final isAgreedProvider = StateProvider<bool>((ref) => false);
 
+final storageServiceProvider = Provider<StorageService>((ref) {
+  return StorageServiceImpl();
+});
+
+final apiServiceProvider = Provider<ApiService>((ref) {
+  return ApiService();
+});
+
 final allServiceProvider = Provider<AllService>((ref) {
-  final storageService = StorageServiceImpl();
-  return AllService(ApiService(), storageService);
+  final storageService = ref.watch(storageServiceProvider);
+  final apiService = ref.watch(apiServiceProvider);
+  return AllService(apiService, storageService);
 });
 
 // FutureProvider for fetching articles

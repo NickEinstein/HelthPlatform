@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -26,7 +27,9 @@ class SignInPage extends ConsumerStatefulWidget {
 class _SignInPageState extends ConsumerState<SignInPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController(
+    text: kDebugMode ? 'Admin@123' : '',
+  );
   bool _isValid = false;
   bool _isBiometricAvailable = false;
   BiometricType? _biometricType; // Store which biometric is available
@@ -83,10 +86,11 @@ class _SignInPageState extends ConsumerState<SignInPage> {
       final bool authenticated = await _localAuth.authenticate(
         localizedReason:
             'Scan your ${_biometricType == BiometricType.face ? "face" : "fingerprint"} to log in',
-        options: const AuthenticationOptions(
-          biometricOnly: true,
-          stickyAuth: true,
-        ),
+        // options: const AuthenticationOptions(
+        biometricOnly: true,
+        persistAcrossBackgrounding: true,
+        // stickyAuth: true,
+        // ),
       );
 
       if (authenticated) {
@@ -267,7 +271,16 @@ class _SignInPageState extends ConsumerState<SignInPage> {
 
                   // Proceed Button
                   isLoading
-                      ? const Center(child: CircularProgressIndicator())
+                      ? Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            color: ColorConstant.primaryColor,
+                          ),
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          child: const Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                        )
                       : Column(
                           children: [
                             Row(
@@ -283,8 +296,9 @@ class _SignInPageState extends ConsumerState<SignInPage> {
                                       disabledBackgroundColor: const Color(
                                           0xffA8D5BA), // Ensure disabled color is applied
                                       disabledForegroundColor: Colors.white
-                                          .withOpacity(
-                                              0.6), // Lightened text for disabled state
+                                          .withValues(
+                                              alpha:
+                                                  0.6), // Lightened text for disabled state
                                       minimumSize:
                                           const Size(double.infinity, 55),
                                       shape: RoundedRectangleBorder(

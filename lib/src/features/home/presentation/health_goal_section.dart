@@ -85,11 +85,13 @@ class _HealthGoalsPagerState extends State<HealthGoalsPager>
             },
           ),
         ),
-        const SizedBox(height: 8),
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
+        // const SizedBox(height: 8),
+        Align(
+          alignment: Alignment.centerLeft,
+          // scrollDirection: Axis.horizontal,
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
             children: List.generate(
               widget.goals.length,
               (index) => AnimatedContainer(
@@ -116,17 +118,17 @@ class _HealthGoalsPagerState extends State<HealthGoalsPager>
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 8),
-      padding: const EdgeInsets.all(16),
+      // padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: goal.backgroundColor,
-        borderRadius: BorderRadius.circular(12),
+        // color: goal.backgroundColor,
+        borderRadius: BorderRadius.circular(4),
         image: isAssetImage
             ? null
             : DecorationImage(
                 image: NetworkImage(goal.imagePath),
                 fit: BoxFit.cover,
                 colorFilter: ColorFilter.mode(
-                  Colors.black.withOpacity(0.3),
+                  Colors.black.withValues(alpha: 0.3),
                   BlendMode.darken,
                 ),
               ),
@@ -134,6 +136,77 @@ class _HealthGoalsPagerState extends State<HealthGoalsPager>
       child: Stack(
         clipBehavior: Clip.none,
         children: [
+          // Text and Button
+          Positioned(
+            child: Container(
+              margin: const EdgeInsets.only(top: 20),
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: goal.backgroundColor,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // const SizedBox(height: 10), // Adjust spacing if needed
+                  Text(
+                    goal.title,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 5),
+                  Text(
+                    goal.description,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: Color(0xffF2F2F2),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  GestureDetector(
+                    onTap: () async {
+                      // if (goal.onTap != null) {
+                      String onTapValue = goal.onTap.toString();
+
+                      if (Uri.tryParse(onTapValue)?.hasAbsolutePath == true) {
+                        if (await canLaunchUrl(Uri.parse(onTapValue))) {
+                          await launchUrl(Uri.parse(onTapValue));
+                        }
+                      } else {
+                        goal.onTap();
+                      }
+                      // }
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 5),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(6),
+                        border: Border.all(color: Colors.white, width: 1.5),
+                      ),
+                      child: Text(
+                        goal.buttonText,
+                        style: const TextStyle(
+                          color: Color(0xff666666),
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+
           // Floating small image
           Positioned(
             top: -35,
@@ -147,64 +220,6 @@ class _HealthGoalsPagerState extends State<HealthGoalsPager>
                 height: height(context) * 0.34,
               ),
             ),
-          ),
-
-          // Text and Button
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 10), // Adjust spacing if needed
-              Text(
-                goal.title,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-              const SizedBox(height: 5),
-              Text(
-                goal.description,
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: Color(0xffF2F2F2),
-                ),
-              ),
-              const SizedBox(height: 10),
-              GestureDetector(
-                onTap: () async {
-                  if (goal.onTap != null) {
-                    String onTapValue = goal.onTap.toString();
-
-                    if (Uri.tryParse(onTapValue)?.hasAbsolutePath == true) {
-                      if (await canLaunchUrl(Uri.parse(onTapValue))) {
-                        await launchUrl(Uri.parse(onTapValue));
-                      }
-                    } else {
-                      goal.onTap();
-                    }
-                  }
-                },
-                child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(6),
-                    border: Border.all(color: Colors.white, width: 1.5),
-                  ),
-                  child: Text(
-                    goal.buttonText,
-                    style: const TextStyle(
-                      color: Color(0xff666666),
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ),
-            ],
           ),
         ],
       ),

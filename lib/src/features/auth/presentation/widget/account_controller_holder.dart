@@ -1,14 +1,20 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:greenzone_medical/src/utils/enum.dart';
 
 class AccountCreationController {
   final TextEditingController firstNameController = TextEditingController();
   final TextEditingController lastNameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
+  bool emailIsEmpty = true;
   final TextEditingController phoneController = TextEditingController();
-  final TextEditingController dobController = TextEditingController();
+  String completePhoneNumber = '';
+  final TextEditingController dobDayController = TextEditingController();
+  final TextEditingController dobMonthController = TextEditingController();
+  final TextEditingController dobYearController = TextEditingController();
   final TextEditingController userNameController = TextEditingController();
+  final TextEditingController genderController = TextEditingController();
 
   final TextEditingController addressController = TextEditingController();
   final TextEditingController stateController = TextEditingController();
@@ -29,6 +35,17 @@ class AccountCreationController {
   final TextEditingController emecityController = TextEditingController();
   final TextEditingController referralCodeController = TextEditingController();
 
+  OTPChannel channel = OTPChannel.sms;
+  changeOTPChannel(OTPChannel newChannel) {
+    channel = newChannel;
+  }
+
+  bool rememberMe = false;
+
+  toggleRememberMe() {
+    rememberMe = !rememberMe;
+  }
+
   File? imageFile;
   int? patientId;
   String? pictureUrl;
@@ -40,11 +57,14 @@ class AccountCreationController {
     lastNameController.dispose();
     userNameController.dispose();
     emailController.dispose();
+    genderController.dispose();
     phoneController.dispose();
     referralCodeController.dispose();
     addressController.dispose();
     passwordController.dispose();
-    dobController.dispose();
+    dobDayController.dispose();
+    dobMonthController.dispose();
+    dobYearController.dispose();
 
     confirmPasswordController.dispose();
     otpController.dispose();

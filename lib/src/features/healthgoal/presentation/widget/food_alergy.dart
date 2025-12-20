@@ -50,7 +50,6 @@ class _FoodAlergyState extends ConsumerState<FoodAlergy> {
 
   @override
   void initState() {
-    // TODO: implement initState
     widget.controller.otherController.clear();
     super.initState();
   }

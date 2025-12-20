@@ -1,3 +1,5 @@
+import 'package:greenzone_medical/src/utils/loading_widget.dart';
+
 import '../../../../provider/all_providers.dart';
 import '../../../../utils/packages.dart';
 import 'group_interest_card.dart';
@@ -50,12 +52,14 @@ class GroupInterestList extends ConsumerWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        "${limitedGroups.length} Groups that might interest you",
-                        style: const TextStyle(
-                          color: Color(0xff343333),
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
+                      Expanded(
+                        child: Text(
+                          "${limitedGroups.length} Groups that might interest you",
+                          style: const TextStyle(
+                            color: Color(0xff343333),
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                          ),
                         ),
                       ),
                       TextButton(
@@ -86,10 +90,11 @@ class GroupInterestList extends ConsumerWidget {
                     ],
                   ),
                 ),
-
+                8.height,
                 // Group List (max 2 groups)
                 ListView.builder(
                   shrinkWrap: true,
+                  padding: EdgeInsets.zero,
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: limitedGroups.length,
                   itemBuilder: (context, index) {
@@ -115,13 +120,14 @@ class GroupInterestList extends ConsumerWidget {
               ],
             );
           },
-          loading: () => const Center(child: CircularProgressIndicator()),
-          error: (error, stack) => SizedBox.shrink(),
+          loading: () => const ListLoader(itemCount: 2),
+          error: (error, stack) => const SizedBox.shrink(),
         );
       },
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (error, stack) =>
-          const Center(child: Text('Failed to load load data')),
+      loading: () => const ListLoader(itemCount: 2),
+      error: (error, stack) => const Center(
+        child: Text('Failed to load load data'),
+      ),
     );
   }
 }
