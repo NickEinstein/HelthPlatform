@@ -62,6 +62,7 @@ abstract class Routes {
   static const ACCOUNTRESETPASSWORDPAGE = _Paths.ACCOUNTRESETPASSWORDPAGE;
   static const FLAGGEDCONTENTPAGE = _Paths.FLAGGEDCONTENTPAGE;
   static const REFFEREDCONTENTPAGE = _Paths.REFFEREDCONTENTPAGE;
+  static const COMMUNITY_PROFILE = _Paths.COMMUNITY_PROFILE;
 }
 
 abstract class _Paths {
@@ -123,4 +124,5 @@ abstract class _Paths {
   static const ACCOUNTRESETPASSWORDPAGE = '/account_reset_password_page';
   static const FLAGGEDCONTENTPAGE = '/flagged_content_page';
   static const REFFEREDCONTENTPAGE = '/referred_content_page';
+  static const COMMUNITY_PROFILE = '/community_profile';
 }

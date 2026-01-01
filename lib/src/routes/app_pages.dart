@@ -25,6 +25,7 @@ import 'package:greenzone_medical/src/features/profile/presentation/update_perso
 import 'package:greenzone_medical/src/features/plan/widgets/start_plan_screen.dart';
 import 'package:greenzone_medical/src/model/community_list_response.dart';
 import 'package:greenzone_medical/src/model/my_app_model.dart';
+import '../features/community_profile/community_profile.dart';
 import '../features/account/presentation/account_reset_password.dart';
 import '../features/appointment/model/appointment_model.dart';
 import '../features/article/all_articles.dart';
@@ -606,6 +607,13 @@ final routerProvider = Provider<GoRouter>((ref) {
         name: _Paths.REFFEREDCONTENTPAGE,
         builder: (context, state) {
           return ReferredContentPage();
+        },
+      ),
+      GoRoute(
+        path: _Paths.COMMUNITY_PROFILE,
+        name: _Paths.COMMUNITY_PROFILE,
+        builder: (context, state) {
+          return const CommunityProfile();
         },
       ),
     ],
