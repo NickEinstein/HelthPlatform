@@ -9,8 +9,8 @@ class ProductScanScreen extends StatefulWidget {
 
 class _ProductScanScreenState extends State<ProductScanScreen> {
   CameraController? _cameraController;
-  bool _isScanning = true;
-  XFile? _capturedImage;
+  // bool _isScanning = true;
+  // XFile? _capturedImage;
 
   @override
   void initState() {

@@ -165,10 +165,10 @@ class _DoctorPageState extends ConsumerState<DoctorPage> {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 20, vertical: 5),
                             decoration: BoxDecoration(
-                              color: Color(0xffFAFAFA),
+                              color: const Color(0xffFAFAFA),
                               borderRadius: BorderRadius.circular(6),
                               border: Border.all(
-                                  color: Color(0xffB0B0B0), width: 0.5),
+                                  color: const Color(0xffB0B0B0), width: 0.5),
                             ),
                             child: Padding(
                               padding: const EdgeInsets.symmetric(vertical: 10),
@@ -178,7 +178,7 @@ class _DoctorPageState extends ConsumerState<DoctorPage> {
                                 children: [
                                   const Text(
                                     "View Engaged Doctors",
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       color: Color(0xff737373),
                                       fontSize: 14,
                                       fontWeight: FontWeight.w400,

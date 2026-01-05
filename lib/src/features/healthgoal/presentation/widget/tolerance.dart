@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:greenzone_medical/src/provider/all_providers.dart';
 
 import '../../../../constants/constants.dart';
-import '../../../../constants/dimens.dart';
 import '../../../../constants/helper.dart';
 import '../../../../model/all_alergy_response.dart';
 import '../../controller/health_goal_controller.dart';
@@ -28,11 +27,12 @@ class _TolerancePageState extends ConsumerState<TolerancePage> {
   List<String> selectedOptions = [];
   bool showOtherTextField = false;
 
-  bool _isValid = false;
+  // bool _isValid = false;
 
   void _validateForm() {
     setState(() {
-      _isValid = widget.formKey.currentState?.validate() ?? false;
+      // _isValid =
+      widget.formKey.currentState?.validate() ?? false;
     });
   }
 
@@ -148,7 +148,7 @@ class _TolerancePageState extends ConsumerState<TolerancePage> {
                             value: isSelected,
                             activeColor: Colors.green,
                             tileColor: isSelected
-                                ? Colors.green.withOpacity(0.2)
+                                ? Colors.green.withValues(alpha: 0.2)
                                 : Colors.transparent,
                             onChanged: (bool? value) {
                               setDialogState(() {

@@ -5,7 +5,6 @@ import 'package:greenzone_medical/src/utils/extensions/widget_extensions.dart';
 import '../../../../resources/resources.dart';
 import '../../../../resources/textstyles/app_textstyles.dart';
 import '../../../../routes/old_routes.dart';
-import '../../models/get_prescriptions_model.dart';
 import '../../models/prescription_model.dart';
 
 class MedicationDetailsWidget extends StatelessWidget {

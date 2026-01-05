@@ -1,6 +1,5 @@
 import 'package:intl/intl.dart';
 
-import '../../../../utils/custom_toast.dart';
 import '../../../../utils/packages.dart';
 
 class ReasoncancelledAppointments extends StatefulWidget {
@@ -185,7 +184,9 @@ class _ReasoncancelledAppointmentsState
                               onTap: () {
                                 setState(() {
                                   // Unselect all other options and select the current one
-                                  options.forEach((e) => e['selected'] = false);
+                                  for (var e in options) {
+                                    e['selected'] = false;
+                                  }
                                   option['selected'] = true;
                                 });
                               },
@@ -249,8 +250,8 @@ class _ReasoncancelledAppointmentsState
                     ),
                     verticalSpace(context, 0.08),
                     isLoading
-                        ? Center(child: CircularProgressIndicator())
-                        : Container(
+                        ? const Center(child: CircularProgressIndicator())
+                        : SizedBox(
                             width: double.infinity,
                             child: ElevatedButton(
                               onPressed: isAnyOptionSelected() && !isLoading
@@ -261,7 +262,8 @@ class _ReasoncancelledAppointmentsState
 
                                       String? selectedValue =
                                           getSelectedValue();
-                                      print('Selected Value: $selectedValue');
+                                      debugPrint(
+                                          'Selected Value: $selectedValue');
 
                                       try {
                                         final apiService = ApiService();
@@ -285,21 +287,27 @@ class _ReasoncancelledAppointmentsState
                                         );
 
                                         if (response.statusCode == 200) {
-                                          showSuccessModal(context);
+                                          if (context.mounted) {
+                                            showSuccessModal(context);
+                                          }
                                           // widget.onRefresh?.call();
                                         } else {
+                                          if (context.mounted) {
+                                            CustomToast.show(
+                                              context,
+                                              "Failed to cancel appointment",
+                                              type: ToastType.error,
+                                            );
+                                          }
+                                        }
+                                      } catch (e) {
+                                        if (context.mounted) {
                                           CustomToast.show(
                                             context,
-                                            "Failed to cancel appointment",
+                                            "An error occurred while cancelling",
                                             type: ToastType.error,
                                           );
                                         }
-                                      } catch (e) {
-                                        CustomToast.show(
-                                          context,
-                                          "An error occurred while cancelling",
-                                          type: ToastType.error,
-                                        );
                                       } finally {
                                         setState(() {
                                           isLoading = false;
@@ -351,8 +359,9 @@ class _ReasoncancelledAppointmentsState
                               onTap: () {
                                 setState(() {
                                   // Unselect all other options and select the current one
-                                  optionsReschedule
-                                      .forEach((e) => e['selected'] = false);
+                                  for (var e in optionsReschedule) {
+                                    e['selected'] = false;
+                                  }
                                   option['selected'] = true;
                                 });
                               },
@@ -416,8 +425,8 @@ class _ReasoncancelledAppointmentsState
                     ),
                     verticalSpace(context, 0.08),
                     isLoading
-                        ? Center(child: CircularProgressIndicator())
-                        : Container(
+                        ? const Center(child: CircularProgressIndicator())
+                        : SizedBox(
                             width: double.infinity,
                             child: ElevatedButton(
                               onPressed: isAnyOptionSelected() && !isLoading
@@ -428,7 +437,8 @@ class _ReasoncancelledAppointmentsState
 
                                       String? selectedValue =
                                           getSelectedValue();
-                                      print('Selected Value: $selectedValue');
+                                      debugPrint(
+                                          'Selected Value: $selectedValue');
 
                                       try {
                                         final apiService = ApiService();
@@ -452,21 +462,27 @@ class _ReasoncancelledAppointmentsState
                                         );
 
                                         if (response.statusCode == 200) {
-                                          showSuccessModal(context);
+                                          if (context.mounted) {
+                                            showSuccessModal(context);
+                                          }
                                           widget.onRefresh?.call();
                                         } else {
+                                          if (context.mounted) {
+                                            CustomToast.show(
+                                              context,
+                                              "Failed to cancel appointment",
+                                              type: ToastType.error,
+                                            );
+                                          }
+                                        }
+                                      } catch (e) {
+                                        if (context.mounted) {
                                           CustomToast.show(
                                             context,
-                                            "Failed to cancel appointment",
+                                            "An error occurred while cancelling",
                                             type: ToastType.error,
                                           );
                                         }
-                                      } catch (e) {
-                                        CustomToast.show(
-                                          context,
-                                          "An error occurred while cancelling",
-                                          type: ToastType.error,
-                                        );
                                       } finally {
                                         setState(() {
                                           isLoading = false;

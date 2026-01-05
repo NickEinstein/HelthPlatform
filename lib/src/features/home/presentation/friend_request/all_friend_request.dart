@@ -94,7 +94,7 @@ class _AllFriendRequestState extends ConsumerState<AllFriendRequest> {
                   );
                 },
                 loading: () => const Center(child: CircularProgressIndicator()),
-                error: (err, stack) => SizedBox.shrink(),
+                error: (err, stack) => const SizedBox.shrink(),
               ),
             ],
           ),

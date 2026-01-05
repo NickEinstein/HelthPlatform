@@ -39,18 +39,18 @@ class ImmunizationResponse {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['vaccine'] = this.vaccine;
-    data['vaccineBrand'] = this.vaccineBrand;
-    data['batchId'] = this.batchId;
-    data['quantity'] = this.quantity;
-    data['age'] = this.age;
-    data['weight'] = this.weight;
-    data['temperature'] = this.temperature;
-    data['dateGiven'] = this.dateGiven;
-    data['notes'] = this.notes;
-    data['patientId'] = this.patientId;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['vaccine'] = vaccine;
+    data['vaccineBrand'] = vaccineBrand;
+    data['batchId'] = batchId;
+    data['quantity'] = quantity;
+    data['age'] = age;
+    data['weight'] = weight;
+    data['temperature'] = temperature;
+    data['dateGiven'] = dateGiven;
+    data['notes'] = notes;
+    data['patientId'] = patientId;
     return data;
   }
 }
@@ -344,11 +344,11 @@ class Notes {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['createdAt'] = this.createdAt;
-    data['note'] = this.note;
-    data['treatment'] = this.treatment;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['createdAt'] = createdAt;
+    data['note'] = note;
+    data['treatment'] = treatment;
     return data;
   }
 }
@@ -367,10 +367,10 @@ class VitalDocuments {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['docName'] = this.docName;
-    data['docPath'] = this.docPath;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['docName'] = docName;
+    data['docPath'] = docPath;
     return data;
   }
 }

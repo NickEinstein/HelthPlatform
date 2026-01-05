@@ -39,7 +39,7 @@ class DoctorCard extends StatelessWidget {
     return GestureDetector(
       onTap: onPress,
       child: Card(
-        color: const Color(0xffE9F8EA).withOpacity(0.3),
+        color: const Color(0xffE9F8EA).withValues(alpha: 0.3),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         elevation: 0,
         child: Padding(
@@ -115,7 +115,7 @@ class DoctorCard extends StatelessWidget {
                               Container(
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(20),
-                                    color: Color(0xffD9FEAA),
+                                    color: const Color(0xffD9FEAA),
                                     border: Border.all(
                                         color: ColorConstant.primaryColor)),
                                 child: Padding(
@@ -123,12 +123,12 @@ class DoctorCard extends StatelessWidget {
                                       horizontal: 10, vertical: 5),
                                   child: Row(
                                     children: [
-                                      Icon(
+                                      const Icon(
                                         Icons.verified,
                                         color: ColorConstant.primaryColor,
                                       ),
                                       tiny5HorSpace(),
-                                      Text('Verified')
+                                      const Text('Verified')
                                     ],
                                   ),
                                 ),

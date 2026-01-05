@@ -1,5 +1,3 @@
-import 'package:flutter_svg/flutter_svg.dart';
-
 import '../../../provider/all_providers.dart';
 import '../../../provider/index_provider.dart';
 import '../../../utils/packages.dart';
@@ -103,8 +101,8 @@ class _HealthInsurancePageState extends ConsumerState<BillingsPage>
                               },
                               loading: () => const Center(
                                   child: CircularProgressIndicator()),
-                              error: (e, _) =>
-                                  Center(child: Text('Error loading billings')),
+                              error: (e, _) => const Center(
+                                  child: Text('Error loading billings')),
                             );
                           },
                         )
@@ -137,6 +135,7 @@ class InsuranceWidget extends ConsumerWidget {
 
         return RefreshIndicator.adaptive(
           onRefresh: () async {
+            // ignore: unused_result
             ref.refresh(userBillingProvider);
           },
           child: ListView.separated(
@@ -152,7 +151,7 @@ class InsuranceWidget extends ConsumerWidget {
       },
       loading: () => const Center(child: CircularProgressIndicator.adaptive()),
       error: (error, stackTrace) =>
-          Center(child: Text('Error loading billing data')),
+          const Center(child: Text('Error loading billing data')),
     );
   }
 }

@@ -14,7 +14,7 @@ import 'dart:async';
 class OTPPage extends ConsumerStatefulWidget {
   final String email; // Make email immutable
 
-  OTPPage({super.key, required this.email});
+  const OTPPage({super.key, required this.email});
 
   @override
   ConsumerState<OTPPage> createState() => _OTPPageState();
@@ -124,7 +124,7 @@ class _OTPPageState extends ConsumerState<OTPPage> {
                     otpController.text = pin;
                   },
                   validator: (value) {
-                    if ( value.isEmpty) {
+                    if (value.isEmpty) {
                       return "Enter a 4-digit PIN";
                     } else if (value.length < 4) {
                       return "OTP must be exactly 4 digits";
@@ -162,7 +162,8 @@ class _OTPPageState extends ConsumerState<OTPPage> {
                       ref.read(isLoadingProvider.notifier).state = true;
 
                       final authService = ref.read(authServiceProvider);
-                      final result = await authService.otpSendUrl(email:widget.email);
+                      final result =
+                          await authService.otpSendUrl(email: widget.email);
 
                       if (!context.mounted) return;
                       ref.read(isLoadingProvider.notifier).state = false;
@@ -176,7 +177,7 @@ class _OTPPageState extends ConsumerState<OTPPage> {
                             type: ToastType.error);
                       }
                     },
-                    child: Text(
+                    child: const Text(
                       "Click here",
                       style: TextStyle(
                         fontWeight: FontWeight.w600,

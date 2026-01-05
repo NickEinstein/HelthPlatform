@@ -10,7 +10,7 @@ import '../../../../utils/network_img_fallback.dart';
 class ArticleCard extends StatelessWidget {
   final ArticleResponse article;
 
-  const ArticleCard({required this.article});
+  const ArticleCard({super.key, required this.article});
 
   @override
   Widget build(BuildContext context) {
@@ -24,8 +24,8 @@ class ArticleCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(15),
-          boxShadow: [
-            const BoxShadow(
+          boxShadow: const [
+            BoxShadow(
               color: Colors.transparent,
               blurRadius: 5,
               spreadRadius: 2,
@@ -74,21 +74,21 @@ class ArticleCard extends StatelessWidget {
             // Date & Time
             RichText(
               text: TextSpan(
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                 ),
                 children: [
                   TextSpan(
                     text: formatDate(article.publishedDate!),
-                    style: TextStyle(
+                    style: const TextStyle(
                         color: Color(0xff3C3B3B),
                         fontWeight: FontWeight.w400,
                         fontSize: 12),
                   ),
                   TextSpan(
                     text: formatTimeAgo(article.publishedDate!),
-                    style: TextStyle(
+                    style: const TextStyle(
                         fontWeight: FontWeight.w500,
                         fontSize: 12,
                         color: ColorConstant.primaryColor), // Change color here

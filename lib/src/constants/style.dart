@@ -30,8 +30,8 @@ class AppThemes {
       colorScheme: const ColorScheme.dark(
         primary: AppColors.primary,
         secondary: AppColors.secondary,
-        background: AppColors.black,
-        onBackground: AppColors.onBlack,
+        surface: AppColors.black,
+        onSurface: AppColors.onBlack,
         shadow: AppColors.black,
       ),
       splashFactory: NoSplash.splashFactory,

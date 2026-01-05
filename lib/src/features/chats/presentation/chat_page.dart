@@ -1,4 +1,4 @@
-import 'package:greenzone_medical/src/features/chats/services/ChatDateFormatter.dart';
+import 'package:greenzone_medical/src/features/chats/services/chat_date_formatter.dart';
 
 import '../../../provider/all_providers.dart';
 import '../../../utils/packages.dart';
@@ -141,36 +141,35 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                           fontWeight: FontWeight.w500,
                         ),
                       ),
-                      subtitle:
-                          (chat.lastMessage == null || chat.lastMessage.isEmpty)
-                              ? Row(
-                                  children: [
-                                    const Icon(
-                                      Icons.camera_alt_rounded,
-                                      size: 17,
-                                      color: Color(0xff8E8E93),
-                                    ),
-                                    tiny5HorSpace(),
-                                    const Text(
-                                      'Photo',
-                                      style: TextStyle(
-                                        color: Color(0xff8E8E93),
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w400,
-                                      ),
-                                    ),
-                                  ],
-                                )
-                              : Text(
-                                  chat.lastMessage,
-                                  style: const TextStyle(
+                      subtitle: (chat.lastMessage.isEmpty)
+                          ? Row(
+                              children: [
+                                const Icon(
+                                  Icons.camera_alt_rounded,
+                                  size: 17,
+                                  color: Color(0xff8E8E93),
+                                ),
+                                tiny5HorSpace(),
+                                const Text(
+                                  'Photo',
+                                  style: TextStyle(
                                     color: Color(0xff8E8E93),
                                     fontSize: 13,
                                     fontWeight: FontWeight.w400,
                                   ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
                                 ),
+                              ],
+                            )
+                          : Text(
+                              chat.lastMessage,
+                              style: const TextStyle(
+                                color: Color(0xff8E8E93),
+                                fontSize: 13,
+                                fontWeight: FontWeight.w400,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                       trailing: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [

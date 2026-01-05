@@ -144,7 +144,7 @@ class _FriendWithSearchPageState extends ConsumerState<FriendWithSearchPage> {
                 },
                 loading: () => const Center(child: CircularProgressIndicator()),
                 error: (error, stack) =>
-                    Center(child: Text("No friend record found")),
+                    const Center(child: Text("No friend record found")),
               ),
             ),
           ],

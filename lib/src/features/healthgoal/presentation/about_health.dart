@@ -4,12 +4,10 @@ import 'package:go_router/go_router.dart';
 import 'package:greenzone_medical/src/app_pkg.dart';
 import 'package:greenzone_medical/src/features/healthgoal/controller/health_goal_controller.dart';
 import 'package:greenzone_medical/src/features/healthgoal/presentation/widget/food_alergy.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../../provider/all_providers.dart';
 import '../../../routes/routes.dart';
 import '../../../utils/custom_toast.dart';
-import '../../community/presentation/community_details.dart';
 import 'widget/tolerance.dart';
 
 final healthGoalControllerProvider = ChangeNotifierProvider((ref) {
@@ -36,12 +34,14 @@ class _AboutGoalPageState extends ConsumerState<AboutGoalPage> {
   void initState() {
     super.initState();
     // Reset the controller's selections on first page load
+    // ignore: no_leading_underscores_for_local_identifiers
     final _controller = ref.read(healthGoalControllerProvider);
     _controller.resetSelections();
   }
 
   void _nextPage() async {
-    final currentFormState = _formKeys[_currentIndex].currentState;
+    // final currentFormState = _formKeys[_currentIndex].currentState;
+    // ignore: no_leading_underscores_for_local_identifiers
     final _controller = ref.watch(healthGoalControllerProvider);
 
     if (_currentIndex == 0) {
@@ -78,7 +78,9 @@ class _AboutGoalPageState extends ConsumerState<AboutGoalPage> {
             curve: Curves.easeInOut,
           );
         } else {
-          CustomToast.show(context, result, type: ToastType.error);
+          if (mounted) {
+            CustomToast.show(context, result, type: ToastType.error);
+          }
         }
       } else {
         CustomToast.show(context, 'Select an option', type: ToastType.error);
@@ -103,9 +105,13 @@ class _AboutGoalPageState extends ConsumerState<AboutGoalPage> {
         ref.read(isLoadingProvider.notifier).state = false; // ✅ Stop loading
 
         if (result == 'successful') {
-          context.pushReplacement(Routes.BOTTOMNAV);
+          if (mounted) {
+            context.pushReplacement(Routes.BOTTOMNAV);
+          }
         } else {
-          CustomToast.show(context, result, type: ToastType.error);
+          if (mounted) {
+            CustomToast.show(context, result, type: ToastType.error);
+          }
         }
       } else {
         CustomToast.show(context, 'Select an option', type: ToastType.error);
@@ -113,6 +119,7 @@ class _AboutGoalPageState extends ConsumerState<AboutGoalPage> {
     }
   }
 
+  // ignore: unused_element
   void _previousPage() {
     if (_currentIndex > 0) {
       _pageController.previousPage(
@@ -125,6 +132,7 @@ class _AboutGoalPageState extends ConsumerState<AboutGoalPage> {
   @override
   Widget build(BuildContext context) {
     final isLoading = ref.watch(isLoadingProvider);
+    // ignore: no_leading_underscores_for_local_identifiers
     final _controller = ref.watch(healthGoalControllerProvider);
 
     return Scaffold(
@@ -153,7 +161,7 @@ class _AboutGoalPageState extends ConsumerState<AboutGoalPage> {
                           color: Colors.white),
                     ),
                   ),
-                  if (title != null) ...[
+                  if (title.isNotEmpty) ...[
                     const SizedBox(width: 12),
                     Text(
                       _currentIndex == 0 ? title : 'Histamine Tolerance',
@@ -213,13 +221,13 @@ class _AboutGoalPageState extends ConsumerState<AboutGoalPage> {
     );
   }
 
-  Color _getButtonColor(HealthGoalController _controller) {
+  Color _getButtonColor(HealthGoalController controller) {
     if (_currentIndex == 0) {
-      final hasOthersSelected = _controller.selectedAllergies.containsKey(0);
-      final isOthersFilled = _controller.otherController.text.trim().isNotEmpty;
+      final hasOthersSelected = controller.selectedAllergies.containsKey(0);
+      final isOthersFilled = controller.otherController.text.trim().isNotEmpty;
 
-      if (_controller.foodAllegy == 'Yes') {
-        final hasValidAllergies = _controller.selectedAllergies.isNotEmpty &&
+      if (controller.foodAllegy == 'Yes') {
+        final hasValidAllergies = controller.selectedAllergies.isNotEmpty &&
             (!hasOthersSelected || (hasOthersSelected && isOthersFilled));
 
         if (hasValidAllergies) {
@@ -227,24 +235,24 @@ class _AboutGoalPageState extends ConsumerState<AboutGoalPage> {
         }
       }
 
-      if (_controller.foodAllegy == 'No') {
+      if (controller.foodAllegy == 'No') {
         return ColorConstant.primaryColor;
       }
 
-      return ColorConstant.primaryLightColor.withOpacity(0.3); // Disabled
+      return ColorConstant.primaryLightColor.withValues(alpha: 0.3); // Disabled
     }
 
     if (_currentIndex == 1) {
-      if (_controller.interllories == 'Yes' &&
-          _controller.selectedIntellories.isNotEmpty) {
+      if (controller.interllories == 'Yes' &&
+          controller.selectedIntellories.isNotEmpty) {
         return ColorConstant.primaryColor;
       }
 
-      if (_controller.interllories == 'No') {
+      if (controller.interllories == 'No') {
         return ColorConstant.primaryColor;
       }
 
-      return ColorConstant.primaryLightColor.withOpacity(0.3); // Disabled
+      return ColorConstant.primaryLightColor.withValues(alpha: 0.3); // Disabled
     }
 
     return ColorConstant.primaryColor;

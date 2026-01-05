@@ -42,7 +42,7 @@ class _ViewPatientPageState extends ConsumerState<ViewPatientPage> {
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: patientIdResponse.when(
           loading: () => const Center(child: CircularProgressIndicator()),
-          error: (error, _) => Center(child: Text('No available prescription')),
+          error: (error, _) => const Center(child: Text('No available prescription')),
           data: (patientProfile) {
             return SingleChildScrollView(
               child: Column(

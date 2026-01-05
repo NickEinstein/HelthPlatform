@@ -78,6 +78,7 @@ class _GroupPostListState extends ConsumerState<GroupPostList> {
                   if (result == 'successful') {
                     // CustomToast.show(context, 'Reaction recorded successfully',
                     //     type: ToastType.success);
+                    // ignore: unused_result
                     ref.refresh(userAllPostProvider(_params));
                   } else {
                     // CustomToast.show(context, result, type: ToastType.error);
@@ -103,13 +104,14 @@ class _GroupPostListState extends ConsumerState<GroupPostList> {
                       // CustomToast.show(
                       //     context, 'Reaction recorded successfully',
                       //     type: ToastType.success);
+                      // ignore: unused_result
                       ref.refresh(userAllPostProvider(_params));
                     } else {
                       // CustomToast.show(context, result,
                       //     type: ToastType.error);
                     }
 
-                    print("Send comment for post ${post.id}: $text");
+                    debugPrint("Send comment for post ${post.id}: $text");
                     _commentControllers[post.id!]!.clear();
                   }
                 });
@@ -293,7 +295,7 @@ class _PostItemState extends ConsumerState<PostItem> {
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.grey.withOpacity(0.2),
+                      color: Colors.grey.withValues(alpha: 0.2),
                       blurRadius: 4,
                       offset: const Offset(0, 2),
                     ),
@@ -357,7 +359,7 @@ class _PostItemState extends ConsumerState<PostItem> {
                                         : 'Show more',
                                     style: TextStyle(
                                       color: ColorConstant.primaryColor
-                                          .withOpacity(0.7),
+                                          .withValues(alpha: 0.7),
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),
@@ -490,6 +492,7 @@ class _PostItemState extends ConsumerState<PostItem> {
                                   false;
 
                               if (result == 'successful') {
+                                // ignore: unused_result
                                 ref.refresh(userAllPostProvider(params));
                               } else {
                                 // Handle error or show message

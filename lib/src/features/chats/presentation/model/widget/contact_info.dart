@@ -167,7 +167,7 @@ class ReportTile extends StatelessWidget {
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
-          color: Colors.green.shade50.withOpacity(0.4),
+          color: Colors.green.shade50.withValues(alpha: 0.4),
         ),
         child: ListTile(
           leading: Container(

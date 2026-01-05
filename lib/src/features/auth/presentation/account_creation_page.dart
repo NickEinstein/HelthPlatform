@@ -1,18 +1,11 @@
 import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-import 'package:greenzone_medical/src/app_pkg.dart';
 import 'package:greenzone_medical/src/utils/extensions/extensions.dart';
 import 'package:greenzone_medical/src/utils/packages.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../../provider/all_providers.dart';
-import '../../../routes/routes.dart';
-import '../../../utils/custom_toast.dart';
 import 'widget/account_controller_holder.dart';
 import 'widget/password_screen.dart';
-import 'widget/personal_info_screen.dart';
 import 'widget/register_otp_page.dart';
 
 class AccountCreationScreen extends ConsumerStatefulWidget {

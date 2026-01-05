@@ -9,7 +9,7 @@ class SignUpPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('Sign Up Page'),leading: IconButton(
         onPressed: () => context.pop(),
-        icon: Icon(Icons.arrow_back_ios),
+        icon: const Icon(Icons.arrow_back_ios),
       ),),
       body: ListView(
         children: const [

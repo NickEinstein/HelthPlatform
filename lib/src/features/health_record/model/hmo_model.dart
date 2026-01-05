@@ -33,7 +33,7 @@ class HmoResponse {
     if (json['benefit'] != null) {
       benefit = <Benefit>[];
       json['benefit'].forEach((v) {
-        benefit!.add(new Benefit.fromJson(v));
+        benefit!.add(Benefit.fromJson(v));
       });
     }
     patientHMOId = json['patientHMOId'];
@@ -47,21 +47,21 @@ class HmoResponse {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['hmoPackageId'] = this.hmoPackageId;
-    data['hmoPackage'] = this.hmoPackage;
-    if (this.benefit != null) {
-      data['benefit'] = this.benefit!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['hmoPackageId'] = hmoPackageId;
+    data['hmoPackage'] = hmoPackage;
+    if (benefit != null) {
+      data['benefit'] = benefit!.map((v) => v.toJson()).toList();
     }
-    data['patientHMOId'] = this.patientHMOId;
-    data['membershipValidity'] = this.membershipValidity;
-    data['notes'] = this.notes;
-    data['patientHMOCardDocumentUrl'] = this.patientHMOCardDocumentUrl;
-    data['patientId'] = this.patientId;
-    data['hmoProviderId'] = this.hmoProviderId;
-    data['hmoProvider'] = this.hmoProvider;
-    data['healthCareProviderId'] = this.healthCareProviderId;
+    data['patientHMOId'] = patientHMOId;
+    data['membershipValidity'] = membershipValidity;
+    data['notes'] = notes;
+    data['patientHMOCardDocumentUrl'] = patientHMOCardDocumentUrl;
+    data['patientId'] = patientId;
+    data['hmoProviderId'] = hmoProviderId;
+    data['hmoProvider'] = hmoProvider;
+    data['healthCareProviderId'] = healthCareProviderId;
     return data;
   }
 }
@@ -114,7 +114,7 @@ class Benefit {
     id = json['id'];
     categoryId = json['categoryId'];
     category = json['category'] != null
-        ? new Category.fromJson(json['category'])
+        ? Category.fromJson(json['category'])
         : null;
     hmoId = json['hmoId'];
     packageId = json['packageId'];
@@ -133,34 +133,34 @@ class Benefit {
     modifiedOn = json['modifiedOn'];
     actionTaken = json['actionTaken'];
     package =
-        json['package'] != null ? new Packages.fromJson(json['package']) : null;
+        json['package'] != null ?  Packages.fromJson(json['package']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['categoryId'] = this.categoryId;
-    if (this.category != null) {
-      data['category'] = this.category!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['categoryId'] = categoryId;
+    if (category != null) {
+      data['category'] = category!.toJson();
     }
-    data['hmoId'] = this.hmoId;
-    data['packageId'] = this.packageId;
-    data['serviceOrProductId'] = this.serviceOrProductId;
-    data['benefitProvision'] = this.benefitProvision;
-    data['benefitLimit'] = this.benefitLimit;
-    data['limitAmount'] = this.limitAmount;
-    data['isLab'] = this.isLab;
-    data['isBed'] = this.isBed;
-    data['isEquipment'] = this.isEquipment;
-    data['isPharmacy'] = this.isPharmacy;
-    data['healthCareProviderId'] = this.healthCareProviderId;
-    data['createdBy'] = this.createdBy;
-    data['modifiedBy'] = this.modifiedBy;
-    data['createdOn'] = this.createdOn;
-    data['modifiedOn'] = this.modifiedOn;
-    data['actionTaken'] = this.actionTaken;
-    if (this.package != null) {
-      data['package'] = this.package!.toJson();
+    data['hmoId'] = hmoId;
+    data['packageId'] = packageId;
+    data['serviceOrProductId'] = serviceOrProductId;
+    data['benefitProvision'] = benefitProvision;
+    data['benefitLimit'] = benefitLimit;
+    data['limitAmount'] = limitAmount;
+    data['isLab'] = isLab;
+    data['isBed'] = isBed;
+    data['isEquipment'] = isEquipment;
+    data['isPharmacy'] = isPharmacy;
+    data['healthCareProviderId'] = healthCareProviderId;
+    data['createdBy'] = createdBy;
+    data['modifiedBy'] = modifiedBy;
+    data['createdOn'] = createdOn;
+    data['modifiedOn'] = modifiedOn;
+    data['actionTaken'] = actionTaken;
+    if (package != null) {
+      data['package'] = package!.toJson();
     }
     return data;
   }
@@ -204,17 +204,17 @@ class Category {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['userId'] = this.userId;
-    data['createdAt'] = this.createdAt;
-    data['updatedAt'] = this.updatedAt;
-    data['status'] = this.status;
-    data['createdBy'] = this.createdBy;
-    data['modifiedBy'] = this.modifiedBy;
-    data['actionTaken'] = this.actionTaken;
-    data['clinicId'] = this.clinicId;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['name'] = name;
+    data['userId'] = userId;
+    data['createdAt'] = createdAt;
+    data['updatedAt'] = updatedAt;
+    data['status'] = status;
+    data['createdBy'] = createdBy;
+    data['modifiedBy'] = modifiedBy;
+    data['actionTaken'] = actionTaken;
+    data['clinicId'] = clinicId;
     return data;
   }
 }
@@ -257,21 +257,21 @@ class Package {
     modifiedOn = json['modifiedOn'];
     actionTaken = json['actionTaken'];
     healthCareProviderId = json['healthCareProviderId'];
-    hmo = json['hmo'] != null ? new Hmo.fromJson(json['hmo']) : null;
+    hmo = json['hmo'] != null ? Hmo.fromJson(json['hmo']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['hmoId'] = this.hmoId;
-    data['userId'] = this.userId;
-    data['createdBy'] = this.createdBy;
-    data['modifiedBy'] = this.modifiedBy;
-    data['createdOn'] = this.createdOn;
-    data['modifiedOn'] = this.modifiedOn;
-    data['actionTaken'] = this.actionTaken;
-    data['healthCareProviderId'] = this.healthCareProviderId;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['name'] = name;
+    data['hmoId'] = hmoId;
+    data['userId'] = userId;
+    data['createdBy'] = createdBy;
+    data['modifiedBy'] = modifiedBy;
+    data['createdOn'] = createdOn;
+    data['modifiedOn'] = modifiedOn;
+    data['actionTaken'] = actionTaken;
+    data['healthCareProviderId'] = healthCareProviderId;
 
     return data;
   }
@@ -336,14 +336,14 @@ class Hmo {
     officeAddress = json['officeAddress'];
     countryId = json['countryId'];
     stateId = json['stateId'];
-    state = json['state'] != null ? new State.fromJson(json['state']) : null;
+    state = json['state'] != null ? State.fromJson(json['state']) : null;
     lga = json['lga'];
     city = json['city'];
     altPhoneNumber = json['altPhoneNumber'];
     if (json['packages'] != null) {
       packages = <Packages>[];
       json['packages'].forEach((v) {
-        packages!.add(new Packages.fromJson(v));
+        packages!.add(Packages.fromJson(v));
       });
     }
     userId = json['userId'];
@@ -356,33 +356,33 @@ class Hmo {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['vendorName'] = this.vendorName;
-    data['phoneNumber'] = this.phoneNumber;
-    data['email'] = this.email;
-    data['contactPerson'] = this.contactPerson;
-    data['rcNumber'] = this.rcNumber;
-    data['taxIdentityNumber'] = this.taxIdentityNumber;
-    data['officeAddress'] = this.officeAddress;
-    data['countryId'] = this.countryId;
-    data['stateId'] = this.stateId;
-    if (this.state != null) {
-      data['state'] = this.state!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['vendorName'] = vendorName;
+    data['phoneNumber'] = phoneNumber;
+    data['email'] = email;
+    data['contactPerson'] = contactPerson;
+    data['rcNumber'] = rcNumber;
+    data['taxIdentityNumber'] = taxIdentityNumber;
+    data['officeAddress'] = officeAddress;
+    data['countryId'] = countryId;
+    data['stateId'] = stateId;
+    if (state != null) {
+      data['state'] = state!.toJson();
     }
-    data['lga'] = this.lga;
-    data['city'] = this.city;
-    data['altPhoneNumber'] = this.altPhoneNumber;
-    if (this.packages != null) {
-      data['packages'] = this.packages!.map((v) => v.toJson()).toList();
+    data['lga'] = lga;
+    data['city'] = city;
+    data['altPhoneNumber'] = altPhoneNumber;
+    if (packages != null) {
+      data['packages'] = packages!.map((v) => v.toJson()).toList();
     }
-    data['userId'] = this.userId;
-    data['healthCareProviderId'] = this.healthCareProviderId;
-    data['createdBy'] = this.createdBy;
-    data['modifiedBy'] = this.modifiedBy;
-    data['createdOn'] = this.createdOn;
-    data['modifiedOn'] = this.modifiedOn;
-    data['actionTaken'] = this.actionTaken;
+    data['userId'] = userId;
+    data['healthCareProviderId'] = healthCareProviderId;
+    data['createdBy'] = createdBy;
+    data['modifiedBy'] = modifiedBy;
+    data['createdOn'] = createdOn;
+    data['modifiedOn'] = modifiedOn;
+    data['actionTaken'] = actionTaken;
     return data;
   }
 }
@@ -419,15 +419,15 @@ class State {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['createdAt'] = this.createdAt;
-    data['createdBy'] = this.createdBy;
-    data['modifiedAt'] = this.modifiedAt;
-    data['modifiedBy'] = this.modifiedBy;
-    data['actionTaken'] = this.actionTaken;
-    data['status'] = this.status;
-    data['name'] = this.name;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['createdAt'] = createdAt;
+    data['createdBy'] = createdBy;
+    data['modifiedAt'] = modifiedAt;
+    data['modifiedBy'] = modifiedBy;
+    data['actionTaken'] = actionTaken;
+    data['status'] = status;
+    data['name'] = name;
     return data;
   }
 }
@@ -471,26 +471,26 @@ class Packages {
     modifiedOn = json['modifiedOn'];
     actionTaken = json['actionTaken'];
     healthCareProviderId = json['healthCareProviderId'];
-    hmo = json['hmo'] != null ? new Hmo.fromJson(json['hmo']) : null;
+    hmo = json['hmo'] != null ? Hmo.fromJson(json['hmo']) : null;
     packageBenefits = json['packageBenefits'].cast<String>();
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['hmoId'] = this.hmoId;
-    data['userId'] = this.userId;
-    data['createdBy'] = this.createdBy;
-    data['modifiedBy'] = this.modifiedBy;
-    data['createdOn'] = this.createdOn;
-    data['modifiedOn'] = this.modifiedOn;
-    data['actionTaken'] = this.actionTaken;
-    data['healthCareProviderId'] = this.healthCareProviderId;
-    if (this.hmo != null) {
-      data['hmo'] = this.hmo!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['name'] = name;
+    data['hmoId'] = hmoId;
+    data['userId'] = userId;
+    data['createdBy'] = createdBy;
+    data['modifiedBy'] = modifiedBy;
+    data['createdOn'] = createdOn;
+    data['modifiedOn'] = modifiedOn;
+    data['actionTaken'] = actionTaken;
+    data['healthCareProviderId'] = healthCareProviderId;
+    if (hmo != null) {
+      data['hmo'] = hmo!.toJson();
     }
-    data['packageBenefits'] = this.packageBenefits;
+    data['packageBenefits'] = packageBenefits;
     return data;
   }
 }
@@ -554,7 +554,7 @@ class HmoIS {
     officeAddress = json['officeAddress'];
     countryId = json['countryId'];
     stateId = json['stateId'];
-    state = json['state'] != null ? new State.fromJson(json['state']) : null;
+    state = json['state'] != null ? State.fromJson(json['state']) : null;
     lga = json['lga'];
     city = json['city'];
     altPhoneNumber = json['altPhoneNumber'];
@@ -569,31 +569,31 @@ class HmoIS {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['vendorName'] = this.vendorName;
-    data['phoneNumber'] = this.phoneNumber;
-    data['email'] = this.email;
-    data['contactPerson'] = this.contactPerson;
-    data['rcNumber'] = this.rcNumber;
-    data['taxIdentityNumber'] = this.taxIdentityNumber;
-    data['officeAddress'] = this.officeAddress;
-    data['countryId'] = this.countryId;
-    data['stateId'] = this.stateId;
-    if (this.state != null) {
-      data['state'] = this.state!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['vendorName'] = vendorName;
+    data['phoneNumber'] = phoneNumber;
+    data['email'] = email;
+    data['contactPerson'] = contactPerson;
+    data['rcNumber'] = rcNumber;
+    data['taxIdentityNumber'] = taxIdentityNumber;
+    data['officeAddress'] = officeAddress;
+    data['countryId'] = countryId;
+    data['stateId'] = stateId;
+    if (state != null) {
+      data['state'] = state!.toJson();
     }
-    data['lga'] = this.lga;
-    data['city'] = this.city;
-    data['altPhoneNumber'] = this.altPhoneNumber;
-    data['packages'] = this.packages;
-    data['userId'] = this.userId;
-    data['healthCareProviderId'] = this.healthCareProviderId;
-    data['createdBy'] = this.createdBy;
-    data['modifiedBy'] = this.modifiedBy;
-    data['createdOn'] = this.createdOn;
-    data['modifiedOn'] = this.modifiedOn;
-    data['actionTaken'] = this.actionTaken;
+    data['lga'] = lga;
+    data['city'] = city;
+    data['altPhoneNumber'] = altPhoneNumber;
+    data['packages'] = packages;
+    data['userId'] = userId;
+    data['healthCareProviderId'] = healthCareProviderId;
+    data['createdBy'] = createdBy;
+    data['modifiedBy'] = modifiedBy;
+    data['createdOn'] = createdOn;
+    data['modifiedOn'] = modifiedOn;
+    data['actionTaken'] = actionTaken;
     return data;
   }
 }

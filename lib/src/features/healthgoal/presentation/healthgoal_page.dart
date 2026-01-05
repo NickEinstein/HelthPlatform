@@ -34,7 +34,7 @@ class _HealthGoalPageState extends State<HealthGoalPage> {
                 'assets/images/healthgoal.png',
               ),
               mediumSpace(),
-              Row(
+              const Row(
                 children: [
                   Text("Your Health, Your Journey",
                       style: TextStyle(
@@ -44,7 +44,7 @@ class _HealthGoalPageState extends State<HealthGoalPage> {
                 ],
               ),
               tinySpace(),
-              Text(
+              const Text(
                   "Everyone’s health journey is unique. Whether you’re looking to stay active, eat healthier, improve mental well-being, or build lasting habits, we’re here to support you. Let’s start by understanding your health goals! ",
                   style: TextStyle(
                       color: ColorConstant.secondryColor,

@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:greenzone_medical/src/features/healthgoal/controller/health_goal_controller.dart';
-import 'package:secure_pin_input/secure_pin_input.dart';
 
 import '../../../../constants/constants.dart';
-import '../../../../constants/dimens.dart';
 import '../../../../constants/helper.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -26,11 +24,12 @@ class FoodAlergy extends ConsumerStatefulWidget {
 }
 
 class _FoodAlergyState extends ConsumerState<FoodAlergy> {
-  bool _isValid = false;
+  // bool _isValid = false;
 
   void _validateForm() {
     setState(() {
-      _isValid = widget.formKey.currentState?.validate() ?? false;
+      // _isValid = 
+      widget.formKey.currentState?.validate() ?? false;
     });
   }
 
@@ -148,7 +147,7 @@ class _FoodAlergyState extends ConsumerState<FoodAlergy> {
                       // Schedule notifying listeners AFTER the current frame to avoid build conflicts
                       WidgetsBinding.instance.addPostFrameCallback((_) {
                         if (mounted) {
-                          // ignore: invalid_use_of_protected_member
+                          // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
                           widget.controller.notifyListeners();
                         }
                       });
@@ -199,7 +198,7 @@ class _FoodAlergyState extends ConsumerState<FoodAlergy> {
                             value: isSelected,
                             activeColor: Colors.green,
                             tileColor: isSelected
-                                ? Colors.green.withOpacity(0.2)
+                                ? Colors.green.withValues(alpha: 0.2)
                                 : Colors.transparent,
                             onChanged: (bool? value) {
                               setDialogState(() {
@@ -214,6 +213,7 @@ class _FoodAlergyState extends ConsumerState<FoodAlergy> {
                               });
                               // Notify listeners AFTER the dialog state updates so the UI updates accordingly
                               WidgetsBinding.instance.addPostFrameCallback((_) {
+                                // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
                                 widget.controller.notifyListeners();
                               });
                             },
@@ -226,7 +226,7 @@ class _FoodAlergyState extends ConsumerState<FoodAlergy> {
                           activeColor: Colors.green,
                           tileColor:
                               widget.controller.selectedAllergies.containsKey(0)
-                                  ? Colors.green.withOpacity(0.2)
+                                  ? Colors.green.withValues(alpha: 0.2)
                                   : Colors.transparent,
                           onChanged: (bool? value) {
                             setDialogState(() {

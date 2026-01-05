@@ -376,6 +376,7 @@ class _AppInputState extends State<AppInput> {
   String? error;
   String? get errorText => widget.errorText ?? error;
 
+  // ignore: unused_field
   CountryCode? _phoneDropdownValue;
 
   void controllerOnEmptyListiner() {

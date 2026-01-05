@@ -34,13 +34,13 @@ class _CommunityPageState extends State<CommunityPage> {
                 'assets/images/community.png',
               ),
               mediumSpace(),
-              Text("Building a Healthier Community, One Step at a Time",
+             const Text("Building a Healthier Community, One Step at a Time",
                   style: TextStyle(
                       color: Color(0xff3C3B3B),
                       fontSize: 24,
                       fontWeight: FontWeight.w700)),
               tinySpace(),
-              Text(
+              const Text(
                   "Our community is dedicated to fostering a supportive environment where everyone has access to the resources, knowledge, and encouragement needed to live a healthier life. ",
                   style: TextStyle(
                       color: ColorConstant.secondryColor,

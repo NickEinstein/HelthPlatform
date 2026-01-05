@@ -10,9 +10,9 @@ import '../../../utils/custom_header.dart';
 import '../../../utils/custom_toast.dart';
 
 class NewPasswordPage extends ConsumerStatefulWidget {
-  String email;
-  String otp;
-  NewPasswordPage({super.key, required this.email, required this.otp});
+  final String email;
+  final String otp;
+  const NewPasswordPage({super.key, required this.email, required this.otp});
 
   @override
   ConsumerState<NewPasswordPage> createState() => _NewPasswordPageState();
@@ -26,11 +26,12 @@ class _NewPasswordPageState extends ConsumerState<NewPasswordPage> {
       TextEditingController();
   bool _passwordsMatch = false;
   final _formKey = GlobalKey<FormState>();
-  bool _isValid = false;
+  // bool _isValid = false;
 
   void _validateForm() {
     setState(() {
-      _isValid = _formKey.currentState?.validate() ?? false;
+      // _isValid = 
+      _formKey.currentState?.validate() ?? false;
     });
   }
 
@@ -44,7 +45,7 @@ class _NewPasswordPageState extends ConsumerState<NewPasswordPage> {
         key: _formKey,
         onChanged: _validateForm,
         child: SingleChildScrollView(
-          physics: ScrollPhysics(),
+          physics: const ScrollPhysics(),
           child: SafeArea(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),

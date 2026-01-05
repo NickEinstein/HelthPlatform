@@ -94,9 +94,14 @@ class _HomeDrawerState extends ConsumerState<HomeDrawer> {
                 _tile(
                   onTap: () async {
                     await authService.logout();
-                    context.pushReplacement(Routes.SIGNIN);
-                    CustomToast.show(context, "Logout successfully...",
-                        type: ToastType.success);
+                    if (context.mounted) {
+                      context.pushReplacement(Routes.SIGNIN);
+                      CustomToast.show(
+                        context,
+                        "Logout successfully...",
+                        type: ToastType.success,
+                      );
+                    }
                   },
                   title: 'Log Out',
                 ),

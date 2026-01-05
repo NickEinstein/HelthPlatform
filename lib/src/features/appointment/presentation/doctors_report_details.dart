@@ -38,33 +38,34 @@ class DoctorsReportDetails extends StatelessWidget {
                       color: Colors.green.shade100,
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(Icons.medical_services, color: Colors.green),
+                    child:
+                        const Icon(Icons.medical_services, color: Colors.green),
                   ),
                   const SizedBox(width: 10),
-                  Column(
+                  const Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
+                      Text(
                         'Respiratory Infection',
                         style: TextStyle(
                             fontSize: 16,
                             color: Colors.white,
                             fontWeight: FontWeight.bold),
                       ),
-                      const SizedBox(height: 4),
+                      SizedBox(height: 4),
                       Row(
                         children: [
-                          const Icon(Icons.calendar_today,
+                          Icon(Icons.calendar_today,
                               size: 12, color: Colors.white70),
-                          const SizedBox(width: 4),
-                          const Text('15 Mar 2025',
+                          SizedBox(width: 4),
+                          Text('15 Mar 2025',
                               style: TextStyle(
                                   color: Colors.white70, fontSize: 12)),
-                          const SizedBox(width: 10),
-                          const Icon(Icons.access_time,
+                          SizedBox(width: 10),
+                          Icon(Icons.access_time,
                               size: 12, color: Colors.white70),
-                          const SizedBox(width: 4),
-                          const Text('20:00 PM',
+                          SizedBox(width: 4),
+                          Text('20:00 PM',
                               style: TextStyle(
                                   color: Colors.white70, fontSize: 12)),
                         ],
@@ -75,7 +76,13 @@ class DoctorsReportDetails extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 10),
-            ...['Vitals', 'Diagnosis & Treatment', 'Prescription', 'Lab Services', 'Discharge Note'].map((item) {
+            ...[
+              'Vitals',
+              'Diagnosis & Treatment',
+              'Prescription',
+              'Lab Services',
+              'Discharge Note'
+            ].map((item) {
               return ExpansionTile(
                 title: Text(item,
                     style: const TextStyle(

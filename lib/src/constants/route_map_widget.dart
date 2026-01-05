@@ -42,7 +42,7 @@ class _RouteMapWidgetState extends State<RouteMapWidget> {
       if (!serviceEnabled) {
         // Location services are not enabled
         // Show a message or handle accordingly
-        print('Location services are disabled.');
+        debugPrint('Location services are disabled.');
         return;
       }
 
@@ -51,14 +51,14 @@ class _RouteMapWidgetState extends State<RouteMapWidget> {
         permission = await Geolocator.requestPermission();
         if (permission == LocationPermission.denied) {
           // Permissions denied, handle appropriately
-          print('Location permissions are denied');
+          debugPrint('Location permissions are denied');
           return;
         }
       }
 
       if (permission == LocationPermission.deniedForever) {
         // Permissions denied forever
-        print('Location permissions are permanently denied.');
+        debugPrint('Location permissions are permanently denied.');
         return;
       }
 
@@ -70,7 +70,7 @@ class _RouteMapWidgetState extends State<RouteMapWidget> {
       // Geocode 'from' location string to LatLng
       List<Location> fromLocations = await locationFromAddress(widget.from);
       if (fromLocations.isEmpty) {
-        print('Could not find location for from: ${widget.from}');
+        debugPrint('Could not find location for from: ${widget.from}');
         return;
       }
       fromLatLng =
@@ -80,7 +80,7 @@ class _RouteMapWidgetState extends State<RouteMapWidget> {
     // Geocode 'to' location string to LatLng
     List<Location> toLocations = await locationFromAddress(widget.to);
     if (toLocations.isEmpty) {
-      print('Could not find location for to: ${widget.to}');
+      debugPrint('Could not find location for to: ${widget.to}');
       return;
     }
     toLatLng = LatLng(toLocations.first.latitude, toLocations.first.longitude);

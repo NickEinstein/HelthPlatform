@@ -24,10 +24,11 @@ class TitleSubtitleSection extends StatelessWidget {
         const SizedBox(height: 4), // Tiny space between title and subtitle
         Text(
           subtitle,
-          style: TextStyle(
-              color: Color(0xff3C3B3B),
-              fontSize: 15,
-              fontWeight: FontWeight.w700),
+          style: const TextStyle(
+            color: Color(0xff3C3B3B),
+            fontSize: 15,
+            fontWeight: FontWeight.w700,
+          ),
         ),
         const SizedBox(height: 16), // Medium space after each section
       ],

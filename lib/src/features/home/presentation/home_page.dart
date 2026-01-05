@@ -120,7 +120,6 @@ class _HomePageState extends ConsumerState<HomePage> {
 
   @override
   void didUpdateWidget(covariant HomePage oldWidget) {
-    // TODO: implement didUpdateWidget
     Future.microtask(() => ref.invalidate(userUnreadChatProvider));
 
     super.didUpdateWidget(oldWidget);
@@ -481,8 +480,8 @@ class _HomePageState extends ConsumerState<HomePage> {
                           const SizedBox(height: 20),
                           _buildStaticBanners(),
                           mediumSpace(),
-                          // _drugSearchWidget(context),
-
+                          _drugSearchWidget(context),
+                          mediumSpace(),
                           const ProfileCompletionWidget(),
                           mediumSpace(),
                           // const PersonalGoalsWidget(),
@@ -659,15 +658,19 @@ class _HomePageState extends ConsumerState<HomePage> {
                                 ),
                               ),
                               14.height,
-                            InkWell(
-                              onTap: () {
-Navigator.of(context).push(MaterialPageRoute(builder: (context) => const CommunityProfile(),));
-                              },
+                              InkWell(
+                                onTap: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) =>
+                                        const CommunityProfile(),
+                                  ));
+                                },
                                 child: Container(
                                   width: double.infinity,
                                   decoration: BoxDecoration(
                                     color: const Color(0xFFEAFFEB),
-                                    border: Border.all(color: AppColors.primary),
+                                    border:
+                                        Border.all(color: AppColors.primary),
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                   padding: const EdgeInsets.symmetric(

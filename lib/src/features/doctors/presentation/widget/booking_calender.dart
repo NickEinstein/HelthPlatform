@@ -6,7 +6,7 @@ class BookingCalendar extends StatefulWidget {
   const BookingCalendar({super.key});
 
   @override
-  _BookingCalendarState createState() => _BookingCalendarState();
+  State<BookingCalendar> createState() => _BookingCalendarState();
 }
 
 class _BookingCalendarState extends State<BookingCalendar> {
@@ -32,12 +32,12 @@ class _BookingCalendarState extends State<BookingCalendar> {
           selectedDate.month == now.month &&
           selectedDate.year == now.year &&
           startTime.isBefore(now)) {
-        startTime = startTime.add(Duration(hours: 1));
+        startTime = startTime.add(const Duration(hours: 1));
         continue;
       }
 
       times.add(DateFormat("hh:mm a").format(startTime));
-      startTime = startTime.add(Duration(hours: 1));
+      startTime = startTime.add(const Duration(hours: 1));
     }
 
     return times;
@@ -71,8 +71,7 @@ class _BookingCalendarState extends State<BookingCalendar> {
                         ? ColorConstant.primaryColor
                         : Colors.white,
                     borderRadius: BorderRadius.circular(10),
-                    border:
-                        Border.all(color: Color(0xffD9D9D94D).withOpacity(0.2)),
+                    border: Border.all(color: const Color(0x4DD9D9D9)),
                   ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -84,7 +83,7 @@ class _BookingCalendarState extends State<BookingCalendar> {
                           fontWeight: FontWeight.w600,
                           color: selectedDate.day == date.day
                               ? Colors.white
-                              : Color(0xff3C3B3B),
+                              : const Color(0xff3C3B3B),
                         ),
                       ),
                       Text(
@@ -94,7 +93,7 @@ class _BookingCalendarState extends State<BookingCalendar> {
                           fontWeight: FontWeight.w600,
                           color: selectedDate.day == date.day
                               ? Colors.white
-                              : Color(0xff3C3B3B),
+                              : const Color(0xff3C3B3B),
                         ),
                       ),
                     ],
@@ -135,8 +134,9 @@ class _BookingCalendarState extends State<BookingCalendar> {
                   time,
                   style: TextStyle(
                     fontSize: 14,
-                    color:
-                        selectedTime == time ? Colors.white : Color(0xff616060),
+                    color: selectedTime == time
+                        ? Colors.white
+                        : const Color(0xff616060),
                     fontWeight: FontWeight.w700,
                   ),
                 ),

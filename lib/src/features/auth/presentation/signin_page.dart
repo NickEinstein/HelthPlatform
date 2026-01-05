@@ -100,7 +100,7 @@ class _SignInPageState extends ConsumerState<SignInPage> {
         _signIn(); // Trigger login automatically
       }
     } catch (e) {
-      print("Biometric authentication failed: $e");
+      debugPrint("Biometric authentication failed: $e");
     }
   }
 
@@ -111,7 +111,9 @@ class _SignInPageState extends ConsumerState<SignInPage> {
     await Future.delayed(const Duration(milliseconds: 100));
 
     // Now, unfocus
-    FocusScope.of(context).unfocus();
+    if (mounted) {
+      FocusScope.of(context).unfocus();
+    }
 
     ref.read(isLoadingProvider.notifier).state = true;
 
@@ -325,8 +327,9 @@ class _SignInPageState extends ConsumerState<SignInPage> {
                                               final result = await authService
                                                   .login(email, password);
 
-                                              if (!context.mounted)
-                                                return; // ✅ Prevents using context if unmounted
+                                              if (!context.mounted) {
+                                                return;
+                                              } // ✅ Prevents using context if unmounted
                                               ref
                                                       .read(isLoadingProvider
                                                           .notifier)
@@ -536,21 +539,30 @@ class _SignInPageState extends ConsumerState<SignInPage> {
                                           .socialLogin('google', idToken);
 
                                       if (result == 'Login successful') {
-                                        context
-                                            .pushReplacement(Routes.BOTTOMNAV);
+                                        if (context.mounted) {
+                                          context.pushReplacement(
+                                            Routes.BOTTOMNAV,
+                                          );
+                                        }
                                       } else {
-                                        CustomToast.show(context, result,
-                                            type: ToastType.error);
+                                        if (context.mounted) {
+                                          CustomToast.show(context, result,
+                                              type: ToastType.error);
+                                        }
                                       }
                                     } else {
-                                      CustomToast.show(
-                                          context, 'Token not found',
-                                          type: ToastType.error);
+                                      if (context.mounted) {
+                                        CustomToast.show(
+                                            context, 'Token not found',
+                                            type: ToastType.error);
+                                      }
                                     }
                                   } else {
-                                    CustomToast.show(
-                                        context, 'Google Sign-in failed',
-                                        type: ToastType.error);
+                                    if (context.mounted) {
+                                      CustomToast.show(
+                                          context, 'Google Sign-in failed',
+                                          type: ToastType.error);
+                                    }
                                   }
                                 },
                                 child: Image.asset(

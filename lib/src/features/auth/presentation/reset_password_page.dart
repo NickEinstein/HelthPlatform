@@ -133,8 +133,9 @@ class _ResetPasswordPageState extends ConsumerState<ResetPasswordPage> {
                           foregroundColor: Colors.white,
                           disabledBackgroundColor: const Color(
                               0xffA8D5BA), // Ensure disabled color is applied
-                          disabledForegroundColor: Colors.white.withOpacity(
-                              0.6), // Lightened text for disabled state
+                          disabledForegroundColor: Colors.white.withValues(
+                            alpha: 0.6,
+                          ), // Lightened text for disabled state
                           minimumSize: const Size(double.infinity, 55),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
@@ -155,8 +156,9 @@ class _ResetPasswordPageState extends ConsumerState<ResetPasswordPage> {
                                     email: email,
                                   );
 
-                                  if (!context.mounted)
-                                    return; // ✅ Prevents using context if unmounted
+                                  if (!context.mounted) {
+                                    return;
+                                  } // ✅ Prevents using context if unmounted
                                   ref.read(isLoadingProvider.notifier).state =
                                       false;
 

@@ -27,7 +27,7 @@ class GeneralChatContent extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
+               const Text(
                   'Share your thoughts, ask a question, or post an update...',
                   style: TextStyle(
                       fontStyle: FontStyle.italic, color: Colors.grey),
@@ -35,13 +35,13 @@ class GeneralChatContent extends StatelessWidget {
                 40.height,
                 Row(
                   children: [
-                    Icon(Icons.camera_alt_outlined,
+                   const Icon(Icons.camera_alt_outlined,
                         color: ColorConstant.primaryColor),
                     12.width,
-                    Icon(Icons.videocam_outlined,
+                    const Icon(Icons.videocam_outlined,
                         color: ColorConstant.primaryColor),
-                    Spacer(),
-                    Icon(Icons.attach_file, color: Colors.grey),
+                    const Spacer(),
+                    const Icon(Icons.attach_file, color: Colors.grey),
                   ],
                 ),
               ],

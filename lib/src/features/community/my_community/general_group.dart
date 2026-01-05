@@ -65,7 +65,7 @@ class _GeneralGroupsState extends ConsumerState<GeneralGroups> {
               return filteredList.isEmpty
                   ? const Center(child: Text("No communities found"))
                   : ListView.builder(
-                      padding: EdgeInsets.symmetric(vertical: 10),
+                      padding: const EdgeInsets.symmetric(vertical: 10),
                       shrinkWrap: true,
                       physics:
                           const NeverScrollableScrollPhysics(), // optional if inside scrollable parent

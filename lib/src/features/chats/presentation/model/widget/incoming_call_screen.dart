@@ -17,8 +17,8 @@ class IncomingCallScreen extends StatelessWidget {
     return AlertDialog(
       title: Text("Incoming Call from $callerId"),
       actions: [
-        TextButton(onPressed: onDecline, child: Text("Decline")),
-        ElevatedButton(onPressed: onAccept, child: Text("Accept")),
+        TextButton(onPressed: onDecline, child: const Text("Decline")),
+        ElevatedButton(onPressed: onAccept, child: const Text("Accept")),
       ],
     );
   }

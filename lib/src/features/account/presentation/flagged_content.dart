@@ -26,7 +26,7 @@ class _FlaggedContentPageState extends ConsumerState<FlaggedContentPage> {
     return Scaffold(
       backgroundColor: Colors.white, // Matching the UI
       body: SingleChildScrollView(
-        physics: ScrollPhysics(),
+        physics: const ScrollPhysics(),
         child: SafeArea(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),

@@ -3,9 +3,9 @@ import '../../../../utils/packages.dart';
 import '../../../community/post/model/all_post_model.dart';
 
 class FlaggedPostList extends ConsumerStatefulWidget {
-  String fullName;
+  final String fullName;
 
-  FlaggedPostList({required this.fullName});
+  const FlaggedPostList({super.key, required this.fullName});
   @override
   ConsumerState<FlaggedPostList> createState() => _FlaggedPostListState();
 }
@@ -48,12 +48,12 @@ class _FlaggedPostListState extends ConsumerState<FlaggedPostList> {
           children: [
             Text(
                 'Hello ${widget.fullName}, you have ${posts.length} flagged content(s).',
-                style: TextStyle(
+                style: const TextStyle(
                     color: Color(0xff615353),
                     fontSize: 14,
                     fontWeight: FontWeight.w400)),
             tinySpace(),
-            Divider(),
+            const Divider(),
             ListView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
@@ -87,7 +87,6 @@ class _FlaggedPostListState extends ConsumerState<FlaggedPostList> {
                       final text = _commentControllers[post.id!]!.text;
                       if (text.trim().isNotEmpty) {
                         // handle sending logic
-
                         ref.read(isLoadingProvider.notifier).state = true;
                         final allService = ref.read(allServiceProvider);
                         final result = await allService.addPostToComment(
@@ -106,7 +105,7 @@ class _FlaggedPostListState extends ConsumerState<FlaggedPostList> {
                           //     type: ToastType.error);
                         }
 
-                        print("Send comment for post ${post.id}: $text");
+                        debugPrint("Send comment for post ${post.id}: $text");
                         _commentControllers[post.id!]!.clear();
                       }
                     });
@@ -150,16 +149,16 @@ class PostItem extends ConsumerStatefulWidget {
 
 class _PostItemState extends ConsumerState<PostItem> {
   String? selectedReaction;
-  bool _showAllComments = false; // Add this state
+  // bool _showAllComments = false; // Add this state
 
   @override
   Widget build(BuildContext context) {
     ref.watch(userAllFlaggedPostProvider);
 
     final post = widget.post;
-    final comments = post.comments ?? [];
-    final displayedComments =
-        _showAllComments ? comments : comments.take(2).toList();
+    // final comments = post.comments ?? [];
+    // final displayedComments =
+    //     _showAllComments ? comments : comments.take(2).toList();
 
     final isLoading = widget.isLoading;
     final Map<String, int> reactionMap = {
@@ -178,7 +177,7 @@ class _PostItemState extends ConsumerState<PostItem> {
           // --- Top Row: Profile Picture, Name, Time ---
           Row(
             children: [
-              Text(
+              const Text(
                 'Group:',
                 style: TextStyle(
                     color: Color(0xff059909),
@@ -188,7 +187,7 @@ class _PostItemState extends ConsumerState<PostItem> {
               tiny5HorSpace(),
               Text(
                 post.groupName ?? '',
-                style: TextStyle(
+                style: const TextStyle(
                     color: Color(0xff383838),
                     fontWeight: FontWeight.w400,
                     fontSize: 15),

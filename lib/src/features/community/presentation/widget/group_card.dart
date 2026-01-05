@@ -1,4 +1,3 @@
-import '../../../../utils/network_img_fallback.dart';
 import '../../../../utils/packages.dart';
 
 class GroupCard extends ConsumerStatefulWidget {
@@ -37,7 +36,7 @@ class GroupCard extends ConsumerStatefulWidget {
   }) : super(key: key);
 
   @override
-  _GroupCardState createState() => _GroupCardState();
+  ConsumerState<GroupCard> createState() => _GroupCardState();
 }
 
 class _GroupCardState extends ConsumerState<GroupCard> {

@@ -20,17 +20,19 @@ class UploadSelfieScreen extends ConsumerStatefulWidget {
     required this.formKey,
     required this.controller,
   });
+  
   @override
-  _UploadSelfieScreenState createState() => _UploadSelfieScreenState();
+  ConsumerState<UploadSelfieScreen> createState() => _UploadSelfieScreenState();
 }
 
 class _UploadSelfieScreenState extends ConsumerState<UploadSelfieScreen> {
   final ImagePicker _picker = ImagePicker();
-  bool _isValid = false;
+  // bool _isValid = false;
 
   void _validateForm() {
     setState(() {
-      _isValid = widget.formKey.currentState?.validate() ?? false;
+      // _isValid =
+      widget.formKey.currentState?.validate() ?? false;
     });
   }
 

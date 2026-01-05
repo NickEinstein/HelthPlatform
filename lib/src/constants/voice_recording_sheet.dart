@@ -47,7 +47,9 @@ class _VoiceRecordingSheetState extends State<VoiceRecordingSheet> {
             spokenWords = result.recognizedWords;
           });
         },
-        listenMode: ListenMode.dictation,
+        listenOptions: SpeechListenOptions(
+          listenMode: ListenMode.dictation,
+        ),
       );
     }
   }

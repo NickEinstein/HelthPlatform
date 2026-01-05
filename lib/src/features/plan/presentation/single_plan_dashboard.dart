@@ -1635,7 +1635,7 @@ class _PlanTabState extends State<PlanTab> {
                                   children: [
                                     Text(
                                       DateFormat('dd.MM.yyyy')
-                                          .format(thisRoutine.startDate!),
+                                          .format(thisRoutine.startDate),
                                       style: context.textTheme.bodyMedium,
                                     ),
                                     5.width,

@@ -102,11 +102,11 @@ class _AccountPageState extends ConsumerState<AccountPage> {
                   Container(
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
-                        color: Color(0xffD9FEAA),
-                        border: Border.all(color: Color(0xff109615))),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 40, vertical: 7),
+                        color: const Color(0xffD9FEAA),
+                        border: Border.all(color: const Color(0xff109615))),
+                    child: const Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 40, vertical: 7),
                       child: Text(
                         'Account Active',
                         style: TextStyle(
@@ -121,10 +121,13 @@ class _AccountPageState extends ConsumerState<AccountPage> {
                     padding: const EdgeInsets.symmetric(horizontal: 70),
                     child: Container(
                       decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(7),
-                          color: Colors.white,
-                          border:
-                              Border.all(color: Color(0xff109615), width: 1.5)),
+                        borderRadius: BorderRadius.circular(7),
+                        color: Colors.white,
+                        border: Border.all(
+                          color: const Color(0xff109615),
+                          width: 1.5,
+                        ),
+                      ),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 40, vertical: 15),
@@ -135,8 +138,8 @@ class _AccountPageState extends ConsumerState<AccountPage> {
                               height: 50,
                               width: 50,
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 30),
+                            const Padding(
+                              padding: EdgeInsets.only(left: 30),
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -164,7 +167,7 @@ class _AccountPageState extends ConsumerState<AccountPage> {
                     ),
                   ),
                   smallSpace(),
-                  LastLoginText(),
+                  const LastLoginText(),
                   verticalSpace(context, 0.06),
                   settingsRow(
                     title: 'Password Reset',
@@ -292,6 +295,8 @@ class _AccountPageState extends ConsumerState<AccountPage> {
 }
 
 class LastLoginText extends StatelessWidget {
+  const LastLoginText({super.key});
+
   @override
   Widget build(BuildContext context) {
     final now = DateTime.now();

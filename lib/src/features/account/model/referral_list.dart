@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_void_to_null
+
 class ReferralList {
   int? id;
   String? pictureUrl;
@@ -29,36 +31,37 @@ class ReferralList {
   List<Null>? medicalRecords;
   List<Null>? patientsHmo;
 
-  ReferralList(
-      {this.id,
-      this.pictureUrl,
-      this.firstName,
-      this.lastName,
-      this.gender,
-      this.weight,
-      this.dateOfBirth,
-      this.email,
-      this.phoneNumber,
-      this.nin,
-      this.stateOfOrigin,
-      this.lga,
-      this.placeOfBirth,
-      this.maritalStatus,
-      this.nationality,
-      this.hasHmo,
-      this.isReferred,
-      this.userId,
-      this.nurseId,
-      this.doctorId,
-      this.createdAt,
-      this.updatedAt,
-      this.createdBy,
-      this.modifiedBy,
-      this.actionTaken,
-      this.contact,
-      this.emergencyContact,
-      this.medicalRecords,
-      this.patientsHmo});
+  ReferralList({
+    this.id,
+    this.pictureUrl,
+    this.firstName,
+    this.lastName,
+    this.gender,
+    this.weight,
+    this.dateOfBirth,
+    this.email,
+    this.phoneNumber,
+    this.nin,
+    this.stateOfOrigin,
+    this.lga,
+    this.placeOfBirth,
+    this.maritalStatus,
+    this.nationality,
+    this.hasHmo,
+    this.isReferred,
+    this.userId,
+    this.nurseId,
+    this.doctorId,
+    this.createdAt,
+    this.updatedAt,
+    this.createdBy,
+    this.modifiedBy,
+    this.actionTaken,
+    this.contact,
+    this.emergencyContact,
+    this.medicalRecords,
+    this.patientsHmo,
+  });
 
   ReferralList.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -87,14 +90,14 @@ class ReferralList {
     modifiedBy = json['modifiedBy'];
     actionTaken = json['actionTaken'];
     contact =
-        json['contact'] != null ? new Contact.fromJson(json['contact']) : null;
+        json['contact'] != null ? Contact.fromJson(json['contact']) : null;
     emergencyContact = json['emergencyContact'] != null
-        ? new EmergencyContact.fromJson(json['emergencyContact'])
+        ? EmergencyContact.fromJson(json['emergencyContact'])
         : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
     data['pictureUrl'] = pictureUrl;
     data['firstName'] = firstName;
@@ -166,7 +169,7 @@ class Contact {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
     data['stateOfResidence'] = stateOfResidence;
     data['lgaResidence'] = lgaResidence;
@@ -236,7 +239,7 @@ class EmergencyContact {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
     data['relationship'] = relationship;
     data['firstName'] = firstName;

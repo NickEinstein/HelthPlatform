@@ -83,7 +83,7 @@ class _AppointmentPageState extends ConsumerState<AppointmentPage> {
 
             final dateTimeFormat = DateFormat('M/d/yyyy HH:mm');
 
-            DateTime? _combineDateTime(String date, String time) {
+            DateTime? combineDateTime(String date, String time) {
               try {
                 return dateTimeFormat.parse('$date $time');
               } catch (e) {
@@ -93,7 +93,7 @@ class _AppointmentPageState extends ConsumerState<AppointmentPage> {
 
             final upcoming = appointments.where((appt) {
               final dateTime =
-                  _combineDateTime(appt.appointDate!, appt.appointTime!);
+                  combineDateTime(appt.appointDate!, appt.appointTime!);
               return dateTime != null &&
                   !(appt.isCanceled ?? false) &&
                   dateTime.isAfter(now);
@@ -101,7 +101,7 @@ class _AppointmentPageState extends ConsumerState<AppointmentPage> {
 
             final completed = appointments.where((appt) {
               final dateTime =
-                  _combineDateTime(appt.appointDate!, appt.appointTime!);
+                  combineDateTime(appt.appointDate!, appt.appointTime!);
               return dateTime != null &&
                   !(appt.isCanceled ?? false) &&
                   dateTime.isBefore(now);
@@ -126,19 +126,18 @@ class _AppointmentPageState extends ConsumerState<AppointmentPage> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 20, vertical: 5),
                       decoration: BoxDecoration(
-                        color: Color(0xffFAFAFA),
+                        color: const Color(0xffFAFAFA),
                         borderRadius: BorderRadius.circular(6),
-                        border:
-                            Border.all(color: Color(0xffB0B0B0), width: 0.5),
+                        border: Border.all(color: const Color(0xffB0B0B0), width: 0.5),
                       ),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 10),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
+                            const Text(
                               "Book An Appointment Today!",
-                              style: const TextStyle(
+                              style: TextStyle(
                                 color: Color(0xff737373),
                                 fontSize: 14,
                                 fontWeight: FontWeight.w400,

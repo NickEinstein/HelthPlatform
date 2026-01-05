@@ -2,7 +2,6 @@ import 'package:greenzone_medical/src/model/doctord_list_response.dart'
     // ignore: library_prefixes
     as DoctorResponse;
 
-import '../../../constants/route_map_widget.dart';
 import '../../../utils/packages.dart';
 import 'widget/doctor_card.dart';
 import 'widget/title_subtitle_section.dart';
@@ -137,12 +136,14 @@ class _DoctorListingState extends ConsumerState<DoctorListing> {
                       ),
                       Container(
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(32),
-                            border: Border.all(
-                                color: ColorConstant.primaryLightColor
-                                    .withOpacity(0.3)),
+                          borderRadius: BorderRadius.circular(32),
+                          border: Border.all(
                             color: ColorConstant.primaryLightColor
-                                .withOpacity(0.3)),
+                                .withValues(alpha: 0.3),
+                          ),
+                          color: ColorConstant.primaryLightColor
+                              .withValues(alpha: 0.3),
+                        ),
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Row(
@@ -177,12 +178,14 @@ class _DoctorListingState extends ConsumerState<DoctorListing> {
                       smallSpace(),
                       Container(
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(32),
-                            border: Border.all(
-                                color: ColorConstant.primaryLightColor
-                                    .withOpacity(0.3)),
+                          borderRadius: BorderRadius.circular(32),
+                          border: Border.all(
                             color: ColorConstant.primaryLightColor
-                                .withOpacity(0.3)),
+                                .withValues(alpha: 0.3),
+                          ),
+                          color: ColorConstant.primaryLightColor
+                              .withValues(alpha: 0.3),
+                        ),
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Row(
