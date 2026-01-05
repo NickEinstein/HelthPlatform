@@ -4,13 +4,15 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:greenzone_medical/src/features/plan/presentation/my_goals_screen.dart';
+import 'package:greenzone_medical/src/model/my_app_model.dart';
 import 'package:greenzone_medical/src/resources/colors/colors.dart';
 import 'package:greenzone_medical/src/utils/extensions/extensions.dart';
 import 'package:greenzone_medical/src/utils/extensions/string_extensions.dart';
 import 'package:greenzone_medical/src/utils/extensions/widget_extensions.dart';
 
 class PersonalGoalsWidget extends StatefulWidget {
-  const PersonalGoalsWidget({super.key});
+  final List<MyAppModel> myApps;
+  const PersonalGoalsWidget({super.key, required this.myApps});
 
   @override
   State<PersonalGoalsWidget> createState() => _PersonalGoalsWidgetState();
@@ -18,8 +20,36 @@ class PersonalGoalsWidget extends StatefulWidget {
 
 class _PersonalGoalsWidgetState extends State<PersonalGoalsWidget> {
   int currentItem = 1;
-  int totalItem = 5;
-  final ScrollController _scrollController = ScrollController();
+  late int totalItem;
+  late final ScrollController _scrollController;
+
+  @override
+  void initState() {
+    super.initState();
+    totalItem = widget.myApps.length;
+    _scrollController = ScrollController()..addListener(_updateCurrentItem);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  _updateCurrentItem() {
+    if (!mounted) return;
+    if (_scrollController.hasClients &&
+        (_scrollController.position.pixels.toInt() >
+            context.screenWidth * .8)) {
+      setState(() {
+        currentItem = _scrollController.hasClients
+            ? _scrollController.position.pixels.toInt() ~/
+                    (context.screenWidth * .8) +
+                1
+            : 1;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,8 +81,8 @@ class _PersonalGoalsWidgetState extends State<PersonalGoalsWidget> {
           child: Row(
             spacing: 12,
             children: List.generate(
-              4,
-              (index) => _buildPersonalGoalsItem(),
+              widget.myApps.length,
+              (index) => _buildPersonalGoalsItem(widget.myApps[index]),
             ),
           ),
         ),
@@ -81,7 +111,7 @@ class _PersonalGoalsWidgetState extends State<PersonalGoalsWidget> {
     );
   }
 
-  Widget _buildPersonalGoalsItem() {
+  Widget _buildPersonalGoalsItem(MyAppModel item) {
     return SizedBox(
       width: context.screenWidth * .8,
       child: Column(
@@ -105,8 +135,13 @@ class _PersonalGoalsWidgetState extends State<PersonalGoalsWidget> {
                     children: [
                       SvgPicture.asset('drugstore'.toSvg),
                       4.width,
-                      Text('Hair Care Self-Care App',
-                          style: context.textTheme.labelMedium),
+                      Text(
+                        item.app?.title ??
+                            item.goal.substring(
+                                0, item.goal.length > 8 ? 8 : item.goal.length),
+                        style: context.textTheme.labelMedium,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ],
                   ),
                 ),

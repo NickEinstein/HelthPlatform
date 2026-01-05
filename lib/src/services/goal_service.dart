@@ -2,12 +2,13 @@ import 'package:flutter/foundation.dart' show debugPrint;
 import 'package:greenzone_medical/src/app_pkg.dart';
 import 'package:greenzone_medical/src/model/my_app_category_model.dart';
 import 'package:greenzone_medical/src/model/my_app_model.dart';
+import 'package:greenzone_medical/src/model/regular_app_model.dart';
 
-class MyAppService {
+class GoalService {
   final ApiService _apiService;
   final StorageService _storageService;
 
-  MyAppService(this._apiService, this._storageService);
+  GoalService(this._apiService, this._storageService);
 
   /// Retrieves the stored authentication token.
   Future<String?> getToken() async {
@@ -52,13 +53,26 @@ class MyAppService {
     }
   }
 
-  Future<List<MyAppModel>> getAppsByCategory(int? id) async {
+  Future<List<RegularAppModel>> getAllApps() async {
+    final response = await _apiService.get(
+      ApiUrl.getAllApps,
+    );
+    if (response.statusCode == 200) {
+      return (response.data as List)
+          .map((e) => RegularAppModel.fromJson(e))
+          .toList();
+    } else {
+      throw Exception('Failed to load apps');
+    }
+  }
+
+  Future<List<RegularAppModel>> getAppsByCategory(int? id) async {
     final response = await _apiService.get(
       id == null ? ApiUrl.getAllApps : ApiUrl.getAppsByCategory(id),
     );
     if (response.statusCode == 200) {
       return (response.data as List)
-          .map((e) => MyAppModel.fromJson(e))
+          .map((e) => RegularAppModel.fromJson(e))
           .toList();
     } else {
       throw Exception('Failed to load apps by category');

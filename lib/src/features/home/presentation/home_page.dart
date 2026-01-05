@@ -6,6 +6,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:greenzone_medical/src/features/community_profile/community_profile.dart';
 import 'package:greenzone_medical/src/features/home/presentation/suspended_products.dart';
 import 'package:greenzone_medical/src/features/home/presentation/widget/advert_helper.dart';
+import 'package:greenzone_medical/src/features/home/presentation/widget/health_goal_widget.dart';
 import 'package:greenzone_medical/src/features/home/presentation/widget/profile_completion_widget.dart';
 import 'package:greenzone_medical/src/features/pharmacy/presentation/pharmacy_search_screen.dart';
 import 'package:greenzone_medical/src/resources/colors/colors.dart';
@@ -482,12 +483,12 @@ class _HomePageState extends ConsumerState<HomePage> {
                           mediumSpace(),
                           _drugSearchWidget(context),
                           mediumSpace(),
-                          const ProfileCompletionWidget(),
+                          const HealthGoalWidget(),
                           mediumSpace(),
-                          // const PersonalGoalsWidget(),
-                          // mediumSpace(),
                           const ActionButtonsRow(),
-                          smallSpace(),
+                          smallSpace(), // if user has no apps
+                          mediumSpace(),
+                          const ProfileCompletionWidget(),
                           CustomListTile(
                             imagePath: "assets/icon/appo_icon.png",
                             title: "Appointment",
@@ -498,7 +499,6 @@ class _HomePageState extends ConsumerState<HomePage> {
                               context.push(Routes.APPOINTMENT, extra: true);
                             },
                           ),
-
                           CustomListTile(
                             imagePath: "assets/icon/pres_icon.png",
                             title: "Prescriptions",
@@ -509,76 +509,6 @@ class _HomePageState extends ConsumerState<HomePage> {
                               context.push(Routes.PRESCRIPTION, extra: true);
                             },
                           ),
-
-                          mediumSpace(),
-                          // if user has no apps
-                          // Text(
-                          //   'Hey, you don\'t seem to have any health goals',
-                          //   style: context.textTheme.bodyMedium?.copyWith(
-                          //     fontWeight: FontWeight.w700,
-                          //   ),
-                          // ),
-                          // 12.height,
-                          // InkWell(
-                          //   onTap: () {
-                          //     context.push(MyGoalsScreen.routeName);
-                          //   },
-                          //   child: Container(
-                          //     padding: const EdgeInsets.symmetric(
-                          //         horizontal: 16, vertical: 16),
-                          //     decoration: BoxDecoration(
-                          //       borderRadius: BorderRadius.circular(12),
-                          //       color: const Color(0xffEAFFEB),
-                          //       border: Border.all(
-                          //         color: ColorConstant.primaryColor,
-                          //       ),
-                          //     ),
-                          //     child: Row(
-                          //       crossAxisAlignment: CrossAxisAlignment.start,
-                          //       children: [
-                          //         SvgPicture.asset(
-                          //           'health_goal'.toSvg,
-                          //         ),
-                          //         12.width,
-                          //         Expanded(
-                          //           child: Column(
-                          //             crossAxisAlignment:
-                          //                 CrossAxisAlignment.start,
-                          //             children: [
-                          //               Text(
-                          //                 'We have a bank of goals you can select from, starting with simple things like your hair to medical goals.',
-                          //                 style: context.textTheme.bodyMedium
-                          //                     ?.copyWith(
-                          //                   fontSize: 13,
-                          //                 ),
-                          //               ),
-                          //               8.height,
-                          //               Container(
-                          //                 decoration: BoxDecoration(
-                          //                   borderRadius:
-                          //                       BorderRadius.circular(28),
-                          //                   color: const Color(0xFF29BA2E),
-                          //                 ),
-                          //                 padding: const EdgeInsets.symmetric(
-                          //                     horizontal: 16, vertical: 6),
-                          //                 child: Text(
-                          //                   'Get started now!',
-                          //                   style: context.textTheme.bodyMedium
-                          //                       ?.copyWith(
-                          //                     color: Colors.white,
-                          //                   ),
-                          //                 ),
-                          //               )
-                          //             ],
-                          //           ),
-                          //         )
-                          //       ],
-                          //     ),
-                          //   ),
-                          // ),
-                          // mediumSpace(),
-
-                          // const ProfileCompletionWidget(),
                           mediumSpace(),
                           InkWell(
                             onTap: () {

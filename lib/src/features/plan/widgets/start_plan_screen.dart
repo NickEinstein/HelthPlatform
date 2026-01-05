@@ -1,11 +1,11 @@
 import 'package:greenzone_medical/src/features/plan/presentation/single_plan_dashboard.dart';
-import 'package:greenzone_medical/src/model/my_app_model.dart';
+import 'package:greenzone_medical/src/model/regular_app_model.dart';
 import 'package:greenzone_medical/src/resources/colors/colors.dart';
 import 'package:greenzone_medical/src/utils/packages.dart';
 
 class StartPlanScreen extends ConsumerWidget {
   static const routeName = '/start-plan';
-  final MyAppModel app;
+  final RegularAppModel app;
   const StartPlanScreen({super.key, required this.app});
 
   @override
@@ -129,7 +129,7 @@ class StartPlanScreen extends ConsumerWidget {
                     ),
                   ),
                   child: Text(
-                    'Start your hair care plan',
+                    'Start ${app.title}',
                     style: CustomTextStyle.labelMedium.copyWith(
                       fontWeight: FontWeight.bold,
                     ),

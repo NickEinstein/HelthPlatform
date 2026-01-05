@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:greenzone_medical/src/features/chats/presentation/model/chatcontact_model.dart';
 import 'package:greenzone_medical/src/features/health_record/model/health_record_model.dart';
+import 'package:greenzone_medical/src/features/plan/models/specialist_model.dart';
 import 'package:greenzone_medical/src/features/prescription/models/get_prescriptions_model.dart';
 import 'package:greenzone_medical/src/model/all_alergy_response.dart';
 import 'package:greenzone_medical/src/model/category_model.dart';
@@ -51,6 +52,11 @@ final allServiceProvider = Provider<AllService>((ref) {
   final storageService = ref.watch(storageServiceProvider);
   final apiService = ref.watch(apiServiceProvider);
   return AllService(apiService, storageService);
+});
+
+final specialistListProvider = FutureProvider<List<SpecialistModel>>((ref) async {
+  final specialistListService = ref.watch(allServiceProvider);
+  return await specialistListService.fetchSpecialistList();
 });
 
 // FutureProvider for fetching articles

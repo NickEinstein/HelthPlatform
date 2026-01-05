@@ -10,7 +10,7 @@ class AdvertHelper extends StatefulWidget {
   const AdvertHelper({super.key, required this.goals});
 
   @override
-  _AdvertHelperState createState() => _AdvertHelperState();
+  State<AdvertHelper> createState() => _AdvertHelperState();
 }
 
 class _AdvertHelperState extends State<AdvertHelper>

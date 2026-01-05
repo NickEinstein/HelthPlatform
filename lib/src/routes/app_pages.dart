@@ -24,7 +24,7 @@ import 'package:greenzone_medical/src/features/profile/presentation/update_emerg
 import 'package:greenzone_medical/src/features/profile/presentation/update_personal_info_screen.dart';
 import 'package:greenzone_medical/src/features/plan/widgets/start_plan_screen.dart';
 import 'package:greenzone_medical/src/model/community_list_response.dart';
-import 'package:greenzone_medical/src/model/my_app_model.dart';
+import 'package:greenzone_medical/src/model/regular_app_model.dart';
 import '../features/community_profile/community_profile.dart';
 import '../features/account/presentation/account_reset_password.dart';
 import '../features/appointment/model/appointment_model.dart';
@@ -129,7 +129,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: SinglePlanDashboard.routeName,
         builder: (context, state) {
           return SinglePlanDashboard(
-            myApp: state.extra as MyAppModel,
+            myApp: state.extra as RegularAppModel,
           );
         },
       ),
@@ -137,7 +137,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: StartPlanScreen.routeName,
         builder: (context, state) {
           return StartPlanScreen(
-            app: state.extra as MyAppModel,
+            app: state.extra as RegularAppModel,
           );
         },
       ),

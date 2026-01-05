@@ -275,4 +275,7 @@ class ApiUrl {
   static String getCountry = '/ConnectedHealthWebApi/api/Geography/countries/';
   static String getState(String cid) =>
       '/ConnectedHealthWebApi/api/Geography/countries/$cid/states';
+
+  static String specialistUrl =
+      '/ConnectedHealthWebApi/api/Categories/SpecialistCategories';
 }
