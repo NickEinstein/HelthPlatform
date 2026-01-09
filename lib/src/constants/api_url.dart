@@ -240,8 +240,10 @@ class ApiUrl {
       'https://api.greenzonetechnologies.com.ng/ConnectedHealthWebApi/api/apps';
   static String getAppsCategories =
       'https://api.greenzonetechnologies.com.ng/ConnectedHealthWebApi/api/appCategories';
-  static String getMyApps =
+  static String appPlan =
       'https://api.greenzonetechnologies.com.ng/ConnectedHealthWebApi/api/AppPlans';
+      static String userGoals =
+      'https://api.greenzonetechnologies.com.ng/ConnectedHealthWebApi/api/userGoals';
 
   static String updatePatientProfile(String id) =>
       '/ConnectedHealthWebApi/api/patient/$id';

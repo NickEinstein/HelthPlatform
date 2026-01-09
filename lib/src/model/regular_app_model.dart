@@ -24,7 +24,7 @@ class RegularAppModel {
       id: SafeJson.asInt(json['id']),
       title: SafeJson.asString(json['title']),
       categoryId: SafeJson.asInt(json['categoryId']),
-      category: SafeJson.asString(json['category']),
+      category: SafeJson.asString(json['category'], defaultValue: 'null'),
       description: SafeJson.asString(json['description']),
       benefits: SafeJson.asString(json['benefits']),
       installs: SafeJson.asString(json['installs']),

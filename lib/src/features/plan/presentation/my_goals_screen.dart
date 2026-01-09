@@ -69,10 +69,10 @@ class _MyGoalsScreenState extends ConsumerState<MyGoalsScreen> {
   Widget build(BuildContext context) {
     final bannerState = ref.watch(bannerProvider);
     final authService = ref.watch(authServiceProvider);
-    final allAvailableApps =
-        ref.watch(goalNotifierProvider.select((s) => s.allApps!));
+    final  allAvailableApps =
+        ref.watch(goalNotifierProvider.select((s) => s.allApps ?? const AsyncValue.data(<RegularAppModel>[])));
     final appCategories =
-        ref.watch(goalNotifierProvider.select((s) => s.categories!));
+        ref.watch(goalNotifierProvider.select((s) => s.categories ?? const AsyncValue.data(<MyAppCategoryModel>[])));
 
     return FutureBuilder<LoginResponse?>(
         future: authService.getStoredUser(),
