@@ -1,11 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:greenzone_medical/src/features/plan/widgets/plan_tab_dashboard.dart';
 import 'package:greenzone_medical/src/features/plan/widgets/populated_plan_tab.dart';
 import 'package:greenzone_medical/src/model/regular_app_model.dart';
 import 'package:greenzone_medical/src/provider/my_goal_provider.dart';
 import 'package:greenzone_medical/src/utils/extensions/extensions.dart';
-import 'package:greenzone_medical/src/utils/extensions/widget_extensions.dart';
 import 'package:greenzone_medical/src/utils/loading_widget.dart';
 import 'package:greenzone_medical/src/utils/packages.dart';
 
@@ -20,12 +17,12 @@ class CareGoalPlanTab extends ConsumerStatefulWidget {
 
 class _CareGoalPlanTabState extends ConsumerState<CareGoalPlanTab> {
   bool getStartedPressed = false;
-  
+
   @override
   Widget build(BuildContext context) {
     final authService = ref.read(authServiceProvider);
     final userGoal = ref.watch(goalNotifierProvider.select(
-      (s) => s.allApps ?? const AsyncValue.data([]),
+      (s) => s.myApps ?? const AsyncValue.data([]),
     ));
 
     return SingleChildScrollView(
@@ -39,8 +36,8 @@ class _CareGoalPlanTabState extends ConsumerState<CareGoalPlanTab> {
 
           return userGoal.when(
             data: (data) {
-              final isStarted =
-                  data.any((element) => element.id == widget.myApp.id);
+              final isStarted = data.any((element) => element.appId == widget.myApp.id);
+
               return isStarted
                   ? const PlanTabDashboard()
                   : getStartedPressed

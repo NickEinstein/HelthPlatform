@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:greenzone_medical/src/app_pkg.dart';
+import 'package:greenzone_medical/src/features/plan/models/user_journal_model.dart';
 import 'package:greenzone_medical/src/model/my_app_category_model.dart';
 import 'package:greenzone_medical/src/model/my_app_model.dart';
 import 'package:greenzone_medical/src/model/regular_app_model.dart';
@@ -82,6 +83,22 @@ class GoalNotifier extends Notifier<GoalState> {
       rethrow;
     }
   }
+
+  Future<RegularAppModel?> getSingleApp(int id) async {
+    try {
+      return await _goalService.getSingleApp(id);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<List<UserJournalModel>> getUserJournal(int id) async {
+    try {
+      return await _goalService.getUserGoalJournals(id);
+    } catch (e) {
+      return [];
+    }
+  }
 }
 
 final goalNotifierProvider =
@@ -90,4 +107,12 @@ final goalNotifierProvider =
 final goalByCategoryProvider =
     FutureProvider.family<List<RegularAppModel>, int?>((ref, id) {
   return ref.watch(goalNotifierProvider.notifier).getAppsByCategory(id);
+});
+
+final singlePlanProvider = FutureProvider.family<RegularAppModel?, int>((ref, id) {
+  return ref.watch(goalNotifierProvider.notifier).getSingleApp(id);
+});
+
+final userJournalProvider = FutureProvider.family<List<UserJournalModel>, int>((ref, id) {
+  return ref.watch(goalNotifierProvider.notifier).getUserJournal(id);
 });

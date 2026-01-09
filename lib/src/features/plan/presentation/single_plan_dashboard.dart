@@ -4,6 +4,7 @@ import 'package:greenzone_medical/src/features/plan/widgets/journals_tab.dart';
 import 'package:greenzone_medical/src/features/plan/widgets/knowledge_tab.dart';
 import 'package:greenzone_medical/src/features/plan/widgets/specialist_tab.dart';
 import 'package:greenzone_medical/src/model/regular_app_model.dart';
+import 'package:greenzone_medical/src/provider/my_goal_provider.dart';
 import 'package:greenzone_medical/src/resources/colors/colors.dart';
 import 'package:greenzone_medical/src/utils/extensions/extensions.dart';
 import 'package:greenzone_medical/src/utils/packages.dart';
@@ -19,26 +20,18 @@ class SinglePlanDashboard extends ConsumerStatefulWidget {
 }
 
 class _SinglePlanDashboardState extends ConsumerState<SinglePlanDashboard> {
-  bool isStarted = false;
-
   @override
   void initState() {
     super.initState();
-    checkIfStarted();
-  }
-
-  checkIfStarted() async {
-    final authService = ref.read(authServiceProvider);
-    final user = await authService.getStoredUser();
-    if (user != null) {
-      setState(() {
-        isStarted = true;
-      });
-    }
   }
 
   @override
   Widget build(BuildContext context) {
+    final planProvider =
+        widget.myApp.title.isEmpty || widget.myApp.category.isEmpty
+            ? ref.watch(singlePlanProvider(widget.myApp.id))
+            : null;
+
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, _) {
@@ -98,20 +91,51 @@ class _SinglePlanDashboardState extends ConsumerState<SinglePlanDashboard> {
                             ),
                           ),
                           10.height,
-                          Text(
-                            widget.myApp.title,
-                            style: context.textTheme.titleLarge?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
+                          if (widget.myApp.title.isEmpty)
+                            planProvider?.when(
+                                  data: (data) => Text(
+                                    data?.title ?? '',
+                                    style:
+                                        context.textTheme.titleLarge?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                  loading: () =>
+                                      const Text('Loading').shimmer(),
+                                  error: (e, s) => const SizedBox.shrink(),
+                                ) ??
+                                const SizedBox.shrink(),
+                          if (widget.myApp.title.isNotEmpty)
+                            Text(
+                              widget.myApp.title,
+                              style: context.textTheme.titleLarge?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                              ),
                             ),
-                          ),
                           5.height,
-                          Text(
-                            widget.myApp.category,
-                            style: context.textTheme.bodyMedium?.copyWith(
-                              color: Colors.grey,
+                          if (widget.myApp.category.isEmpty)
+                            planProvider?.when(
+                                  data: (data) => Text(
+                                    data?.category ?? '',
+                                    style:
+                                        context.textTheme.bodyMedium?.copyWith(
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                  loading: () =>
+                                      const Text('Getting Category').shimmer(),
+                                  error: (e, s) => const SizedBox.shrink(),
+                                ) ??
+                                const SizedBox.shrink(),
+                          if (widget.myApp.category.isNotEmpty)
+                            Text(
+                              widget.myApp.category,
+                              style: context.textTheme.bodyMedium?.copyWith(
+                                color: Colors.grey,
+                              ),
                             ),
-                          ),
                           15.height,
                           OutlinedButton(
                             onPressed: () {},
@@ -161,11 +185,22 @@ class _SinglePlanDashboardState extends ConsumerState<SinglePlanDashboard> {
               body: TabBarView(
                 children: [
                   // Care, Goal & Plan Tab
-                  CareGoalPlanTab(myApp: widget.myApp),
+                  if (widget.myApp.category.isEmpty)
+                    planProvider?.when(
+                          data: (data) =>
+                              CareGoalPlanTab(myApp: data ?? widget.myApp),
+                          loading: () => Center(
+                            child: const Text('Loading').shimmer(),
+                          ),
+                          error: (e, s) => const SizedBox.shrink(),
+                        ) ??
+                        const SizedBox.shrink(),
+                  if (widget.myApp.category.isNotEmpty)
+                    CareGoalPlanTab(myApp: widget.myApp),
                   const Center(child: Text('Products Loading')),
                   const KnowledgeTab(),
                   const CommunityTab(),
-                  const JournalsTab(),
+                  JournalsTab(app: widget.myApp),
                   const SpecialistTab(),
                 ],
               ),

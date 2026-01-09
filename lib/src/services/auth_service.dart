@@ -313,8 +313,8 @@ class AuthService {
       final response = await _apiService.post(
         url,
       );
-      print('Url: $url');
-      print('Response: ${response.data}');
+      // print('Url: $url');
+      // print('Response: ${response.data}');
       // Check if the status code is 200 and the response body has a failure code
       if (response.statusCode == 200 && response.data != null) {
         if (response.data['code'] == 4) {

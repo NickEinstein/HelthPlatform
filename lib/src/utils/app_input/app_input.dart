@@ -17,7 +17,7 @@ class InputIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return SvgPicture.asset(
       asset,
-      color: Colors.black,
+      colorFilter: const ColorFilter.mode(Colors.black, BlendMode.srcIn),
     ).paddingOnly(r: 12);
   }
 }

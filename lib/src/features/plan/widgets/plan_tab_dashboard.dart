@@ -39,7 +39,7 @@ class _PlanTabDashboardState extends ConsumerState<PlanTabDashboard> {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -53,12 +53,12 @@ class _PlanTabDashboardState extends ConsumerState<PlanTabDashboard> {
             children: [
               _buildTopStat(
                 icon: Icons.check_circle_outline,
-                value: '18',
+                value: '0',
                 label: 'Days completed',
               ),
               _buildTopStat(
                 icon: Icons.monetization_on_outlined,
-                value: '3118',
+                value: '0',
                 label: 'Earned Coins',
               ),
             ],
@@ -66,7 +66,7 @@ class _PlanTabDashboardState extends ConsumerState<PlanTabDashboard> {
           30.height,
           // Large Percentage Display
           const Text(
-            '36%',
+            '0%',
             style: TextStyle(
               fontSize: 64,
               fontWeight: FontWeight.bold,
@@ -90,12 +90,12 @@ class _PlanTabDashboardState extends ConsumerState<PlanTabDashboard> {
               Container(
                 height: 8,
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.3),
+                  color: Colors.white.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(4),
                 ),
               ),
               FractionallySizedBox(
-                widthFactor: 0.36,
+                widthFactor: 0,
                 child: Container(
                   height: 8,
                   decoration: BoxDecoration(
@@ -157,7 +157,7 @@ class _PlanTabDashboardState extends ConsumerState<PlanTabDashboard> {
             Expanded(
               child: _buildStatCard(
                 icon: Icons.check_circle,
-                value: '18',
+                value: '0',
                 label: 'Days Completed',
                 iconColor: const Color(0xFF00A651),
               ),
@@ -166,7 +166,7 @@ class _PlanTabDashboardState extends ConsumerState<PlanTabDashboard> {
             Expanded(
               child: _buildStatCard(
                 icon: Icons.calendar_today,
-                value: '15',
+                value: '0',
                 label: 'Days to Go',
                 iconColor: const Color(0xFF00A651),
               ),
@@ -179,7 +179,7 @@ class _PlanTabDashboardState extends ConsumerState<PlanTabDashboard> {
             Expanded(
               child: _buildStatCard(
                 icon: Icons.inventory_2_outlined,
-                value: '5',
+                value: '0',
                 label: 'Products Reviewed',
                 iconColor: const Color(0xFF00A651),
               ),
@@ -188,7 +188,7 @@ class _PlanTabDashboardState extends ConsumerState<PlanTabDashboard> {
             Expanded(
               child: _buildStatCard(
                 icon: Icons.person_outline,
-                value: '8',
+                value: '0',
                 label: 'Experts Engaged',
                 iconColor: const Color(0xFF00A651),
               ),
@@ -201,7 +201,7 @@ class _PlanTabDashboardState extends ConsumerState<PlanTabDashboard> {
             Expanded(
               child: _buildStatCard(
                 icon: Icons.groups_outlined,
-                value: '18',
+                value: '0',
                 label: 'Joined Communities',
                 iconColor: const Color(0xFF00A651),
                 backgroundColor: const Color(0xFFE8F5E9),
@@ -211,7 +211,7 @@ class _PlanTabDashboardState extends ConsumerState<PlanTabDashboard> {
             Expanded(
               child: _buildStatCard(
                 icon: Icons.stars_outlined,
-                value: '3118',
+                value: '0',
                 label: 'Earned Points',
                 iconColor: const Color(0xFF00A651),
                 backgroundColor: const Color(0xFFE8F5E9),
@@ -225,7 +225,7 @@ class _PlanTabDashboardState extends ConsumerState<PlanTabDashboard> {
             Expanded(
               child: _buildStatCard(
                 icon: Icons.favorite_outline,
-                value: '3',
+                value: '0',
                 label: 'Cheerleader/Friends',
                 iconColor: const Color(0xFF00A651),
                 backgroundColor: const Color(0xFFE8F5E9),
@@ -235,7 +235,7 @@ class _PlanTabDashboardState extends ConsumerState<PlanTabDashboard> {
             Expanded(
               child: _buildStatCard(
                 icon: Icons.attach_money,
-                value: '3118',
+                value: '0',
                 label: 'Acquired Points',
                 iconColor: const Color(0xFF00A651),
                 backgroundColor: const Color(0xFFE8F5E9),
@@ -269,7 +269,7 @@ class _PlanTabDashboardState extends ConsumerState<PlanTabDashboard> {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: iconColor.withOpacity(0.1),
+              color: iconColor.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(6),
             ),
             child: Icon(

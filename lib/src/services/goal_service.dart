@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart' show debugPrint;
 import 'package:greenzone_medical/src/app_pkg.dart';
+import 'package:greenzone_medical/src/features/plan/models/user_journal_model.dart';
 import 'package:greenzone_medical/src/model/my_app_category_model.dart';
 import 'package:greenzone_medical/src/model/my_app_model.dart';
 import 'package:greenzone_medical/src/model/regular_app_model.dart';
@@ -15,6 +16,110 @@ class GoalService {
   /// Retrieves the stored authentication token.
   Future<String?> getToken() async {
     return _storageService.getString(StorageConstants.accessToken);
+  }
+
+  Future<bool> saveJournal(UserJournalModel journal) async {
+    try {
+      final token = await getToken();
+      final userId = await getUserId();
+      if (token == null || token.isEmpty || userId == null) {
+        debugPrint('⚠️ No access token found.');
+        return false;
+      }
+
+      final response = await _apiService.post(
+        ApiUrl.saveJournal(userId),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        data: journal.toJson(),
+      );
+
+      if ((response.statusCode == 200 || response.statusCode == 1)) {
+        return true;
+      } else {
+        debugPrint(' Failed to save goal journals: ${response.statusCode}');
+        return false;
+      }
+    } catch (error) {
+      debugPrint(' Error saving goal journals: $error');
+      return false;
+    }
+  }
+
+  Future<List<UserJournalModel>> getUserGoalJournals(int goalId) async {
+    try {
+      final token = await getToken();
+      final userId = await getUserId();
+      if (token == null || token.isEmpty || userId == null) {
+        debugPrint('⚠️ No access token found.');
+        return [];
+      }
+
+      final response = await _apiService.get(
+        ApiUrl.userGoalJournals(goalId),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if ((response.statusCode == 200 || response.statusCode == 1)) {
+        final data = response.data as List;
+
+        if (data.isEmpty) {
+          debugPrint('⚠️ No goal journals found.');
+          return [];
+        }
+        debugPrint(data.toString());
+        final userJournals =
+            data.map((e) => UserJournalModel.fromJson(e)).toList();
+        return userJournals;
+      } else {
+        debugPrint(' Failed to fetch goal journals: ${response.statusCode}');
+        throw Exception(
+            'Failed to fetch goal journals: ${response.statusCode}');
+      }
+    } catch (error) {
+      debugPrint(' Error fetching goal journals: $error');
+      throw Exception('Error fetching goal journals: $error');
+    }
+  }
+
+  Future<RegularAppModel?> getSingleApp(int id) async {
+    try {
+      final token = await getToken();
+      final userId = await getUserId();
+      if (token == null || token.isEmpty || userId == null) {
+        debugPrint('⚠️ No access token found.');
+        return null;
+      }
+
+      final response = await _apiService.get(
+        ApiUrl.getApps(id),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if ((response.statusCode == 200 || response.statusCode == 1)) {
+        final data = response.data as Map<String, dynamic>;
+
+        if (data.isEmpty) {
+          debugPrint('⚠️ No apps found.');
+          return null;
+        }
+        return RegularAppModel.fromJson(data);
+      } else {
+        debugPrint(' Failed to fetch my apps: ${response.statusCode}');
+        throw Exception('Failed to my apps: ${response.statusCode}');
+      }
+    } catch (error) {
+      debugPrint(' Error fetching my apps: $error');
+      throw Exception('Error fetching my apps: $error');
+    }
   }
 
   Future<String?> getUserId() async {
@@ -76,7 +181,7 @@ class GoalService {
         'title': title,
         'unit': unit,
       };
-      print(payload);
+      // print(payload);
       final response = await _apiService.post(
         ApiUrl.userGoals,
         headers: {
@@ -114,7 +219,7 @@ class GoalService {
       }
 
       final response = await _apiService.post(
-        ApiUrl.appPlan,
+        ApiUrl.appPlan(),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
@@ -151,7 +256,7 @@ class GoalService {
       }
 
       final response = await _apiService.get(
-        ApiUrl.appPlan,
+        ApiUrl.appPlan(),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
@@ -181,7 +286,7 @@ class GoalService {
 
   Future<List<RegularAppModel>> getAllApps() async {
     final response = await _apiService.get(
-      ApiUrl.getAllApps,
+      ApiUrl.getApps(),
     );
     if (response.statusCode == 200) {
       return (response.data as List)
@@ -194,7 +299,7 @@ class GoalService {
 
   Future<List<RegularAppModel>> getAppsByCategory(int? id) async {
     final response = await _apiService.get(
-      id == null ? ApiUrl.getAllApps : ApiUrl.getAppsByCategory(id),
+      id == null ? ApiUrl.getApps() : ApiUrl.getAppsByCategory(id),
     );
     if (response.statusCode == 200) {
       return (response.data as List)

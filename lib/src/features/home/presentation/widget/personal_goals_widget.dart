@@ -4,7 +4,9 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:greenzone_medical/src/features/plan/presentation/my_goals_screen.dart';
+import 'package:greenzone_medical/src/features/plan/presentation/single_plan_dashboard.dart';
 import 'package:greenzone_medical/src/model/my_app_model.dart';
+import 'package:greenzone_medical/src/model/regular_app_model.dart';
 import 'package:greenzone_medical/src/resources/colors/colors.dart';
 import 'package:greenzone_medical/src/utils/extensions/extensions.dart';
 import 'package:greenzone_medical/src/utils/extensions/string_extensions.dart';
@@ -95,16 +97,16 @@ class _PersonalGoalsWidgetState extends State<PersonalGoalsWidget> {
                 context.push(MyGoalsScreen.routeName);
               },
               child: Text(
-                'View all my goals',
+                'View all goals',
                 style: context.textTheme.bodyMedium
                     ?.copyWith(color: AppColors.greyTextColor2),
               ),
             ),
-            Text(
-              'View all my friend\'s goals',
-              style: context.textTheme.bodyMedium
-                  ?.copyWith(color: AppColors.greyTextColor2),
-            ),
+            // Text(
+            //   'View all my friend\'s goals',
+            //   style: context.textTheme.bodyMedium
+            //       ?.copyWith(color: AppColors.greyTextColor2),
+            // ),
           ],
         ),
       ],
@@ -112,168 +114,176 @@ class _PersonalGoalsWidgetState extends State<PersonalGoalsWidget> {
   }
 
   Widget _buildPersonalGoalsItem(MyAppModel item) {
-    return SizedBox(
-      width: context.screenWidth * .8,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Expanded(
-                child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  decoration: const BoxDecoration(
-                    color: AppColors.primaryLight,
-                    borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(24),
-                      topLeft: Radius.circular(4),
-                    ),
-                  ),
-                  child: Row(
-                    children: [
-                      SvgPicture.asset('drugstore'.toSvg),
-                      4.width,
-                      Text(
-                        item.app?.title ??
-                            item.goal.substring(
-                                0, item.goal.length > 8 ? 8 : item.goal.length),
-                        style: context.textTheme.labelMedium,
-                        overflow: TextOverflow.ellipsis,
+    return InkWell(
+      onTap: () {
+        context.push(
+          SinglePlanDashboard.routeName,
+          extra: RegularAppModel.fromApp(item),
+        );
+      },
+      child: SizedBox(
+        width: context.screenWidth * .8,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Expanded(
+                  child: Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    decoration: const BoxDecoration(
+                      color: AppColors.primaryLight,
+                      borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(24),
+                        topLeft: Radius.circular(4),
                       ),
-                    ],
+                    ),
+                    child: Row(
+                      children: [
+                        SvgPicture.asset('drugstore'.toSvg),
+                        4.width,
+                        Text(
+                          item.app?.title ??
+                              item.goal.substring(0,
+                                  item.goal.length > 8 ? 8 : item.goal.length),
+                          style: context.textTheme.labelMedium,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              (context.screenWidth * .1).width,
-            ],
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 18),
-            decoration: BoxDecoration(
-              boxShadow: const [
-                BoxShadow(
-                  color: Color(0x40A7A7A7),
-                  blurRadius: 11,
-                  offset: Offset(0, 4),
-                )
+                (context.screenWidth * .1).width,
               ],
-              color: Colors.white,
-              border: Border.all(
-                color: AppColors.primaryVariant,
-                width: .7,
-              ),
-              borderRadius: BorderRadius.circular(4),
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Column(
-                                children: [
-                                  26.height,
-                                  Text(
-                                    '36%',
-                                    style:
-                                        context.textTheme.labelLarge?.copyWith(
-                                      fontSize: 46,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SvgPicture.asset(
-                                'goal'.toSvg,
-                                height: 50,
-                                width: 50,
-                              ),
-                            ],
-                          ),
-                          4.height,
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  'Percentage of Goal Achieved',
-                                  style: context.textTheme.bodyMedium,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Column(
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 18),
+              decoration: BoxDecoration(
+                boxShadow: const [
+                  BoxShadow(
+                    color: Color(0x40A7A7A7),
+                    blurRadius: 11,
+                    offset: Offset(0, 4),
+                  )
+                ],
+                color: Colors.white,
+                border: Border.all(
+                  color: AppColors.primaryVariant,
+                  width: .7,
+                ),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                SvgPicture.asset('days_completed'.toSvg),
-                                2.width,
-                                Text(
-                                  '12',
-                                  style: context.textTheme.displayLarge,
+                                Column(
+                                  children: [
+                                    26.height,
+                                    Text(
+                                      '0%',
+                                      style: context.textTheme.labelLarge
+                                          ?.copyWith(
+                                        fontSize: 46,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SvgPicture.asset(
+                                  'goal'.toSvg,
+                                  height: 50,
+                                  width: 50,
                                 ),
                               ],
                             ),
-                            Text(
-                              'Days completed',
-                              style: context.textTheme.bodySmall?.copyWith(
-                                fontSize: 11,
-                                color: AppColors.greyTextColor,
-                              ),
+                            4.height,
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    'Percentage of Goal Achieved',
+                                    style: context.textTheme.bodyMedium,
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
-                        12.height,
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                SvgPicture.asset('coins'.toSvg),
-                                2.width,
-                                Text(
-                                  '3112',
-                                  style: context.textTheme.displayLarge,
-                                ),
-                              ],
-                            ),
-                            Text(
-                              'Earned Coins',
-                              style: context.textTheme.bodySmall?.copyWith(
-                                fontSize: 11,
-                                color: AppColors.greyTextColor,
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  SvgPicture.asset('days_completed'.toSvg),
+                                  2.width,
+                                  Text(
+                                    '0',
+                                    style: context.textTheme.displayLarge,
+                                  ),
+                                ],
                               ),
-                            ),
-                          ],
-                        )
-                      ],
-                    )
-                  ],
-                ),
-                18.height,
-                const LinearProgressIndicator(
-                  value: .8,
-                  color: AppColors.primaryVariant,
-                  backgroundColor: AppColors.greyVariant,
-                  borderRadius: BorderRadius.all(Radius.circular(8)),
-                )
-              ],
+                              Text(
+                                'Days completed',
+                                style: context.textTheme.bodySmall?.copyWith(
+                                  fontSize: 11,
+                                  color: AppColors.greyTextColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                          12.height,
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  SvgPicture.asset('coins'.toSvg),
+                                  2.width,
+                                  Text(
+                                    '0',
+                                    style: context.textTheme.displayLarge,
+                                  ),
+                                ],
+                              ),
+                              Text(
+                                'Earned Coins',
+                                style: context.textTheme.bodySmall?.copyWith(
+                                  fontSize: 11,
+                                  color: AppColors.greyTextColor,
+                                ),
+                              ),
+                            ],
+                          )
+                        ],
+                      )
+                    ],
+                  ),
+                  18.height,
+                  const LinearProgressIndicator(
+                    value: 0,
+                    color: AppColors.primaryVariant,
+                    backgroundColor: AppColors.greyVariant,
+                    borderRadius: BorderRadius.all(Radius.circular(8)),
+                  )
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

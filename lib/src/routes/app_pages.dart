@@ -592,21 +592,21 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: _Paths.ACCOUNTRESETPASSWORDPAGE,
         name: _Paths.ACCOUNTRESETPASSWORDPAGE,
         builder: (context, state) {
-          return AccountResetPasswordPage();
+          return const AccountResetPasswordPage();
         },
       ),
       GoRoute(
         path: _Paths.FLAGGEDCONTENTPAGE,
         name: _Paths.FLAGGEDCONTENTPAGE,
         builder: (context, state) {
-          return FlaggedContentPage();
+          return const FlaggedContentPage();
         },
       ),
       GoRoute(
         path: _Paths.REFFEREDCONTENTPAGE,
         name: _Paths.REFFEREDCONTENTPAGE,
         builder: (context, state) {
-          return ReferredContentPage();
+          return const ReferredContentPage();
         },
       ),
       GoRoute(

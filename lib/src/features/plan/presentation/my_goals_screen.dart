@@ -69,10 +69,10 @@ class _MyGoalsScreenState extends ConsumerState<MyGoalsScreen> {
   Widget build(BuildContext context) {
     final bannerState = ref.watch(bannerProvider);
     final authService = ref.watch(authServiceProvider);
-    final  allAvailableApps =
-        ref.watch(goalNotifierProvider.select((s) => s.allApps ?? const AsyncValue.data(<RegularAppModel>[])));
-    final appCategories =
-        ref.watch(goalNotifierProvider.select((s) => s.categories ?? const AsyncValue.data(<MyAppCategoryModel>[])));
+    final allAvailableApps = ref.watch(goalNotifierProvider.select(
+        (s) => s.allApps ?? const AsyncValue.data(<RegularAppModel>[])));
+    final appCategories = ref.watch(goalNotifierProvider.select(
+        (s) => s.categories ?? const AsyncValue.data(<MyAppCategoryModel>[])));
 
     return FutureBuilder<LoginResponse?>(
         future: authService.getStoredUser(),
@@ -86,6 +86,11 @@ class _MyGoalsScreenState extends ConsumerState<MyGoalsScreen> {
             backgroundColor: Colors.white,
             body: SafeArea(
               child: SingleChildScrollView(
+                physics: allAvailableApps.when(
+                  data: (_) => const AlwaysScrollableScrollPhysics(),
+                  loading: () => const NeverScrollableScrollPhysics(),
+                  error: (_, __) => const NeverScrollableScrollPhysics(),
+                ),
                 padding: const EdgeInsets.all(20.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

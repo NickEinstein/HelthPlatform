@@ -70,9 +70,9 @@ class ProfileService {
         debugPrint(' Failed to add allergy: ${response.statusCode}');
         throw Exception('Failed to add allergy: ${response.statusCode}');
       }
-    } catch (error, s) {
+    } catch (error) {
       debugPrint(' Error adding allergy: $error');
-      print(s);
+      // print(s);
       throw Exception('Error adding allergy: $error');
     }
   }
@@ -80,14 +80,13 @@ class ProfileService {
   Future<List<AllergyListModel>> getAllAllergyList() async {
     try {
       final url = ApiUrl.getAllAllergies;
-      print('----------Starting: $url');
       final response = await _apiService.get(
         url,
         headers: {
           'Content-Type': 'application/json',
         },
       );
-      print(response.data);
+
       if ((response.statusCode == 200 || response.data['code'] == 1)) {
         final List<AllergyListModel> allAllergies =
             (response.data['data'] as List)
@@ -321,9 +320,9 @@ class ProfileService {
       } else {
         return [];
       }
-    } catch (error, s) {
+    } catch (error) {
       debugPrint(' Error getting allergy: $error');
-      print(s);
+      
       return [];
     }
   }
@@ -349,9 +348,8 @@ class ProfileService {
       } else {
         return false;
       }
-    } catch (error, s) {
+    } catch (error) {
       debugPrint(' Error deleting allergy: $error');
-      print(s);
       return false;
     }
   }
@@ -377,9 +375,9 @@ class ProfileService {
       } else {
         return false;
       }
-    } catch (error, s) {
+    } catch (error) {
       debugPrint(' Error deleting allergy: $error');
-      print(s);
+      // print(s);
       return false;
     }
   }
@@ -405,9 +403,9 @@ class ProfileService {
       } else {
         return false;
       }
-    } catch (error, s) {
+    } catch (error) {
       debugPrint(' Error deleting allergy: $error');
-      print(s);
+      // print(s);
       return false;
     }
   }
@@ -439,9 +437,9 @@ class ProfileService {
       } else {
         return [];
       }
-    } catch (error, s) {
+    } catch (error) {
       debugPrint(' Error getting allergy: $error');
-      print(s);
+      // print(s);
       return [];
     }
   }

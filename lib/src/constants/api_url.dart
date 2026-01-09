@@ -235,15 +235,18 @@ class ApiUrl {
   //
 
   static String getAppsByCategory(int id) =>
-      'https://api.greenzonetechnologies.com.ng/ConnectedHealthWebApi/api/apps/appByCategoryId?id=$id';
-  static String getAllApps =
-      'https://api.greenzonetechnologies.com.ng/ConnectedHealthWebApi/api/apps';
-  static String getAppsCategories =
-      'https://api.greenzonetechnologies.com.ng/ConnectedHealthWebApi/api/appCategories';
-  static String appPlan =
-      'https://api.greenzonetechnologies.com.ng/ConnectedHealthWebApi/api/AppPlans';
-      static String userGoals =
-      'https://api.greenzonetechnologies.com.ng/ConnectedHealthWebApi/api/userGoals';
+      '/ConnectedHealthWebApi/api/apps/appByCategoryId?id=$id';
+  static String getApps([int? id]) =>
+      '/ConnectedHealthWebApi/api/apps/${id ?? ''}';
+  static String getAppsCategories = '/ConnectedHealthWebApi/api/appCategories';
+  static String appPlan([int? id]) =>
+      '/ConnectedHealthWebApi/api/AppPlans/${id ?? ''}';
+  static String userGoals = '/ConnectedHealthWebApi/api/userGoals';
+  static String userGoalJournals(int goalId) =>
+      '/ConnectedHealthWebApi/api/userGoalJournal/goal/$goalId';
+  static String saveJournal(String uid) =>
+      '/ConnectedHealthWebApi/api/userGoalJournal?userid=$uid';
+
 
   static String updatePatientProfile(String id) =>
       '/ConnectedHealthWebApi/api/patient/$id';

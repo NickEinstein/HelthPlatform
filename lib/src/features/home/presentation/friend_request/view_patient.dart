@@ -42,7 +42,8 @@ class _ViewPatientPageState extends ConsumerState<ViewPatientPage> {
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: patientIdResponse.when(
           loading: () => const Center(child: CircularProgressIndicator()),
-          error: (error, _) => const Center(child: Text('No available prescription')),
+          error: (error, _) =>
+              const Center(child: Text('No available prescription')),
           data: (patientProfile) {
             return SingleChildScrollView(
               child: Column(
@@ -62,7 +63,7 @@ class _ViewPatientPageState extends ConsumerState<ViewPatientPage> {
                   const SizedBox(height: 20),
                   Text(
                     "${patientProfile.firstName} ${patientProfile.lastName} ",
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
                       color: Colors.green,
@@ -71,7 +72,7 @@ class _ViewPatientPageState extends ConsumerState<ViewPatientPage> {
                   const SizedBox(height: 5),
                   Text(
                     "${patientProfile.email} ",
-                    style: TextStyle(fontSize: 14, color: Colors.grey),
+                    style: const TextStyle(fontSize: 14, color: Colors.grey),
                   ),
                   const SizedBox(height: 10),
                   Container(
@@ -127,8 +128,9 @@ class _ViewPatientPageState extends ConsumerState<ViewPatientPage> {
                                             .patientReceiver!
                                             .id!,
                                         isAccepted: false);
-                                if (!context.mounted)
-                                  return; // Prevents using context if unmounted
+                                if (!context.mounted) {
+                                  return;
+                                } // Prevents using context if unmounted
                                 ref.read(isLoadingProvider.notifier).state =
                                     false; // Stop loading
                                 if (result == 'successful') {
@@ -174,8 +176,9 @@ class _ViewPatientPageState extends ConsumerState<ViewPatientPage> {
                                             .patientReceiver!
                                             .id!,
                                         isAccepted: true);
-                                if (!context.mounted)
-                                  return; // Prevents using context if unmounted
+                                if (!context.mounted) {
+                                  return;
+                                } // Prevents using context if unmounted
                                 ref.read(isLoadingProvider.notifier).state =
                                     false; // Stop loading
                                 if (result == 'successful') {
@@ -234,7 +237,7 @@ class ReportTile extends StatelessWidget {
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
-          color: Colors.green.shade50.withOpacity(0.4),
+          color: Colors.green.shade50.withValues(alpha: 0.4),
         ),
         child: ListTile(
           leading: Container(
