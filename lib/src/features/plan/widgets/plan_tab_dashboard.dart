@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:greenzone_medical/src/model/my_app_model.dart';
+import 'package:greenzone_medical/src/provider/my_goal_provider.dart';
+import 'package:greenzone_medical/src/utils/extensions/extensions.dart';
+import 'package:greenzone_medical/src/utils/extensions/string_extensions.dart';
 import 'package:greenzone_medical/src/utils/extensions/widget_extensions.dart';
 
 class PlanTabDashboard extends ConsumerStatefulWidget {
-  const PlanTabDashboard({super.key});
+  final int appId;
+  const PlanTabDashboard({super.key, required this.appId});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -13,29 +19,49 @@ class PlanTabDashboard extends ConsumerStatefulWidget {
 class _PlanTabDashboardState extends ConsumerState<PlanTabDashboard> {
   @override
   Widget build(BuildContext context) {
+    final myApps = ref.watch(
+      goalNotifierProvider.select((s) => s.myApps),
+    );
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
-      child: Column(
-        children: [
-          // Top Green Progress Card
-          _buildProgressCard(),
-          20.height,
-          // Statistics Grid
-          _buildStatisticsGrid(),
-        ],
+      child: myApps?.when(
+        data: (data) {
+          final app = data
+              .where((element) => element.appId == widget.appId)
+              .firstOrNull;
+
+          return Column(
+            children: [
+              // Top Green Progress Card
+              _buildProgressCard(app),
+              20.height,
+              // Statistics Grid
+              _buildStatisticsGrid(app),
+            ],
+          );
+        },
+        loading: () => Container(
+          height: 400,
+          width: double.infinity,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12), color: Colors.white),
+        ).shimmer(),
+        error: (error, stackTrace) => Center(child: Text(error.toString())),
       ),
     );
   }
 
-  Widget _buildProgressCard() {
+  Widget _buildProgressCard(MyAppModel? app) {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [Color(0xFF00A651), Color(0xFF00C853)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+        // gradient: const LinearGradient(
+        //   colors: [Color(0xFF00A651), Color(0xFF00C853)],
+        //   begin: Alignment.topLeft,
+        //   end: Alignment.bottomRight,
+        // ),
+        color: const Color(0xFF059909),
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
@@ -47,44 +73,64 @@ class _PlanTabDashboardState extends ConsumerState<PlanTabDashboard> {
       ),
       child: Column(
         children: [
-          // Top Row: Days completed and Earned Coins
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildTopStat(
-                icon: Icons.check_circle_outline,
-                value: '0',
-                label: 'Days completed',
+              Expanded(
+                child: Column(
+                  children: [
+                    30.height,
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: SvgPicture.asset('stars'.toSvg),
+                    ),
+                    50.height,
+                    Text(
+                      app?.planDashboard?.percentageOfGoalAchieved
+                              .toInt()
+                              .toString() ??
+                          '0%',
+                      style: const TextStyle(
+                        fontSize: 64,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        height: 1,
+                      ),
+                    ),
+                    8.height,
+                    const Text(
+                      'Percentage of Goal Achieved',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
               ),
-              _buildTopStat(
-                icon: Icons.monetization_on_outlined,
-                value: '0',
-                label: 'Earned Coins',
+              4.width,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: 16,
+                children: [
+                  _buildTopStat(
+                    svg: 'check_circle',
+                    value: app?.planDashboard?.daysToGo.toString() ?? '0',
+                    label: 'Days to go',
+                  ),
+                  _buildTopStat(
+                    svg: 'earned_coins',
+                    value:
+                        app?.planDashboard?.chpPointsAcquired.toString() ?? '0',
+                    label: 'Earned Coins',
+                  ),
+                ],
               ),
             ],
           ),
-          30.height,
-          // Large Percentage Display
-          const Text(
-            '0%',
-            style: TextStyle(
-              fontSize: 64,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-              height: 1,
-            ),
-          ),
-          8.height,
-          const Text(
-            'Percentage of Goal Achieved',
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.white,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
           16.height,
-          // Progress Bar
           Stack(
             children: [
               Container(
@@ -95,7 +141,7 @@ class _PlanTabDashboardState extends ConsumerState<PlanTabDashboard> {
                 ),
               ),
               FractionallySizedBox(
-                widthFactor: 0,
+                widthFactor: app?.planDashboard?.percentageOfGoalAchieved ?? 0,
                 child: Container(
                   height: 8,
                   decoration: BoxDecoration(
@@ -116,7 +162,8 @@ class _PlanTabDashboardState extends ConsumerState<PlanTabDashboard> {
   }
 
   Widget _buildTopStat({
-    required IconData icon,
+    IconData? icon,
+    String? svg,
     required String value,
     required String label,
   }) {
@@ -125,7 +172,15 @@ class _PlanTabDashboardState extends ConsumerState<PlanTabDashboard> {
       children: [
         Row(
           children: [
-            Icon(icon, color: Colors.white, size: 16),
+            if (svg != null)
+              SvgPicture.asset(
+                svg.toSvg,
+                // colorFilter:
+                //     const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                width: 20,
+                height: 20,
+              ),
+            if (icon != null) Icon(icon, color: Colors.white, size: 16),
             6.width,
             Text(
               value,
@@ -137,27 +192,26 @@ class _PlanTabDashboardState extends ConsumerState<PlanTabDashboard> {
             ),
           ],
         ),
-        4.height,
+        // 4.height,
         Text(
           label,
-          style: TextStyle(
-            fontSize: 11,
-            color: Colors.white.withOpacity(0.9),
+          style: context.textTheme.bodySmall?.copyWith(
+            color: Colors.white,
           ),
         ),
       ],
     );
   }
 
-  Widget _buildStatisticsGrid() {
+  Widget _buildStatisticsGrid(MyAppModel? app) {
     return Column(
       children: [
         Row(
           children: [
             Expanded(
               child: _buildStatCard(
-                icon: Icons.check_circle,
-                value: '0',
+                svg: 'completed',
+                value: app?.planDashboard?.daysCompleted.toString() ?? '0',
                 label: 'Days Completed',
                 iconColor: const Color(0xFF00A651),
               ),
@@ -165,8 +219,8 @@ class _PlanTabDashboardState extends ConsumerState<PlanTabDashboard> {
             12.width,
             Expanded(
               child: _buildStatCard(
-                icon: Icons.calendar_today,
-                value: '0',
+                svg: 'calendar',
+                value: app?.planDashboard?.daysToGo.toString() ?? '0',
                 label: 'Days to Go',
                 iconColor: const Color(0xFF00A651),
               ),
@@ -178,8 +232,8 @@ class _PlanTabDashboardState extends ConsumerState<PlanTabDashboard> {
           children: [
             Expanded(
               child: _buildStatCard(
-                icon: Icons.inventory_2_outlined,
-                value: '0',
+                svg: 'products',
+                value: app?.planDashboard?.productsReviewed.toString() ?? '0',
                 label: 'Products Reviewed',
                 iconColor: const Color(0xFF00A651),
               ),
@@ -187,8 +241,8 @@ class _PlanTabDashboardState extends ConsumerState<PlanTabDashboard> {
             12.width,
             Expanded(
               child: _buildStatCard(
-                icon: Icons.person_outline,
-                value: '0',
+                svg: 'expert',
+                value: app?.planDashboard?.expertsEngaged.toString() ?? '0',
                 label: 'Experts Engaged',
                 iconColor: const Color(0xFF00A651),
               ),
@@ -200,8 +254,8 @@ class _PlanTabDashboardState extends ConsumerState<PlanTabDashboard> {
           children: [
             Expanded(
               child: _buildStatCard(
-                icon: Icons.groups_outlined,
-                value: '0',
+                svg: 'joined_communities',
+                value: app?.planDashboard?.joinedCommunities.toString() ?? '0',
                 label: 'Joined Communities',
                 iconColor: const Color(0xFF00A651),
                 backgroundColor: const Color(0xFFE8F5E9),
@@ -210,8 +264,8 @@ class _PlanTabDashboardState extends ConsumerState<PlanTabDashboard> {
             12.width,
             Expanded(
               child: _buildStatCard(
-                icon: Icons.stars_outlined,
-                value: '0',
+                svg: 'acquired_points',
+                value: app?.planDashboard?.chpPointsAcquired.toString() ?? '0',
                 label: 'Earned Points',
                 iconColor: const Color(0xFF00A651),
                 backgroundColor: const Color(0xFFE8F5E9),
@@ -224,22 +278,17 @@ class _PlanTabDashboardState extends ConsumerState<PlanTabDashboard> {
           children: [
             Expanded(
               child: _buildStatCard(
-                icon: Icons.favorite_outline,
-                value: '0',
+                svg: 'cheerleader',
+                value: app?.planDashboard?.cheerleadersAndFriends.toString() ??
+                    '0',
                 label: 'Cheerleader/Friends',
                 iconColor: const Color(0xFF00A651),
                 backgroundColor: const Color(0xFFE8F5E9),
               ),
             ),
             12.width,
-            Expanded(
-              child: _buildStatCard(
-                icon: Icons.attach_money,
-                value: '0',
-                label: 'Acquired Points',
-                iconColor: const Color(0xFF00A651),
-                backgroundColor: const Color(0xFFE8F5E9),
-              ),
+            const Expanded(
+              child: SizedBox(),
             ),
           ],
         ),
@@ -248,7 +297,8 @@ class _PlanTabDashboardState extends ConsumerState<PlanTabDashboard> {
   }
 
   Widget _buildStatCard({
-    required IconData icon,
+    String? svg,
+    IconData? icon,
     required String value,
     required String label,
     required Color iconColor,
@@ -266,18 +316,25 @@ class _PlanTabDashboardState extends ConsumerState<PlanTabDashboard> {
       ),
       child: Row(
         children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: iconColor.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(6),
+          if (svg != null)
+            SvgPicture.asset(
+              svg.toSvg,
+              width: 34,
+              height: 34,
             ),
-            child: Icon(
-              icon,
-              color: iconColor,
-              size: 20,
+          if (icon != null)
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: iconColor.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(6),
+              ),
+              child: Icon(
+                icon,
+                color: iconColor,
+                size: 20,
+              ),
             ),
-          ),
           12.width,
           Expanded(
             child: Column(

@@ -150,10 +150,12 @@ class _DoctorListingState extends ConsumerState<DoctorListing> {
                             children: [
                               Container(
                                   decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(50),
-                                      border: Border.all(
-                                          color: ColorConstant.primaryColor),
-                                      color: ColorConstant.primaryColor),
+                                    borderRadius: BorderRadius.circular(50),
+                                    border: Border.all(
+                                      color: ColorConstant.primaryColor,
+                                    ),
+                                    color: ColorConstant.primaryColor,
+                                  ),
                                   child: Padding(
                                     padding: const EdgeInsets.all(4.0),
                                     child: Image.asset(
@@ -163,12 +165,14 @@ class _DoctorListingState extends ConsumerState<DoctorListing> {
                                     ),
                                   )),
                               tiny5HorSpace(),
-                              Text(
-                                doctor.email ?? 'No email available',
-                                style: const TextStyle(
-                                  color: Color(0xff595959),
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w400,
+                              Expanded(
+                                child: Text(
+                                  doctor.email ?? 'No email available',
+                                  style: const TextStyle(
+                                    color: Color(0xff595959),
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w400,
+                                  ),
                                 ),
                               )
                             ],

@@ -4,7 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:greenzone_medical/src/app_pkg.dart';
 import 'package:greenzone_medical/src/features/home/presentation/widget/personal_goals_widget.dart';
-import 'package:greenzone_medical/src/features/plan/presentation/my_goals_screen.dart';
+import 'package:greenzone_medical/src/features/plan/presentation/all_goals_screen.dart';
 import 'package:greenzone_medical/src/provider/my_goal_provider.dart';
 import 'package:greenzone_medical/src/utils/extensions/extensions.dart';
 import 'package:greenzone_medical/src/utils/extensions/string_extensions.dart';
@@ -69,7 +69,14 @@ class _HealthGoalWidgetState extends ConsumerState<HealthGoalWidget> {
             }
           },
           loading: () => loadingWidget,
-          error: (error, stackTrace) => const SizedBox.shrink(),
+          error: (error, stackTrace) {
+            //  TODO: revert
+            print(error.toString());
+            print(stackTrace);
+            return SizedBox(
+              child: Text(error.toString()),
+            );
+          },
         ) ??
         const SizedBox.shrink();
   }
@@ -88,7 +95,7 @@ Widget noHealthGoalWidget(BuildContext context) {
       12.height,
       InkWell(
         onTap: () {
-          context.push(MyGoalsScreen.routeName);
+          context.push(AllGoalsScreen.routeName);
         },
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),

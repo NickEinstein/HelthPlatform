@@ -41,4 +41,16 @@ class RegularAppModel {
         benefits: '',
         installs: null,
       );
+
+  MyAppModel toMyApp() => MyAppModel(
+        appId: id,
+        userId: 0,
+        goal: '',
+        startDate: '',
+        createdAt: '',
+        timeOfDay: '',
+        isDelete: false,
+        routines: [],
+        id: 0,
+      );
 }

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart' show debugPrint;
 import 'package:greenzone_medical/src/app_pkg.dart';
+import 'package:greenzone_medical/src/features/plan/models/plan_dashboard_model.dart';
 import 'package:greenzone_medical/src/features/plan/models/user_journal_model.dart';
 import 'package:greenzone_medical/src/model/my_app_category_model.dart';
 import 'package:greenzone_medical/src/model/my_app_model.dart';
@@ -249,8 +250,9 @@ class GoalService {
   Future<List<MyAppModel>> getMyApps() async {
     try {
       final token = await getToken();
+      final userId = await getUserId();
 
-      if (token == null || token.isEmpty) {
+      if (token == null || token.isEmpty || userId == null) {
         debugPrint('⚠️ No access token found.');
         return [];
       }
@@ -271,15 +273,37 @@ class GoalService {
           return [];
         }
 
-        final myApps = data.map((e) => MyAppModel.fromJson(e)).toList();
+        final myApps = data.map((e) => MyAppModel.fromJson(e)).where((e)=>e.userId.toString() == userId).toList();
+        final myCompletedApps = <MyAppModel>[];
+        for (final app in myApps) {
+          try {
+            final response = await _apiService.get(
+              ApiUrl.getAppPlanDashboard(userId, app.appId),
+              headers: {
+                'Authorization': 'Bearer $token',
+                'Content-Type': 'application/json',
+              },
+            );
+            if (response.data != null) {
+              final planDashboard = PlanDashboardModel.fromJson(response.data);
+              final newApp = app.copyWith(planDashboard: planDashboard);
+              myCompletedApps.add(newApp);
+            } else {
+              myCompletedApps.add(app);
+            }
+          } catch (_) {
+            myCompletedApps.add(app);
+          }
+        }
 
-        return myApps;
+        return myCompletedApps;
       } else {
         debugPrint(' Failed to fetch my apps: ${response.statusCode}');
         throw Exception('Failed to my apps: ${response.statusCode}');
       }
-    } catch (error) {
+    } catch (error, s) {
       debugPrint(' Error fetching my apps: $error');
+      print(s);
       throw Exception('Error fetching my apps: $error');
     }
   }

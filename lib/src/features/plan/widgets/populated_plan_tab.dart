@@ -54,191 +54,194 @@ class _PlanTabState extends ConsumerState<PlanTab> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
-      child: showDashboard ? const PlanTabDashboard(): Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          24.height,
-          if (!hasSetGoal) ...[
-            const Text(
-              "Create a Routine",
-              style: CustomTextStyle.labelMedium,
+      child: showDashboard
+          ? PlanTabDashboard(appId: widget.model.id)
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                24.height,
+                if (!hasSetGoal) ...[
+                  const Text(
+                    "Create a Routine",
+                    style: CustomTextStyle.labelMedium,
+                  ),
+                  16.height,
+                  AppInput(
+                    minLines: 3,
+                    maxLines: 5,
+                    controller: _goalNameController,
+                    labelText: "What is your goal?",
+                    labelStyle: context.textTheme.bodySmall,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Goal name is required";
+                      }
+                      return null;
+                    },
+                  ),
+                  16.height,
+                  AppInput.datePicker(
+                    trailingIcon: const Padding(
+                      padding: EdgeInsets.only(right: 8.0),
+                      child: Icon(Icons.calendar_today),
+                    ),
+                    labelText: "Select Date",
+                    labelStyle: context.textTheme.bodySmall,
+                    initialDateTime: startDate,
+                    firstDate: DateTime.now(),
+                    lastDate: DateTime.now().add(const Duration(days: 365)),
+                    onDateTimeChanged: (value) {
+                      setState(() {
+                        startDate = value;
+                      });
+                    },
+                  ),
+                  16.height,
+                  AppInput.timePicker(
+                    trailingIcon: const Padding(
+                      padding: EdgeInsets.only(right: 8.0),
+                      child: Icon(Icons.access_time),
+                    ),
+                    labelText: "Select Time",
+                    labelStyle: context.textTheme.bodySmall,
+                    initialTime: startTime,
+                    onTimeChanged: (value) {
+                      setState(() {
+                        startTime = value;
+                      });
+                    },
+                  ),
+                  24.height,
+                  AppButton(
+                    onPressed: _createCarePlan,
+                    child: const Text('Create Care Plan'),
+                  ),
+                ],
+                //  Additional Details
+                if (hasSetGoal) ...[
+                  const Text(
+                    "Provide Additional Details",
+                    style: CustomTextStyle.labelMedium,
+                  ),
+                  16.height,
+                  AppInput(
+                    controller: _titleController,
+                    labelText: "Title",
+                    labelStyle: context.textTheme.bodySmall,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Title is required";
+                      }
+                      return null;
+                    },
+                  ),
+                  16.height,
+                  AppInput(
+                    minLines: 3,
+                    maxLines: 5,
+                    controller: _descriptionController,
+                    labelText: "Description",
+                    labelStyle: context.textTheme.bodySmall,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Description is required";
+                      }
+                      return null;
+                    },
+                  ),
+                  16.height,
+                  AppInput(
+                    controller:
+                        TextEditingController(text: widget.model.category),
+                    labelText: "Category",
+                    labelStyle: context.textTheme.bodySmall,
+                    readOnly: true,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Category is required";
+                      }
+                      return null;
+                    },
+                  ),
+                  16.height,
+                  AppInput(
+                    controller: _targetCountController,
+                    labelText: "Target",
+                    labelStyle: context.textTheme.bodySmall,
+                    keyboardType: TextInputType.number,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Target is required";
+                      }
+                      return null;
+                    },
+                  ),
+                  16.height,
+                  AppInput(
+                    controller: _currentCountController,
+                    labelText: "Current Value",
+                    labelStyle: context.textTheme.bodySmall,
+                    keyboardType: TextInputType.number,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Current Value is required";
+                      }
+                      return null;
+                    },
+                  ),
+                  16.height,
+                  AppInput(
+                    controller: _unitController,
+                    labelText: "Unit",
+                    labelStyle: context.textTheme.bodySmall,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Unit is required";
+                      }
+                      return null;
+                    },
+                  ),
+                  16.height,
+                  AppInput.datePicker(
+                    trailingIcon: const Padding(
+                      padding: EdgeInsets.only(right: 8.0),
+                      child: Icon(Icons.calendar_today),
+                    ),
+                    labelText: "Deadline",
+                    labelStyle: context.textTheme.bodySmall,
+                    initialDateTime: deadlineDate,
+                    firstDate: DateTime.now(),
+                    lastDate: DateTime.now().add(const Duration(days: 365)),
+                    onDateTimeChanged: (value) {
+                      setState(() {
+                        deadlineDate = value;
+                      });
+                    },
+                  ),
+                  16.height,
+                  AppInput.timePicker(
+                    trailingIcon: const Padding(
+                      padding: EdgeInsets.only(right: 8.0),
+                      child: Icon(Icons.access_time),
+                    ),
+                    labelText: "Deadline Time",
+                    labelStyle: context.textTheme.bodySmall,
+                    initialTime: deadlineTime,
+                    onTimeChanged: (value) {
+                      setState(() {
+                        deadlineTime = value;
+                      });
+                    },
+                  ),
+                  24.height,
+                  AppButton(
+                    onPressed: _createGoal,
+                    child: const Text('Submit Details'),
+                  ),
+                ],
+                28.height,
+              ],
             ),
-            16.height,
-            AppInput(
-              minLines: 3,
-              maxLines: 5,
-              controller: _goalNameController,
-              labelText: "What is your goal?",
-              labelStyle: context.textTheme.bodySmall,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return "Goal name is required";
-                }
-                return null;
-              },
-            ),
-            16.height,
-            AppInput.datePicker(
-              trailingIcon: const Padding(
-                padding: EdgeInsets.only(right: 8.0),
-                child: Icon(Icons.calendar_today),
-              ),
-              labelText: "Select Date",
-              labelStyle: context.textTheme.bodySmall,
-              initialDateTime: startDate,
-              firstDate: DateTime.now(),
-              lastDate: DateTime.now().add(const Duration(days: 365)),
-              onDateTimeChanged: (value) {
-                setState(() {
-                  startDate = value;
-                });
-              },
-            ),
-            16.height,
-            AppInput.timePicker(
-              trailingIcon: const Padding(
-                padding: EdgeInsets.only(right: 8.0),
-                child: Icon(Icons.access_time),
-              ),
-              labelText: "Select Time",
-              labelStyle: context.textTheme.bodySmall,
-              initialTime: startTime,
-              onTimeChanged: (value) {
-                setState(() {
-                  startTime = value;
-                });
-              },
-            ),
-            24.height,
-            AppButton(
-              onPressed: _createCarePlan,
-              child: const Text('Create Care Plan'),
-            ),
-          ],
-          //  Additional Details
-          if (hasSetGoal) ...[
-            const Text(
-              "Provide Additional Details",
-              style: CustomTextStyle.labelMedium,
-            ),
-            16.height,
-            AppInput(
-              controller: _titleController,
-              labelText: "Title",
-              labelStyle: context.textTheme.bodySmall,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return "Title is required";
-                }
-                return null;
-              },
-            ),
-            16.height,
-            AppInput(
-              minLines: 3,
-              maxLines: 5,
-              controller: _descriptionController,
-              labelText: "Description",
-              labelStyle: context.textTheme.bodySmall,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return "Description is required";
-                }
-                return null;
-              },
-            ),
-            16.height,
-            AppInput(
-              controller: TextEditingController(text: widget.model.category),
-              labelText: "Category",
-              labelStyle: context.textTheme.bodySmall,
-              readOnly: true,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return "Category is required";
-                }
-                return null;
-              },
-            ),
-            16.height,
-            AppInput(
-              controller: _targetCountController,
-              labelText: "Target",
-              labelStyle: context.textTheme.bodySmall,
-              keyboardType: TextInputType.number,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return "Target is required";
-                }
-                return null;
-              },
-            ),
-            16.height,
-            AppInput(
-              controller: _currentCountController,
-              labelText: "Current Value",
-              labelStyle: context.textTheme.bodySmall,
-              keyboardType: TextInputType.number,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return "Current Value is required";
-                }
-                return null;
-              },
-            ),
-            16.height,
-            AppInput(
-              controller: _unitController,
-              labelText: "Unit",
-              labelStyle: context.textTheme.bodySmall,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return "Unit is required";
-                }
-                return null;
-              },
-            ),
-            16.height,
-            AppInput.datePicker(
-              trailingIcon: const Padding(
-                padding: EdgeInsets.only(right: 8.0),
-                child: Icon(Icons.calendar_today),
-              ),
-              labelText: "Deadline",
-              labelStyle: context.textTheme.bodySmall,
-              initialDateTime: deadlineDate,
-              firstDate: DateTime.now(),
-              lastDate: DateTime.now().add(const Duration(days: 365)),
-              onDateTimeChanged: (value) {
-                setState(() {
-                  deadlineDate = value;
-                });
-              },
-            ),
-            16.height,
-            AppInput.timePicker(
-              trailingIcon: const Padding(
-                padding: EdgeInsets.only(right: 8.0),
-                child: Icon(Icons.access_time),
-              ),
-              labelText: "Deadline Time",
-              labelStyle: context.textTheme.bodySmall,
-              initialTime: deadlineTime,
-              onTimeChanged: (value) {
-                setState(() {
-                  deadlineTime = value;
-                });
-              },
-            ),
-            24.height,
-            AppButton(
-              onPressed: _createGoal,
-              child: const Text('Submit Details'),
-            ),
-          ],
-          28.height,
-        ],
-      ),
     );
   }
 

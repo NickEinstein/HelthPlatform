@@ -246,7 +246,8 @@ class ApiUrl {
       '/ConnectedHealthWebApi/api/userGoalJournal/goal/$goalId';
   static String saveJournal(String uid) =>
       '/ConnectedHealthWebApi/api/userGoalJournal?userid=$uid';
-
+  static String getAppPlanDashboard(String uid, int appId) =>
+      '/ConnectedHealthWebApi/api/AppDashboard/DashboardData?userId=$uid&appId=$appId';
 
   static String updatePatientProfile(String id) =>
       '/ConnectedHealthWebApi/api/patient/$id';

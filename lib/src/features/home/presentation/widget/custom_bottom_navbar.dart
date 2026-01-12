@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:greenzone_medical/src/constants/constants.dart';
 import 'package:greenzone_medical/src/features/account/account.dart';
 import 'package:greenzone_medical/src/features/appointment/appointment.dart';
+import 'package:greenzone_medical/src/features/home/presentation/drawer/home_drawer.dart';
 
 import '../../../prescription/presentation/prescriptions.dart';
 import '../../home.dart';
@@ -17,8 +18,10 @@ class CustomBottomNavBar extends StatefulWidget {
 
 class _CustomBottomNavState extends State<CustomBottomNavBar> {
   int currentTab = 0;
+  static final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+
   final List<Widget> screen = [
-    const HomePage(),
+    HomePage(scaffoldKey: scaffoldKey),
     const AppointmentPage(),
     const PrescriptionPage(),
     const AccountPage()
@@ -37,6 +40,8 @@ class _CustomBottomNavState extends State<CustomBottomNavBar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: scaffoldKey,
+      endDrawer: const HomeDrawer(),
       body: PageStorage(
         bucket: bucket,
         child: currentScreen,
@@ -97,6 +102,7 @@ class _CustomBottomNavState extends State<CustomBottomNavBar> {
                 isSelected ? activeIconPath : iconPath,
                 height: 24, // Reduced size to fit
                 width: 24,
+                color: isSelected ? ColorConstant.primaryColor : ColorConstant.secondryColor,
               ),
               const SizedBox(height: 2), // Reduced spacing
               Text(

@@ -63,6 +63,11 @@ abstract class Routes {
   static const FLAGGEDCONTENTPAGE = _Paths.FLAGGEDCONTENTPAGE;
   static const REFFEREDCONTENTPAGE = _Paths.REFFEREDCONTENTPAGE;
   static const COMMUNITY_PROFILE = _Paths.COMMUNITY_PROFILE;
+  static const HMO = _Paths.HMO;
+  static const SUBMITFEEDBACKPAGE = _Paths.SUBMITFEEDBACKPAGE;
+  static const OUT_PATIENT_LIMIT = _Paths.OUT_PATIENT_LIMIT;
+  static const TRACKFEEDBACKSCREEN = _Paths.TRACKFEEDBACKSCREEN;
+  static const ACCOUNTACTIVITYPAGE = _Paths.ACCOUNTACTIVITYPAGE;
 }
 
 abstract class _Paths {
@@ -125,4 +130,9 @@ abstract class _Paths {
   static const FLAGGEDCONTENTPAGE = '/flagged_content_page';
   static const REFFEREDCONTENTPAGE = '/referred_content_page';
   static const COMMUNITY_PROFILE = '/community_profile';
+  static const HMO = '/hmo';
+  static const SUBMITFEEDBACKPAGE = '/submit_feedback_page';
+  static const OUT_PATIENT_LIMIT = '/out_patient_limit';
+  static const TRACKFEEDBACKSCREEN = '/track_feedback_screen';
+  static const ACCOUNTACTIVITYPAGE = '/account_activity_page';
 }

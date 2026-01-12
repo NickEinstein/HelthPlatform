@@ -1,3 +1,4 @@
+import 'package:greenzone_medical/src/features/plan/models/plan_dashboard_model.dart';
 import 'package:greenzone_medical/src/model/regular_app_model.dart';
 import 'package:greenzone_medical/src/model/safe_json.dart';
 
@@ -12,9 +13,12 @@ class MyAppModel {
   final bool isDelete;
   final List<dynamic> routines;
   final RegularAppModel? app;
+  final PlanDashboardModel? planDashboard;
 
   const MyAppModel({
+
     required this.id,
+    this.planDashboard,
     this.app,
     required this.appId,
     required this.userId,
@@ -37,9 +41,11 @@ class MyAppModel {
     bool? isDelete,
     List<dynamic>? routines,
     RegularAppModel? app,
+    PlanDashboardModel? planDashboard,
   }) {
     return MyAppModel(
       id: id ?? this.id,
+      planDashboard: planDashboard ?? this.planDashboard, 
       appId: appId ?? this.appId,
       userId: userId ?? this.userId,
       goal: goal ?? this.goal,

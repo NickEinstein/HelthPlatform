@@ -19,7 +19,8 @@ import '../../../utils/packages.dart';
 import 'widget/friend_request_section.dart';
 
 class HomePage extends ConsumerStatefulWidget {
-  const HomePage({super.key});
+  final GlobalKey<ScaffoldState> scaffoldKey;
+  const HomePage({super.key, required this.scaffoldKey});
 
   @override
   ConsumerState<HomePage> createState() => _HomePageState();
@@ -28,7 +29,6 @@ class HomePage extends ConsumerStatefulWidget {
 class _HomePageState extends ConsumerState<HomePage> {
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = "";
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   int cachedUpcomingAppointments = 0;
   int cachedPrescription = 0;
 
@@ -242,8 +242,7 @@ class _HomePageState extends ConsumerState<HomePage> {
 
         return Scaffold(
           backgroundColor: Colors.white,
-          key: _scaffoldKey,
-          endDrawer: const HomeDrawer(),
+          // endDrawer: const HomeDrawer(),
           // appBar: AppBar(
           //   backgroundColor: Colors.white,
           //   surfaceTintColor: Colors.white,
@@ -298,6 +297,9 @@ class _HomePageState extends ConsumerState<HomePage> {
               ref.invalidate(userGetInterestProvider);
               ref.watch(userUnreadChatProvider);
               ref.watch(userUnreadNotificationProvider);
+              //
+              // ref.invalidate(goalNotifierProvider);
+              await Future.delayed(const Duration(seconds: 1));
             },
             child: Padding(
               // physics:
@@ -325,7 +327,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                       const Spacer(),
                       InkWell(
                         onTap: () async {
-                          _scaffoldKey.currentState?.openEndDrawer();
+                          widget.scaffoldKey.currentState?.openEndDrawer();
                         },
                         child: Padding(
                           padding: const EdgeInsets.only(right: 20),

@@ -68,10 +68,9 @@ class _HomeDrawerState extends ConsumerState<HomeDrawer> {
                 _tile(
                   onTap: () {
                     Navigator.pop(context);
-                    CustomToast.show(context, "Coming soon...",
-                        type: ToastType.error);
+                    context.push(Routes.HMO);
                   },
-                  title: 'Health Insurance',
+                  title: 'HMO',
                 ),
                 const Divider(color: Colors.white),
                 _tile(
@@ -82,15 +81,15 @@ class _HomeDrawerState extends ConsumerState<HomeDrawer> {
                   title: 'Personal Records',
                 ),
                 const Divider(color: Colors.white),
-                _tile(
-                  onTap: () {
-                    Navigator.pop(context);
-                    CustomToast.show(context, "Coming soon...",
-                        type: ToastType.error);
-                  },
-                  title: 'Settings Insurance',
-                ),
-                const Divider(color: Colors.white),
+                // _tile(
+                //   onTap: () {
+                //     Navigator.pop(context);
+                //     CustomToast.show(context, "Coming soon...",
+                //         type: ToastType.error);
+                //   },
+                //   title: 'Settings Insurance',
+                // ),
+                // const Divider(color: Colors.white),
                 _tile(
                   onTap: () async {
                     await authService.logout();

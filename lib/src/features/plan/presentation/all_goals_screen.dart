@@ -1,6 +1,4 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:greenzone_medical/src/features/home/presentation/widget/advert_helper.dart';
 import 'package:greenzone_medical/src/features/plan/widgets/start_plan_screen.dart';
 import 'package:greenzone_medical/src/model/my_app_category_model.dart';
@@ -12,15 +10,15 @@ import 'package:greenzone_medical/src/utils/extensions/extensions.dart';
 import 'package:greenzone_medical/src/utils/loading_widget.dart';
 import 'package:greenzone_medical/src/utils/packages.dart';
 
-class MyGoalsScreen extends ConsumerStatefulWidget {
-  static const routeName = '/my-goals';
-  const MyGoalsScreen({super.key});
+class AllGoalsScreen extends ConsumerStatefulWidget {
+  static const routeName = '/all-goals';
+  const AllGoalsScreen({super.key});
 
   @override
-  ConsumerState<MyGoalsScreen> createState() => _MyGoalsScreenState();
+  ConsumerState<AllGoalsScreen> createState() => _MyGoalsScreenState();
 }
 
-class _MyGoalsScreenState extends ConsumerState<MyGoalsScreen> {
+class _MyGoalsScreenState extends ConsumerState<AllGoalsScreen> {
   List<RegularAppModel> searchedApps = [];
   late TextEditingController _searchController;
   bool isSearching = false;

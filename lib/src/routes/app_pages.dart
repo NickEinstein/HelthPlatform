@@ -15,7 +15,7 @@ import 'package:greenzone_medical/src/features/pharmacy/presentation/pharmacy_se
 import 'package:greenzone_medical/src/features/pharmacy/presentation/single_drug_detail.dart';
 import 'package:greenzone_medical/src/features/plan/presentation/single_plan_dashboard.dart';
 import 'package:greenzone_medical/src/features/prescription/presentation/prescriptions.dart';
-import 'package:greenzone_medical/src/features/plan/presentation/my_goals_screen.dart';
+import 'package:greenzone_medical/src/features/plan/presentation/all_goals_screen.dart';
 import 'package:greenzone_medical/src/features/profile/presentation/allergy_details.dart';
 import 'package:greenzone_medical/src/features/profile/presentation/immunization_details.dart';
 import 'package:greenzone_medical/src/features/profile/presentation/profile_management.dart';
@@ -26,6 +26,11 @@ import 'package:greenzone_medical/src/features/plan/widgets/start_plan_screen.da
 import 'package:greenzone_medical/src/model/community_list_response.dart';
 import 'package:greenzone_medical/src/model/regular_app_model.dart';
 import '../features/community_profile/community_profile.dart';
+import '../features/hmo/presentation/hmo_screen.dart';
+import '../features/hmo/presentation/out_patient_limit_screen.dart';
+import '../features/account/presentation/submit_feedback_page.dart';
+import '../features/account/presentation/track_feedback_screen.dart';
+import '../features/account/presentation/account_activity_page.dart';
 import '../features/account/presentation/account_reset_password.dart';
 import '../features/appointment/model/appointment_model.dart';
 import '../features/article/all_articles.dart';
@@ -142,9 +147,9 @@ final routerProvider = Provider<GoRouter>((ref) {
         },
       ),
       GoRoute(
-        path: MyGoalsScreen.routeName,
+        path: AllGoalsScreen.routeName,
         builder: (context, state) {
-          return const MyGoalsScreen();
+          return const AllGoalsScreen();
         },
       ),
       GoRoute(
@@ -243,7 +248,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: _Paths.HOMEPAGE,
         name: _Paths.HOMEPAGE,
         builder: (context, state) {
-          return const HomePage();
+          return HomePage(scaffoldKey: state.extra as GlobalKey<ScaffoldState>);
         },
       ),
       GoRoute(
@@ -614,6 +619,41 @@ final routerProvider = Provider<GoRouter>((ref) {
         name: _Paths.COMMUNITY_PROFILE,
         builder: (context, state) {
           return const CommunityProfile();
+        },
+      ),
+      GoRoute(
+        path: _Paths.HMO,
+        name: _Paths.HMO,
+        builder: (context, state) {
+          return const HMOScreen();
+        },
+      ),
+      GoRoute(
+        path: _Paths.SUBMITFEEDBACKPAGE,
+        name: _Paths.SUBMITFEEDBACKPAGE,
+        builder: (context, state) {
+          return const SubmitFeedbackPage();
+        },
+      ),
+      GoRoute(
+        path: _Paths.OUT_PATIENT_LIMIT,
+        name: _Paths.OUT_PATIENT_LIMIT,
+        builder: (context, state) {
+          return const OutPatientLimitScreen();
+        },
+      ),
+      GoRoute(
+        path: _Paths.TRACKFEEDBACKSCREEN,
+        name: _Paths.TRACKFEEDBACKSCREEN,
+        builder: (context, state) {
+          return const TrackFeedbackScreen();
+        },
+      ),
+      GoRoute(
+        path: _Paths.ACCOUNTACTIVITYPAGE,
+        name: _Paths.ACCOUNTACTIVITYPAGE,
+        builder: (context, state) {
+          return const AccountActivityPage();
         },
       ),
     ],

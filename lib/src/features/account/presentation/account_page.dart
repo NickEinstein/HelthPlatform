@@ -118,7 +118,7 @@ class _AccountPageState extends ConsumerState<AccountPage> {
                   ),
                   smallSpace(),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 70),
+                    padding: const EdgeInsets.symmetric(horizontal: 50),
                     child: Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(7),
@@ -130,7 +130,9 @@ class _AccountPageState extends ConsumerState<AccountPage> {
                       ),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 40, vertical: 15),
+                          horizontal: 20,
+                          vertical: 15,
+                        ),
                         child: Row(
                           children: [
                             Image.asset(
@@ -138,27 +140,29 @@ class _AccountPageState extends ConsumerState<AccountPage> {
                               height: 50,
                               width: 50,
                             ),
-                            const Padding(
-                              padding: EdgeInsets.only(left: 30),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'You have earned',
-                                    style: TextStyle(
-                                        color: Color(0xff878787),
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 14),
-                                  ),
-                                  Text(
-                                    '0 Coin',
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 18),
-                                  ),
-                                ],
+                            const Expanded(
+                              child: Padding(
+                                padding: EdgeInsets.only(left: 30),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'You have earned',
+                                      style: TextStyle(
+                                          color: Color(0xff878787),
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 14),
+                                    ),
+                                    Text(
+                                      '0 Coin',
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 18),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ],
@@ -185,6 +189,18 @@ class _AccountPageState extends ConsumerState<AccountPage> {
                     title: 'View Referrals',
                     onTap: () {
                       context.push(Routes.REFFEREDCONTENTPAGE);
+                    },
+                  ),
+                  settingsRow(
+                    title: 'Feedback',
+                    onTap: () {
+                      context.push(Routes.SUBMITFEEDBACKPAGE);
+                    },
+                  ),
+                  settingsRow(
+                    title: 'Account Activity',
+                    onTap: () {
+                      context.push(Routes.ACCOUNTACTIVITYPAGE);
                     },
                   ),
                 ],
@@ -259,8 +275,12 @@ class _AccountPageState extends ConsumerState<AccountPage> {
     required String title,
     IconData icon = Icons.add,
     VoidCallback? onTap,
-    EdgeInsetsGeometry padding =
-        const EdgeInsets.only(left: 30, right: 30, top: 5, bottom: 15),
+    EdgeInsetsGeometry padding = const EdgeInsets.only(
+      left: 30,
+      right: 30,
+      top: 0,
+      bottom: 12,
+    ),
   }) {
     return InkWell(
       onTap: onTap,

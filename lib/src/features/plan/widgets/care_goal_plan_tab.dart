@@ -36,10 +36,10 @@ class _CareGoalPlanTabState extends ConsumerState<CareGoalPlanTab> {
 
           return userGoal.when(
             data: (data) {
-              final isStarted = data.any((element) => element.appId == widget.myApp.id);
+              final existingData = data.where((element) => element.appId == widget.myApp.id).firstOrNull;
 
-              return isStarted
-                  ? const PlanTabDashboard()
+              return existingData != null
+                  ? PlanTabDashboard(appId: existingData.appId)
                   : getStartedPressed
                       ? PlanTab(
                           model: widget.myApp,

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart'
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:greenzone_medical/src/features/plan/presentation/my_goals_screen.dart';
+import 'package:greenzone_medical/src/features/plan/presentation/all_goals_screen.dart';
 import 'package:greenzone_medical/src/features/plan/presentation/single_plan_dashboard.dart';
 import 'package:greenzone_medical/src/model/my_app_model.dart';
 import 'package:greenzone_medical/src/model/regular_app_model.dart';
@@ -94,7 +94,7 @@ class _PersonalGoalsWidgetState extends State<PersonalGoalsWidget> {
           children: [
             InkWell(
               onTap: () {
-                context.push(MyGoalsScreen.routeName);
+                context.push(AllGoalsScreen.routeName);
               },
               child: Text(
                 'View all goals',
@@ -231,13 +231,14 @@ class _PersonalGoalsWidgetState extends State<PersonalGoalsWidget> {
                                   SvgPicture.asset('days_completed'.toSvg),
                                   2.width,
                                   Text(
-                                    '0',
+                                    item.planDashboard?.daysToGo.toString() ??
+                                        '0',
                                     style: context.textTheme.displayLarge,
                                   ),
                                 ],
                               ),
                               Text(
-                                'Days completed',
+                                'Days to go',
                                 style: context.textTheme.bodySmall?.copyWith(
                                   fontSize: 11,
                                   color: AppColors.greyTextColor,
@@ -254,7 +255,9 @@ class _PersonalGoalsWidgetState extends State<PersonalGoalsWidget> {
                                   SvgPicture.asset('coins'.toSvg),
                                   2.width,
                                   Text(
-                                    '0',
+                                    item.planDashboard?.chpPointsAcquired
+                                            .toString() ??
+                                        '0',
                                     style: context.textTheme.displayLarge,
                                   ),
                                 ],
@@ -273,11 +276,11 @@ class _PersonalGoalsWidgetState extends State<PersonalGoalsWidget> {
                     ],
                   ),
                   18.height,
-                  const LinearProgressIndicator(
-                    value: 0,
+                  LinearProgressIndicator(
+                    value: item.planDashboard?.percentageOfGoalAchieved ?? 0,
                     color: AppColors.primaryVariant,
                     backgroundColor: AppColors.greyVariant,
-                    borderRadius: BorderRadius.all(Radius.circular(8)),
+                    borderRadius: const BorderRadius.all(Radius.circular(8)),
                   )
                 ],
               ),
