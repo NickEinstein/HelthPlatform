@@ -1,3 +1,4 @@
+import 'package:greenzone_medical/src/features/account/model/track_feedback_response.dart';
 import 'package:greenzone_medical/src/features/account/presentation/flagged_content.dart';
 import 'package:greenzone_medical/src/features/account/presentation/referred_content.dart';
 import 'package:greenzone_medical/src/features/appointment/appointment.dart';
@@ -646,7 +647,8 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: _Paths.TRACKFEEDBACKSCREEN,
         name: _Paths.TRACKFEEDBACKSCREEN,
         builder: (context, state) {
-          return const TrackFeedbackScreen();
+          final trackFeedbackResponse = state.extra as TrackFeedbackResponse;
+          return TrackFeedbackScreen(trackFeedbackResponse: trackFeedbackResponse);
         },
       ),
       GoRoute(

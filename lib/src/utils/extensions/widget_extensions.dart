@@ -45,14 +45,17 @@ extension WidgetExtensions on Widget {
       );
 
   Widget shimmer({
+    bool isLoading = true,
     Color? baseColor,
     Color? highlightColor,
   }) {
-    return Shimmer.fromColors(
-      baseColor: baseColor ?? Colors.grey[300]!,
-      highlightColor: highlightColor ?? Colors.grey[100]!,
-      child: this,
-    );
+    return isLoading
+        ? Shimmer.fromColors(
+            baseColor: baseColor ?? Colors.grey[300]!,
+            highlightColor: highlightColor ?? Colors.grey[100]!,
+            child: this,
+          )
+        : this;
   }
 }
 

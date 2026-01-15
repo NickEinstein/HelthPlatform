@@ -1,9 +1,12 @@
+import 'package:greenzone_medical/src/features/account/model/track_feedback_response.dart';
+import 'package:greenzone_medical/src/utils/extensions/date_extensions.dart';
 import 'package:greenzone_medical/src/utils/extensions/extensions.dart';
 import 'package:greenzone_medical/src/utils/packages.dart';
 import 'package:greenzone_medical/src/resources/colors/colors.dart';
 
 class TrackFeedbackScreen extends StatelessWidget {
-  const TrackFeedbackScreen({super.key});
+  final TrackFeedbackResponse trackFeedbackResponse;
+  const TrackFeedbackScreen({super.key, required this.trackFeedbackResponse});
 
   @override
   Widget build(BuildContext context) {
@@ -48,32 +51,41 @@ class TrackFeedbackScreen extends StatelessWidget {
                   // Feedback Details Badge
                   _buildBadge(
                     "Feedback Details",
-                    "TCK3298J10R9R27382H43B198CNJDDJ",
+                    trackFeedbackResponse.data?.trackingId,
                     AppColors.primary,
                   ),
                   16.height,
 
                   // Type Badge
-                  _buildBadge("Type", "Complaint", AppColors.primary),
+                  _buildBadge("Type", trackFeedbackResponse.data?.type,
+                      AppColors.primary),
                   16.height,
 
                   // Status Badge
-                  _buildBadge("Status", "Pending", AppColors.primary),
+                  _buildBadge("Status", trackFeedbackResponse.data?.status,
+                      AppColors.primary),
                   16.height,
 
                   // Location Badge
-                  _buildBadge("Location", "12, Onitsha Street, Wuse, Abuja",
+                  _buildBadge("Location", trackFeedbackResponse.data?.location,
                       AppColors.primary),
                   16.height,
 
                   // Contact Email Badge
-                  _buildBadge("Contact Email", "william.humphrey@gmail.com",
+                  _buildBadge(
+                      "Contact Email",
+                      trackFeedbackResponse.data?.contactEmail,
                       AppColors.primary),
                   16.height,
 
                   // Created At Badge
-                  _buildBadge("Created At", "November 23, 2025 at 15:46am",
-                      AppColors.primary),
+                  _buildBadge(
+                    "Created At",
+                    DateTime.tryParse(
+                            trackFeedbackResponse.data?.createdAt ?? "")
+                        ?.formatDateTimePretty,
+                    AppColors.primary,
+                  ),
                   16.height,
 
                   // Action Taken Badge

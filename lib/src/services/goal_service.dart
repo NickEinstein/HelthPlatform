@@ -19,6 +19,32 @@ class GoalService {
     return _storageService.getString(StorageConstants.accessToken);
   }
 
+  Future<String?> getUserId() async {
+    try {
+      final storedData = _storageService.getString(StorageConstants.loginData);
+
+      if (storedData.isEmpty) {
+        debugPrint("⚠️ No access token found in storage.");
+        return null;
+      }
+
+      // Decode JSON safely
+      final decodedData = jsonDecode(storedData);
+      // print('Login Data: $decodedData');
+
+      if (decodedData is Map<String, dynamic> &&
+          decodedData.containsKey("userID")) {
+        return decodedData["userID"].toString(); // Ensure it's a string
+      } else {
+        debugPrint("⚠️ userID not found in stored data: $decodedData");
+        return null;
+      }
+    } catch (error) {
+      debugPrint(" Error decoding userID: $error");
+      return null;
+    }
+  }
+
   Future<bool> saveJournal(UserJournalModel journal) async {
     try {
       final token = await getToken();
@@ -120,32 +146,6 @@ class GoalService {
     } catch (error) {
       debugPrint(' Error fetching my apps: $error');
       throw Exception('Error fetching my apps: $error');
-    }
-  }
-
-  Future<String?> getUserId() async {
-    try {
-      final storedData = _storageService.getString(StorageConstants.loginData);
-
-      if (storedData.isEmpty) {
-        debugPrint("⚠️ No access token found in storage.");
-        return null;
-      }
-
-      // Decode JSON safely
-      final decodedData = jsonDecode(storedData);
-      // print('Login Data: $decodedData');
-
-      if (decodedData is Map<String, dynamic> &&
-          decodedData.containsKey("userID")) {
-        return decodedData["userID"].toString(); // Ensure it's a string
-      } else {
-        debugPrint("⚠️ userID not found in stored data: $decodedData");
-        return null;
-      }
-    } catch (error) {
-      debugPrint(" Error decoding userID: $error");
-      return null;
     }
   }
 
@@ -273,7 +273,10 @@ class GoalService {
           return [];
         }
 
-        final myApps = data.map((e) => MyAppModel.fromJson(e)).where((e)=>e.userId.toString() == userId).toList();
+        final myApps = data
+            .map((e) => MyAppModel.fromJson(e))
+            .where((e) => e.userId.toString() == userId)
+            .toList();
         final myCompletedApps = <MyAppModel>[];
         for (final app in myApps) {
           try {

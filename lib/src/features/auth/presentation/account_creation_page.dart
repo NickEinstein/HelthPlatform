@@ -174,10 +174,10 @@ class _AccountCreationScreenState extends ConsumerState<AccountCreationScreen> {
 
       // Sending Otp
       await authService.otpSendUrl(
-        email: _controller.patientId == null
-            ? _controller.emailController.text
-            : null,
-        sendChannel: _controller.channel.name,
+        // email: _controller.patientId == null
+        //     ? _controller.emailController.text
+        //     : null,
+        sendChannel: _controller.channel,
         userId: _controller.patientId?.toString(),
       );
       //

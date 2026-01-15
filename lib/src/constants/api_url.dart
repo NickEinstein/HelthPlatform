@@ -6,6 +6,8 @@ class ApiUrl {
   static const String login = '/ConnectedHealthWebApi/api/auth/login';
   static const String socialLogin =
       '/ConnectedHealthWebApi/api/Auth/login/social';
+  static String accountActivity(String userId) =>
+      '/ConnectedHealthWebApi/api/Auth/audit/$userId';
 
   static const String registerUrl = '/ConnectedHealthWebApi/api/Patient';
   static const String uploadProfileUrl =
@@ -284,4 +286,9 @@ class ApiUrl {
 
   static String specialistUrl =
       '/ConnectedHealthWebApi/api/Categories/SpecialistCategories';
+
+  static String submitFeedback =
+      '/feedbackportalapi/api/customerengagement/external';
+  static String trackFeedback(String trackId) =>
+      '/feedbackportalapi/api/customerengagement/track-id$trackId';
 }
