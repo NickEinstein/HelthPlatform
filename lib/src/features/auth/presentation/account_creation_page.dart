@@ -424,7 +424,7 @@ class _AccountCreationScreenState extends ConsumerState<AccountCreationScreen> {
                                         recognizer: TapGestureRecognizer()
                                           ..onTap = () {
                                             context
-                                                .pushReplacement(Routes.SIGNIN);
+                                                .pushReplacement(Routes.AUTHLANDINGPAGE);
                                           },
                                       ),
                                     ],

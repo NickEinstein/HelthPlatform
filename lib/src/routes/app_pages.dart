@@ -3,6 +3,7 @@ import 'package:greenzone_medical/src/features/account/presentation/flagged_cont
 import 'package:greenzone_medical/src/features/account/presentation/referred_content.dart';
 import 'package:greenzone_medical/src/features/appointment/appointment.dart';
 import 'package:greenzone_medical/src/features/appointment/presentation/widgets/reasoncancelled_appointments.dart';
+import 'package:greenzone_medical/src/features/auth/presentation/auth_landing_page.dart';
 import 'package:greenzone_medical/src/features/caregivers/presentation/engage_page.dart';
 import 'package:greenzone_medical/src/features/chats/chats.dart';
 import 'package:greenzone_medical/src/features/chats/presentation/model/chatcontact_model.dart';
@@ -69,6 +70,10 @@ final routerProvider = Provider<GoRouter>((ref) {
     debugLogDiagnostics: true,
     initialLocation: _Paths.SPLASH,
     routes: [
+      GoRoute(
+        path: _Paths.AUTHLANDINGPAGE,
+        builder: (context, state) => const AuthLandingPage(),
+      ),
       GoRoute(
         path: AllergyDetailsScreen.routeName,
         builder: (context, state) => const AllergyDetailsScreen(),
@@ -203,9 +208,11 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: _Paths.OTPPAGE,
         name: _Paths.OTPPAGE,
         builder: (context, state) {
-          final email = state.extra as String;
+          final email = (state.extra as Map<String, dynamic>)['email'];
+          final channel = (state.extra as Map<String, dynamic>)['channel'];
           return OTPPage(
             email: email,
+            channel: channel,
           );
         },
       ),
@@ -648,7 +655,8 @@ final routerProvider = Provider<GoRouter>((ref) {
         name: _Paths.TRACKFEEDBACKSCREEN,
         builder: (context, state) {
           final trackFeedbackResponse = state.extra as TrackFeedbackResponse;
-          return TrackFeedbackScreen(trackFeedbackResponse: trackFeedbackResponse);
+          return TrackFeedbackScreen(
+              trackFeedbackResponse: trackFeedbackResponse);
         },
       ),
       GoRoute(

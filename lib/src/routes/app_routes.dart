@@ -68,10 +68,12 @@ abstract class Routes {
   static const OUT_PATIENT_LIMIT = _Paths.OUT_PATIENT_LIMIT;
   static const TRACKFEEDBACKSCREEN = _Paths.TRACKFEEDBACKSCREEN;
   static const ACCOUNTACTIVITYPAGE = _Paths.ACCOUNTACTIVITYPAGE;
+  static const AUTHLANDINGPAGE = _Paths.AUTHLANDINGPAGE;
 }
 
 abstract class _Paths {
   _Paths._();
+  static const AUTHLANDINGPAGE = '/auth_landing_page';
   static const HOME = '/home';
   static const SIGNIN = '/sign-in';
   static const SIGNUP = '/sign-up';

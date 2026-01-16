@@ -3,6 +3,9 @@ import 'package:greenzone_medical/src/app_pkg.dart';
 class ApiUrl {
   ApiUrl._();
 
+  static String validateEmail(String email) =>
+      '/ConnectedHealthWebApi/api/Patient/${Uri.encodeComponent(email)}';
+
   static const String login = '/ConnectedHealthWebApi/api/auth/login';
   static const String socialLogin =
       '/ConnectedHealthWebApi/api/Auth/login/social';

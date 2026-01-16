@@ -57,6 +57,37 @@ class AuthService {
     }
   }
 
+  Future<(bool, String)> validateEmail(String email) async {
+    try {
+      final response = await _apiService.get(
+        ApiUrl.validateEmail(email),
+      );
+      final resData = response.data;
+      if (response.statusCode == 200) {
+        if (resData['status'] == 'success' && resData['data'] != null) {
+          final loginResponse = LoginResponse.fromJson(resData['data']);
+
+          _storageService.setString(StorageConstants.savedEmail, email);
+
+          await _storageService.setString(
+              StorageConstants.loginData,
+              jsonEncode(
+                loginResponse.toJson(),
+              ));
+          await _storageService.setString(
+            StorageConstants.accessToken,
+            loginResponse.token,
+          );
+
+          return (true, '');
+        }
+      }
+      return (false, 'Invalid email');
+    } catch (error) {
+      return (false, 'Error validating email');
+    }
+  }
+
   Future<TrackFeedbackResponse> trackFeedback(String trackId) async {
     try {
       final token = await getToken();
@@ -452,8 +483,12 @@ class AuthService {
     String? email,
   }) async {
     try {
+      final user = await getUser();
       final url = email == null
-          ? ApiUrl.otpSendUrlWithChannel(userId ?? '', sendChannel?.name ?? '')
+          ? ApiUrl.otpSendUrlWithChannel(
+              userId ?? user?.userId.toString() ?? '',
+              sendChannel?.name ?? '',
+            )
           : ApiUrl.otpSendUrl(email);
       final response = await _apiService.post(
         url,

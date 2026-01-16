@@ -29,7 +29,7 @@ class _SplashPageState extends ConsumerState<SplashPage> {
       if (!mounted) return;
 
       if (isLoggedIn) {
-        context.pushReplacement(Routes.SIGNIN);
+        context.pushReplacement(Routes.AUTHLANDINGPAGE);
       } else {
         context.pushReplacement(Routes.ONBOARDING);
       }

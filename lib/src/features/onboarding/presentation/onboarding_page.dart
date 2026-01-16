@@ -176,7 +176,7 @@ class _OnBoardingPageState extends State<OnBoardingPage>
             ),
             onPressed: () {
               // Navigate to login screen
-              context.push(Routes.SIGNIN);
+              context.push(Routes.AUTHLANDINGPAGE);
             },
             child: const Text("Login",
                 style:
