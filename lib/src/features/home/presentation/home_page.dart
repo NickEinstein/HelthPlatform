@@ -3,8 +3,6 @@
 // import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:greenzone_medical/src/features/community_profile/community_profile.dart';
-import 'package:greenzone_medical/src/features/home/presentation/suspended_products.dart';
 import 'package:greenzone_medical/src/features/home/presentation/widget/advert_helper.dart';
 import 'package:greenzone_medical/src/features/home/presentation/widget/health_goal_widget.dart';
 import 'package:greenzone_medical/src/features/home/presentation/widget/profile_completion_widget.dart';
@@ -512,115 +510,115 @@ class _HomePageState extends ConsumerState<HomePage> {
                             },
                           ),
                           mediumSpace(),
-                          InkWell(
-                            onTap: () {
-                              context.push(SuspendedProducts.routeName);
-                            },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: const Color(0xFFFFE7E6),
-                                border: Border.all(
-                                  color: const Color(0xFFFF6159),
-                                ),
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              padding: const EdgeInsets.all(12),
-                              child: Row(
-                                children: [
-                                  Image.asset('nafdac'.toImg),
-                                  8.width,
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'Suspended & Canceled Products',
-                                          style: context.textTheme.bodyMedium
-                                              ?.copyWith(
-                                            fontSize: 15,
-                                          ),
-                                        ),
-                                        4.height,
-                                        Text(
-                                          'NAFDAC Approved list',
-                                          style: context.textTheme.bodyLarge
-                                              ?.copyWith(
-                                            fontSize: 13,
-                                            color: const Color(0xFFFF6159),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  4.width,
-                                  const Icon(
-                                    Icons.arrow_forward_ios,
-                                    size: 14,
-                                    color: Color(0xFFFF6159),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          mediumSpace(),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'My Community & Socials',
-                                style: context.textTheme.labelLarge,
-                              ),
-                              12.height,
-                              const Divider(
-                                color: Color(0xFFBABABA),
-                              ),
-                              12.height,
-                              Text(
-                                'Hey Jessica, you have 0 posts',
-                                style: context.textTheme.labelMedium?.copyWith(
-                                  color: const Color(0xFF656565),
-                                ),
-                              ),
-                              4.height,
-                              Text(
-                                'Start the conversation by creating the first post',
-                                style: context.textTheme.bodyLarge?.copyWith(
-                                  fontSize: 13,
-                                ),
-                              ),
-                              14.height,
-                              InkWell(
-                                onTap: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) =>
-                                        const CommunityProfile(),
-                                  ));
-                                },
-                                child: Container(
-                                  width: double.infinity,
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xFFEAFFEB),
-                                    border:
-                                        Border.all(color: AppColors.primary),
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 12,
-                                    vertical: 16,
-                                  ),
-                                  alignment: Alignment.center,
-                                  child: Text(
-                                    'Create your first post',
-                                    style:
-                                        context.textTheme.labelMedium?.copyWith(
-                                      color: const Color(0xFF575757),
-                                    ),
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
+                          // InkWell(
+                          //   onTap: () {
+                          //     context.push(SuspendedProducts.routeName);
+                          //   },
+                          //   child: Container(
+                          //     decoration: BoxDecoration(
+                          //       color: const Color(0xFFFFE7E6),
+                          //       border: Border.all(
+                          //         color: const Color(0xFFFF6159),
+                          //       ),
+                          //       borderRadius: BorderRadius.circular(8),
+                          //     ),
+                          //     padding: const EdgeInsets.all(12),
+                          //     child: Row(
+                          //       children: [
+                          //         Image.asset('nafdac'.toImg),
+                          //         8.width,
+                          //         Expanded(
+                          //           child: Column(
+                          //             crossAxisAlignment:
+                          //                 CrossAxisAlignment.start,
+                          //             children: [
+                          //               Text(
+                          //                 'Suspended & Canceled Products',
+                          //                 style: context.textTheme.bodyMedium
+                          //                     ?.copyWith(
+                          //                   fontSize: 15,
+                          //                 ),
+                          //               ),
+                          //               4.height,
+                          //               Text(
+                          //                 'NAFDAC Approved list',
+                          //                 style: context.textTheme.bodyLarge
+                          //                     ?.copyWith(
+                          //                   fontSize: 13,
+                          //                   color: const Color(0xFFFF6159),
+                          //                 ),
+                          //               ),
+                          //             ],
+                          //           ),
+                          //         ),
+                          //         4.width,
+                          //         const Icon(
+                          //           Icons.arrow_forward_ios,
+                          //           size: 14,
+                          //           color: Color(0xFFFF6159),
+                          //         ),
+                          //       ],
+                          //     ),
+                          //   ),
+                          // ),
+                          // mediumSpace(),
+                          // Column(
+                          //   crossAxisAlignment: CrossAxisAlignment.start,
+                          //   children: [
+                          //     Text(
+                          //       'My Community & Socials',
+                          //       style: context.textTheme.labelLarge,
+                          //     ),
+                          //     12.height,
+                          //     const Divider(
+                          //       color: Color(0xFFBABABA),
+                          //     ),
+                          //     12.height,
+                          //     Text(
+                          //       'Hey Jessica, you have 0 posts',
+                          //       style: context.textTheme.labelMedium?.copyWith(
+                          //         color: const Color(0xFF656565),
+                          //       ),
+                          //     ),
+                          //     4.height,
+                          //     Text(
+                          //       'Start the conversation by creating the first post',
+                          //       style: context.textTheme.bodyLarge?.copyWith(
+                          //         fontSize: 13,
+                          //       ),
+                          //     ),
+                          //     14.height,
+                          //     InkWell(
+                          //       onTap: () {
+                          //         Navigator.of(context).push(MaterialPageRoute(
+                          //           builder: (context) =>
+                          //               const CommunityProfile(),
+                          //         ));
+                          //       },
+                          //       child: Container(
+                          //         width: double.infinity,
+                          //         decoration: BoxDecoration(
+                          //           color: const Color(0xFFEAFFEB),
+                          //           border:
+                          //               Border.all(color: AppColors.primary),
+                          //           borderRadius: BorderRadius.circular(8),
+                          //         ),
+                          //         padding: const EdgeInsets.symmetric(
+                          //           horizontal: 12,
+                          //           vertical: 16,
+                          //         ),
+                          //         alignment: Alignment.center,
+                          //         child: Text(
+                          //           'Create your first post',
+                          //           style:
+                          //               context.textTheme.labelMedium?.copyWith(
+                          //             color: const Color(0xFF575757),
+                          //           ),
+                          //         ),
+                          //       ),
+                          //     )
+                          //   ],
+                          // ),
                           // mediumSpace(),
                           // const FriendRequestWidget(),
                           // mediumSpace(),
@@ -642,7 +640,8 @@ class _HomePageState extends ConsumerState<HomePage> {
                                 height: 120,
                               ),
                               error: (err, stack) => const Center(
-                                  child: Text("Failed to load banners")),
+                                child: Text("Failed to load banners"),
+                              ),
                               data: (banners) {
                                 if (banners.isEmpty) {
                                   return const Center(

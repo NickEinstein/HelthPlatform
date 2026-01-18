@@ -141,7 +141,7 @@ class _AuthLandingPageState extends ConsumerState<AuthLandingPage> {
     ref.read(isLoadingProvider.notifier).state = false;
 
     if (isSuccess) {
-      context.push(Routes.SIGNIN);
+      context.pushReplacement(Routes.SIGNIN);
     } else {
       CustomToast.show(context, message, type: ToastType.error);
     }
