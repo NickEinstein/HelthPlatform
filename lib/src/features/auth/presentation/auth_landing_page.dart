@@ -101,7 +101,7 @@ class _AuthLandingPageState extends ConsumerState<AuthLandingPage> {
     FocusScope.of(context).requestFocus(
         FocusNode()); // Request focus on a dummy node to dismiss the keyboard
 
-    await Future.delayed(const Duration(milliseconds: 100));
+    // await Future.delayed(const Duration(milliseconds: 100));
 
     // Now, unfocus
     if (mounted) {
@@ -269,43 +269,48 @@ class _AuthLandingPageState extends ConsumerState<AuthLandingPage> {
                             Row(
                               children: [
                                 Expanded(
-                                  child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: _emailController
-                                              .text.isNotEmpty
-                                          ? ColorConstant.primaryColor
-                                          : const Color(
-                                              0xffA8D5BA), // Muted green when disabled
-                                      foregroundColor: Colors.white,
-                                      disabledBackgroundColor: const Color(
-                                          0xffA8D5BA), // Ensure disabled color is applied
-                                      disabledForegroundColor: Colors.white
-                                          .withValues(
-                                              alpha:
-                                                  0.6), // Lightened text for disabled state
-                                      minimumSize:
-                                          const Size(double.infinity, 55),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                    ),
-                                    onPressed: _emailController.text.isNotEmpty
-                                        ? () async {
-                                            _validateEmail();
-                                          }
-                                        : null,
-                                    child: const Padding(
-                                      padding:
-                                          EdgeInsets.symmetric(vertical: 20),
-                                      child: Text(
-                                        "Proceed",
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w700,
-                                          fontSize: 14,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
+                                  child: ListenableBuilder(
+                                      listenable: _emailController,
+                                      builder: (context, child) {
+                                        return ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: _emailController
+                                                    .text.contains('@')
+                                                ? ColorConstant.primaryColor
+                                                : const Color(
+                                                    0xffA8D5BA), // Muted green when disabled
+                                            foregroundColor: Colors.white,
+                                            disabledBackgroundColor: const Color(
+                                                0xffA8D5BA), // Ensure disabled color is applied
+                                            disabledForegroundColor:
+                                                Colors.white.withValues(
+                                                    alpha:
+                                                        0.6), // Lightened text for disabled state
+                                            minimumSize:
+                                                const Size(double.infinity, 55),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                            ),
+                                          ),
+                                          onPressed: isLoading
+                                              ? null
+                                              : () async {
+                                                  _validateEmail();
+                                                },
+                                          child: const Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                vertical: 20),
+                                            child: Text(
+                                              "Proceed",
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.w700,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      }),
                                 ),
 
                                 // Biometric Icon Button (if available)

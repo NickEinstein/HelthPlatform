@@ -481,8 +481,8 @@ class _HomePageState extends ConsumerState<HomePage> {
                           const SizedBox(height: 20),
                           _buildStaticBanners(),
                           mediumSpace(),
-                          _drugSearchWidget(context),
-                          mediumSpace(),
+                          // _drugSearchWidget(context),
+                          // mediumSpace(),
                           const HealthGoalWidget(),
                           mediumSpace(),
                           const ActionButtonsRow(),
@@ -818,77 +818,77 @@ class _HomePageState extends ConsumerState<HomePage> {
     );
   }
 
-  _drugSearchWidget(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        context.push(PharmacySearchScreen.routeName);
-      },
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Expanded(
-                child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  decoration: const BoxDecoration(
-                    color: AppColors.primaryVariant,
-                    borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(24),
-                      topLeft: Radius.circular(4),
-                    ),
-                  ),
-                  child: Row(
-                    children: [
-                      SvgPicture.asset('drugstore'.toSvg),
-                      4.width,
-                      Text(
-                        'CHP Pharmacy eKiosk',
-                        style: context.textTheme.labelMedium?.copyWith(
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              (context.screenWidth * .1).width,
-            ],
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 18),
-            decoration: BoxDecoration(
-              boxShadow: const [
-                BoxShadow(
-                  color: Color(0x40A7A7A7),
-                  blurRadius: 11,
-                  offset: Offset(0, 4),
-                )
-              ],
-              color: Colors.white,
-              border: Border.all(
-                color: AppColors.primaryVariant,
-                width: .7,
-              ),
-              borderRadius: BorderRadius.circular(4),
-            ),
-            child: Row(
-              children: [
-                Text(
-                  'Search for any drugs',
-                  style: context.textTheme.bodyMedium?.copyWith(
-                    color: const Color(0xFF9D9D9D),
-                  ),
-                ),
-                const Spacer(),
-                SvgPicture.asset('search'.toSvg),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+  // _drugSearchWidget(BuildContext context) {
+  //   return InkWell(
+  //     onTap: () {
+  //       context.push(PharmacySearchScreen.routeName);
+  //     },
+  //     child: Column(
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       children: [
+  //         Row(
+  //           mainAxisSize: MainAxisSize.max,
+  //           children: [
+  //             Expanded(
+  //               child: Container(
+  //                 padding:
+  //                     const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+  //                 decoration: const BoxDecoration(
+  //                   color: AppColors.primaryVariant,
+  //                   borderRadius: BorderRadius.only(
+  //                     topRight: Radius.circular(24),
+  //                     topLeft: Radius.circular(4),
+  //                   ),
+  //                 ),
+  //                 child: Row(
+  //                   children: [
+  //                     SvgPicture.asset('drugstore'.toSvg),
+  //                     4.width,
+  //                     Text(
+  //                       'CHP Pharmacy eKiosk',
+  //                       style: context.textTheme.labelMedium?.copyWith(
+  //                         color: Colors.white,
+  //                       ),
+  //                     ),
+  //                   ],
+  //                 ),
+  //               ),
+  //             ),
+  //             (context.screenWidth * .1).width,
+  //           ],
+  //         ),
+  //         Container(
+  //           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 18),
+  //           decoration: BoxDecoration(
+  //             boxShadow: const [
+  //               BoxShadow(
+  //                 color: Color(0x40A7A7A7),
+  //                 blurRadius: 11,
+  //                 offset: Offset(0, 4),
+  //               )
+  //             ],
+  //             color: Colors.white,
+  //             border: Border.all(
+  //               color: AppColors.primaryVariant,
+  //               width: .7,
+  //             ),
+  //             borderRadius: BorderRadius.circular(4),
+  //           ),
+  //           child: Row(
+  //             children: [
+  //               Text(
+  //                 'Search for any drugs',
+  //                 style: context.textTheme.bodyMedium?.copyWith(
+  //                   color: const Color(0xFF9D9D9D),
+  //                 ),
+  //               ),
+  //               const Spacer(),
+  //               SvgPicture.asset('search'.toSvg),
+  //             ],
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 }
