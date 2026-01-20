@@ -167,7 +167,10 @@ class AppButton extends StatelessWidget {
                   if (preIcon != null) ...[
                     SvgPicture.asset(
                       preIcon!,
-                      color: iconColor ?? textColor,
+                      colorFilter: ColorFilter.mode(
+                        iconColor ?? textColor ?? Colors.black,
+                        BlendMode.srcIn,
+                      ),
                     ),
                     preIconSpace.spacingW,
                   ],

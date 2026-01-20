@@ -139,7 +139,7 @@ class _BillingHistoryState extends State<BillingHistory>
                     controller: _tabController,
                     children: [
                       // Income Tab (Placeholder)
-                      Center(child: Text('No income transactions')),
+                      const Center(child: Text('No income transactions')),
                       // Outflow Tab
                       ListView(
                         padding: const EdgeInsets.all(20),

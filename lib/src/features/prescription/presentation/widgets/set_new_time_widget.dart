@@ -5,7 +5,6 @@ import 'package:greenzone_medical/src/utils/extensions/widget_extensions.dart';
 
 import '../../../../resources/resources.dart';
 import '../../../../resources/textstyles/app_textstyles.dart';
-import '../../models/get_prescriptions_model.dart';
 import '../../models/prescription_model.dart';
 import '../../providers/prescription_provider.dart';
 
@@ -79,8 +78,8 @@ class SetNewTimeWidget extends ConsumerWidget {
     );
   }
 
-  Widget get _divider => const Divider(
-        height: 1,
-        color: Color(0xffD1D1D1),
-      );
+  // Widget get _divider => const Divider(
+  //       height: 1,
+  //       color: Color(0xffD1D1D1),
+  //     );
 }

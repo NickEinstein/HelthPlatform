@@ -85,6 +85,7 @@ class HorizontalListTileLoader extends StatelessWidget {
     return SizedBox(
       height: height.h,
       child: ListView.separated(
+        physics: const NeverScrollableScrollPhysics(),
         scrollDirection: Axis.horizontal,
         itemCount: itemCount,
         separatorBuilder: (context, index) => const Gap(10),

@@ -48,7 +48,7 @@ class UpcomingAppointments extends StatelessWidget {
               const SizedBox(height: 20),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xffC53030),
+                  backgroundColor: const Color(0xffC53030),
                   minimumSize: const Size.fromHeight(50),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5),
@@ -103,7 +103,7 @@ class UpcomingAppointments extends StatelessWidget {
                   //   );
                   // }
                 },
-                child: Text(
+                child: const Text(
                   'Yes, Cancel',
                   style: TextStyle(color: Colors.white),
                 ),
@@ -111,7 +111,7 @@ class UpcomingAppointments extends StatelessWidget {
               const SizedBox(height: 10),
               TextButton(
                 style: TextButton.styleFrom(
-                  backgroundColor: Color(0xffFED7D7),
+                  backgroundColor: const Color(0xffFED7D7),
                   minimumSize: const Size.fromHeight(50),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5),

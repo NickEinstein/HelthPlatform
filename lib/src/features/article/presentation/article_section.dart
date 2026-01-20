@@ -20,11 +20,14 @@ class ArticlesSection extends ConsumerWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text("Articles",
-                style: TextStyle(
-                    color: ColorConstant.primaryColor,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700)),
+            const Text(
+              "Articles",
+              style: TextStyle(
+                color: ColorConstant.primaryColor,
+                fontSize: 16,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
             TextButton(
               onPressed: () => context.push(Routes.ALLARTICLESECTION),
               child: const Text(

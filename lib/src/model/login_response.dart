@@ -18,12 +18,13 @@ class LoginResponse {
   // Convert JSON to LoginResponse object
   factory LoginResponse.fromJson(Map<String, dynamic> json) {
     return LoginResponse(
-      userId: json['userID'],
-      name: json['name'],
+      userId: json['userID'] ?? json['id'],
+      name: json['name'] ??
+          '${json['firstName'] ?? ''} ${json['lastName'] ?? ''}',
       email: json['email'],
-      token: json['token'],
+      token: json['token'] ?? json['deviceToken'],
       deviceToken: json['deviceToken'],
-      userType: json['userType'],
+      userType: json['userType'] ?? json['usersType'],
     );
   }
 

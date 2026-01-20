@@ -202,9 +202,8 @@ class _CaregiversPageState extends ConsumerState<CaregiversPage> {
                       )
                     else
                       ...caregivers.map((caregiver) {
-                        final name = caregiver.name.toString() ?? '';
-                        final location =
-                            caregiver.location.toString() ?? 'No Location';
+                        final name = caregiver.name.toString();
+                        final location = caregiver.location.toString();
 
                         return Card(
                           margin: const EdgeInsets.symmetric(vertical: 0),

@@ -110,7 +110,7 @@ class _ArticleDetailsState extends State<ArticleDetails> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
+                SizedBox(
                     width: width(context),
                     height: 68,
                     child: Stack(children: <Widget>[
@@ -147,7 +147,7 @@ class _ArticleDetailsState extends State<ArticleDetails> {
                                 Text(
                                   widget.article.category!.name!,
                                   textAlign: TextAlign.left,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       color: Color.fromRGBO(60, 58, 58, 1),
                                       fontFamily: 'Inter',
                                       fontSize: 14,
@@ -156,35 +156,38 @@ class _ArticleDetailsState extends State<ArticleDetails> {
                                       fontWeight: FontWeight.normal,
                                       height: 1.4285714285714286),
                                 ),
-                                Container(
-                                    width: width(context),
-                                    height: 12,
-                                    child: Stack(children: <Widget>[
+                                SizedBox(
+                                  width: width(context),
+                                  height: 12,
+                                  child: Stack(
+                                    children: <Widget>[
                                       Positioned(
-                                          top: 0,
-                                          left: 0,
-                                          child: Text(
-                                            widget
-                                                .article.category!.description!,
-                                            textAlign: TextAlign.left,
-                                            style: TextStyle(
-                                                color: Color.fromRGBO(
-                                                    96, 95, 95, 1),
-                                                fontFamily: 'Inter',
-                                                fontSize: 10,
-                                                letterSpacing:
-                                                    0 /*percentages not used in flutter. defaulting to zero*/,
-                                                fontWeight: FontWeight.normal,
-                                                height: 1.2),
-                                          )),
-                                    ])),
+                                        top: 0,
+                                        left: 0,
+                                        child: Text(
+                                          widget.article.category!.description!,
+                                          textAlign: TextAlign.left,
+                                          style: const TextStyle(
+                                              color:
+                                                  Color.fromRGBO(96, 95, 95, 1),
+                                              fontFamily: 'Inter',
+                                              fontSize: 10,
+                                              letterSpacing:
+                                                  0 /*percentages not used in flutter. defaulting to zero*/,
+                                              fontWeight: FontWeight.normal,
+                                              height: 1.2),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               ],
                             ),
                           )),
                     ])),
               ],
             ),
-            Divider(),
+            const Divider(),
             tiny5Space(),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),

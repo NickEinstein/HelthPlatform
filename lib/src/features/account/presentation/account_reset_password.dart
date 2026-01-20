@@ -33,11 +33,12 @@ class _AccountResetPasswordPageState
       TextEditingController();
   bool _passwordsMatch = false;
   final _formKey = GlobalKey<FormState>();
-  bool _isValid = false;
+  // bool _isValid = false;
 
   void _validateForm() {
     setState(() {
-      _isValid = _formKey.currentState?.validate() ?? false;
+      // _isValid = 
+      _formKey.currentState?.validate() ?? false;
     });
   }
 

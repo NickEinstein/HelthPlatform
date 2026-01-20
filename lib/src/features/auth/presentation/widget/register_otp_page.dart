@@ -391,7 +391,7 @@ class _RegisterOTPPageState extends ConsumerState<RegisterOTPPage> {
                                             widget.controller.emailIsEmpty)
                                     ? email
                                     : null,
-                                sendChannel: widget.controller.channel.name,
+                                sendChannel: widget.controller.channel,
                                 userId: widget.controller.patientId?.toString(),
                               );
 

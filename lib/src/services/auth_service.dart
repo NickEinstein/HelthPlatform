@@ -5,6 +5,10 @@ import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:greenzone_medical/src/app_pkg.dart';
+import 'package:greenzone_medical/src/features/account/model/account_activity_model.dart';
+import 'package:greenzone_medical/src/features/account/model/submit_feedback_response.dart';
+import 'package:greenzone_medical/src/features/account/model/track_feedback_response.dart';
+import 'package:greenzone_medical/src/utils/enum.dart';
 import 'package:path/path.dart';
 
 import '../features/auth/model/register_response.dart';
@@ -18,6 +22,10 @@ class AuthService {
 
   AuthService(this._apiService, this._storageService);
 
+  Future<String?> getToken() async {
+    return _storageService.getString(StorageConstants.accessToken);
+  }
+
   Future<bool> authenticateUserLocally(String password) async {
     final savedPassword =
         _storageService.getString(StorageConstants.savedPassword);
@@ -25,6 +33,175 @@ class AuthService {
       return true;
     }
     return false;
+  }
+
+  Future<LoginResponse?> getUser() async {
+    try {
+      final storedData = _storageService.getString(StorageConstants.loginData);
+
+      if (storedData.isEmpty) {
+        return null;
+      }
+
+      final decodedData = jsonDecode(storedData);
+
+      if (decodedData is Map<String, dynamic> &&
+          decodedData.containsKey("userID")) {
+        final loginResponse = LoginResponse.fromJson(decodedData);
+        return loginResponse;
+      } else {
+        return null;
+      }
+    } catch (error) {
+      return null;
+    }
+  }
+
+  Future<(bool, String)> validateEmail(String email) async {
+    try {
+      final response = await _apiService.get(
+        ApiUrl.validateEmail(email),
+      );
+      final resData = response.data;
+      if (response.statusCode == 200) {
+        if (resData['status'] == 'success' && resData['data'] != null) {
+          final loginResponse = LoginResponse.fromJson(resData['data']);
+
+          _storageService.setString(StorageConstants.savedEmail, email);
+
+          await _storageService.setString(
+              StorageConstants.loginData,
+              jsonEncode(
+                loginResponse.toJson(),
+              ));
+          await _storageService.setString(
+            StorageConstants.accessToken,
+            loginResponse.token,
+          );
+
+          return (true, '');
+        }
+      }
+      return (false, 'Invalid email');
+    } catch (error) {
+      return (false, 'Error validating email');
+    }
+  }
+
+  Future<TrackFeedbackResponse> trackFeedback(String trackId) async {
+    try {
+      final token = await getToken();
+      if (token == null) {
+        return TrackFeedbackResponse(
+          isSuccess: false,
+          statusCode: 401,
+          data: null,
+          error: 'No token found',
+        );
+      }
+      print('Before');
+      final response = await _apiService.get(
+        ApiUrl.trackFeedback(trackId),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+          'X-Api-Key': '072e71ab-a109-404d-ae9e-3978699d4f2e',
+        },
+      );
+
+      print('After : ${response.data}');
+      final resData = response.data;
+      if (response.statusCode == 200) {
+        return TrackFeedbackResponse.fromJson(resData);
+      }
+      return TrackFeedbackResponse(
+        isSuccess: false,
+        statusCode: response.statusCode ?? 404,
+        data: null,
+        error: response.data,
+      );
+    } catch (error) {
+      return TrackFeedbackResponse(
+        isSuccess: false,
+        statusCode: 500,
+        data: null,
+        error: error.toString(),
+      );
+    }
+  }
+
+  Future<SubmitFeedbackResponse> submitFeedback(
+      Map<String, dynamic> body) async {
+    try {
+      final user = await getUser();
+      final token = await getToken();
+      if (token == null) {
+        return SubmitFeedbackResponse(
+          isSuccess: false,
+          statusCode: 401,
+          data: null,
+          error: 'No token found',
+        );
+      }
+      final fullBody = {
+        ...body,
+        "contactEmail": user?.email,
+        "externalUserId": user?.userId,
+        "externalUserName": user?.name,
+      };
+
+      final response = await _apiService.post(
+        ApiUrl.submitFeedback,
+        data: fullBody,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+          'X-Api-Key': '2c059132-966b-4bc2-ab9f-f69e31eeb717',
+        },
+      );
+
+      final resData = response.data;
+      if (response.statusCode == 200) {
+        return SubmitFeedbackResponse.fromJson(resData);
+      }
+      return SubmitFeedbackResponse(
+        isSuccess: false,
+        statusCode: response.statusCode ?? 404,
+        data: null,
+        error: response.data,
+      );
+    } catch (error) {
+      return SubmitFeedbackResponse(
+        isSuccess: false,
+        statusCode: 500,
+        data: null,
+        error: error.toString(),
+      );
+    }
+  }
+
+  Future<List<AccountActivityModel>> getAccountActivity() async {
+    try {
+      final userId = await getUser();
+      if (userId?.userId == null) {
+        return [];
+      }
+      final response = await _apiService
+          .get(ApiUrl.accountActivity(userId?.userId.toString() ?? ''));
+
+      final resData = response.data;
+      if (response.statusCode == 200) {
+        if (resData is List) {
+          final List<AccountActivityModel> accountActivityList =
+              resData.map((x) => AccountActivityModel.fromJson(x)).toList();
+
+          return accountActivityList;
+        }
+      }
+      return [];
+    } catch (error) {
+      return [];
+    }
   }
 
   Future<String> login(String email, String password) async {
@@ -291,7 +468,6 @@ class AuthService {
   //     final response = await _apiService.post(
   //       ApiUrl.otpSendUrl + email,
   //     );
-
   //     if (response.statusCode == 200 && response.data != null) {
   //       return 'successful';
   //     } else {
@@ -303,18 +479,22 @@ class AuthService {
   // }
   Future<String> otpSendUrl({
     String? userId,
-    String? sendChannel,
+    OTPChannel? sendChannel,
     String? email,
   }) async {
     try {
+      final user = await getUser();
       final url = email == null
-          ? ApiUrl.otpSendUrlWithChannel(userId ?? '', sendChannel ?? '')
+          ? ApiUrl.otpSendUrlWithChannel(
+              userId ?? user?.userId.toString() ?? '',
+              sendChannel?.name ?? '',
+            )
           : ApiUrl.otpSendUrl(email);
       final response = await _apiService.post(
         url,
       );
-      print('Url: $url');
-      print('Response: ${response.data}');
+      // print('Url: $url');
+      // print('Response: ${response.data}');
       // Check if the status code is 200 and the response body has a failure code
       if (response.statusCode == 200 && response.data != null) {
         if (response.data['code'] == 4) {
@@ -511,10 +691,6 @@ class AuthService {
       return LoginResponse.fromJson(jsonDecode(userDataString));
     }
     return null;
-  }
-
-  Future<String?> getToken() async {
-    return _storageService.getString(StorageConstants.accessToken);
   }
 
   Future<String?> getLoginData() async {

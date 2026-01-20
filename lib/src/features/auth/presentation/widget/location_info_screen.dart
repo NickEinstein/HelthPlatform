@@ -4,7 +4,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:greenzone_medical/src/constants/color_constant.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../constants/dimens.dart';
 import '../../../../constants/helper.dart';
@@ -32,7 +31,7 @@ class LocationInfoScreen extends ConsumerStatefulWidget {
 
 class _LocationInfoScreenState extends ConsumerState<LocationInfoScreen> {
   // bool isChecked = false;
-  bool _isValid = false;
+  // bool _isValid = false;
 
   List<StateModel> states = [];
   List<String> stateNames = [];
@@ -79,7 +78,7 @@ class _LocationInfoScreenState extends ConsumerState<LocationInfoScreen> {
         lgaNames = state.locals.map((lga) => lga.name).toSet().toList();
       });
     } else {
-      print('Error: Selected state value is not in the state names list.');
+      debugPrint('Error: Selected state value is not in the state names list.');
     }
   }
 
@@ -95,20 +94,21 @@ class _LocationInfoScreenState extends ConsumerState<LocationInfoScreen> {
 
   void _validateForm() {
     setState(() {
-      _isValid = widget.formKey.currentState?.validate() ?? false;
+      // _isValid = 
+      widget.formKey.currentState?.validate() ?? false;
     });
   }
 
-  bool _isFormValid() {
-    return _isValid &&
-        selectedState != null &&
-        selectedLga != null &&
-        selectedCity != null;
-  }
+  // bool _isFormValid() {
+  //   return _isValid &&
+  //       selectedState != null &&
+  //       selectedLga != null &&
+  //       selectedCity != null;
+  // }
 
   @override
   Widget build(BuildContext context) {
-    final isAgreed = ref.watch(isAgreedProvider);
+    // final isAgreed = ref.watch(isAgreedProvider);
 
     return SingleChildScrollView(
       child: Form(

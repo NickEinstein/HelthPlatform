@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart' show debugPrint;
 import 'package:greenzone_medical/src/app_pkg.dart';
 
 class AuthInterceptor extends Interceptor {
@@ -16,7 +17,7 @@ class AuthInterceptor extends Interceptor {
 class CustomInterceptors extends Interceptor {
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    print('REQUEST[${options.method}] => PATH: ${options.path}');
+    debugPrint('REQUEST[${options.method}] => PATH: ${options.path}');
     String? accessToken = SharedPreferencesService.instance
         .getString(StorageConstants.accessToken);
     if (accessToken != null) {
@@ -27,14 +28,14 @@ class CustomInterceptors extends Interceptor {
 
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) {
-    print(
+    debugPrint(
         'RESPONSE[${response.statusCode}] => PATH: ${response.requestOptions.path}');
     super.onResponse(response, handler);
   }
 
   @override
   Future onError(DioException err, ErrorInterceptorHandler handler) async {
-    print(
+    debugPrint(
         'ERROR[${err.response?.statusCode}] => PATH: ${err.requestOptions.path}');
     super.onError(err, handler);
   }

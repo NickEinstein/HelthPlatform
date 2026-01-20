@@ -17,7 +17,7 @@ class InputIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return SvgPicture.asset(
       asset,
-      color: Colors.black,
+      colorFilter: const ColorFilter.mode(Colors.black, BlendMode.srcIn),
     ).paddingOnly(r: 12);
   }
 }
@@ -376,6 +376,7 @@ class _AppInputState extends State<AppInput> {
   String? error;
   String? get errorText => widget.errorText ?? error;
 
+  // ignore: unused_field
   CountryCode? _phoneDropdownValue;
 
   void controllerOnEmptyListiner() {

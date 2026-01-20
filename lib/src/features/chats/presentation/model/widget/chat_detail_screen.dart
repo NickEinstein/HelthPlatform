@@ -92,7 +92,7 @@ class _ChatDetailScreenState extends ConsumerState<ChatDetailScreen> {
         .fetchChatConversationList(widget.chat.id.toString(),
             widget.chat.userType.toString(), nextPage, 20);
 
-    if (response != null && response.isNotEmpty) {
+    if (response.isNotEmpty) {
       setState(() {
         allMessages.addAll(response);
         currentPage = nextPage;
@@ -116,7 +116,7 @@ class _ChatDetailScreenState extends ConsumerState<ChatDetailScreen> {
               20, // Keep fetching a reasonable size to catch recent ones
             );
 
-    if (response != null && response.isNotEmpty) {
+    if (response.isNotEmpty) {
       // Create a set of existing message IDs for efficient lookup
       final existingIds = allMessages.map((e) => e.id).toSet();
       // Find new messages that are not already in our current list
@@ -416,7 +416,8 @@ class _ChatDetailScreenState extends ConsumerState<ChatDetailScreen> {
                                   child: Material(
                                     elevation: 3,
                                     borderRadius: BorderRadius.circular(8),
-                                    shadowColor: Colors.black.withOpacity(0.25),
+                                    shadowColor:
+                                        Colors.black.withValues(alpha: 0.25),
                                     color: isSentByMe
                                         ? const Color(0xffDCF7C5)
                                         : const Color(0xffFAFAFA),
@@ -633,8 +634,10 @@ class _ChatDetailScreenState extends ConsumerState<ChatDetailScreen> {
           );
         });
       } else {
-        CustomToast.show(context, "Failed to send message",
-            type: ToastType.error);
+        if (mounted) {
+          CustomToast.show(context, "Failed to send message",
+              type: ToastType.error);
+        }
       }
     }
   }
@@ -669,8 +672,10 @@ class _ChatDetailScreenState extends ConsumerState<ChatDetailScreen> {
           );
         });
       } else {
-        CustomToast.show(context, "Failed to send message",
-            type: ToastType.error);
+        if (mounted) {
+          CustomToast.show(context, "Failed to send message",
+              type: ToastType.error);
+        }
       }
     }
   }

@@ -66,27 +66,27 @@ class CareGiverResponse {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['location'] = this.location;
-    data['dateEstablished'] = this.dateEstablished;
-    data['mandate'] = this.mandate;
-    data['createdAt'] = this.createdAt;
-    data['createdBy'] = this.createdBy;
-    data['logoPath'] = this.logoPath;
-    data['cacPath'] = this.cacPath;
-    data['rcNumber'] = this.rcNumber;
-    data['brandName'] = this.brandName;
-    data['stateId'] = this.stateId;
-    data['lgaId'] = this.lgaId;
-    data['phone'] = this.phone;
-    data['email'] = this.email;
-    data['website'] = this.website;
-    data['updatedAt'] = this.updatedAt;
-    data['modifiedBy'] = this.modifiedBy;
-    data['actionTaken'] = this.actionTaken;
-    data['status'] = this.status;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['name'] = name;
+    data['location'] = location;
+    data['dateEstablished'] = dateEstablished;
+    data['mandate'] = mandate;
+    data['createdAt'] = createdAt;
+    data['createdBy'] = createdBy;
+    data['logoPath'] = logoPath;
+    data['cacPath'] = cacPath;
+    data['rcNumber'] = rcNumber;
+    data['brandName'] = brandName;
+    data['stateId'] = stateId;
+    data['lgaId'] = lgaId;
+    data['phone'] = phone;
+    data['email'] = email;
+    data['website'] = website;
+    data['updatedAt'] = updatedAt;
+    data['modifiedBy'] = modifiedBy;
+    data['actionTaken'] = actionTaken;
+    data['status'] = status;
     return data;
   }
 }

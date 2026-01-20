@@ -1,17 +1,12 @@
 import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:greenzone_medical/src/provider/all_providers.dart';
 import 'package:greenzone_medical/src/utils/enum.dart';
 import 'package:greenzone_medical/src/utils/extensions/extensions.dart';
 import 'package:greenzone_medical/src/utils/extensions/string_extensions.dart';
 import 'package:greenzone_medical/src/utils/packages.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
-import 'package:greenzone_medical/src/constants/color_constant.dart';
 
-import '../../../../constants/dimens.dart';
-import '../../../../constants/helper.dart';
 import 'account_controller_holder.dart';
 
 class PersonalInfoScreen extends ConsumerStatefulWidget {

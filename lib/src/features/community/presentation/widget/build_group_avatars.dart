@@ -97,7 +97,7 @@ Widget buildCommunityAvatars(
                   },
                   child: CircleAvatar(
                     radius: 25,
-                    backgroundColor: Colors.green.withOpacity(0.2),
+                    backgroundColor: Colors.green.withValues(alpha: 0.2),
                     child: const Icon(
                       Icons.more_horiz_sharp,
                       size: 30,
@@ -161,14 +161,18 @@ void _showTooltipMenu(BuildContext context, Offset position, String name,
       // } else
       if (value == 'share') {
         // TODO: Handle share
-        _handleShareAction(context, name);
+        if (context.mounted) {
+          _handleShareAction(context, name);
+        }
       }
       // else if (value == 'reaction') {
       //   // TODO: Handle reaction
       // }
       else if (value == 'copy') {
         // TODO: Handle copy
-        _handleCopyAction(context, community);
+        if (context.mounted) {
+          _handleCopyAction(context, community);
+        }
       }
     }
   });

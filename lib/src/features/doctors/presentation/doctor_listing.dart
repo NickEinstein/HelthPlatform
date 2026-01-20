@@ -2,7 +2,6 @@ import 'package:greenzone_medical/src/model/doctord_list_response.dart'
     // ignore: library_prefixes
     as DoctorResponse;
 
-import '../../../constants/route_map_widget.dart';
 import '../../../utils/packages.dart';
 import 'widget/doctor_card.dart';
 import 'widget/title_subtitle_section.dart';
@@ -137,22 +136,26 @@ class _DoctorListingState extends ConsumerState<DoctorListing> {
                       ),
                       Container(
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(32),
-                            border: Border.all(
-                                color: ColorConstant.primaryLightColor
-                                    .withOpacity(0.3)),
+                          borderRadius: BorderRadius.circular(32),
+                          border: Border.all(
                             color: ColorConstant.primaryLightColor
-                                .withOpacity(0.3)),
+                                .withValues(alpha: 0.3),
+                          ),
+                          color: ColorConstant.primaryLightColor
+                              .withValues(alpha: 0.3),
+                        ),
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Row(
                             children: [
                               Container(
                                   decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(50),
-                                      border: Border.all(
-                                          color: ColorConstant.primaryColor),
-                                      color: ColorConstant.primaryColor),
+                                    borderRadius: BorderRadius.circular(50),
+                                    border: Border.all(
+                                      color: ColorConstant.primaryColor,
+                                    ),
+                                    color: ColorConstant.primaryColor,
+                                  ),
                                   child: Padding(
                                     padding: const EdgeInsets.all(4.0),
                                     child: Image.asset(
@@ -162,12 +165,14 @@ class _DoctorListingState extends ConsumerState<DoctorListing> {
                                     ),
                                   )),
                               tiny5HorSpace(),
-                              Text(
-                                doctor.email ?? 'No email available',
-                                style: const TextStyle(
-                                  color: Color(0xff595959),
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w400,
+                              Expanded(
+                                child: Text(
+                                  doctor.email ?? 'No email available',
+                                  style: const TextStyle(
+                                    color: Color(0xff595959),
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w400,
+                                  ),
                                 ),
                               )
                             ],
@@ -177,12 +182,14 @@ class _DoctorListingState extends ConsumerState<DoctorListing> {
                       smallSpace(),
                       Container(
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(32),
-                            border: Border.all(
-                                color: ColorConstant.primaryLightColor
-                                    .withOpacity(0.3)),
+                          borderRadius: BorderRadius.circular(32),
+                          border: Border.all(
                             color: ColorConstant.primaryLightColor
-                                .withOpacity(0.3)),
+                                .withValues(alpha: 0.3),
+                          ),
+                          color: ColorConstant.primaryLightColor
+                              .withValues(alpha: 0.3),
+                        ),
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Row(

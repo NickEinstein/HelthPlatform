@@ -22,14 +22,12 @@ class AllInterestResponse {
 
   AllInterestResponse.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    category = json['category'] != null
-        ? new Category.fromJson(json['category'])
-        : null;
+    category =
+        json['category'] != null ? Category.fromJson(json['category']) : null;
     patient =
-        json['patient'] != null ? new Patient.fromJson(json['patient']) : null;
-    employee = json['employee'] != null
-        ? new Employee.fromJson(json['employee'])
-        : null;
+        json['patient'] != null ? Patient.fromJson(json['patient']) : null;
+    employee =
+        json['employee'] != null ? Employee.fromJson(json['employee']) : null;
     status = json['status'];
     createdBy = json['createdBy'];
     modifiedBy = json['modifiedBy'];
@@ -38,22 +36,22 @@ class AllInterestResponse {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    if (this.category != null) {
-      data['category'] = this.category!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    if (category != null) {
+      data['category'] = category!.toJson();
     }
-    if (this.patient != null) {
-      data['patient'] = this.patient!.toJson();
+    if (patient != null) {
+      data['patient'] = patient!.toJson();
     }
-    if (this.employee != null) {
-      data['employee'] = this.employee!.toJson();
+    if (employee != null) {
+      data['employee'] = employee!.toJson();
     }
-    data['status'] = this.status;
-    data['createdBy'] = this.createdBy;
-    data['modifiedBy'] = this.modifiedBy;
-    data['createdAt'] = this.createdAt;
-    data['updatedAt'] = this.updatedAt;
+    data['status'] = status;
+    data['createdBy'] = createdBy;
+    data['modifiedBy'] = modifiedBy;
+    data['createdAt'] = createdAt;
+    data['updatedAt'] = updatedAt;
     return data;
   }
 }
@@ -70,9 +68,9 @@ class Category {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['name'] = name;
     return data;
   }
 }
@@ -96,12 +94,12 @@ class Patient {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['pictureUrl'] = this.pictureUrl;
-    data['firstName'] = this.firstName;
-    data['lastName'] = this.lastName;
-    data['gender'] = this.gender;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['pictureUrl'] = pictureUrl;
+    data['firstName'] = firstName;
+    data['lastName'] = lastName;
+    data['gender'] = gender;
     return data;
   }
 }
@@ -120,10 +118,10 @@ class Employee {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['firstName'] = this.firstName;
-    data['lastName'] = this.lastName;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['firstName'] = firstName;
+    data['lastName'] = lastName;
     return data;
   }
 }

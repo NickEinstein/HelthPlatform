@@ -37,12 +37,12 @@ class _BookAppointmentState extends ConsumerState<BookAppointment> {
           selectedDate.month == now.month &&
           selectedDate.year == now.year &&
           startTime.isBefore(now)) {
-        startTime = startTime.add(Duration(hours: 1));
+        startTime = startTime.add(const Duration(hours: 1));
         continue;
       }
 
       times.add(DateFormat("hh:mm a").format(startTime));
-      startTime = startTime.add(Duration(hours: 1));
+      startTime = startTime.add(const Duration(hours: 1));
     }
 
     return times;
@@ -98,7 +98,8 @@ class _BookAppointmentState extends ConsumerState<BookAppointment> {
                                   : Colors.white,
                               borderRadius: BorderRadius.circular(10),
                               border: Border.all(
-                                  color: Color(0xffD9D9D94D).withOpacity(0.2)),
+                                color: const Color(0x4DD9D9D9),
+                              ),
                             ),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -110,7 +111,7 @@ class _BookAppointmentState extends ConsumerState<BookAppointment> {
                                     fontWeight: FontWeight.w600,
                                     color: selectedDate.day == date.day
                                         ? Colors.white
-                                        : Color(0xff3C3B3B),
+                                        : const Color(0xff3C3B3B),
                                   ),
                                 ),
                                 Text(
@@ -120,7 +121,7 @@ class _BookAppointmentState extends ConsumerState<BookAppointment> {
                                     fontWeight: FontWeight.w600,
                                     color: selectedDate.day == date.day
                                         ? Colors.white
-                                        : Color(0xff3C3B3B),
+                                        : const Color(0xff3C3B3B),
                                   ),
                                 ),
                               ],
@@ -163,7 +164,7 @@ class _BookAppointmentState extends ConsumerState<BookAppointment> {
                               fontSize: 14,
                               color: selectedTime == time
                                   ? Colors.white
-                                  : Color(0xff616060),
+                                  : const Color(0xff616060),
                               fontWeight: FontWeight.w700,
                             ),
                           ),
@@ -241,8 +242,9 @@ class _BookAppointmentState extends ConsumerState<BookAppointment> {
                             description: descriptionController.text,
                           );
 
-                          if (!context.mounted)
-                            return; // Prevents using context if unmounted
+                          if (!context.mounted) {
+                            return;
+                          } // Prevents using context if unmounted
                           ref.read(isLoadingProvider.notifier).state =
                               false; // Stop loading
 
@@ -272,7 +274,9 @@ class _BookAppointmentState extends ConsumerState<BookAppointment> {
                               onPressed: () async {
                                 Navigator.pop(context);
                                 await Add2Calendar.addEvent2Cal(event);
-                                context.pushReplacement(Routes.BOTTOMNAV);
+                                if (context.mounted) {
+                                  context.pushReplacement(Routes.BOTTOMNAV);
+                                }
                               },
                             );
                           } else {

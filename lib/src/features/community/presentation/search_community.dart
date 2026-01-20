@@ -131,7 +131,7 @@ class _SearchCommunityState extends ConsumerState<SearchCommunity> {
                             selectedCategories.remove(cat);
                           });
                         },
-                        backgroundColor: Color(0xffD9FEAA),
+                        backgroundColor: const Color(0xffD9FEAA),
                         shape: RoundedRectangleBorder(
                           borderRadius:
                               BorderRadius.circular(20), // Set radius to 20
@@ -185,7 +185,7 @@ class _SearchCommunityState extends ConsumerState<SearchCommunity> {
                 },
                 loading: () => const Center(child: CircularProgressIndicator()),
                 error: (error, stack) =>
-                    Center(child: Text("Error community found")),
+                    const Center(child: Text("Error community found")),
               ),
             ),
           ],

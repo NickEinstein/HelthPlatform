@@ -3,13 +3,10 @@
 // import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:greenzone_medical/src/features/home/presentation/suspended_products.dart';
 import 'package:greenzone_medical/src/features/home/presentation/widget/advert_helper.dart';
-import 'package:greenzone_medical/src/features/home/presentation/widget/friend_request_widget.dart';
-import 'package:greenzone_medical/src/features/home/presentation/widget/personal_goals_widget.dart';
+import 'package:greenzone_medical/src/features/home/presentation/widget/health_goal_widget.dart';
 import 'package:greenzone_medical/src/features/home/presentation/widget/profile_completion_widget.dart';
 import 'package:greenzone_medical/src/features/pharmacy/presentation/pharmacy_search_screen.dart';
-import 'package:greenzone_medical/src/features/plan/presentation/my_goals_screen.dart';
 import 'package:greenzone_medical/src/resources/colors/colors.dart';
 import 'package:greenzone_medical/src/utils/extensions/extensions.dart';
 import 'package:greenzone_medical/src/utils/extensions/string_extensions.dart';
@@ -20,7 +17,8 @@ import '../../../utils/packages.dart';
 import 'widget/friend_request_section.dart';
 
 class HomePage extends ConsumerStatefulWidget {
-  const HomePage({super.key});
+  final GlobalKey<ScaffoldState> scaffoldKey;
+  const HomePage({super.key, required this.scaffoldKey});
 
   @override
   ConsumerState<HomePage> createState() => _HomePageState();
@@ -29,7 +27,6 @@ class HomePage extends ConsumerStatefulWidget {
 class _HomePageState extends ConsumerState<HomePage> {
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = "";
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   int cachedUpcomingAppointments = 0;
   int cachedPrescription = 0;
 
@@ -122,7 +119,6 @@ class _HomePageState extends ConsumerState<HomePage> {
 
   @override
   void didUpdateWidget(covariant HomePage oldWidget) {
-    // TODO: implement didUpdateWidget
     Future.microtask(() => ref.invalidate(userUnreadChatProvider));
 
     super.didUpdateWidget(oldWidget);
@@ -244,8 +240,7 @@ class _HomePageState extends ConsumerState<HomePage> {
 
         return Scaffold(
           backgroundColor: Colors.white,
-          key: _scaffoldKey,
-          endDrawer: const HomeDrawer(),
+          // endDrawer: const HomeDrawer(),
           // appBar: AppBar(
           //   backgroundColor: Colors.white,
           //   surfaceTintColor: Colors.white,
@@ -300,6 +295,9 @@ class _HomePageState extends ConsumerState<HomePage> {
               ref.invalidate(userGetInterestProvider);
               ref.watch(userUnreadChatProvider);
               ref.watch(userUnreadNotificationProvider);
+              //
+              // ref.invalidate(goalNotifierProvider);
+              await Future.delayed(const Duration(seconds: 1));
             },
             child: Padding(
               // physics:
@@ -327,7 +325,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                       const Spacer(),
                       InkWell(
                         onTap: () async {
-                          _scaffoldKey.currentState?.openEndDrawer();
+                          widget.scaffoldKey.currentState?.openEndDrawer();
                         },
                         child: Padding(
                           padding: const EdgeInsets.only(right: 20),
@@ -484,13 +482,13 @@ class _HomePageState extends ConsumerState<HomePage> {
                           _buildStaticBanners(),
                           mediumSpace(),
                           // _drugSearchWidget(context),
-
-                          const ProfileCompletionWidget(),
-                          mediumSpace(),
-                          // const PersonalGoalsWidget(),
                           // mediumSpace(),
+                          const HealthGoalWidget(),
+                          mediumSpace(),
                           const ActionButtonsRow(),
-                          smallSpace(),
+                          smallSpace(), // if user has no apps
+                          mediumSpace(),
+                          const ProfileCompletionWidget(),
                           CustomListTile(
                             imagePath: "assets/icon/appo_icon.png",
                             title: "Appointment",
@@ -501,7 +499,6 @@ class _HomePageState extends ConsumerState<HomePage> {
                               context.push(Routes.APPOINTMENT, extra: true);
                             },
                           ),
-
                           CustomListTile(
                             imagePath: "assets/icon/pres_icon.png",
                             title: "Prescriptions",
@@ -512,76 +509,6 @@ class _HomePageState extends ConsumerState<HomePage> {
                               context.push(Routes.PRESCRIPTION, extra: true);
                             },
                           ),
-
-                          mediumSpace(),
-                          // if user has no apps
-                          // Text(
-                          //   'Hey, you don\'t seem to have any health goals',
-                          //   style: context.textTheme.bodyMedium?.copyWith(
-                          //     fontWeight: FontWeight.w700,
-                          //   ),
-                          // ),
-                          // 12.height,
-                          // InkWell(
-                          //   onTap: () {
-                          //     context.push(MyGoalsScreen.routeName);
-                          //   },
-                          //   child: Container(
-                          //     padding: const EdgeInsets.symmetric(
-                          //         horizontal: 16, vertical: 16),
-                          //     decoration: BoxDecoration(
-                          //       borderRadius: BorderRadius.circular(12),
-                          //       color: const Color(0xffEAFFEB),
-                          //       border: Border.all(
-                          //         color: ColorConstant.primaryColor,
-                          //       ),
-                          //     ),
-                          //     child: Row(
-                          //       crossAxisAlignment: CrossAxisAlignment.start,
-                          //       children: [
-                          //         SvgPicture.asset(
-                          //           'health_goal'.toSvg,
-                          //         ),
-                          //         12.width,
-                          //         Expanded(
-                          //           child: Column(
-                          //             crossAxisAlignment:
-                          //                 CrossAxisAlignment.start,
-                          //             children: [
-                          //               Text(
-                          //                 'We have a bank of goals you can select from, starting with simple things like your hair to medical goals.',
-                          //                 style: context.textTheme.bodyMedium
-                          //                     ?.copyWith(
-                          //                   fontSize: 13,
-                          //                 ),
-                          //               ),
-                          //               8.height,
-                          //               Container(
-                          //                 decoration: BoxDecoration(
-                          //                   borderRadius:
-                          //                       BorderRadius.circular(28),
-                          //                   color: const Color(0xFF29BA2E),
-                          //                 ),
-                          //                 padding: const EdgeInsets.symmetric(
-                          //                     horizontal: 16, vertical: 6),
-                          //                 child: Text(
-                          //                   'Get started now!',
-                          //                   style: context.textTheme.bodyMedium
-                          //                       ?.copyWith(
-                          //                     color: Colors.white,
-                          //                   ),
-                          //                 ),
-                          //               )
-                          //             ],
-                          //           ),
-                          //         )
-                          //       ],
-                          //     ),
-                          //   ),
-                          // ),
-                          // mediumSpace(),
-
-                          // const ProfileCompletionWidget(),
                           mediumSpace(),
                           // InkWell(
                           //   onTap: () {
@@ -661,23 +588,32 @@ class _HomePageState extends ConsumerState<HomePage> {
                           //       ),
                           //     ),
                           //     14.height,
-                          //     Container(
-                          //       width: double.infinity,
-                          //       decoration: BoxDecoration(
-                          //         color: const Color(0xFFEAFFEB),
-                          //         border: Border.all(color: AppColors.primary),
-                          //         borderRadius: BorderRadius.circular(8),
-                          //       ),
-                          //       padding: const EdgeInsets.symmetric(
-                          //         horizontal: 12,
-                          //         vertical: 16,
-                          //       ),
-                          //       alignment: Alignment.center,
-                          //       child: Text(
-                          //         'Create your first post',
-                          //         style:
-                          //             context.textTheme.labelMedium?.copyWith(
-                          //           color: const Color(0xFF575757),
+                          //     InkWell(
+                          //       onTap: () {
+                          //         Navigator.of(context).push(MaterialPageRoute(
+                          //           builder: (context) =>
+                          //               const CommunityProfile(),
+                          //         ));
+                          //       },
+                          //       child: Container(
+                          //         width: double.infinity,
+                          //         decoration: BoxDecoration(
+                          //           color: const Color(0xFFEAFFEB),
+                          //           border:
+                          //               Border.all(color: AppColors.primary),
+                          //           borderRadius: BorderRadius.circular(8),
+                          //         ),
+                          //         padding: const EdgeInsets.symmetric(
+                          //           horizontal: 12,
+                          //           vertical: 16,
+                          //         ),
+                          //         alignment: Alignment.center,
+                          //         child: Text(
+                          //           'Create your first post',
+                          //           style:
+                          //               context.textTheme.labelMedium?.copyWith(
+                          //             color: const Color(0xFF575757),
+                          //           ),
                           //         ),
                           //       ),
                           //     )
@@ -704,7 +640,8 @@ class _HomePageState extends ConsumerState<HomePage> {
                                 height: 120,
                               ),
                               error: (err, stack) => const Center(
-                                  child: Text("Failed to load banners")),
+                                child: Text("Failed to load banners"),
+                              ),
                               data: (banners) {
                                 if (banners.isEmpty) {
                                   return const Center(
@@ -881,77 +818,77 @@ class _HomePageState extends ConsumerState<HomePage> {
     );
   }
 
-  _drugSearchWidget(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        context.push(PharmacySearchScreen.routeName);
-      },
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Expanded(
-                child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  decoration: const BoxDecoration(
-                    color: AppColors.primaryVariant,
-                    borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(24),
-                      topLeft: Radius.circular(4),
-                    ),
-                  ),
-                  child: Row(
-                    children: [
-                      SvgPicture.asset('drugstore'.toSvg),
-                      4.width,
-                      Text(
-                        'CHP Pharmacy eKiosk',
-                        style: context.textTheme.labelMedium?.copyWith(
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              (context.screenWidth * .1).width,
-            ],
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 18),
-            decoration: BoxDecoration(
-              boxShadow: const [
-                BoxShadow(
-                  color: Color(0x40A7A7A7),
-                  blurRadius: 11,
-                  offset: Offset(0, 4),
-                )
-              ],
-              color: Colors.white,
-              border: Border.all(
-                color: AppColors.primaryVariant,
-                width: .7,
-              ),
-              borderRadius: BorderRadius.circular(4),
-            ),
-            child: Row(
-              children: [
-                Text(
-                  'Search for any drugs',
-                  style: context.textTheme.bodyMedium?.copyWith(
-                    color: const Color(0xFF9D9D9D),
-                  ),
-                ),
-                const Spacer(),
-                SvgPicture.asset('search'.toSvg),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+  // _drugSearchWidget(BuildContext context) {
+  //   return InkWell(
+  //     onTap: () {
+  //       context.push(PharmacySearchScreen.routeName);
+  //     },
+  //     child: Column(
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       children: [
+  //         Row(
+  //           mainAxisSize: MainAxisSize.max,
+  //           children: [
+  //             Expanded(
+  //               child: Container(
+  //                 padding:
+  //                     const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+  //                 decoration: const BoxDecoration(
+  //                   color: AppColors.primaryVariant,
+  //                   borderRadius: BorderRadius.only(
+  //                     topRight: Radius.circular(24),
+  //                     topLeft: Radius.circular(4),
+  //                   ),
+  //                 ),
+  //                 child: Row(
+  //                   children: [
+  //                     SvgPicture.asset('drugstore'.toSvg),
+  //                     4.width,
+  //                     Text(
+  //                       'CHP Pharmacy eKiosk',
+  //                       style: context.textTheme.labelMedium?.copyWith(
+  //                         color: Colors.white,
+  //                       ),
+  //                     ),
+  //                   ],
+  //                 ),
+  //               ),
+  //             ),
+  //             (context.screenWidth * .1).width,
+  //           ],
+  //         ),
+  //         Container(
+  //           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 18),
+  //           decoration: BoxDecoration(
+  //             boxShadow: const [
+  //               BoxShadow(
+  //                 color: Color(0x40A7A7A7),
+  //                 blurRadius: 11,
+  //                 offset: Offset(0, 4),
+  //               )
+  //             ],
+  //             color: Colors.white,
+  //             border: Border.all(
+  //               color: AppColors.primaryVariant,
+  //               width: .7,
+  //             ),
+  //             borderRadius: BorderRadius.circular(4),
+  //           ),
+  //           child: Row(
+  //             children: [
+  //               Text(
+  //                 'Search for any drugs',
+  //                 style: context.textTheme.bodyMedium?.copyWith(
+  //                   color: const Color(0xFF9D9D9D),
+  //                 ),
+  //               ),
+  //               const Spacer(),
+  //               SvgPicture.asset('search'.toSvg),
+  //             ],
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 }

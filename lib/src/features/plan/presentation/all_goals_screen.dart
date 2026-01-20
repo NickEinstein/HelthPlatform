@@ -1,24 +1,25 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/foundation.dart';
+import 'package:greenzone_medical/src/features/home/presentation/widget/advert_helper.dart';
 import 'package:greenzone_medical/src/features/plan/widgets/start_plan_screen.dart';
 import 'package:greenzone_medical/src/model/my_app_category_model.dart';
-import 'package:greenzone_medical/src/model/my_app_model.dart';
-import 'package:greenzone_medical/src/provider/my_app_provider.dart';
+import 'package:greenzone_medical/src/model/regular_app_model.dart';
+import 'package:greenzone_medical/src/provider/all_providers.dart';
+import 'package:greenzone_medical/src/provider/my_goal_provider.dart';
 import 'package:greenzone_medical/src/resources/colors/colors.dart';
 import 'package:greenzone_medical/src/utils/extensions/extensions.dart';
 import 'package:greenzone_medical/src/utils/loading_widget.dart';
 import 'package:greenzone_medical/src/utils/packages.dart';
 
-class MyGoalsScreen extends ConsumerStatefulWidget {
-  static const routeName = '/my-goals';
-  const MyGoalsScreen({super.key});
+class AllGoalsScreen extends ConsumerStatefulWidget {
+  static const routeName = '/all-goals';
+  const AllGoalsScreen({super.key});
 
   @override
-  ConsumerState<MyGoalsScreen> createState() => _MyGoalsScreenState();
+  ConsumerState<AllGoalsScreen> createState() => _MyGoalsScreenState();
 }
 
-class _MyGoalsScreenState extends ConsumerState<MyGoalsScreen> {
-  List<MyAppModel> searchedApps = [];
+class _MyGoalsScreenState extends ConsumerState<AllGoalsScreen> {
+  List<RegularAppModel> searchedApps = [];
   late TextEditingController _searchController;
   bool isSearching = false;
 
@@ -26,6 +27,10 @@ class _MyGoalsScreenState extends ConsumerState<MyGoalsScreen> {
   initState() {
     super.initState();
     _searchController = TextEditingController();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(goalNotifierProvider.notifier).getAppCategories();
+      ref.read(goalNotifierProvider.notifier).getAllApps();
+    });
   }
 
   @override
@@ -34,10 +39,8 @@ class _MyGoalsScreenState extends ConsumerState<MyGoalsScreen> {
     super.dispose();
   }
 
-  void search(List<MyAppModel>? list) {
-    print('HE');
+  void search(List<RegularAppModel>? list) {
     if (!mounted) return;
-    print(list);
     try {
       final searchQuery = _searchController.text.toLowerCase();
       if (searchQuery.isEmpty) {
@@ -62,10 +65,12 @@ class _MyGoalsScreenState extends ConsumerState<MyGoalsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // final myApps = ref.watch(myAppsProvider);
+    final bannerState = ref.watch(bannerProvider);
     final authService = ref.watch(authServiceProvider);
-    final allAvailableApps = ref.watch(appByCategoryProvider(null));
-    final appCategories = ref.watch(appCategoryProvider);
+    final allAvailableApps = ref.watch(goalNotifierProvider.select(
+        (s) => s.allApps ?? const AsyncValue.data(<RegularAppModel>[])));
+    final appCategories = ref.watch(goalNotifierProvider.select(
+        (s) => s.categories ?? const AsyncValue.data(<MyAppCategoryModel>[])));
 
     return FutureBuilder<LoginResponse?>(
         future: authService.getStoredUser(),
@@ -79,6 +84,11 @@ class _MyGoalsScreenState extends ConsumerState<MyGoalsScreen> {
             backgroundColor: Colors.white,
             body: SafeArea(
               child: SingleChildScrollView(
+                physics: allAvailableApps.when(
+                  data: (_) => const AlwaysScrollableScrollPhysics(),
+                  loading: () => const NeverScrollableScrollPhysics(),
+                  error: (_, __) => const NeverScrollableScrollPhysics(),
+                ),
                 padding: const EdgeInsets.all(20.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -223,40 +233,81 @@ class _MyGoalsScreenState extends ConsumerState<MyGoalsScreen> {
                     ),
                     20.height,
                     // Ad Banner
-                    Container(
-                      height: 150,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: Colors.grey[300],
-                        borderRadius: BorderRadius.circular(10),
+                    if (!kDebugMode)
+                      bannerState.when(
+                        loading: () => const ListLoader(
+                          itemCount: 1,
+                          height: 120,
+                        ),
+                        error: (err, stack) =>
+                            const Center(child: Text("Failed to load banners")),
+                        data: (banners) {
+                          if (banners.isEmpty) {
+                            return const Center(
+                                child: Text("No banners available."));
+                          }
+                          // API banners only
+                          final List<AdvertModel> apiBanners =
+                              banners.map((banner) {
+                            final imageUrl = banner.imageUrl ?? "";
+                            final isVideo = imageUrl.endsWith('.mp4');
+                            return AdvertModel(
+                              title: "",
+                              description: "",
+                              backgroundColor: ColorConstant.primaryColor,
+                              mediaType: isVideo ? 'video' : 'image',
+                              imagePath:
+                                  "${AppConstants.noSlashImageURL}$imageUrl",
+                              onTap: () {
+                                final url = imageUrl.isNotEmpty
+                                    ? "${AppConstants.noSlashImageURL}$imageUrl"
+                                    : "https://edogoverp.com";
+                                try {
+                                  launchUrl(Uri.parse(url));
+                                } catch (e) {
+                                  debugPrint("⚠️ Failed to launch URL: $url");
+                                }
+                              },
+                            );
+                          }).toList();
+                          return AdvertHelper(goals: apiBanners);
+                        },
                       ),
-                      child: Stack(
-                        children: [
-                          Positioned.fill(
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  gradient: LinearGradient(
-                                      begin: Alignment.centerLeft,
-                                      end: Alignment.centerRight,
-                                      colors: [
-                                        Colors.grey[400]!,
-                                        Colors.grey[300]!
-                                      ])),
-                            ),
-                          ),
-                          Positioned(
-                            bottom: 20,
-                            left: 20,
-                            child: Text(
-                              'This is\nAn Advert',
-                              style: CustomTextStyle.labelXLBold
-                                  .copyWith(color: Colors.white, fontSize: 24),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
+
+                    // Container(
+                    //   height: 150,
+                    //   width: double.infinity,
+                    //   decoration: BoxDecoration(
+                    //     color: Colors.grey[300],
+                    //     borderRadius: BorderRadius.circular(10),
+                    //   ),
+                    //   child: Stack(
+                    //     children: [
+                    //       Positioned.fill(
+                    //         child: Container(
+                    //           decoration: BoxDecoration(
+                    //               borderRadius: BorderRadius.circular(10),
+                    //               gradient: LinearGradient(
+                    //                   begin: Alignment.centerLeft,
+                    //                   end: Alignment.centerRight,
+                    //                   colors: [
+                    //                     Colors.grey[400]!,
+                    //                     Colors.grey[300]!
+                    //                   ])),
+                    //         ),
+                    //       ),
+                    //       Positioned(
+                    //         bottom: 20,
+                    //         left: 20,
+                    //         child: Text(
+                    //           'This is\nAn Advert',
+                    //           style: CustomTextStyle.labelXLBold
+                    //               .copyWith(color: Colors.white, fontSize: 24),
+                    //         ),
+                    //       )
+                    //     ],
+                    //   ),
+                    // ),
                     20.height,
                     appCategories.when(
                       data: (categories) {
@@ -308,7 +359,7 @@ class _MyGoalsScreenState extends ConsumerState<MyGoalsScreen> {
   }
 
   Widget _appHorizontalWidget({
-    required MyAppModel app,
+    required RegularAppModel app,
     List<MyAppCategoryModel> categories = const [],
   }) {
     final category =
@@ -389,7 +440,7 @@ class CategoryAppsList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final appsAsync = ref.watch(appByCategoryProvider(category.id));
+    final appsAsync = ref.watch(goalByCategoryProvider(category.id));
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

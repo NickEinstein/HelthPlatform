@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:path/path.dart';
 
 import '../../../../../provider/all_providers.dart';
 import 'agora_call_screen.dart';
@@ -43,21 +42,25 @@ Future<void> acceptCall(
       await ref.read(allServiceProvider).getAgoraToken(uid, channelName);
 
   if (tokenResponse == null) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("Failed to join call")),
-    );
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Failed to join call")),
+      );
+    }
     return;
   }
 
-  Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (_) => AgoraCallScreen(
-        token: tokenResponse.token,
-        channelName: tokenResponse.channelName,
-        uid: tokenResponse.uid,
-        appId: tokenResponse.appId,
+  if (context.mounted) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => AgoraCallScreen(
+          token: tokenResponse.token,
+          channelName: tokenResponse.channelName,
+          uid: tokenResponse.uid,
+          appId: tokenResponse.appId,
+        ),
       ),
-    ),
-  );
+    );
+  }
 }

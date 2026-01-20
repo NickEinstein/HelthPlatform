@@ -51,7 +51,7 @@ class ChatPaginationNotifier
 
       state = AsyncValue.data([...currentList, ...newItems]);
       _pageNumber++;
-    } catch (e, st) {
+    } catch (e) {
       // You can decide whether to update error state here or just ignore
       // For now, just ignore to not override existing data:
       // state = AsyncValue.error(e, st);

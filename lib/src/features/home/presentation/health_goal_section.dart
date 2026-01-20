@@ -11,7 +11,7 @@ class HealthGoalsPager extends StatefulWidget {
   const HealthGoalsPager({super.key, required this.goals});
 
   @override
-  _HealthGoalsPagerState createState() => _HealthGoalsPagerState();
+  State<HealthGoalsPager> createState() => _HealthGoalsPagerState();
 }
 
 class _HealthGoalsPagerState extends State<HealthGoalsPager>

@@ -1,4 +1,16 @@
+import 'package:flutter/material.dart' show TimeOfDay, BuildContext, MaterialLocalizations;
 import 'package:intl/intl.dart';
+
+extension TimeOfDayExtension on TimeOfDay {
+ String formatTime(BuildContext context) {
+  final localizations = MaterialLocalizations.of(context);
+  return localizations.formatTimeOfDay(
+    this,
+    alwaysUse24HourFormat: true,
+  );
+}
+ 
+}
 
 DateTime firstDayInDateMonth(DateTime date) {
   return DateTime(date.year, date.month, 1);

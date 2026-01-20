@@ -1,15 +1,12 @@
+// ignore_for_file: unused_local_variable
+
 import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:greenzone_medical/src/utils/packages.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 // import '../../../utils/packages.dart';
-import '../../../routes/routes.dart';
 import '../../chats/presentation/model/widget/show_incoming_call.dart';
 import '../model/notification_model.dart' as notification;
 import 'background_service.dart';
@@ -233,6 +230,7 @@ class NotificationRepositoryImpl implements NotificationRepository {
     } catch (_) {}
   }
 
+  @override
   Future<void> displayLocalNotification(RemoteNotification message) async {
     const AndroidNotificationDetails androidDetails =
         AndroidNotificationDetails(

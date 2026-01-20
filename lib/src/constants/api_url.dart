@@ -3,9 +3,14 @@ import 'package:greenzone_medical/src/app_pkg.dart';
 class ApiUrl {
   ApiUrl._();
 
+  static String validateEmail(String email) =>
+      '/ConnectedHealthWebApi/api/Patient/${Uri.encodeComponent(email)}';
+
   static const String login = '/ConnectedHealthWebApi/api/auth/login';
   static const String socialLogin =
       '/ConnectedHealthWebApi/api/Auth/login/social';
+  static String accountActivity(String userId) =>
+      '/ConnectedHealthWebApi/api/Auth/audit/$userId';
 
   static const String registerUrl = '/ConnectedHealthWebApi/api/Patient';
   static const String uploadProfileUrl =
@@ -235,13 +240,19 @@ class ApiUrl {
   //
 
   static String getAppsByCategory(int id) =>
-      'https://api.greenzonetechnologies.com.ng/ConnectedHealthWebApi/api/apps/appByCategoryId?id=$id';
-  static String getAllApps =
-      'https://api.greenzonetechnologies.com.ng/ConnectedHealthWebApi/api/apps';
-  static String getAppsCategories =
-      'https://api.greenzonetechnologies.com.ng/ConnectedHealthWebApi/api/appCategories';
-  static String getMyApps =
-      'https://api.greenzonetechnologies.com.ng/ConnectedHealthWebApi/api/AppPlans';
+      '/ConnectedHealthWebApi/api/apps/appByCategoryId?id=$id';
+  static String getApps([int? id]) =>
+      '/ConnectedHealthWebApi/api/apps/${id ?? ''}';
+  static String getAppsCategories = '/ConnectedHealthWebApi/api/appCategories';
+  static String appPlan([int? id]) =>
+      '/ConnectedHealthWebApi/api/AppPlans/${id ?? ''}';
+  static String userGoals = '/ConnectedHealthWebApi/api/userGoals';
+  static String userGoalJournals(int goalId) =>
+      '/ConnectedHealthWebApi/api/userGoalJournal/goal/$goalId';
+  static String saveJournal(String uid) =>
+      '/ConnectedHealthWebApi/api/userGoalJournal?userid=$uid';
+  static String getAppPlanDashboard(String uid, int appId) =>
+      '/ConnectedHealthWebApi/api/AppDashboard/DashboardData?userId=$uid&appId=$appId';
 
   static String updatePatientProfile(String id) =>
       '/ConnectedHealthWebApi/api/patient/$id';
@@ -275,4 +286,12 @@ class ApiUrl {
   static String getCountry = '/ConnectedHealthWebApi/api/Geography/countries/';
   static String getState(String cid) =>
       '/ConnectedHealthWebApi/api/Geography/countries/$cid/states';
+
+  static String specialistUrl =
+      '/ConnectedHealthWebApi/api/Categories/SpecialistCategories';
+
+  static String submitFeedback =
+      '/feedbackportalapi/api/customerengagement/external';
+  static String trackFeedback(String trackId) =>
+      '/feedbackportalapi/api/customerengagement/track-id$trackId';
 }

@@ -59,33 +59,33 @@ class BillingResponse {
     if (json['paymentBreakdowns'] != null) {
       paymentBreakdowns = <PaymentBreakdowns>[];
       json['paymentBreakdowns'].forEach((v) {
-        paymentBreakdowns!.add(new PaymentBreakdowns.fromJson(v));
+        paymentBreakdowns!.add(PaymentBreakdowns.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['patientId'] = this.patientId;
-    data['treatmentId'] = this.treatmentId;
-    data['patient'] = this.patient;
-    data['diagnosis'] = this.diagnosis;
-    data['totalCost'] = this.totalCost;
-    data['totalHMOCover'] = this.totalHMOCover;
-    data['patientTotalBalance'] = this.patientTotalBalance;
-    data['hmoTotalBalance'] = this.hmoTotalBalance;
-    data['patientTotalDuePay'] = this.patientTotalDuePay;
-    data['hmoTotalDuePay'] = this.hmoTotalDuePay;
-    data['patientTotalDeposit'] = this.patientTotalDeposit;
-    data['hmoTotalDeposit'] = this.hmoTotalDeposit;
-    data['visitStartedOn'] = this.visitStartedOn;
-    data['visitEndedOn'] = this.visitEndedOn;
-    data['healthCareProviderId'] = this.healthCareProviderId;
-    data['hasHmo'] = this.hasHmo;
-    if (this.paymentBreakdowns != null) {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['patientId'] = patientId;
+    data['treatmentId'] = treatmentId;
+    data['patient'] = patient;
+    data['diagnosis'] = diagnosis;
+    data['totalCost'] = totalCost;
+    data['totalHMOCover'] = totalHMOCover;
+    data['patientTotalBalance'] = patientTotalBalance;
+    data['hmoTotalBalance'] = hmoTotalBalance;
+    data['patientTotalDuePay'] = patientTotalDuePay;
+    data['hmoTotalDuePay'] = hmoTotalDuePay;
+    data['patientTotalDeposit'] = patientTotalDeposit;
+    data['hmoTotalDeposit'] = hmoTotalDeposit;
+    data['visitStartedOn'] = visitStartedOn;
+    data['visitEndedOn'] = visitEndedOn;
+    data['healthCareProviderId'] = healthCareProviderId;
+    data['hasHmo'] = hasHmo;
+    if (paymentBreakdowns != null) {
       data['paymentBreakdowns'] =
-          this.paymentBreakdowns!.map((v) => v.toJson()).toList();
+          paymentBreakdowns!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -171,31 +171,31 @@ class PaymentBreakdowns {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['hmoId'] = this.hmoId;
-    data['medId'] = this.medId;
-    data['categoryId'] = this.categoryId;
-    data['cost'] = this.cost;
-    data['hmoCover'] = this.hmoCover;
-    data['duePay'] = this.duePay;
-    data['patientPaymentId'] = this.patientPaymentId;
-    data['patientId'] = this.patientId;
-    data['packageBenefitId'] = this.packageBenefitId;
-    data['healthCareProviderId'] = this.healthCareProviderId;
-    data['serviceOrProductId'] = this.serviceOrProductId;
-    data['productName'] = this.productName;
-    data['hmoDuePay'] = this.hmoDuePay;
-    data['patientDeposit'] = this.patientDeposit;
-    data['hmoDeposit'] = this.hmoDeposit;
-    data['patientBalance'] = this.patientBalance;
-    data['hmoBalance'] = this.hmoBalance;
-    data['status'] = this.status;
-    data['isPharmacy'] = this.isPharmacy;
-    data['hmoPackageId'] = this.hmoPackageId;
-    data['isCategoryItem'] = this.isCategoryItem;
-    data['isBed'] = this.isBed;
-    data['isEquipment'] = this.isEquipment;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['hmoId'] = hmoId;
+    data['medId'] = medId;
+    data['categoryId'] = categoryId;
+    data['cost'] = cost;
+    data['hmoCover'] = hmoCover;
+    data['duePay'] = duePay;
+    data['patientPaymentId'] = patientPaymentId;
+    data['patientId'] = patientId;
+    data['packageBenefitId'] = packageBenefitId;
+    data['healthCareProviderId'] = healthCareProviderId;
+    data['serviceOrProductId'] = serviceOrProductId;
+    data['productName'] = productName;
+    data['hmoDuePay'] = hmoDuePay;
+    data['patientDeposit'] = patientDeposit;
+    data['hmoDeposit'] = hmoDeposit;
+    data['patientBalance'] = patientBalance;
+    data['hmoBalance'] = hmoBalance;
+    data['status'] = status;
+    data['isPharmacy'] = isPharmacy;
+    data['hmoPackageId'] = hmoPackageId;
+    data['isCategoryItem'] = isCategoryItem;
+    data['isBed'] = isBed;
+    data['isEquipment'] = isEquipment;
     return data;
   }
 }

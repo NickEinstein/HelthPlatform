@@ -139,7 +139,7 @@ class _AppointmentCardState extends ConsumerState<AppointmentCard> {
                                   fontWeight: FontWeight.w500)),
                         ],
                       ),
-                      Divider()
+                      const Divider()
                     ],
                   ),
                 ),
@@ -171,11 +171,14 @@ class _AppointmentCardState extends ConsumerState<AppointmentCard> {
                                 await launchUrl(Uri.parse(zoomUrl),
                                     mode: LaunchMode.externalApplication);
                               } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content: Text(
-                                          "Could not launch Zoom meeting")),
-                                );
+                                if (mounted) {
+                                  // ignore: use_build_context_synchronously
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content: Text(
+                                            "Could not launch Zoom meeting")),
+                                  );
+                                }
                               }
                             },
                       style: ElevatedButton.styleFrom(
@@ -222,11 +225,14 @@ class _AppointmentCardState extends ConsumerState<AppointmentCard> {
                                   await launchUrl(Uri.parse(zoomUrl),
                                       mode: LaunchMode.externalApplication);
                                 } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                        content: Text(
-                                            "Could not launch Zoom meeting")),
-                                  );
+                                  if (mounted) {
+                                    // ignore: use_build_context_synchronously
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                          content: Text(
+                                              "Could not launch Zoom meeting")),
+                                    );
+                                  }
                                 }
                               },
                         child: Image.asset(

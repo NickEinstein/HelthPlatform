@@ -130,18 +130,18 @@ class ApiService {
     if (error is DioException) {
       if (error.response != null) {
         // Handle Dio specific errors with response here
-        print(
-            'Dio Error Response: ${error.response!.statusCode} - ${error.response!.statusMessage}');
-        print('Response Data: ${error.response!.data}');
+        // print(
+        //     'Dio Error Response: ${error.response!.statusCode} - ${error.response!.statusMessage}');
+        // print('Response Data: ${error.response!.data}');
         throw error;
       } else {
         // Handle Dio network errors here
-        print('Dio Network Error: ${error.message}');
+        // print('Dio Network Error: ${error.message}');
         throw error;
       }
     } else {
       // Handle other types of errors here
-      print('Generic Error: $error');
+      // print('Generic Error: $error');
       throw error;
     }
   }
@@ -208,21 +208,21 @@ class ApiService2 {
   }
 
   dynamic _handleError(error) {
-    if (error is DioError) {
+    if (error is DioException) {
       if (error.response != null) {
         // Handle Dio specific errors with response here
-        print(
-            'Dio Error Response: ${error.response!.statusCode} - ${error.response!.statusMessage}');
-        print('Response Data: ${error.response!.data}');
+        // print(
+        //     'Dio Error Response: ${error.response!.statusCode} - ${error.response!.statusMessage}');
+        // print('Response Data: ${error.response!.data}');
         throw error;
       } else {
         // Handle Dio network errors here
-        print('Dio Network Error: ${error.message}');
+        // print('Dio Network Error: ${error.message}');
         throw error;
       }
     } else {
       // Handle other types of errors here
-      print('Generic Error: $error');
+      // print('Generic Error: $error');
       throw error;
     }
   }
