@@ -87,7 +87,7 @@ class _HealthGoalsPagerState extends State<HealthGoalsPager>
         ),
         // const SizedBox(height: 8),
         Align(
-          alignment: Alignment.centerLeft,
+          alignment: Alignment.center,
           // scrollDirection: Axis.horizontal,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
