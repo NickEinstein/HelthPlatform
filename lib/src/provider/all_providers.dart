@@ -34,10 +34,12 @@ import '../features/prescription/models/prescription_model.dart';
 import '../model/article_response.dart';
 import '../model/banner_response.dart';
 import '../services/all_service.dart';
+import '../services/cloud_translate_service.dart';
 
 // Provider for ArticleService
 final isLoadingProvider = StateProvider<bool>((ref) => false);
 final isAgreedProvider = StateProvider<bool>((ref) => false);
+final languageProvider = StateProvider<String>((ref) => "en");
 
 final storageServiceProvider = Provider<StorageService>((ref) {
   return StorageServiceImpl();
@@ -329,4 +331,21 @@ final userUnreadNotificationProvider =
     FutureProvider.autoDispose<UnreadNotificationResponse>((ref) async {
   final responseListService = ref.watch(allServiceProvider);
   return await responseListService.fetchUnreadNotification();
+});
+final cloudTranslateProvider = Provider((ref) {
+  const apiKey = "AIzaSyAr16nQrhWSnyM9geBTAJlBBwkg69kGTEc";
+  return CloudTranslateService(apiKey);
+});
+
+final cloudTranslatedTextProvider =
+    FutureProvider.family<String, String>((ref, text) async {
+  final lang = ref.watch(languageProvider);
+  final service = ref.watch(cloudTranslateProvider);
+
+  if (lang == "en") return text;
+
+  return await service.translateText(
+    text: text,
+    to: lang,
+  );
 });
