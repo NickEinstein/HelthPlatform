@@ -247,7 +247,7 @@ class _CustomLongTextFieldState extends State<CustomLongTextField> {
             ),
             filled: true, // Enable background color
             fillColor: _hasText
-                ? ColorConstant.primaryLightColor.withOpacity(0.3)
+                ? ColorConstant.primaryLightColor.withValues(alpha: 0.3)
                 : Colors.transparent, // Background color
           ),
         ),
@@ -355,7 +355,7 @@ class _CustomDropdownState extends State<CustomDropdown> {
               ),
               filled: true,
               fillColor: _selectedValue != null
-                  ? ColorConstant.primaryLightColor.withOpacity(0.3)
+                  ? ColorConstant.primaryLightColor.withValues(alpha: 0.3)
                   : Colors.transparent,
             ),
           ),
@@ -508,7 +508,7 @@ class OldPasswordTextField extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _OldPasswordTextFieldState createState() => _OldPasswordTextFieldState();
+  State<OldPasswordTextField> createState() => _OldPasswordTextFieldState();
 }
 
 class _OldPasswordTextFieldState extends State<OldPasswordTextField> {
@@ -566,7 +566,7 @@ class _OldPasswordTextFieldState extends State<OldPasswordTextField> {
           decoration: InputDecoration(
             filled: true,
             fillColor: hasText.value
-                ? ColorConstant.primaryLightColor.withOpacity(0.3)
+                ? ColorConstant.primaryLightColor.withValues(alpha: 0.3)
                 : Colors.white,
             hintText: "Enter Password",
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
@@ -621,7 +621,7 @@ class PasswordTextField extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _PasswordTextFieldState createState() => _PasswordTextFieldState();
+  State<PasswordTextField> createState() => _PasswordTextFieldState();
 }
 
 class _PasswordTextFieldState extends State<PasswordTextField> {
@@ -703,7 +703,7 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
           decoration: InputDecoration(
             filled: true,
             fillColor: hasText.value
-                ? ColorConstant.primaryLightColor.withOpacity(0.3)
+                ? ColorConstant.primaryLightColor.withValues(alpha: 0.3)
                 : Colors.white,
             hintText: "Enter Password",
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
@@ -799,7 +799,7 @@ class ConfirmPasswordTextField extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _ConfirmPasswordTextFieldState createState() =>
+  State<ConfirmPasswordTextField> createState() =>
       _ConfirmPasswordTextFieldState();
 }
 
@@ -873,7 +873,7 @@ class _ConfirmPasswordTextFieldState extends State<ConfirmPasswordTextField> {
                 const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
             filled: true,
             fillColor: hasText
-                ? ColorConstant.primaryLightColor.withOpacity(0.3)
+                ? ColorConstant.primaryLightColor.withValues(alpha: 0.3)
                 : Colors.transparent,
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(3),
@@ -938,7 +938,7 @@ class LoginPasswordTextField extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _LoginPasswordTextFieldState createState() => _LoginPasswordTextFieldState();
+  State<LoginPasswordTextField> createState() => _LoginPasswordTextFieldState();
 }
 
 class _LoginPasswordTextFieldState extends State<LoginPasswordTextField> {
@@ -1102,7 +1102,7 @@ class _DateOfBirthFieldState extends State<DateOfBirthField> {
             ),
             filled: true,
             fillColor: _hasDate
-                ? ColorConstant.primaryLightColor.withOpacity(0.3)
+                ? ColorConstant.primaryLightColor.withValues(alpha: 0.3)
                 : Colors.transparent,
           ),
         ),
@@ -1136,8 +1136,9 @@ String timeAgos(DateTime dateTime) {
 }
 
 String timeAgo(String? createdAt, String title) {
-  if (createdAt == null || createdAt.isEmpty)
+  if (createdAt == null || createdAt.isEmpty) {
     return "Creation date unavailable";
+  }
 
   try {
     DateTime createdDate = DateTime.parse(createdAt).toLocal();
@@ -1146,13 +1147,13 @@ String timeAgo(String? createdAt, String title) {
 
     if (difference.inDays >= 7) {
       int weeks = (difference.inDays / 7).floor();
-      return "${title} about $weeks ${weeks == 1 ? 'week' : 'weeks'} ago";
+      return "$title about $weeks ${weeks == 1 ? 'week' : 'weeks'} ago";
     } else if (difference.inDays > 0) {
-      return "${title} about ${difference.inDays} ${difference.inDays == 1 ? 'day' : 'days'} ago";
+      return "$title about ${difference.inDays} ${difference.inDays == 1 ? 'day' : 'days'} ago";
     } else if (difference.inHours > 0) {
-      return "${title} about ${difference.inHours} ${difference.inHours == 1 ? 'hour' : 'hours'} ago";
+      return "$title about ${difference.inHours} ${difference.inHours == 1 ? 'hour' : 'hours'} ago";
     } else {
-      return "${title} just now";
+      return "$title just now";
     }
   } catch (e) {
     return "Invalid date format";
@@ -1343,7 +1344,7 @@ Future<List<String>?> openCategoryFilterDialog(
                   disabledBackgroundColor: const Color(
                       0xffA8D5BA), // Ensure disabled color is applied
                   disabledForegroundColor: Colors.white
-                      .withOpacity(0.6), // Lightened text for disabled state
+                      .withValues(alpha: 0.6), // Lightened text for disabled state
                   minimumSize: const Size(double.infinity, 55),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),

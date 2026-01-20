@@ -1,7 +1,9 @@
+import 'package:greenzone_medical/src/features/account/model/track_feedback_response.dart';
 import 'package:greenzone_medical/src/features/account/presentation/flagged_content.dart';
 import 'package:greenzone_medical/src/features/account/presentation/referred_content.dart';
 import 'package:greenzone_medical/src/features/appointment/appointment.dart';
 import 'package:greenzone_medical/src/features/appointment/presentation/widgets/reasoncancelled_appointments.dart';
+import 'package:greenzone_medical/src/features/auth/presentation/auth_landing_page.dart';
 import 'package:greenzone_medical/src/features/caregivers/presentation/engage_page.dart';
 import 'package:greenzone_medical/src/features/chats/chats.dart';
 import 'package:greenzone_medical/src/features/chats/presentation/model/chatcontact_model.dart';
@@ -15,7 +17,7 @@ import 'package:greenzone_medical/src/features/pharmacy/presentation/pharmacy_se
 import 'package:greenzone_medical/src/features/pharmacy/presentation/single_drug_detail.dart';
 import 'package:greenzone_medical/src/features/plan/presentation/single_plan_dashboard.dart';
 import 'package:greenzone_medical/src/features/prescription/presentation/prescriptions.dart';
-import 'package:greenzone_medical/src/features/plan/presentation/my_goals_screen.dart';
+import 'package:greenzone_medical/src/features/plan/presentation/all_goals_screen.dart';
 import 'package:greenzone_medical/src/features/profile/presentation/allergy_details.dart';
 import 'package:greenzone_medical/src/features/profile/presentation/immunization_details.dart';
 import 'package:greenzone_medical/src/features/profile/presentation/profile_management.dart';
@@ -24,7 +26,13 @@ import 'package:greenzone_medical/src/features/profile/presentation/update_emerg
 import 'package:greenzone_medical/src/features/profile/presentation/update_personal_info_screen.dart';
 import 'package:greenzone_medical/src/features/plan/widgets/start_plan_screen.dart';
 import 'package:greenzone_medical/src/model/community_list_response.dart';
-import 'package:greenzone_medical/src/model/my_app_model.dart';
+import 'package:greenzone_medical/src/model/regular_app_model.dart';
+import '../features/community_profile/community_profile.dart';
+import '../features/hmo/presentation/hmo_screen.dart';
+import '../features/hmo/presentation/out_patient_limit_screen.dart';
+import '../features/account/presentation/submit_feedback_page.dart';
+import '../features/account/presentation/track_feedback_screen.dart';
+import '../features/account/presentation/account_activity_page.dart';
 import '../features/account/presentation/account_reset_password.dart';
 import '../features/appointment/model/appointment_model.dart';
 import '../features/article/all_articles.dart';
@@ -62,6 +70,10 @@ final routerProvider = Provider<GoRouter>((ref) {
     debugLogDiagnostics: true,
     initialLocation: _Paths.SPLASH,
     routes: [
+      GoRoute(
+        path: _Paths.AUTHLANDINGPAGE,
+        builder: (context, state) => const AuthLandingPage(),
+      ),
       GoRoute(
         path: AllergyDetailsScreen.routeName,
         builder: (context, state) => const AllergyDetailsScreen(),
@@ -128,7 +140,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: SinglePlanDashboard.routeName,
         builder: (context, state) {
           return SinglePlanDashboard(
-            myApp: state.extra as MyAppModel,
+            myApp: state.extra as RegularAppModel,
           );
         },
       ),
@@ -136,14 +148,14 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: StartPlanScreen.routeName,
         builder: (context, state) {
           return StartPlanScreen(
-            app: state.extra as MyAppModel,
+            app: state.extra as RegularAppModel,
           );
         },
       ),
       GoRoute(
-        path: MyGoalsScreen.routeName,
+        path: AllGoalsScreen.routeName,
         builder: (context, state) {
-          return const MyGoalsScreen();
+          return const AllGoalsScreen();
         },
       ),
       GoRoute(
@@ -196,9 +208,11 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: _Paths.OTPPAGE,
         name: _Paths.OTPPAGE,
         builder: (context, state) {
-          final email = state.extra as String;
+          final email = (state.extra as Map<String, dynamic>)['email'];
+          final channel = (state.extra as Map<String, dynamic>)['channel'];
           return OTPPage(
             email: email,
+            channel: channel,
           );
         },
       ),
@@ -242,7 +256,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: _Paths.HOMEPAGE,
         name: _Paths.HOMEPAGE,
         builder: (context, state) {
-          return const HomePage();
+          return HomePage(scaffoldKey: state.extra as GlobalKey<ScaffoldState>);
         },
       ),
       GoRoute(
@@ -591,21 +605,65 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: _Paths.ACCOUNTRESETPASSWORDPAGE,
         name: _Paths.ACCOUNTRESETPASSWORDPAGE,
         builder: (context, state) {
-          return AccountResetPasswordPage();
+          return const AccountResetPasswordPage();
         },
       ),
       GoRoute(
         path: _Paths.FLAGGEDCONTENTPAGE,
         name: _Paths.FLAGGEDCONTENTPAGE,
         builder: (context, state) {
-          return FlaggedContentPage();
+          return const FlaggedContentPage();
         },
       ),
       GoRoute(
         path: _Paths.REFFEREDCONTENTPAGE,
         name: _Paths.REFFEREDCONTENTPAGE,
         builder: (context, state) {
-          return ReferredContentPage();
+          return const ReferredContentPage();
+        },
+      ),
+      GoRoute(
+        path: _Paths.COMMUNITY_PROFILE,
+        name: _Paths.COMMUNITY_PROFILE,
+        builder: (context, state) {
+          return const CommunityProfile();
+        },
+      ),
+      GoRoute(
+        path: _Paths.HMO,
+        name: _Paths.HMO,
+        builder: (context, state) {
+          return const HMOScreen();
+        },
+      ),
+      GoRoute(
+        path: _Paths.SUBMITFEEDBACKPAGE,
+        name: _Paths.SUBMITFEEDBACKPAGE,
+        builder: (context, state) {
+          return const SubmitFeedbackPage();
+        },
+      ),
+      GoRoute(
+        path: _Paths.OUT_PATIENT_LIMIT,
+        name: _Paths.OUT_PATIENT_LIMIT,
+        builder: (context, state) {
+          return const OutPatientLimitScreen();
+        },
+      ),
+      GoRoute(
+        path: _Paths.TRACKFEEDBACKSCREEN,
+        name: _Paths.TRACKFEEDBACKSCREEN,
+        builder: (context, state) {
+          final trackFeedbackResponse = state.extra as TrackFeedbackResponse;
+          return TrackFeedbackScreen(
+              trackFeedbackResponse: trackFeedbackResponse);
+        },
+      ),
+      GoRoute(
+        path: _Paths.ACCOUNTACTIVITYPAGE,
+        name: _Paths.ACCOUNTACTIVITYPAGE,
+        builder: (context, state) {
+          return const AccountActivityPage();
         },
       ),
     ],

@@ -22,7 +22,7 @@ class _NotesPageState extends ConsumerState<NotesPage> {
   @override
   Widget build(BuildContext context) {
     final prescriptionResponse =
-        ref.watch(userPrescriptionByIdProvider(widget.screenData.id!));
+        ref.watch(userPrescriptionByIdProvider(widget.screenData.id));
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -57,9 +57,10 @@ class _NotesPageState extends ConsumerState<NotesPage> {
                   ),
                   smallSpace(),
                   buildRecordTile(
-                    title: widget.screenData.diagnosis ?? '',
+                    title: widget.screenData.diagnosis,
                     subtitle: formatNewDate(
-                        widget.screenData.dateOfVisit.toIso8601String() ?? ''),
+                      widget.screenData.dateOfVisit.toIso8601String(),
+                    ),
                     icon: SvgAssets.medx,
                     isSvg: false,
                     isCircle: true,
@@ -421,7 +422,7 @@ class _NotesPageState extends ConsumerState<NotesPage> {
                               ),
                             ),
                             padding: const EdgeInsets.all(16),
-                            child: widget.screenData.diagnosis!.isEmpty
+                            child: widget.screenData.diagnosis.isEmpty
                                 ? Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
@@ -444,7 +445,7 @@ class _NotesPageState extends ConsumerState<NotesPage> {
                                       ),
                                       tiny5Space(),
                                       Text(
-                                        '${widget.screenData.diagnosis}',
+                                        widget.screenData.diagnosis,
                                         style: CustomTextStyle.textsmall14
                                             .withColorHex(0xff393939),
                                       ),
@@ -594,7 +595,7 @@ class _NotesPageState extends ConsumerState<NotesPage> {
                                 prescriptionResponse.when(
                                   loading: () => const Center(
                                       child: CircularProgressIndicator()),
-                                  error: (error, _) => Center(
+                                  error: (error, _) => const Center(
                                       child: Text('No available prescription')),
                                   data: (prescriptions) {
                                     return Column(
@@ -629,7 +630,8 @@ class _NotesPageState extends ConsumerState<NotesPage> {
                                               child: Container(
                                                 decoration: BoxDecoration(
                                                   border: Border.all(
-                                                      color: Color(0xFFCACACA),
+                                                      color: const Color(
+                                                          0xFFCACACA),
                                                       width: 1), // Grey outline
                                                   borderRadius:
                                                       BorderRadius.circular(24),
@@ -642,7 +644,8 @@ class _NotesPageState extends ConsumerState<NotesPage> {
                                                   },
                                                   child: Container(
                                                     decoration: BoxDecoration(
-                                                      color: Color(0xff8209CD),
+                                                      color: const Color(
+                                                          0xff8209CD),
                                                       borderRadius:
                                                           BorderRadius.circular(
                                                               20),
@@ -651,7 +654,7 @@ class _NotesPageState extends ConsumerState<NotesPage> {
                                                         .symmetric(
                                                         vertical: 10,
                                                         horizontal: 20),
-                                                    child: Text(
+                                                    child: const Text(
                                                       'View Prescription Details',
                                                       style: TextStyle(
                                                         color: Colors.white,
@@ -734,7 +737,7 @@ class _NotesPageState extends ConsumerState<NotesPage> {
                               ),
                             ),
                             padding: const EdgeInsets.all(16),
-                            child: widget.screenData.carePlan!.isEmpty
+                            child: widget.screenData.carePlan.isEmpty
                                 ? Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
@@ -757,7 +760,7 @@ class _NotesPageState extends ConsumerState<NotesPage> {
                                       ),
                                       tiny5Space(),
                                       Text(
-                                        '${widget.screenData.carePlan}',
+                                        widget.screenData.carePlan,
                                         style: CustomTextStyle.textsmall14
                                             .withColorHex(0xff393939),
                                       ),
@@ -827,7 +830,7 @@ class _NotesPageState extends ConsumerState<NotesPage> {
                               ),
                             ),
                             padding: const EdgeInsets.all(16),
-                            child: Column(
+                            child: const Column(
                               crossAxisAlignment: CrossAxisAlignment
                                   .start, // Ensure alignment starts from the left
                               children: [

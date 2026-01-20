@@ -56,31 +56,31 @@ class AllPostResponse {
     if (json['comments'] != null) {
       comments = <Comments>[];
       json['comments'].forEach((v) {
-        comments!.add(new Comments.fromJson(v));
+        comments!.add(Comments.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['content'] = this.content;
-    data['groupId'] = this.groupId;
-    data['groupName'] = this.groupName;
-    data['memberFullName'] = this.memberFullName;
-    data['mediaUrl'] = this.mediaUrl;
-    data['mediaType'] = this.mediaType;
-    data['pictureUrl'] = this.pictureUrl;
-    data['createdAt'] = this.createdAt;
-    data['likeCount'] = this.likeCount;
-    data['repostCount'] = this.repostCount;
-    data['likesCount'] = this.likesCount;
-    data['loveCount'] = this.loveCount;
-    data['laughCount'] = this.laughCount;
-    data['wowCount'] = this.wowCount;
-    data['sadCount'] = this.sadCount;
-    if (this.comments != null) {
-      data['comments'] = this.comments!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['content'] = content;
+    data['groupId'] = groupId;
+    data['groupName'] = groupName;
+    data['memberFullName'] = memberFullName;
+    data['mediaUrl'] = mediaUrl;
+    data['mediaType'] = mediaType;
+    data['pictureUrl'] = pictureUrl;
+    data['createdAt'] = createdAt;
+    data['likeCount'] = likeCount;
+    data['repostCount'] = repostCount;
+    data['likesCount'] = likesCount;
+    data['loveCount'] = loveCount;
+    data['laughCount'] = laughCount;
+    data['wowCount'] = wowCount;
+    data['sadCount'] = sadCount;
+    if (comments != null) {
+      data['comments'] = comments!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -121,16 +121,16 @@ class Comments {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['postId'] = this.postId;
-    data['memberId'] = this.memberId;
-    data['employeeId'] = this.employeeId;
-    data['commenterFullName'] = this.commenterFullName;
-    data['profilePictureUrl'] = this.profilePictureUrl;
-    data['userType'] = this.userType;
-    data['commentText'] = this.commentText;
-    data['createdAt'] = this.createdAt;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['postId'] = postId;
+    data['memberId'] = memberId;
+    data['employeeId'] = employeeId;
+    data['commenterFullName'] = commenterFullName;
+    data['profilePictureUrl'] = profilePictureUrl;
+    data['userType'] = userType;
+    data['commentText'] = commentText;
+    data['createdAt'] = createdAt;
     return data;
   }
 }

@@ -25,16 +25,16 @@ class FriendRequestReceiverResponse {
   FriendRequestReceiverResponse.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     patientSender = json['patientSender'] != null
-        ? new PatientSender.fromJson(json['patientSender'])
+        ? PatientSender.fromJson(json['patientSender'])
         : null;
     patientReceiver = json['patientReceiver'] != null
-        ? new PatientSender.fromJson(json['patientReceiver'])
+        ? PatientSender.fromJson(json['patientReceiver'])
         : null;
     employeeSender = json['employeeSender'] != null
-        ? new EmployeeSender.fromJson(json['employeeSender'])
+        ? EmployeeSender.fromJson(json['employeeSender'])
         : null;
     employeeReceiver = json['employeeReceiver'] != null
-        ? new EmployeeSender.fromJson(json['employeeReceiver'])
+        ? EmployeeSender.fromJson(json['employeeReceiver'])
         : null;
     status = json['status'];
     isHealthPractitioner = json['isHealthPractitioner'];
@@ -44,25 +44,25 @@ class FriendRequestReceiverResponse {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    if (this.patientSender != null) {
-      data['patientSender'] = this.patientSender!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    if (patientSender != null) {
+      data['patientSender'] = patientSender!.toJson();
     }
-    if (this.patientReceiver != null) {
-      data['patientReceiver'] = this.patientReceiver!.toJson();
+    if (patientReceiver != null) {
+      data['patientReceiver'] = patientReceiver!.toJson();
     }
-    if (this.employeeSender != null) {
-      data['employeeSender'] = this.employeeSender!.toJson();
+    if (employeeSender != null) {
+      data['employeeSender'] = employeeSender!.toJson();
     }
-    if (this.employeeReceiver != null) {
-      data['employeeReceiver'] = this.employeeReceiver!.toJson();
+    if (employeeReceiver != null) {
+      data['employeeReceiver'] = employeeReceiver!.toJson();
     }
-    data['status'] = this.status;
-    data['isHealthPractitioner'] = this.isHealthPractitioner;
-    data['createdAt'] = this.createdAt;
-    data['acceptedAt'] = this.acceptedAt;
-    data['rejectedAt'] = this.rejectedAt;
+    data['status'] = status;
+    data['isHealthPractitioner'] = isHealthPractitioner;
+    data['createdAt'] = createdAt;
+    data['acceptedAt'] = acceptedAt;
+    data['rejectedAt'] = rejectedAt;
     return data;
   }
 }
@@ -87,11 +87,11 @@ class PatientSender {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['pictureUrl'] = this.pictureUrl;
-    data['firstName'] = this.firstName;
-    data['lastName'] = this.lastName;
-    data['gender'] = this.gender;
+    data['id'] = id;
+    data['pictureUrl'] = pictureUrl;
+    data['firstName'] = firstName;
+    data['lastName'] = lastName;
+    data['gender'] = gender;
     return data;
   }
 }
@@ -110,10 +110,10 @@ class EmployeeSender {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['firstName'] = this.firstName;
-    data['lastName'] = this.lastName;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['firstName'] = firstName;
+    data['lastName'] = lastName;
     return data;
   }
 }

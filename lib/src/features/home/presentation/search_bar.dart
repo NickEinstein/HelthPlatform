@@ -36,8 +36,8 @@ class CustomSearchBar extends StatelessWidget {
               child: TextField(
                 controller: controller,
                 onChanged: onChanged,
-                style: TextStyle(color: Colors.black),
-                decoration: InputDecoration(
+                style: const TextStyle(color: Colors.black),
+                decoration: const InputDecoration(
                   hintText: "Search meds or article...",
                   hintStyle: TextStyle(
                       color: Color(0xff999999),

@@ -21,7 +21,7 @@ class _CaregiverDetailsPageState extends State<CaregiverDetailsPage> {
     final phone = widget.caregiver.phone ?? 'No phone';
     final type =
         '${widget.caregiver.rcNumber}'; // You can dynamically update this later
-    final address = '10 Crescent Close, Yaba, Lagos'; // Optional fallback
+    const address = '10 Crescent Close, Yaba, Lagos'; // Optional fallback
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -94,7 +94,7 @@ class _CaregiverDetailsPageState extends State<CaregiverDetailsPage> {
                     padding:
                         const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                     decoration: BoxDecoration(
-                      color: Color(0xffEAFFEB),
+                      color: const Color(0xffEAFFEB),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Padding(

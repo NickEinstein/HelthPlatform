@@ -21,12 +21,13 @@ class PasswordScreen extends StatefulWidget {
 class _PasswordScreenState extends State<PasswordScreen> {
   String password = "";
 
-  bool _passwordsMatch = false;
-  bool _isValid = false;
+  // bool _passwordsMatch = false;
+  // bool _isValid = false;
 
   void _validateForm() {
     setState(() {
-      _isValid = widget.formKey.currentState?.validate() ?? false;
+      // _isValid =
+      widget.formKey.currentState?.validate() ?? false;
     });
   }
 
@@ -62,7 +63,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   if (mounted) {
                     setState(() {
-                      _passwordsMatch = isMatching;
+                      // _passwordsMatch = isMatching;
                     });
                   }
                 });

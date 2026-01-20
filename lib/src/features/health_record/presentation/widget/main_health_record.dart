@@ -136,7 +136,7 @@ class _MainHealthRecordState extends ConsumerState<MainHealthRecord> {
         );
 
       case 'Immunization':
-        return ImmunizationMedical();
+        return const ImmunizationMedical();
 
       default:
         return const SizedBox.shrink();
@@ -162,7 +162,7 @@ class _MainHealthRecordState extends ConsumerState<MainHealthRecord> {
           padding: EdgeInsets.zero,
           physics: const NeverScrollableScrollPhysics(),
           itemBuilder: (_, i) => buildGrayRecordTile(
-            title: records[i].diagnosis ?? 'Unknown Diagnosis',
+            title: records[i].diagnosis.isEmpty ? 'Unknown Diagnosis' : records[i].diagnosis,
             subtitle: formatNewDate(records[i].dateOfVisit.toIso8601String()),
             icon: 'assets/images/bocx.png',
             isSvg: true,

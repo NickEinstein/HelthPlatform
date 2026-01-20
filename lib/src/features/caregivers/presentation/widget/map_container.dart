@@ -64,9 +64,11 @@ class _MapContainerState extends State<MapContainer> {
     if (await canLaunchUrl(Uri.parse(url))) {
       await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Couldn't open map.")),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Couldn't open map.")),
+        );
+      }
     }
   }
 
@@ -119,7 +121,7 @@ class _MapContainerState extends State<MapContainer> {
                       child: Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(7),
-                          color: Colors.white.withOpacity(0.9),
+                          color: Colors.white.withValues(alpha: 0.9),
                         ),
                         padding: const EdgeInsets.all(8.0),
                         child: Column(

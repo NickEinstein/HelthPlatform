@@ -29,7 +29,7 @@ class _ToastContent extends StatelessWidget {
   final String message;
   final ToastType type;
 
-  const _ToastContent({super.key, required this.message, required this.type});
+  const _ToastContent({required this.message, required this.type});
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +56,7 @@ class _ToastContent extends StatelessWidget {
       decoration: BoxDecoration(
         color: bgColor,
         borderRadius: BorderRadius.circular(8),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(color: Colors.black26, blurRadius: 4, offset: Offset(0, 2))
         ],
       ),

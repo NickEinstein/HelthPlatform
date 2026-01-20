@@ -1,8 +1,10 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:greenzone_medical/src/app_pkg.dart';
 import 'package:greenzone_medical/src/routes/routes.dart';
+import 'package:greenzone_medical/src/utils/enum.dart';
 
 import '../../../provider/all_providers.dart';
 import '../../../utils/custom_header.dart';
@@ -13,8 +15,9 @@ import 'dart:async';
 
 class OTPPage extends ConsumerStatefulWidget {
   final String email; // Make email immutable
+  final OTPChannel? channel;
 
-  OTPPage({super.key, required this.email});
+  const OTPPage({super.key, required this.email, this.channel});
 
   @override
   ConsumerState<OTPPage> createState() => _OTPPageState();
@@ -111,7 +114,7 @@ class _OTPPageState extends ConsumerState<OTPPage> {
                 ),
                 smallSpace(),
                 const Text(
-                  "A four-digit code has been sent to your email",
+                  "A four-digit code has been sent to you",
                   style: TextStyle(
                       color: ColorConstant.secondryColor,
                       fontSize: 14,
@@ -124,7 +127,7 @@ class _OTPPageState extends ConsumerState<OTPPage> {
                     otpController.text = pin;
                   },
                   validator: (value) {
-                    if ( value.isEmpty) {
+                    if (value.isEmpty) {
                       return "Enter a 4-digit PIN";
                     } else if (value.length < 4) {
                       return "OTP must be exactly 4 digits";
@@ -138,53 +141,89 @@ class _OTPPageState extends ConsumerState<OTPPage> {
                     style: const TextStyle(
                         fontSize: 14, fontWeight: FontWeight.bold),
                     children: [
-                      const TextSpan(
-                        text: "Resend code in ",
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
                       TextSpan(
-                        text: "${_remainingTime}s",
-                        style: const TextStyle(
+                        text: "Resend code",
+                        style: TextStyle(
+                          color: _remainingTime > 0
+                              ? Colors.black
+                              : ColorConstant.primaryColor,
                           fontWeight: FontWeight.w600,
-                          color: Color(0xffE54335),
                         ),
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () async {
+                            if (_remainingTime > 0) return;
+                            ref.read(isLoadingProvider.notifier).state = true;
+
+                            final authService = ref.read(authServiceProvider);
+                            final result = await authService.otpSendUrl(
+                              email:
+                                  widget.channel == null ? widget.email : null,
+                              sendChannel: widget.channel,
+                            );
+
+                            if (!context.mounted) return;
+                            ref.read(isLoadingProvider.notifier).state = false;
+
+                            if (result == 'successful') {
+                              CustomToast.show(context, "OTP sent successfully",
+                                  type: ToastType.success);
+                              _startCountdown();
+                            } else {
+                              CustomToast.show(context, result,
+                                  type: ToastType.error);
+                            }
+                          },
                       ),
+                      if (_remainingTime > 0) ...[
+                        const TextSpan(
+                          text: " in ",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        TextSpan(
+                          text: "${_remainingTime}s",
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xffE54335),
+                          ),
+                        ),
+                      ],
                     ],
                   ),
                 ),
                 mediumSpace(),
-                if (isButtonEnabled)
-                  GestureDetector(
-                    onTap: () async {
-                      ref.read(isLoadingProvider.notifier).state = true;
+                // if (isButtonEnabled)
+                //   GestureDetector(
+                //     onTap: () async {
+                //       ref.read(isLoadingProvider.notifier).state = true;
 
-                      final authService = ref.read(authServiceProvider);
-                      final result = await authService.otpSendUrl(email:widget.email);
+                //       final authService = ref.read(authServiceProvider);
+                //       final result =
+                //           await authService.otpSendUrl(email: widget.email);
 
-                      if (!context.mounted) return;
-                      ref.read(isLoadingProvider.notifier).state = false;
+                //       if (!context.mounted) return;
+                //       ref.read(isLoadingProvider.notifier).state = false;
 
-                      if (result == 'successful') {
-                        CustomToast.show(context, "OTP sent successfully",
-                            type: ToastType.success);
-                        _startCountdown();
-                      } else {
-                        CustomToast.show(context, result,
-                            type: ToastType.error);
-                      }
-                    },
-                    child: Text(
-                      "Click here",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        decoration: TextDecoration.underline,
-                        color: ColorConstant.primaryColor,
-                      ),
-                    ),
-                  ),
+                //       if (result == 'successful') {
+                //         CustomToast.show(context, "OTP sent successfully",
+                //             type: ToastType.success);
+                //         _startCountdown();
+                //       } else {
+                //         CustomToast.show(context, result,
+                //             type: ToastType.error);
+                //       }
+                //     },
+                //     child: const Text(
+                //       "Click here",
+                //       style: TextStyle(
+                //         fontWeight: FontWeight.w600,
+                //         decoration: TextDecoration.underline,
+                //         color: ColorConstant.primaryColor,
+                //       ),
+                //     ),
+                //   ),
                 mediumSpace(),
                 isLoading
                     ? const Center(child: CircularProgressIndicator())

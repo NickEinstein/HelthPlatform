@@ -1,7 +1,6 @@
 import 'package:greenzone_medical/src/model/community_list_response.dart';
 
 import '../../../provider/all_providers.dart';
-import '../../../utils/network_img_fallback.dart';
 import '../../../utils/packages.dart';
 import '../../chats/presentation/model/chatcontact_model.dart';
 import 'widget/build_group_avatars.dart';
@@ -274,8 +273,9 @@ class CommunityFriendDetails extends ConsumerWidget {
                                                                   patientProfile
                                                                       .id!);
 
-                                                      if (!context.mounted)
+                                                      if (!context.mounted) {
                                                         return;
+                                                      }
 
                                                       ref
                                                               .read(
@@ -370,8 +370,9 @@ class CommunityFriendDetails extends ConsumerWidget {
                                                                   patientProfile
                                                                       .id!);
 
-                                                      if (!context.mounted)
+                                                      if (!context.mounted) {
                                                         return;
+                                                      }
 
                                                       ref
                                                               .read(

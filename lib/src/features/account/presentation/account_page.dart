@@ -4,9 +4,7 @@ import 'package:intl/intl.dart';
 
 import '../../../model/user_model.dart';
 import '../../../provider/all_providers.dart';
-import '../../../utils/app_language.dart';
 import '../../../utils/packages.dart';
-import 'widget/show_language_picker.dart';
 
 class AccountPage extends ConsumerStatefulWidget {
   const AccountPage({super.key});
@@ -186,28 +184,6 @@ class _AccountPageState extends ConsumerState<AccountPage> {
                       context.push(Routes.REFFEREDCONTENTPAGE);
                     },
                   ),
-                  Consumer(
-                    builder: (context, ref, _) {
-                      final langCode = ref.watch(languageProvider);
-                      final langName =
-                          languages.firstWhere((e) => e.code == langCode).name;
-
-                      return settingsRowWithTrailing(
-                        title: "Change Language",
-                        icon: Icons.arrow_forward_ios,
-                        onTap: () {
-                          showLanguagePicker(context, ref);
-                        },
-                        trailing: Text(
-                          langName,
-                          style: const TextStyle(
-                            color: Colors.green,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      );
-                    },
-                  )
                 ],
               ),
             ),
@@ -303,48 +279,6 @@ class _AccountPageState extends ConsumerState<AccountPage> {
                 Icon(
                   icon,
                   color: const Color(0xff818181),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            const Divider(),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget settingsRowWithTrailing({
-    required String title,
-    IconData icon = Icons.add,
-    Widget? trailing,
-    VoidCallback? onTap,
-    EdgeInsetsGeometry padding =
-        const EdgeInsets.only(left: 30, right: 30, top: 5, bottom: 15),
-  }) {
-    return InkWell(
-      onTap: onTap,
-      child: Padding(
-        padding: padding,
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    color: Color(0xff616060),
-                    fontWeight: FontWeight.w500,
-                    fontSize: 16,
-                  ),
-                ),
-                Row(
-                  children: [
-                    if (trailing != null) trailing!,
-                    const SizedBox(width: 8),
-                    Icon(icon, size: 15, color: const Color(0xff818181)),
-                  ],
                 ),
               ],
             ),

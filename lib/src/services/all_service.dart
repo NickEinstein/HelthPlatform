@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 // import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:greenzone_medical/src/features/plan/models/specialist_model.dart';
 import 'package:greenzone_medical/src/model/user_model.dart';
 import 'package:path/path.dart';
 import '../api/app_endpoints.dart';
@@ -97,6 +98,45 @@ class AllService {
       }
     } catch (error) {
       return null;
+    }
+  }
+
+  Future<List<SpecialistModel>> fetchSpecialistList() async {
+    try {
+      final token = await getToken();
+
+      if (token == null || token.isEmpty) {
+        debugPrint('⚠️ No access token found.');
+        return [];
+      }
+
+      final response = await _apiService.get(
+        ApiUrl.specialistUrl,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if ((response.statusCode == 200 || response.statusCode == 1)) {
+        final List<dynamic> data = response.data['data'];
+
+        if (data.isEmpty) {
+          debugPrint('⚠️ No specialist found.');
+          return [];
+        }
+
+        final specialistList =
+            data.map((e) => SpecialistModel.fromJson(e)).toList();
+
+        return specialistList;
+      } else {
+        debugPrint(' Failed to fetch specialist: ${response.statusCode}');
+        throw Exception('Failed to fetch specialist: ${response.statusCode}');
+      }
+    } catch (error) {
+      debugPrint(' Error fetching specialist: $error');
+      throw Exception('Error fetching specialist: $error');
     }
   }
 

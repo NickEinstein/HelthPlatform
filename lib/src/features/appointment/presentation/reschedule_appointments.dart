@@ -38,12 +38,12 @@ class _RescheduleAppointmentPageState
           selectedDate.month == now.month &&
           selectedDate.year == now.year &&
           startTime.isBefore(now)) {
-        startTime = startTime.add(Duration(hours: 1));
+        startTime = startTime.add(const Duration(hours: 1));
         continue;
       }
 
       times.add(DateFormat("hh:mm a").format(startTime));
-      startTime = startTime.add(Duration(hours: 1));
+      startTime = startTime.add(const Duration(hours: 1));
     }
 
     return times;
@@ -174,7 +174,8 @@ class _RescheduleAppointmentPageState
                             : Colors.white,
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(
-                            color: Color(0xffD9D9D94D).withOpacity(0.2)),
+                          color: const Color(0x4DD9D9D9).withValues(alpha: 0.2),
+                        ),
                       ),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -186,7 +187,7 @@ class _RescheduleAppointmentPageState
                               fontWeight: FontWeight.w600,
                               color: selectedDate.day == date.day
                                   ? Colors.white
-                                  : Color(0xff3C3B3B),
+                                  : const Color(0xff3C3B3B),
                             ),
                           ),
                           Text(
@@ -196,7 +197,7 @@ class _RescheduleAppointmentPageState
                               fontWeight: FontWeight.w600,
                               color: selectedDate.day == date.day
                                   ? Colors.white
-                                  : Color(0xff3C3B3B),
+                                  : const Color(0xff3C3B3B),
                             ),
                           ),
                         ],
@@ -239,7 +240,7 @@ class _RescheduleAppointmentPageState
                         fontSize: 14,
                         color: selectedTime == time
                             ? Colors.white
-                            : Color(0xff616060),
+                            : const Color(0xff616060),
                         fontWeight: FontWeight.w700,
                       ),
                     ),
@@ -269,7 +270,7 @@ class _RescheduleAppointmentPageState
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: Colors.green.withOpacity(0.1),
+                  color: Colors.green.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: TextField(
@@ -332,19 +333,24 @@ class _RescheduleAppointmentPageState
                               false; // Stop loading if error
 
                           if (response.statusCode == 200) {
-                            showRescheduleSuccessModal(context);
+                            if (context.mounted) {
+                              showRescheduleSuccessModal(context);
+                            }
                           } else {
-                            CustomToast.show(
-                                context, "Failed to reschedule appointment",
-                                type: ToastType.error);
+                            if (context.mounted) {
+                              CustomToast.show(
+                                  context, "Failed to reschedule appointment",
+                                  type: ToastType.error);
+                            }
                           }
                         } catch (e) {
                           ref.read(isLoadingProvider.notifier).state =
                               false; // Stop loading if error
-
-                          CustomToast.show(
-                              context, "An error occurred while rescheduling",
-                              type: ToastType.error);
+                          if (context.mounted) {
+                            CustomToast.show(
+                                context, "An error occurred while rescheduling",
+                                type: ToastType.error);
+                          }
                         }
                       },
                       style: ElevatedButton.styleFrom(

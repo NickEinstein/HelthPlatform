@@ -25,14 +25,14 @@ class AllFriendRequestResponse {
   AllFriendRequestResponse.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     friendPatient = json['friendPatient'] != null
-        ? new FriendPatient.fromJson(json['friendPatient'])
+        ? FriendPatient.fromJson(json['friendPatient'])
         : null;
     friendEmployee = json['friendEmployee'] != null
-        ? new FriendEmployee.fromJson(json['friendEmployee'])
+        ? FriendEmployee.fromJson(json['friendEmployee'])
         : null;
     isHealthPractitioner = json['isHealthPractitioner'];
     patient = json['patient'] != null
-        ? new FriendPatient.fromJson(json['patient'])
+        ? FriendPatient.fromJson(json['patient'])
         : null;
     status = json['status'];
     createdBy = json['createdBy'];
@@ -42,23 +42,23 @@ class AllFriendRequestResponse {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    if (this.friendPatient != null) {
-      data['friendPatient'] = this.friendPatient!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    if (friendPatient != null) {
+      data['friendPatient'] = friendPatient!.toJson();
     }
-    if (this.friendEmployee != null) {
-      data['friendEmployee'] = this.friendEmployee!.toJson();
+    if (friendEmployee != null) {
+      data['friendEmployee'] = friendEmployee!.toJson();
     }
-    data['isHealthPractitioner'] = this.isHealthPractitioner;
-    if (this.patient != null) {
-      data['patient'] = this.patient!.toJson();
+    data['isHealthPractitioner'] = isHealthPractitioner;
+    if (patient != null) {
+      data['patient'] = patient!.toJson();
     }
-    data['status'] = this.status;
-    data['createdBy'] = this.createdBy;
-    data['modifiedBy'] = this.modifiedBy;
-    data['createdAt'] = this.createdAt;
-    data['updatedAt'] = this.updatedAt;
+    data['status'] = status;
+    data['createdBy'] = createdBy;
+    data['modifiedBy'] = modifiedBy;
+    data['createdAt'] = createdAt;
+    data['updatedAt'] = updatedAt;
     return data;
   }
 }
@@ -82,12 +82,12 @@ class FriendPatient {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['pictureUrl'] = this.pictureUrl;
-    data['firstName'] = this.firstName;
-    data['lastName'] = this.lastName;
-    data['gender'] = this.gender;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['pictureUrl'] = pictureUrl;
+    data['firstName'] = firstName;
+    data['lastName'] = lastName;
+    data['gender'] = gender;
     return data;
   }
 }
@@ -106,10 +106,10 @@ class FriendEmployee {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['firstName'] = this.firstName;
-    data['lastName'] = this.lastName;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['firstName'] = firstName;
+    data['lastName'] = lastName;
     return data;
   }
 }

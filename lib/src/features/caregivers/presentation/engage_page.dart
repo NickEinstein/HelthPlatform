@@ -26,6 +26,7 @@ class _EngagePageState extends ConsumerState<EngagePage> {
     super.dispose();
   }
 
+  // ignore: unused_element
   void _onSearchChanged(String value) {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
     _debounce = Timer(const Duration(milliseconds: 300), () {
@@ -110,9 +111,8 @@ class _EngagePageState extends ConsumerState<EngagePage> {
                       )
                     else
                       ...caregivers.map((caregiver) {
-                        final name = caregiver.name.toString() ?? '';
-                        final location =
-                            caregiver.location.toString() ?? 'No Location';
+                        final name = caregiver.name.toString();
+                        final location = caregiver.location.toString();
 
                         return Card(
                           margin: const EdgeInsets.symmetric(vertical: 0),

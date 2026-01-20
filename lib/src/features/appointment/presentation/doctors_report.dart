@@ -63,7 +63,7 @@ class DoctorsReportPage extends StatelessWidget {
             const SizedBox(height: 20),
             Expanded(
               child: ListView(
-                children: [
+                children: const [
                   ReportTile(
                     title: "Respiratory Infection",
                     date: "15 Mar 2025",
@@ -101,45 +101,45 @@ class ReportTile extends StatelessWidget {
     required this.time,
   });
 
- @override
-Widget build(BuildContext context) {
-  return GestureDetector(
-    onTap: () => context.push(Routes.DOCTORSREPORTDETAILS),
-    child: Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        color: Colors.green.shade50.withOpacity(0.4),
-      ),
-      child: ListTile(
-        leading: Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: Colors.green.shade100,
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => context.push(Routes.DOCTORSREPORTDETAILS),
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 12),
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          color: Colors.green.shade50.withValues(alpha: 0.4),
+        ),
+        child: ListTile(
+          leading: Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.green.shade100,
+            ),
+            child: const Icon(Icons.medical_services, color: Colors.green),
           ),
-          child: const Icon(Icons.medical_services, color: Colors.green),
+          title: Text(
+            title,
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
+          subtitle: Row(
+            children: [
+              const Icon(Icons.calendar_today, size: 14, color: Colors.grey),
+              const SizedBox(width: 4),
+              Text(date, style: const TextStyle(fontSize: 12)),
+              const SizedBox(width: 10),
+              const Icon(Icons.access_time, size: 14, color: Colors.grey),
+              const SizedBox(width: 4),
+              Text(time, style: const TextStyle(fontSize: 12)),
+            ],
+          ),
+          trailing:
+              const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
         ),
-        title: Text(
-          title,
-          style: const TextStyle(fontWeight: FontWeight.bold),
-        ),
-        subtitle: Row(
-          children: [
-            const Icon(Icons.calendar_today, size: 14, color: Colors.grey),
-            const SizedBox(width: 4),
-            Text(date, style: const TextStyle(fontSize: 12)),
-            const SizedBox(width: 10),
-            const Icon(Icons.access_time, size: 14, color: Colors.grey),
-            const SizedBox(width: 4),
-            Text(time, style: const TextStyle(fontSize: 12)),
-          ],
-        ),
-        trailing: const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
       ),
-    ),
-  );
-}
-
+    );
+  }
 }

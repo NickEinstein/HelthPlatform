@@ -19,7 +19,7 @@ class VideoPlayerWidgetState extends State<VideoPlayerWidget> {
     super.initState();
     _isMuted = true; // Start muted by default
 
-    _controller = VideoPlayerController.network(widget.videoUrl)
+    _controller = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl))
       ..initialize().then((_) {
         setState(() {
           _isInitialized = true;

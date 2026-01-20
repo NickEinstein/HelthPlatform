@@ -131,7 +131,7 @@ class _ArticleScreenState extends ConsumerState<ArticleScreen> {
                               selectedCategories.remove(cat);
                             });
                           },
-                          backgroundColor: Color(0xffD9FEAA),
+                          backgroundColor: const Color(0xffD9FEAA),
                           shape: RoundedRectangleBorder(
                             borderRadius:
                                 BorderRadius.circular(20), // Set radius to 20
@@ -180,7 +180,7 @@ class _ArticleScreenState extends ConsumerState<ArticleScreen> {
                         loading: () =>
                             const Center(child: CircularProgressIndicator()),
                         error: (error, stackTrace) =>
-                            Center(child: Text('No articles available.')),
+                            const Center(child: Text('No articles available.')),
                         data: (articles) {
                           final filteredArticles = articles.where((article) {
                             final matchesCategory = selectedIndex == 0 ||
@@ -215,7 +215,7 @@ class _ArticleScreenState extends ConsumerState<ArticleScreen> {
                           }).toList();
 
                           if (filteredArticles.isEmpty) {
-                            return Center(
+                            return const Center(
                               child: Text(
                                 "No articles match your search",
                                 style: TextStyle(

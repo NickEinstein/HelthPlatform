@@ -163,7 +163,11 @@ class _ProfileCompletionWidgetState
       ].where((v) => v).length;
       const numTotal = 8;
       final percentage = (numCompleted / numTotal * 100).toInt();
-      
+
+      if (percentage == 100) {
+        return const SizedBox.shrink();
+      }
+
       return Container(
         decoration: BoxDecoration(
           color: const Color(0xFFFFF4D2),

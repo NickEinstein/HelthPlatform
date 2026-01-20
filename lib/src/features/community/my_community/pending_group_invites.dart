@@ -84,7 +84,7 @@ class _PendingGroupInvitesState extends ConsumerState<PendingGroupInvites> {
                                         ref.read(allServiceProvider);
                                     final result = await allService
                                         .communityRespondToInvite(
-                                      id: community.id!,
+                                      id: community.id,
                                       isAccepted: false,
                                     );
 
@@ -119,7 +119,7 @@ class _PendingGroupInvitesState extends ConsumerState<PendingGroupInvites> {
                                         ref.read(allServiceProvider);
                                     final result = await allService
                                         .communityRespondToInvite(
-                                      id: community.id!,
+                                      id: community.id,
                                       isAccepted: true,
                                     );
 
@@ -159,19 +159,19 @@ class _PendingGroupInvitesState extends ConsumerState<PendingGroupInvites> {
                                         ref.read(loadingMapProvider.notifier);
                                     loadingMap.state = {
                                       ...loadingMap.state,
-                                      community.id!: true,
+                                      community.id: true,
                                     };
 
                                     final allService =
                                         ref.read(allServiceProvider);
                                     final result = await allService
-                                        .joinCommunity(community.id!);
+                                        .joinCommunity(community.id);
 
                                     if (!context.mounted) return;
 
                                     loadingMap.state = {
                                       ...loadingMap.state,
-                                      community.id!: false,
+                                      community.id: false,
                                     };
 
                                     if (result == 'Join successful') {

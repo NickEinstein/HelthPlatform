@@ -65,15 +65,14 @@ class _HomeDrawerState extends ConsumerState<HomeDrawer> {
                   title: 'Billing History',
                 ),
                 const Divider(color: Colors.white),
-                _tile(
-                  onTap: () {
-                    Navigator.pop(context);
-                    CustomToast.show(context, "Coming soon...",
-                        type: ToastType.error);
-                  },
-                  title: 'Health Insurance',
-                ),
-                const Divider(color: Colors.white),
+                // _tile(
+                //   onTap: () {
+                //     Navigator.pop(context);
+                //     context.push(Routes.HMO);
+                //   },
+                //   title: 'HMO',
+                // ),
+                // const Divider(color: Colors.white),
                 _tile(
                   onTap: () {
                     Navigator.pop(context);
@@ -82,21 +81,26 @@ class _HomeDrawerState extends ConsumerState<HomeDrawer> {
                   title: 'Personal Records',
                 ),
                 const Divider(color: Colors.white),
-                _tile(
-                  onTap: () {
-                    Navigator.pop(context);
-                    CustomToast.show(context, "Coming soon...",
-                        type: ToastType.error);
-                  },
-                  title: 'Settings Insurance',
-                ),
-                const Divider(color: Colors.white),
+                // _tile(
+                //   onTap: () {
+                //     Navigator.pop(context);
+                //     CustomToast.show(context, "Coming soon...",
+                //         type: ToastType.error);
+                //   },
+                //   title: 'Settings Insurance',
+                // ),
+                // const Divider(color: Colors.white),
                 _tile(
                   onTap: () async {
                     await authService.logout();
-                    context.pushReplacement(Routes.SIGNIN);
-                    CustomToast.show(context, "Logout successfully...",
-                        type: ToastType.success);
+                    if (context.mounted) {
+                      context.pushReplacement(Routes.SIGNIN);
+                      CustomToast.show(
+                        context,
+                        "Logout successfully...",
+                        type: ToastType.success,
+                      );
+                    }
                   },
                   title: 'Log Out',
                 ),

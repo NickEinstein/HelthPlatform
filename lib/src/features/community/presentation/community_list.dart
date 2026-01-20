@@ -1,7 +1,6 @@
 import 'package:greenzone_medical/src/model/community_list_response.dart';
 
 import '../../../provider/all_providers.dart';
-import '../../../utils/network_img_fallback.dart';
 import '../../../utils/packages.dart';
 import '../../article/presentation/widget/category_selector.dart';
 import 'widget/group_card.dart';
@@ -130,6 +129,7 @@ class _CommunityListState extends ConsumerState<CommunityList> {
                                 final lastCommunity = communityList.lastWhere(
                                   (c) => c.category?.name == categoryName,
                                 );
+                                // ignore: unnecessary_null_comparison
                                 if (lastCommunity != null) {
                                   topPopularCommunities.add(lastCommunity);
                                 }
@@ -206,13 +206,13 @@ class _CommunityListState extends ConsumerState<CommunityList> {
                                                         BorderRadius.circular(
                                                             0),
                                                     child: Image.network(
-                                                      (community.pictureUrl! ??
+                                                      (community.pictureUrl ??
                                                                   '')
                                                               .startsWith(
                                                                   'http')
                                                           ? community
                                                               .pictureUrl!
-                                                          : '${AppConstants.noSlashImageURL}${community.pictureUrl! ?? ''}',
+                                                          : '${AppConstants.noSlashImageURL}${community.pictureUrl ?? ''}',
                                                       width: 100,
                                                       height: 100,
                                                       fit: BoxFit.cover,

@@ -8,7 +8,7 @@ import '../../../utils/custom_header.dart';
 import 'widget/referred_card.dart';
 
 class ReferredContentPage extends ConsumerStatefulWidget {
-  ReferredContentPage({
+  const ReferredContentPage({
     super.key,
   });
 
@@ -27,7 +27,7 @@ class _ReferredContentPageState extends ConsumerState<ReferredContentPage> {
     return Scaffold(
       backgroundColor: Colors.white, // Matching the UI
       body: SingleChildScrollView(
-        physics: ScrollPhysics(),
+        physics: const ScrollPhysics(),
         child: SafeArea(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
