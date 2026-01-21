@@ -28,9 +28,10 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
-  add_2_calendar: ^2.0.0
+  # add_2_calendar: ^2.0.0
+  add_2_calendar_new: ^1.0.0
   agora_rtc_engine: ^6.5.2
-  audioplayers: ^5.2.1
+  # audioplayers: ^5.2.1
   cached_network_image: ^3.4.1
   camera: ^0.10.5
   csc_picker_plus:
@@ -74,12 +75,12 @@ dependencies:
   path: ^1.8.0
   permission_handler: ^11.3.0
   secure_pin_input: null
-  share_plus: ^7.0.2
+  share_plus: ^12.0.1
   shared_preferences: ^2.2.1
   shimmer: ^3.0.0
-  sign_in_with_apple: ^6.0.0
+  # sign_in_with_apple: ^7.0.1
   smooth_page_indicator: ^1.1.0
-  speech_to_text: ^6.4.1
+  speech_to_text: ^7.3.0
   url_launcher: null
   video_player: ^2.7.0
   google_cloud_translation: ^0.0.4

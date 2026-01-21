@@ -4,7 +4,6 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   agora_rtc_engine
-  audioplayers_windows
   file_selector_windows
   firebase_auth
   firebase_core
@@ -13,6 +12,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
   local_auth_windows
   permission_handler_windows
   share_plus
+  speech_to_text_windows
   url_launcher_windows
 )
 
