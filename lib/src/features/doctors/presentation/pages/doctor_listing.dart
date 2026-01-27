@@ -2,9 +2,9 @@ import 'package:greenzone_medical/src/model/doctord_list_response.dart'
     // ignore: library_prefixes
     as DoctorResponse;
 
-import '../../../utils/packages.dart';
-import 'widget/doctor_card.dart';
-import 'widget/title_subtitle_section.dart';
+import '../../../../utils/packages.dart';
+import '../widget/doctor_card.dart';
+import '../widget/title_subtitle_section.dart';
 
 class DoctorListing extends ConsumerStatefulWidget {
   final DoctorResponse.DoctorListResponse doctor; // Accept doctor data

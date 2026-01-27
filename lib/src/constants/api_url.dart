@@ -294,4 +294,8 @@ class ApiUrl {
       '/feedbackportalapi/api/customerengagement/external';
   static String trackFeedback(String trackId) =>
       '/feedbackportalapi/api/customerengagement/track-id$trackId';
+
+  // Doctor
+  static String getDoctorAvailableTimes(String doctorId) =>
+      '/ConnectedHealthWebApi/api/Doctors/api/slots/availableByDoctorId?doctorId=$doctorId';
 }

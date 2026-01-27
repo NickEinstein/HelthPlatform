@@ -25,8 +25,8 @@ export 'package:greenzone_medical/src/features/community/presentation/community_
 export 'package:greenzone_medical/src/features/community/presentation/community_list.dart';
 export 'package:greenzone_medical/src/features/community/presentation/search_community.dart';
 export 'package:greenzone_medical/src/features/doctors/doctors.dart';
-export 'package:greenzone_medical/src/features/doctors/presentation/book_appointment.dart';
-export 'package:greenzone_medical/src/features/doctors/presentation/doctor_listing.dart';
+export 'package:greenzone_medical/src/features/doctors/presentation/pages/book_appointment.dart';
+export 'package:greenzone_medical/src/features/doctors/presentation/pages/doctor_listing.dart';
 export 'package:greenzone_medical/src/features/healthgoal/presentation/about_health.dart';
 export 'package:greenzone_medical/src/features/healthgoal/presentation/healthgoal_page.dart';
 export 'package:greenzone_medical/src/features/home/home.dart';

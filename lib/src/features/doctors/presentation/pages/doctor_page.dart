@@ -1,9 +1,9 @@
 import 'package:speech_to_text/speech_to_text.dart';
 
-import '../../../provider/all_providers.dart';
-import '../../../utils/packages.dart';
-import '../../article/presentation/widget/category_selector.dart';
-import 'widget/doctor_card.dart';
+import '../../../../provider/all_providers.dart';
+import '../../../../utils/packages.dart';
+import '../../../article/presentation/widget/category_selector.dart';
+import '../widget/doctor_card.dart';
 
 class DoctorPage extends ConsumerStatefulWidget {
   const DoctorPage({super.key});
