@@ -65,14 +65,14 @@ class _HomeDrawerState extends ConsumerState<HomeDrawer> {
                   title: 'Billing History',
                 ),
                 const Divider(color: Colors.white),
-                // _tile(
-                //   onTap: () {
-                //     Navigator.pop(context);
-                //     context.push(Routes.HMO);
-                //   },
-                //   title: 'HMO',
-                // ),
-                // const Divider(color: Colors.white),
+                _tile(
+                  onTap: () {
+                    Navigator.pop(context);
+                    context.push(Routes.HMO);
+                  },
+                  title: 'HMO',
+                ),
+                const Divider(color: Colors.white),
                 _tile(
                   onTap: () {
                     Navigator.pop(context);

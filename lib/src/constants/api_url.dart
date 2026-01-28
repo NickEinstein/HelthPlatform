@@ -298,4 +298,8 @@ class ApiUrl {
   // Doctor
   static String getDoctorAvailableTimes(String doctorId) =>
       '/ConnectedHealthWebApi/api/Doctors/api/slots/availableByDoctorId?doctorId=$doctorId';
+
+  // User HMO
+  static String userHmo(String userId) =>
+      '/medicals/api/HMO/get-patient-hmo/$userId';
 }

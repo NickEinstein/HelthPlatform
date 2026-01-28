@@ -28,8 +28,8 @@ import 'package:greenzone_medical/src/features/plan/widgets/start_plan_screen.da
 import 'package:greenzone_medical/src/model/community_list_response.dart';
 import 'package:greenzone_medical/src/model/regular_app_model.dart';
 import '../features/community_profile/community_profile.dart';
-import '../features/hmo/presentation/hmo_screen.dart';
-import '../features/hmo/presentation/out_patient_limit_screen.dart';
+import '../features/hmo/presentation/pages/hmo_screen.dart';
+import '../features/hmo/presentation/pages/out_patient_limit_screen.dart';
 import '../features/account/presentation/submit_feedback_page.dart';
 import '../features/account/presentation/track_feedback_screen.dart';
 import '../features/account/presentation/account_activity_page.dart';
