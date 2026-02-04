@@ -24,7 +24,7 @@ class _CustomBottomNavState extends State<CustomBottomNavBar> {
     HomePage(scaffoldKey: scaffoldKey),
     const AppointmentPage(),
     const PrescriptionPage(),
-    const AccountPage()
+    AccountPage(scaffoldKey: scaffoldKey)
   ];
 
   @override
@@ -42,6 +42,7 @@ class _CustomBottomNavState extends State<CustomBottomNavBar> {
     return Scaffold(
       key: scaffoldKey,
       endDrawer: const HomeDrawer(),
+      drawer: const HomeDrawer(),
       body: PageStorage(
         bucket: bucket,
         child: currentScreen,

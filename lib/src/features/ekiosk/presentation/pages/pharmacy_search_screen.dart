@@ -1,10 +1,25 @@
-import 'package:greenzone_medical/src/features/pharmacy/presentation/drug_search_result.dart';
+import 'package:greenzone_medical/src/features/ekiosk/presentation/pages/drug_search_result.dart';
+import 'package:greenzone_medical/src/features/ekiosk/presentation/provider/ekiosk_provider.dart';
 import 'package:greenzone_medical/src/utils/extensions/extensions.dart';
 import 'package:greenzone_medical/src/utils/packages.dart';
 
-class PharmacySearchScreen extends StatelessWidget {
+class PharmacySearchScreen extends ConsumerStatefulWidget {
   static const routeName = '/pharmacy-search';
   const PharmacySearchScreen({super.key});
+
+  @override
+  ConsumerState<PharmacySearchScreen> createState() =>
+      _PharmacySearchScreenState();
+}
+
+class _PharmacySearchScreenState extends ConsumerState<PharmacySearchScreen> {
+  final TextEditingController _searchController = TextEditingController();
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,11 +101,26 @@ class PharmacySearchScreen extends StatelessWidget {
                   children: [
                     // Search Bar
                     TextField(
+                      controller: _searchController,
                       decoration: InputDecoration(
                         hintText: 'Search for any drugs',
                         hintStyle: const TextStyle(color: Colors.grey),
-                        suffixIcon:
-                            const Icon(Icons.search, color: Colors.grey),
+                        suffixIcon: InkWell(
+                          onTap: () {
+                            final searchText = _searchController.text.trim();
+                            if (searchText.isEmpty) return;
+                            ref.read(ekioskStateProvider.notifier).search(
+                                  searchText,
+                                  context: context,
+                                  pushScreen: true,
+                                );
+                            _searchController.clear();
+                          },
+                          child: const Icon(
+                            Icons.search,
+                            color: Colors.grey,
+                          ),
+                        ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(5),
                           borderSide: const BorderSide(
@@ -104,8 +134,15 @@ class PharmacySearchScreen extends StatelessWidget {
                         contentPadding:
                             const EdgeInsets.symmetric(horizontal: 15),
                       ),
-                      onTap: () {
-                        context.push(DrugSearchResult.routeName);
+                      onSubmitted: (value) {
+                        final searchText = value.trim();
+                        if (searchText.isEmpty) return;
+                        ref.read(ekioskStateProvider.notifier).search(
+                              searchText,
+                              context: context,
+                              pushScreen: true,
+                            );
+                        _searchController.clear();
                       },
                     ),
                     20.height,
@@ -122,21 +159,23 @@ class PharmacySearchScreen extends StatelessWidget {
                       context,
                       icon: Icons.medical_services_outlined,
                       title: 'Get a Prescription',
-                      onTap: () {},
+                      onTap: () {
+                        context.push(Routes.DOCTORPAGE);
+                      },
                     ),
                     15.height,
                     _buildMenuOption(
                       context,
                       icon: Icons.autorenew,
                       title: 'Subscribe to Refill Prescription',
-                      onTap: () {},
+                      onTap: () => _showComingSoonBottomSheet(context),
                     ),
                     15.height,
                     _buildMenuOption(
                       context,
                       icon: Icons.person_add_alt_1_outlined,
                       title: 'Order for a family or friend',
-                      onTap: () {},
+                      onTap: () => _showComingSoonBottomSheet(context),
                     ),
                   ],
                 ),
@@ -276,6 +315,81 @@ class PharmacySearchScreen extends StatelessWidget {
                   'Cancel',
                   style: context.textTheme.bodyMedium?.copyWith(
                     color: Colors.grey,
+                  ),
+                ),
+              ),
+              20.height,
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _showComingSoonBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return Container(
+          padding: const EdgeInsets.all(20),
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 40,
+                height: 5,
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade300,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              20.height,
+              const Icon(
+                Icons.access_time_filled,
+                size: 60,
+                color: Color(0xFF109615),
+              ),
+              20.height,
+              Text(
+                'Coming Soon',
+                style: context.textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
+              10.height,
+              Text(
+                'We are working hard to bring you the ability to subscribe for prescription refills. Stay tuned!',
+                textAlign: TextAlign.center,
+                style: context.textTheme.bodyMedium?.copyWith(
+                  color: Colors.grey.shade600,
+                ),
+              ),
+              30.height,
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () => context.pop(),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF109615),
+                    padding: const EdgeInsets.symmetric(vertical: 15),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                  ),
+                  child: const Text(
+                    'Okay',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),

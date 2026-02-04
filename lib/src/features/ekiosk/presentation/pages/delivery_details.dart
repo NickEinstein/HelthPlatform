@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:greenzone_medical/src/features/pharmacy/presentation/drug_checkout.dart';
+import 'package:greenzone_medical/src/features/ekiosk/presentation/pages/drug_checkout.dart';
 import 'package:greenzone_medical/src/utils/extensions/extensions.dart';
 import 'package:greenzone_medical/src/utils/extensions/widget_extensions.dart';
 

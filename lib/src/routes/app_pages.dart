@@ -7,14 +7,15 @@ import 'package:greenzone_medical/src/features/auth/presentation/auth_landing_pa
 import 'package:greenzone_medical/src/features/caregivers/presentation/engage_page.dart';
 import 'package:greenzone_medical/src/features/chats/chats.dart';
 import 'package:greenzone_medical/src/features/chats/presentation/model/chatcontact_model.dart';
+import 'package:greenzone_medical/src/features/ekiosk/data/model/drug_model.dart';
 import 'package:greenzone_medical/src/features/health_record/presentation/widget/main_health_record.dart';
 import 'package:greenzone_medical/src/features/home/presentation/suspended_products.dart';
 import 'package:greenzone_medical/src/features/notifications/notifications.dart';
-import 'package:greenzone_medical/src/features/pharmacy/presentation/delivery_details.dart';
-import 'package:greenzone_medical/src/features/pharmacy/presentation/drug_checkout.dart';
-import 'package:greenzone_medical/src/features/pharmacy/presentation/drug_search_result.dart';
-import 'package:greenzone_medical/src/features/pharmacy/presentation/pharmacy_search_screen.dart';
-import 'package:greenzone_medical/src/features/pharmacy/presentation/single_drug_detail.dart';
+import 'package:greenzone_medical/src/features/ekiosk/presentation/pages/delivery_details.dart';
+import 'package:greenzone_medical/src/features/ekiosk/presentation/pages/drug_checkout.dart';
+import 'package:greenzone_medical/src/features/ekiosk/presentation/pages/drug_search_result.dart';
+import 'package:greenzone_medical/src/features/ekiosk/presentation/pages/pharmacy_search_screen.dart';
+import 'package:greenzone_medical/src/features/ekiosk/presentation/pages/single_drug_detail.dart';
 import 'package:greenzone_medical/src/features/plan/presentation/single_plan_dashboard.dart';
 import 'package:greenzone_medical/src/features/prescription/presentation/prescriptions.dart';
 import 'package:greenzone_medical/src/features/plan/presentation/all_goals_screen.dart';
@@ -133,7 +134,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: SingleDrugDetail.routeName,
         builder: (context, state) {
-          return const SingleDrugDetail();
+          return SingleDrugDetail(drug: state.extra as DrugModel);
         },
       ),
       GoRoute(
