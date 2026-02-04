@@ -28,7 +28,7 @@ class _SignInPageState extends ConsumerState<SignInPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController(
-    text: kDebugMode ? 'Admin@123' : '',
+    text: kDebugMode ? 'Password@1' : '',
   );
   bool _isValid = false;
   bool _isBiometricAvailable = false;

@@ -1,0 +1,98 @@
+{
+  "project_info": {
+    "project_number": "648993315957",
+    "project_id": "notify-38b31",
+    "storage_bucket": "notify-38b31.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:648993315957:android:6d51aadb194e9a9caeac3c",
+        "android_client_info": {
+          "package_name": "com.connectedhealth.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "648993315957-tpi7p7bsm58qpvdakvnfsqlu06t2r2r3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.connectedhealth.app",
+            "certificate_hash": "4c1a37ace6ade39361d733449aaa037cad5d1561"
+          }
+        },
+        {
+          "client_id": "648993315957-j1idl943geqjm3lti9ope9bin8531adp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCID9tDtNgAASBoRLOlyC0sS9oSEybJVg4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "648993315957-j1idl943geqjm3lti9ope9bin8531adp.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "648993315957-gdek92s3b2egu95hgesqsfpd5419u18o.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.connectedhealth.app"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:648993315957:android:c5130b3caf33f98faeac3c",
+        "android_client_info": {
+          "package_name": "com.connecthealthpro.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "648993315957-nrafm346bf48tlibubg8b0p2h6ut73t3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.connecthealthpro.app",
+            "certificate_hash": "4c1a37ace6ade39361d733449aaa037cad5d1561"
+          }
+        },
+        {
+          "client_id": "648993315957-j1idl943geqjm3lti9ope9bin8531adp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCID9tDtNgAASBoRLOlyC0sS9oSEybJVg4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "648993315957-j1idl943geqjm3lti9ope9bin8531adp.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "648993315957-gdek92s3b2egu95hgesqsfpd5419u18o.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.connectedhealth.app"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

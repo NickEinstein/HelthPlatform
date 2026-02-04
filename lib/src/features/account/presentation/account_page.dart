@@ -102,11 +102,11 @@ class _AccountPageState extends ConsumerState<AccountPage> {
                   Container(
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
-                        color: const Color(0xffD9FEAA),
-                        border: Border.all(color: const Color(0xff109615))),
-                    child: const Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 40, vertical: 7),
+                        color: Color(0xffD9FEAA),
+                        border: Border.all(color: Color(0xff109615))),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 40, vertical: 7),
                       child: Text(
                         'Account Active',
                         style: TextStyle(
@@ -118,21 +118,16 @@ class _AccountPageState extends ConsumerState<AccountPage> {
                   ),
                   smallSpace(),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 50),
+                    padding: const EdgeInsets.symmetric(horizontal: 70),
                     child: Container(
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(7),
-                        color: Colors.white,
-                        border: Border.all(
-                          color: const Color(0xff109615),
-                          width: 1.5,
-                        ),
-                      ),
+                          borderRadius: BorderRadius.circular(7),
+                          color: Colors.white,
+                          border:
+                              Border.all(color: Color(0xff109615), width: 1.5)),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 20,
-                          vertical: 15,
-                        ),
+                            horizontal: 40, vertical: 15),
                         child: Row(
                           children: [
                             Image.asset(
@@ -140,29 +135,27 @@ class _AccountPageState extends ConsumerState<AccountPage> {
                               height: 50,
                               width: 50,
                             ),
-                            const Expanded(
-                              child: Padding(
-                                padding: EdgeInsets.only(left: 30),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'You have earned',
-                                      style: TextStyle(
-                                          color: Color(0xff878787),
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 14),
-                                    ),
-                                    Text(
-                                      '0 Coin',
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 18),
-                                    ),
-                                  ],
-                                ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 30),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'You have earned',
+                                    style: TextStyle(
+                                        color: Color(0xff878787),
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 14),
+                                  ),
+                                  Text(
+                                    '0 Coin',
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 18),
+                                  ),
+                                ],
                               ),
                             ),
                           ],
@@ -171,7 +164,7 @@ class _AccountPageState extends ConsumerState<AccountPage> {
                     ),
                   ),
                   smallSpace(),
-                  const LastLoginText(),
+                  LastLoginText(),
                   verticalSpace(context, 0.06),
                   settingsRow(
                     title: 'Password Reset',
@@ -189,18 +182,6 @@ class _AccountPageState extends ConsumerState<AccountPage> {
                     title: 'View Referrals',
                     onTap: () {
                       context.push(Routes.REFFEREDCONTENTPAGE);
-                    },
-                  ),
-                  settingsRow(
-                    title: 'Feedback',
-                    onTap: () {
-                      context.push(Routes.SUBMITFEEDBACKPAGE);
-                    },
-                  ),
-                  settingsRow(
-                    title: 'Account Activity',
-                    onTap: () {
-                      context.push(Routes.ACCOUNTACTIVITYPAGE);
                     },
                   ),
                 ],
@@ -275,12 +256,8 @@ class _AccountPageState extends ConsumerState<AccountPage> {
     required String title,
     IconData icon = Icons.add,
     VoidCallback? onTap,
-    EdgeInsetsGeometry padding = const EdgeInsets.only(
-      left: 30,
-      right: 30,
-      top: 0,
-      bottom: 12,
-    ),
+    EdgeInsetsGeometry padding =
+        const EdgeInsets.only(left: 30, right: 30, top: 5, bottom: 15),
   }) {
     return InkWell(
       onTap: onTap,
@@ -315,8 +292,6 @@ class _AccountPageState extends ConsumerState<AccountPage> {
 }
 
 class LastLoginText extends StatelessWidget {
-  const LastLoginText({super.key});
-
   @override
   Widget build(BuildContext context) {
     final now = DateTime.now();
