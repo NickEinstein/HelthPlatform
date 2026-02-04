@@ -1,4 +1,11 @@
 extension StringExtensions on String {
+  String toTitleCase() {
+    if (isEmpty) return this;
+    String spaced = replaceAllMapped(
+        RegExp(r'([a-z])([A-Z])'), (Match m) => '${m[1]} ${m[2]}');
+    return '${spaced[0].toUpperCase()}${spaced.substring(1)}';
+  }
+
   String get toSvg => "assets/svgs/$this.svg";
   String get toImg => "assets/images/$this.png";
 

@@ -7,7 +7,8 @@ import '../../../provider/all_providers.dart';
 import '../../../utils/packages.dart';
 
 class AccountPage extends ConsumerStatefulWidget {
-  const AccountPage({super.key});
+  const AccountPage({super.key, required this.scaffoldKey});
+  final GlobalKey<ScaffoldState> scaffoldKey;
 
   @override
   ConsumerState<AccountPage> createState() => _AccountPageState();
@@ -32,7 +33,6 @@ class _AccountPageState extends ConsumerState<AccountPage> {
         return Scaffold(
           backgroundColor: Colors.white,
           key: _scaffoldKey,
-          drawer: const HomeDrawer(), // 👈 use drawer instead of endDrawer
           appBar: AppBar(
             backgroundColor: Colors.white,
             surfaceTintColor: Colors.white,
@@ -43,8 +43,8 @@ class _AccountPageState extends ConsumerState<AccountPage> {
               children: [
                 InkWell(
                   onTap: () {
-                    _scaffoldKey.currentState
-                        ?.openDrawer(); // 👈 open left drawer
+                    widget.scaffoldKey.currentState
+                        ?.openEndDrawer(); // 👈 open left drawer
                   },
                   child: const Padding(
                       padding: EdgeInsets.only(right: 20),
@@ -102,9 +102,11 @@ class _AccountPageState extends ConsumerState<AccountPage> {
                   Container(
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
-                        color: Color(0xffD9FEAA),
-                        border: Border.all(color: Color(0xff109615))),
-                    child: Padding(
+                        color: const Color(0xffD9FEAA),
+                        border: Border.all(
+                          color: const Color(0xff109615),
+                        )),
+                    child: const Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 40, vertical: 7),
                       child: Text(
@@ -121,13 +123,16 @@ class _AccountPageState extends ConsumerState<AccountPage> {
                     padding: const EdgeInsets.symmetric(horizontal: 70),
                     child: Container(
                       decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(7),
-                          color: Colors.white,
-                          border:
-                              Border.all(color: Color(0xff109615), width: 1.5)),
+                        borderRadius: BorderRadius.circular(7),
+                        color: Colors.white,
+                        border: Border.all(
+                          color: const Color(0xff109615),
+                          width: 1.5,
+                        ),
+                      ),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 40, vertical: 15),
+                            horizontal: 20, vertical: 15),
                         child: Row(
                           children: [
                             Image.asset(
@@ -135,27 +140,29 @@ class _AccountPageState extends ConsumerState<AccountPage> {
                               height: 50,
                               width: 50,
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 30),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'You have earned',
-                                    style: TextStyle(
-                                        color: Color(0xff878787),
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 14),
-                                  ),
-                                  Text(
-                                    '0 Coin',
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 18),
-                                  ),
-                                ],
+                            const Expanded(
+                              child: const Padding(
+                                padding: EdgeInsets.only(left: 30),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'You have earned',
+                                      style: TextStyle(
+                                          color: Color(0xff878787),
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 14),
+                                    ),
+                                    Text(
+                                      '0 Coin',
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 18),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ],

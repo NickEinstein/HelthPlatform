@@ -3,6 +3,9 @@ import 'package:greenzone_medical/src/app_pkg.dart';
 class ApiUrl {
   ApiUrl._();
 
+  static String getDrugs(String query, {int page = 1, int pageSize = 10}) =>
+      '/ConnectedHealthWebApi/api/eKiosk/search?searchTerm=$query&page=$page&pageSize=$pageSize';
+
   static String validateEmail(String email) =>
       '/ConnectedHealthWebApi/api/Patient/${Uri.encodeComponent(email)}';
 
