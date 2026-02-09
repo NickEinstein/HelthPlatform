@@ -1,3 +1,6 @@
+import 'package:greenzone_medical/src/features/profile/presentation/medical_records.dart';
+import 'package:greenzone_medical/src/features/profile/presentation/update_personal_info_screen.dart' show UpdatePersonalDetailsScreen;
+import 'package:greenzone_medical/src/utils/dialogs/auth_bottom_sheet.dart';
 import '../../../../model/user_model.dart';
 import '../../../../provider/all_providers.dart';
 import '../../../../utils/packages.dart';
@@ -36,6 +39,14 @@ class _HomeDrawerState extends ConsumerState<HomeDrawer> {
                 _tile(
                   onTap: () {
                     Navigator.pop(context);
+                    context.push(Routes.BILLING_REWARDS_PAGE);
+                  },
+                  title: 'Billing and Rewards',
+                ),
+                const Divider(color: Colors.white),
+                _tile(
+                  onTap: () {
+                    Navigator.pop(context);
                     context.push(Routes.APPOINTMENT, extra: true);
                   },
                   title: 'Appointment',
@@ -52,7 +63,11 @@ class _HomeDrawerState extends ConsumerState<HomeDrawer> {
                 _tile(
                   onTap: () {
                     Navigator.pop(context);
-                    context.push(Routes.MAINHEALTHGOAL);
+                    showAuthBottomSheet(
+                      context,
+                      nextRoute: MedicalRecordsScreen.routeName,
+                    );
+                    // context.push(Routes.MAINHEALTHGOAL);
                   },
                   title: 'My Health Record',
                 ),
@@ -76,7 +91,8 @@ class _HomeDrawerState extends ConsumerState<HomeDrawer> {
                 _tile(
                   onTap: () {
                     Navigator.pop(context);
-                    context.push(Routes.USERPERSONAL);
+                    context.push(UpdatePersonalDetailsScreen.routeName);
+                    // context.push(Routes.USERPERSONAL);
                   },
                   title: 'Personal Records',
                 ),

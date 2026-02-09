@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:greenzone_medical/src/features/profile/presentation/allergy_details.dart';
+import 'package:greenzone_medical/src/features/profile/presentation/immunization_details.dart';
+import 'package:greenzone_medical/src/features/profile/presentation/medical_records.dart';
 import 'package:greenzone_medical/src/features/profile/presentation/update_contact_details.dart';
 import 'package:greenzone_medical/src/features/profile/presentation/update_emergency_contact.dart';
 import 'package:greenzone_medical/src/features/profile/presentation/update_personal_info_screen.dart';
@@ -19,6 +22,9 @@ OverlayEntry profileSwitchOverlay({
     'Personal Data': UpdatePersonalDetailsScreen.routeName,
     'Contact Details': UpdateContactDetailsScreen.routeName,
     'Emergency Contact': UpdateEmergencyContact.routeName,
+    'Medical Records': MedicalRecordsScreen.routeName,
+    'Immunization': ImmunizationDetailsScreen.routeName,
+    'Allergies': AllergyDetailsScreen.routeName,
   };
   return OverlayEntry(
     builder: (context) => GestureDetector(

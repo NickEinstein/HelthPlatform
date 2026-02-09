@@ -82,185 +82,185 @@ class _SubmitFeedbackPageState extends ConsumerState<SubmitFeedbackPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: const Text(
-          "Submit Feedback",
-          style: TextStyle(
-            color: Color(0xFF333333),
-            fontSize: 16,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-        leading: InkWell(
-          onTap: context.pop,
-          child: Container(
-            margin: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(30),
-              color: AppColors.primary,
-            ),
-            child: const Icon(Icons.arrow_back, color: Colors.white),
-          ),
-        ),
-        elevation: 0,
-        backgroundColor: Colors.white,
-        centerTitle: false,
-      ),
+      // appBar: 
+
+      // AppBar(
+      //   title: const Text(
+      //     "Submit Feedback",
+      //     style: TextStyle(
+      //       color: Color(0xFF333333),
+      //       fontSize: 16,
+      //       fontWeight: FontWeight.w700,
+      //     ),
+      //   ),
+      //   leading: (),
+      //   elevation: 0,
+      //   backgroundColor: Colors.white,
+      //   centerTitle: false,
+      // ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Form(
           key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              20.height,
-              const Text(
-                "Help us improve by reporting issues or\nsharing feedback.",
-                style: TextStyle(
-                  color: Color(0xFF666666),
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-              12.height,
-              const Divider(color: Color(0xFFEEEEEE)),
-              12.height,
-              // Track Feedback Button
-              Align(
-                alignment: Alignment.centerRight,
-                child: OutlinedButton(
+          child: SafeArea(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                CustomHeader(
                   onPressed: () {
-                    _showTrackFeedbackBottomSheet();
+                    Navigator.pop(context);
                   },
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: AppColors.primary,
-                    side: const BorderSide(color: AppColors.primary),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    backgroundColor: const Color(0xFFEAFFEA),
+                  title: 'Submit Feedback',
+                ),
+                20.height,
+                const Text(
+                  "Help us improve by reporting issues or\nsharing feedback.",
+                  style: TextStyle(
+                    color: Color(0xFF666666),
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
                   ),
-                  child: const Text("Track Feedback"),
                 ),
-              ),
-              20.height,
-
-              // Success Card
-              if (_isSubmitted && result?.isSuccess == true) ...[
-                _showSubmittedCard(
-                  context,
-                  result: result,
-                ),
-                24.height,
-              ],
-
-              // Category Dropdown
-              _buildLabel("Category"),
-              const SizedBox(height: 8),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey.shade300),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: DropdownButtonHideUnderline(
-                  child: DropdownButton<String>(
-                    value: _selectedCategory,
-                    isExpanded: true,
-                    icon: const Icon(Icons.keyboard_arrow_down),
-                    items: _categories.map((String category) {
-                      return DropdownMenuItem<String>(
-                        value: category,
-                        child: Text(category),
-                      );
-                    }).toList(),
-                    onChanged: (newValue) {
-                      setState(() {
-                        _selectedCategory = newValue;
-                      });
+                12.height,
+                const Divider(color: Color(0xFFEEEEEE)),
+                12.height,
+                // Track Feedback Button
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: OutlinedButton(
+                    onPressed: () {
+                      _showTrackFeedbackBottomSheet();
                     },
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: AppColors.primary,
+                      side: const BorderSide(color: AppColors.primary),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      backgroundColor: const Color(0xFFEAFFEA),
+                    ),
+                    child: const Text("Track Feedback"),
                   ),
                 ),
-              ),
-              16.height,
-
-              // Description Field
-              _buildLabel("Description"),
-              const SizedBox(height: 8),
-              TextFormField(
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Please enter a description";
-                  }
-                  return null;
-                },
-                controller: _feedbackController,
-                maxLines: 5,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(color: Colors.grey.shade300),
+                20.height,
+            
+                // Success Card
+                if (_isSubmitted && result?.isSuccess == true) ...[
+                  _showSubmittedCard(
+                    context,
+                    result: result,
                   ),
-                  enabledBorder: OutlineInputBorder(
+                  24.height,
+                ],
+            
+                // Category Dropdown
+                _buildLabel("Category"),
+                const SizedBox(height: 8),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey.shade300),
                     borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(color: Colors.grey.shade300),
                   ),
-                ),
-              ),
-              16.height,
-
-              // Location Field
-              _buildLabel("Location"),
-              const SizedBox(height: 8),
-              TextFormField(
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Please enter a location";
-                  }
-                  return null;
-                },
-                controller: _locationController,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(color: Colors.grey.shade300),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(color: Colors.grey.shade300),
-                  ),
-                ),
-              ),
-              32.height,
-
-              SizedBox(
-                width: double.infinity,
-                height: 50,
-                child: ElevatedButton(
-                  onPressed: _isLoading ? null : _submitFeedback,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF009900),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton<String>(
+                      value: _selectedCategory,
+                      isExpanded: true,
+                      icon: const Icon(Icons.keyboard_arrow_down),
+                      items: _categories.map((String category) {
+                        return DropdownMenuItem<String>(
+                          value: category,
+                          child: Text(category),
+                        );
+                      }).toList(),
+                      onChanged: (newValue) {
+                        setState(() {
+                          _selectedCategory = newValue;
+                        });
+                      },
                     ),
                   ),
-                  child: _isLoading
-                      ? const Center(
-                          child: CircularProgressIndicator(
-                            color: Colors.white,
-                          ),
-                        )
-                      : const Text(
-                          "Submit Feedback",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
                 ),
-              ),
-              40.height,
-            ],
+                16.height,
+            
+                // Description Field
+                _buildLabel("Description"),
+                const SizedBox(height: 8),
+                TextFormField(
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please enter a description";
+                    }
+                    return null;
+                  },
+                  controller: _feedbackController,
+                  maxLines: 5,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: BorderSide(color: Colors.grey.shade300),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: BorderSide(color: Colors.grey.shade300),
+                    ),
+                  ),
+                ),
+                16.height,
+            
+                // Location Field
+                _buildLabel("Location"),
+                const SizedBox(height: 8),
+                TextFormField(
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please enter a location";
+                    }
+                    return null;
+                  },
+                  controller: _locationController,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: BorderSide(color: Colors.grey.shade300),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: BorderSide(color: Colors.grey.shade300),
+                    ),
+                  ),
+                ),
+                32.height,
+            
+                SizedBox(
+                  width: double.infinity,
+                  height: 50,
+                  child: ElevatedButton(
+                    onPressed: _isLoading ? null : _submitFeedback,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF009900),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: _isLoading
+                        ? const Center(
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                            ),
+                          )
+                        : const Text(
+                            "Submit Feedback",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                  ),
+                ),
+                40.height,
+              ],
+            ),
           ),
         ),
       ),

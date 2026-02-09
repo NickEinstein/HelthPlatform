@@ -68,6 +68,8 @@ abstract class Routes {
   static const OUT_PATIENT_LIMIT = _Paths.OUT_PATIENT_LIMIT;
   static const TRACKFEEDBACKSCREEN = _Paths.TRACKFEEDBACKSCREEN;
   static const ACCOUNTACTIVITYPAGE = _Paths.ACCOUNTACTIVITYPAGE;
+  static const BILLING_REWARDS_PAGE = _Paths.BILLING_REWARDS_PAGE;
+  static const REWARDS_PAGE = _Paths.REWARDS_PAGE;
   static const AUTHLANDINGPAGE = _Paths.AUTHLANDINGPAGE;
 }
 
@@ -137,4 +139,6 @@ abstract class _Paths {
   static const OUT_PATIENT_LIMIT = '/out_patient_limit';
   static const TRACKFEEDBACKSCREEN = '/track_feedback_screen';
   static const ACCOUNTACTIVITYPAGE = '/account_activity_page';
+  static const BILLING_REWARDS_PAGE = '/billing_rewards_page';
+  static const REWARDS_PAGE = '/rewards_page';
 }

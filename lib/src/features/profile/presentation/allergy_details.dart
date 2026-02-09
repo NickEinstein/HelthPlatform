@@ -1,5 +1,5 @@
 import 'package:greenzone_medical/src/features/profile/model/allergy_list_model.dart';
-import 'package:greenzone_medical/src/features/profile/presentation/immunization_details.dart';
+import 'package:greenzone_medical/src/features/profile/presentation/medical_records.dart';
 import 'package:greenzone_medical/src/features/profile/widget/allergy_widget.dart';
 import 'package:greenzone_medical/src/features/profile/widget/delete_dialog.dart';
 import 'package:greenzone_medical/src/features/profile/widget/profile_switch_overlay.dart';
@@ -295,13 +295,13 @@ class _AllergyDetailsScreenState extends ConsumerState<AllergyDetailsScreen> {
                       TextButton(
                         onPressed: () {
                           context.pushReplacement(
-                            ImmunizationDetailsScreen.routeName,
+                            MedicalRecordsScreen.routeName,
                           );
                         },
                         child: const Row(
                           children: [
                             Text(
-                              'Immunization',
+                              'Medical Records',
                               style: TextStyle(color: Colors.black),
                             ),
                             Icon(Icons.arrow_forward,
@@ -446,8 +446,7 @@ class _AllergyDetailsScreenState extends ConsumerState<AllergyDetailsScreen> {
       currentScreen: 'Immunization Details',
       hideOverlay: _hideOverlay,
       layerLink: _layerLink,
-      list: ['Immunization'],
-      nextRoute: ImmunizationDetailsScreen.routeName,
+      list: ['Medical Records', 'Immunization'],
     );
     Overlay.of(context).insert(_overlayEntry!);
   }
