@@ -177,12 +177,17 @@ class _DrugSearchResultState extends ConsumerState<DrugSearchResult> {
                           final value = ekioskState.drugs.entries
                               .where((e) => e.value.isNotEmpty)
                               .elementAt(index);
+                          final length = value.value
+                              .where((e) => e.name.isNotEmpty)
+                              .length;
+                          if (length == 0) return const SizedBox.shrink();
                           return _buildResultSection(
                             drugName: value.key.toTitleCase(),
-                            resultCount: '${value.value.length} Results',
+                            resultCount: '$length Results',
                             cards: value.value
+                                .where((e) => e.name.isNotEmpty)
                                 .map(
-                                  (drug) => _buildPharmacyCard(
+                                  (drug) => _buildDrugCard(
                                     drug: drug,
                                     isSelected: false,
                                   ),
@@ -421,10 +426,11 @@ class _DrugSearchResultState extends ConsumerState<DrugSearchResult> {
     );
   }
 
-  Widget _buildPharmacyCard({
+  Widget _buildDrugCard({
     required bool isSelected,
     required DrugModel drug,
   }) {
+    if (drug.name.isEmpty) return const SizedBox.shrink();
     return InkWell(
       onTap: () {
         context.push(SingleDrugDetail.routeName, extra: drug);

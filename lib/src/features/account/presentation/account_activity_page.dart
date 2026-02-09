@@ -45,121 +45,128 @@ class _AccountActivityPageState extends ConsumerState<AccountActivityPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        leading: const BackButton(color: Color(0xFF333333)),
-        elevation: 0,
-        backgroundColor: Colors.white,
-        centerTitle: false,
-      ),
-      body: RefreshIndicator(
-        onRefresh: () async {
-          await getAccountActivity();
-        },
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // 20.height,
-              const Text(
-                "Account Activity",
-                style: TextStyle(
-                  color: Color(0xFF333333),
-                  fontSize: 20,
-                  fontWeight: FontWeight.w700,
+      // appBar: AppBar(
+      //   leading: const BackButton(color: Color(0xFF333333)),
+      //   elevation: 0,
+      //   backgroundColor: Colors.white,
+      //   centerTitle: false,
+      // ),
+      body: SafeArea(
+        child: RefreshIndicator(
+          onRefresh: () async {
+            await getAccountActivity();
+          },
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                CustomHeader(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  title: '',
                 ),
-              ),
-              8.height,
-              const Text(
-                "View your account activity history",
-                style: TextStyle(
-                  color: Color(0xFF666666),
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-              24.height,
-
-              // Statistics Cards
-              IntrinsicHeight(
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: _buildStatCard(
-                        context,
-                        value: accountActivityList.length.toString(),
-                        label: "Total Activities",
-                      ).shimmer(isLoading: isLoading),
-                    ),
-                    12.width,
-                    Expanded(
-                      child: _buildStatCard(
-                        context,
-                        value: accountActivityList.length.toString(),
-                        label: "Auth Events",
-                      ).shimmer(isLoading: isLoading),
-                    ),
-                    12.width,
-                    Expanded(
-                      child: _buildStatCard(
-                        context,
-                        value: "0",
-                        label: "API Calls",
-                      ).shimmer(isLoading: isLoading),
-                    ),
-                    12.width,
-                    Expanded(
-                      child: _buildStatCard(
-                        context,
-                        icon: Icons.calendar_today,
-                        value: DateTime.tryParse(accountActivityList
-                                        .firstOrNull?.timeCreated ??
-                                    '')
-                                ?.formatDateTimePretty??
-                            "23 Nov 2025\n03:48:11",
-                        label: "",
-                        isDate: true,
-                      ).shimmer(isLoading: isLoading),
-                    ),
-                  ],
-                ),
-              ),
-              32.height,
-
-              // Activity Log Header
-              const Text(
-                "Activity Log",
-                style: TextStyle(
-                  color: ColorConstant.primaryColor,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              16.height,
-
-              if (isLoading)
-                const ListLoader(
-                  height: 80,
-                  itemCount: 4,
-                ),
-              // Activity List
-              if (accountActivityList.isEmpty && !isLoading) ...[
-                18.height,
-                Center(
-                  child: Text(
-                    "No Activity Found",
-                    style: context.textTheme.bodyLarge
-                        ?.copyWith(color: AppColors.greyTextColor2),
+                const Text(
+                  "Account Activity",
+                  style: TextStyle(
+                    color: Color(0xFF333333),
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700,
                   ),
-                )
-              ],
-
-              if (accountActivityList.isNotEmpty && !isLoading)
-                Column(
-                  children: _buildActivityList(accountActivityList),
                 ),
-              40.height,
-            ],
+                8.height,
+                const Text(
+                  "View your account activity history",
+                  style: TextStyle(
+                    color: Color(0xFF666666),
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                24.height,
+
+                // Statistics Cards
+                IntrinsicHeight(
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: _buildStatCard(
+                          context,
+                          value: accountActivityList.length.toString(),
+                          label: "Total Activities",
+                        ).shimmer(isLoading: isLoading),
+                      ),
+                      12.width,
+                      Expanded(
+                        child: _buildStatCard(
+                          context,
+                          value: accountActivityList.length.toString(),
+                          label: "Auth Events",
+                        ).shimmer(isLoading: isLoading),
+                      ),
+                      12.width,
+                      Expanded(
+                        child: _buildStatCard(
+                          context,
+                          value: "0",
+                          label: "API Calls",
+                        ).shimmer(isLoading: isLoading),
+                      ),
+                      12.width,
+                      Expanded(
+                        child: _buildStatCard(
+                          context,
+                          icon: Icons.calendar_today,
+                          value: DateTime.tryParse(accountActivityList
+                                          .firstOrNull?.timeCreated ??
+                                      '')
+                                  ?.formatDateTimePretty ??
+                              "23 Nov 2025\n03:48:11",
+                          label: "",
+                          isDate: true,
+                        ).shimmer(isLoading: isLoading),
+                      ),
+                    ],
+                  ),
+                ),
+                32.height,
+
+                // Activity Log Header
+                const Text(
+                  "Activity Log",
+                  style: TextStyle(
+                    color: ColorConstant.primaryColor,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                16.height,
+
+                if (isLoading)
+                  const ListLoader(
+                    height: 80,
+                    itemCount: 4,
+                  ),
+                // Activity List
+                if (accountActivityList.isEmpty && !isLoading) ...[
+                  18.height,
+                  Center(
+                    child: Text(
+                      "No Activity Found",
+                      style: context.textTheme.bodyLarge
+                          ?.copyWith(color: AppColors.greyTextColor2),
+                    ),
+                  )
+                ],
+
+                if (accountActivityList.isNotEmpty && !isLoading)
+                  Column(
+                    children: _buildActivityList(accountActivityList),
+                  ),
+                40.height,
+              ],
+            ),
           ),
         ),
       ),
@@ -218,15 +225,15 @@ class _AccountActivityPageState extends ConsumerState<AccountActivityPage> {
     );
   }
 
-  List<Widget> _buildActivityList(List<AccountActivityModel> accountActivityList) {
+  List<Widget> _buildActivityList(
+      List<AccountActivityModel> accountActivityList) {
     final activities = List.generate(
       accountActivityList.length,
-      (index) => _buildActivityItem(
-        accountActivityList[index]
-        // "Authentication",
-        // "Patient logged into the system",
-        // "23 Nov 2025, 20:48:11",
-      ),
+      (index) => _buildActivityItem(accountActivityList[index]
+          // "Authentication",
+          // "Patient logged into the system",
+          // "23 Nov 2025, 20:48:11",
+          ),
     );
     return activities;
   }
@@ -281,7 +288,9 @@ class _AccountActivityPageState extends ConsumerState<AccountActivityPage> {
               const Icon(Icons.access_time, size: 14, color: Color(0xFF999999)),
               4.width,
               Text(
-                DateTime.tryParse(accountActivity.timeCreated)?.formatDateTimePretty?? '',
+                DateTime.tryParse(accountActivity.timeCreated)
+                        ?.formatDateTimePretty ??
+                    '',
                 style: const TextStyle(
                   color: Color(0xFF999999),
                   fontSize: 12,

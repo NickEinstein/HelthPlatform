@@ -152,7 +152,8 @@ class _ImmunizationDetailsScreenState
           elevation: 0,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back, color: Colors.black),
-            onPressed: () => context.pop(),
+            onPressed: () => Navigator.of(context).pop(),
+            // onPressed: () => context.pop(),
           ),
         ),
         body: isLoading
@@ -348,11 +349,11 @@ class _ImmunizationDetailsScreenState
 
   void _showOverlay() {
     _overlayEntry = profileSwitchOverlay(
-      currentScreen: 'Immunization Details',
+      currentScreen: 'Immunization',
       hideOverlay: _hideOverlay,
       layerLink: _layerLink,
-      list: ['Allergies'],
-      nextRoute: AllergyDetailsScreen.routeName,
+      list: ['Allergies', 'Medical Records'],
+      
     );
     Overlay.of(context).insert(_overlayEntry!);
   }

@@ -1,4 +1,3 @@
-import 'package:greenzone_medical/src/features/ekiosk/presentation/pages/drug_search_result.dart';
 import 'package:greenzone_medical/src/features/ekiosk/presentation/provider/ekiosk_provider.dart';
 import 'package:greenzone_medical/src/utils/extensions/extensions.dart';
 import 'package:greenzone_medical/src/utils/packages.dart';
@@ -152,7 +151,8 @@ class _PharmacySearchScreenState extends ConsumerState<PharmacySearchScreen> {
                       context,
                       icon: Icons.upload_file,
                       title: 'Upload Prescription',
-                      onTap: () => _showUploadPrescriptionBottomSheet(context),
+                      // onTap: () => _showUploadPrescriptionBottomSheet(context),
+                      onTap: () => _showComingSoonBottomSheet(context),
                     ),
                     15.height,
                     _buildMenuOption(
@@ -227,104 +227,104 @@ class _PharmacySearchScreenState extends ConsumerState<PharmacySearchScreen> {
     );
   }
 
-  void _showUploadPrescriptionBottomSheet(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) {
-        return Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Top Icon
-              const Icon(Icons.track_changes,
-                  size: 50, color: Color(0xFF4CAF50)),
-              20.height,
-              // Description
-              Text(
-                'Hey Jessica, upload your prescription so we can search for the closest pharmacy you can pick them up.',
-                textAlign: TextAlign.center,
-                style: context.textTheme.bodyMedium?.copyWith(
-                  color: Colors.grey.shade700,
-                  height: 1.5,
-                ),
-              ),
-              20.height,
-              // Upload Area
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(vertical: 30),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFF1F8E9), // Light green background
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: const Color(0xFF4CAF50)),
-                ),
-                child: Column(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: const BoxDecoration(
-                        color: Color(0xFF109615),
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Icon(Icons.upload_file, color: Colors.white),
-                    ),
-                    10.height,
-                    Text(
-                      'Tap to upload prescription',
-                      style: context.textTheme.bodySmall?.copyWith(
-                        color: const Color(0xFF4CAF50),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              20.height,
-              // Submit Button
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () {
-                    // Handle submission
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF109615),
-                    padding: const EdgeInsets.symmetric(vertical: 15),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                  ),
-                  child: const Text(
-                    'Submit Prescription',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-              15.height,
-              // Cancel Button
-              TextButton(
-                onPressed: () => context.pop(),
-                child: Text(
-                  'Cancel',
-                  style: context.textTheme.bodyMedium?.copyWith(
-                    color: Colors.grey,
-                  ),
-                ),
-              ),
-              20.height,
-            ],
-          ),
-        );
-      },
-    );
-  }
+  // void _showUploadPrescriptionBottomSheet(BuildContext context) {
+  //   showModalBottomSheet(
+  //     context: context,
+  //     isScrollControlled: true,
+  //     shape: const RoundedRectangleBorder(
+  //       borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+  //     ),
+  //     builder: (context) {
+  //       return Padding(
+  //         padding: const EdgeInsets.all(20.0),
+  //         child: Column(
+  //           mainAxisSize: MainAxisSize.min,
+  //           children: [
+  //             // Top Icon
+  //             const Icon(Icons.track_changes,
+  //                 size: 50, color: Color(0xFF4CAF50)),
+  //             20.height,
+  //             // Description
+  //             Text(
+  //               'Hey Jessica, upload your prescription so we can search for the closest pharmacy you can pick them up.',
+  //               textAlign: TextAlign.center,
+  //               style: context.textTheme.bodyMedium?.copyWith(
+  //                 color: Colors.grey.shade700,
+  //                 height: 1.5,
+  //               ),
+  //             ),
+  //             20.height,
+  //             // Upload Area
+  //             Container(
+  //               width: double.infinity,
+  //               padding: const EdgeInsets.symmetric(vertical: 30),
+  //               decoration: BoxDecoration(
+  //                 color: const Color(0xFFF1F8E9), // Light green background
+  //                 borderRadius: BorderRadius.circular(10),
+  //                 border: Border.all(color: const Color(0xFF4CAF50)),
+  //               ),
+  //               child: Column(
+  //                 children: [
+  //                   Container(
+  //                     padding: const EdgeInsets.all(10),
+  //                     decoration: const BoxDecoration(
+  //                       color: Color(0xFF109615),
+  //                       shape: BoxShape.circle,
+  //                     ),
+  //                     child: const Icon(Icons.upload_file, color: Colors.white),
+  //                   ),
+  //                   10.height,
+  //                   Text(
+  //                     'Tap to upload prescription',
+  //                     style: context.textTheme.bodySmall?.copyWith(
+  //                       color: const Color(0xFF4CAF50),
+  //                     ),
+  //                   ),
+  //                 ],
+  //               ),
+  //             ),
+  //             20.height,
+  //             // Submit Button
+  //             SizedBox(
+  //               width: double.infinity,
+  //               child: ElevatedButton(
+  //                 onPressed: () {
+  //                   // Handle submission
+  //                 },
+  //                 style: ElevatedButton.styleFrom(
+  //                   backgroundColor: const Color(0xFF109615),
+  //                   padding: const EdgeInsets.symmetric(vertical: 15),
+  //                   shape: RoundedRectangleBorder(
+  //                     borderRadius: BorderRadius.circular(5),
+  //                   ),
+  //                 ),
+  //                 child: const Text(
+  //                   'Submit Prescription',
+  //                   style: TextStyle(
+  //                     color: Colors.white,
+  //                     fontWeight: FontWeight.bold,
+  //                   ),
+  //                 ),
+  //               ),
+  //             ),
+  //             15.height,
+  //             // Cancel Button
+  //             TextButton(
+  //               onPressed: () => context.pop(),
+  //               child: Text(
+  //                 'Cancel',
+  //                 style: context.textTheme.bodyMedium?.copyWith(
+  //                   color: Colors.grey,
+  //                 ),
+  //               ),
+  //             ),
+  //             20.height,
+  //           ],
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 
   void _showComingSoonBottomSheet(BuildContext context) {
     showModalBottomSheet(
@@ -342,6 +342,7 @@ class _PharmacySearchScreenState extends ConsumerState<PharmacySearchScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              // Top Icon
               Container(
                 width: 40,
                 height: 5,
