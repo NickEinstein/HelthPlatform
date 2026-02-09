@@ -21,6 +21,7 @@ import 'package:greenzone_medical/src/features/prescription/presentation/prescri
 import 'package:greenzone_medical/src/features/plan/presentation/all_goals_screen.dart';
 import 'package:greenzone_medical/src/features/profile/presentation/allergy_details.dart';
 import 'package:greenzone_medical/src/features/profile/presentation/immunization_details.dart';
+import 'package:greenzone_medical/src/features/profile/presentation/medical_records.dart';
 import 'package:greenzone_medical/src/features/profile/presentation/profile_management.dart';
 import 'package:greenzone_medical/src/features/profile/presentation/update_contact_details.dart';
 import 'package:greenzone_medical/src/features/profile/presentation/update_emergency_contact.dart';
@@ -38,6 +39,8 @@ import '../features/account/presentation/account_reset_password.dart';
 import '../features/appointment/model/appointment_model.dart';
 import '../features/article/all_articles.dart';
 import '../features/biling/presentation/billings_page.dart';
+import '../features/account/presentation/billing_rewards_page.dart';
+import '../features/account/presentation/rewards_page.dart';
 import '../features/chats/presentation/model/widget/chat_detail_screen.dart';
 import '../features/chats/presentation/model/widget/contact_info.dart';
 import '../features/community/presentation/community_friends_details.dart';
@@ -82,6 +85,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: ImmunizationDetailsScreen.routeName,
         builder: (context, state) => const ImmunizationDetailsScreen(),
+      ),
+      GoRoute(
+        path: MedicalRecordsScreen.routeName,
+        builder: (context, state) => const MedicalRecordsScreen(),
       ),
       GoRoute(
         path: UpdateEmergencyContact.routeName,
@@ -665,6 +672,20 @@ final routerProvider = Provider<GoRouter>((ref) {
         name: _Paths.ACCOUNTACTIVITYPAGE,
         builder: (context, state) {
           return const AccountActivityPage();
+        },
+      ),
+      GoRoute(
+        path: _Paths.BILLING_REWARDS_PAGE,
+        name: _Paths.BILLING_REWARDS_PAGE,
+        builder: (context, state) {
+          return const BillingAndRewardsPage();
+        },
+      ),
+      GoRoute(
+        path: _Paths.REWARDS_PAGE,
+        name: _Paths.REWARDS_PAGE,
+        builder: (context, state) {
+          return const RewardsPage();
         },
       ),
     ],

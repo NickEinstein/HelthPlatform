@@ -1,10 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:greenzone_medical/src/features/profile/model/patient_profile_result.dart';
 import 'package:greenzone_medical/src/features/profile/presentation/profile_management.dart';
 import 'package:greenzone_medical/src/provider/profile_provider.dart';
 import 'package:greenzone_medical/src/utils/extensions/extensions.dart';
-import 'package:greenzone_medical/src/utils/extensions/widget_extensions.dart';
 import 'package:greenzone_medical/src/utils/packages.dart';
 
 import '../../../../resources/colors/colors.dart';

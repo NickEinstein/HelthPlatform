@@ -174,6 +174,12 @@ class _AccountPageState extends ConsumerState<AccountPage> {
                   LastLoginText(),
                   verticalSpace(context, 0.06),
                   settingsRow(
+                    title: 'Billing & Rewards',
+                    onTap: () {
+                      context.push(Routes.BILLING_REWARDS_PAGE);
+                    },
+                  ),
+                  settingsRow(
                     title: 'Password Reset',
                     onTap: () {
                       context.push(Routes.ACCOUNTRESETPASSWORDPAGE);
