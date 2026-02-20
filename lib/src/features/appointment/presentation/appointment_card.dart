@@ -258,23 +258,24 @@ class _AppointmentCardState extends ConsumerState<AppointmentCard> {
                       ),
                     ],
                   )
-                // Expanded(
-                //   child: ElevatedButton(
-                //     onPressed:
-                //         widget.buttonsDisabled ? null : widget.onReschedule,
-                //     style: ElevatedButton.styleFrom(
-                //       backgroundColor: ColorConstant.primaryColor,
-                //       padding: const EdgeInsets.symmetric(vertical: 16),
-                //       shape: RoundedRectangleBorder(
-                //         borderRadius: BorderRadius.circular(12),
-                //       ),
-                //     ),
-                //     child: Text(
-                //       widget.buttonText2,
-                //       style: const TextStyle(color: Colors.white),
-                //     ),
-                //   ),
-                // )
+                else
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed:
+                          widget.buttonsDisabled ? null : widget.onReschedule,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: ColorConstant.primaryColor,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: Text(
+                        widget.buttonText2,
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  )
               ],
             ),
             if (widget.showRating)

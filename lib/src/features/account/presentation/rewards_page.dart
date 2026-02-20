@@ -232,7 +232,7 @@ class _RewardsPageState extends State<RewardsPage> {
               ],
             ),
           ),
-          Icon(Icons.copy, color: const Color(0xFF17621A), size: 20),
+          const Icon(Icons.copy, color: Color(0xFF17621A), size: 20),
         ],
       ),
     );

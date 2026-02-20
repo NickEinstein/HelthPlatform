@@ -117,7 +117,7 @@ class ActionButton extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-                border: Border.all(color: Color(0xff109615)),
+                border: Border.all(color: const Color(0xff109615)),
                 color: Color(color),
                 borderRadius: BorderRadius.circular(50)),
             child: Column(

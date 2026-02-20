@@ -33,16 +33,16 @@ class UserContact {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['stateOfResidence'] = this.stateOfResidence;
-    data['lgaResidence'] = this.lgaResidence;
-    data['city'] = this.city;
-    data['homeAddress'] = this.homeAddress;
-    data['phone'] = this.phone;
-    data['altPhone'] = this.altPhone;
-    data['email'] = this.email;
-    data['patientId'] = this.patientId;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['stateOfResidence'] = stateOfResidence;
+    data['lgaResidence'] = lgaResidence;
+    data['city'] = city;
+    data['homeAddress'] = homeAddress;
+    data['phone'] = phone;
+    data['altPhone'] = altPhone;
+    data['email'] = email;
+    data['patientId'] = patientId;
     return data;
   }
 }
@@ -94,20 +94,20 @@ class UserEmergency {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['relationship'] = this.relationship;
-    data['firstName'] = this.firstName;
-    data['lastName'] = this.lastName;
-    data['phone'] = this.phone;
-    data['email'] = this.email;
-    data['contactAddress'] = this.contactAddress;
-    data['lga'] = this.lga;
-    data['city'] = this.city;
-    data['altPhone'] = this.altPhone;
-    data['patientId'] = this.patientId;
-    data['stateOfResidence'] = this.stateOfResidence;
-    data['fullName'] = this.fullName;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['relationship'] = relationship;
+    data['firstName'] = firstName;
+    data['lastName'] = lastName;
+    data['phone'] = phone;
+    data['email'] = email;
+    data['contactAddress'] = contactAddress;
+    data['lga'] = lga;
+    data['city'] = city;
+    data['altPhone'] = altPhone;
+    data['patientId'] = patientId;
+    data['stateOfResidence'] = stateOfResidence;
+    data['fullName'] = fullName;
     return data;
   }
 }

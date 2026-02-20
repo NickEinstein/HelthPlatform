@@ -10,7 +10,7 @@ import '../../home.dart';
 class CustomBottomNavBar extends StatefulWidget {
   final int setPage;
 
-  CustomBottomNavBar({this.setPage = 0});
+  const CustomBottomNavBar({super.key, this.setPage = 0});
 
   @override
   _CustomBottomNavState createState() => _CustomBottomNavState();
@@ -18,18 +18,19 @@ class CustomBottomNavBar extends StatefulWidget {
 
 class _CustomBottomNavState extends State<CustomBottomNavBar> {
   int currentTab = 0;
-  static final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
-  final List<Widget> screen = [
-    HomePage(scaffoldKey: scaffoldKey),
-    const AppointmentPage(),
-    const PrescriptionPage(),
-    AccountPage(scaffoldKey: scaffoldKey)
-  ];
+  late final List<Widget> screen;
 
   @override
   void initState() {
     super.initState();
+    screen = [
+      HomePage(scaffoldKey: scaffoldKey),
+      const AppointmentPage(),
+      const PrescriptionPage(),
+      AccountPage(scaffoldKey: scaffoldKey)
+    ];
     currentTab = widget.setPage;
     currentScreen = screen[widget.setPage];
   }
@@ -87,7 +88,9 @@ class _CustomBottomNavState extends State<CustomBottomNavBar> {
     bool isSelected = currentTab == index;
     return Expanded(
       // Ensures equal spacing
-      child: GestureDetector(
+      child: InkWell(
+        highlightColor: Colors.transparent,
+        splashColor: Colors.transparent,
         onTap: () {
           setState(() {
             currentScreen = screen[index];
@@ -103,7 +106,9 @@ class _CustomBottomNavState extends State<CustomBottomNavBar> {
                 isSelected ? activeIconPath : iconPath,
                 height: 24, // Reduced size to fit
                 width: 24,
-                color: isSelected ? ColorConstant.primaryColor : ColorConstant.secondryColor,
+                color: isSelected
+                    ? ColorConstant.primaryColor
+                    : ColorConstant.secondryColor,
               ),
               const SizedBox(height: 2), // Reduced spacing
               Text(

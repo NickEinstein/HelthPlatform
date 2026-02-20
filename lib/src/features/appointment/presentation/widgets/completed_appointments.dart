@@ -59,11 +59,8 @@ class CompletedAppointments extends StatelessWidget {
                     appointment.dischargeNotes?.isNotEmpty ?? false,
                 onCancel: () {},
                 onReschedule: () {
-                  showInfoBottomSheet(
-                    context,
-                    'Discharge Note',
-                    appointment.dischargeNotes!,
-                  );
+                  context.push(Routes.CONSULTATIONSUMMARYPAGE,
+                      extra: appointment);
                 },
               ),
             );

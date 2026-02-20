@@ -6,11 +6,8 @@ import '../../routes/old_routes.dart';
 import '../packages.dart';
 
 class Dialogs {
-  static final GlobalKey<NavigatorState> navigatorKey =
-      GlobalKey<NavigatorState>();
-
   static void showLoadingDialog() {
-    final context = navigatorKey.currentState?.context;
+    final context = NavigationService.navigatorKey.currentState?.context;
     if (context == null) return; // Prevent null context crash
 
     showDialog(
@@ -27,12 +24,15 @@ class Dialogs {
   static void pop<T>([T? value]) {
     //log('Pop to [${}]');
 
-    return Navigator.pop(navigatorKey.currentState!.context, value);
+    return Navigator.pop(
+        NavigationService.navigatorKey.currentState!.context, value);
   }
 
   static void hideLoadingDialog() {
-    if (navigatorKey.currentState?.overlay?.context != null) {
-      Navigator.of(navigatorKey.currentState!.overlay!.context).pop();
+    if (NavigationService.navigatorKey.currentState?.overlay?.context != null) {
+      Navigator.of(
+              NavigationService.navigatorKey.currentState!.overlay!.context)
+          .pop();
     }
   }
 

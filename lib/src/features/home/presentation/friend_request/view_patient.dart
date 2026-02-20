@@ -85,7 +85,7 @@ class _ViewPatientPageState extends ConsumerState<ViewPatientPage> {
                     ),
                     child: Text(
                       "${patientProfile.gender} ",
-                      style: TextStyle(color: Colors.green, fontSize: 14),
+                      style: const TextStyle(color: Colors.green, fontSize: 14),
                     ),
                   ),
                   const SizedBox(height: 20),

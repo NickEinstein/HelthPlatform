@@ -4,7 +4,7 @@ import '../../../../utils/packages.dart';
 class LoadingScreen extends ConsumerStatefulWidget {
   final String imagePath;
 
-  LoadingScreen({required this.imagePath});
+  const LoadingScreen({super.key, required this.imagePath});
 
   @override
   ConsumerState<LoadingScreen> createState() => _LoadingScreenState();
@@ -34,12 +34,12 @@ class _LoadingScreenState extends ConsumerState<LoadingScreen> {
       showDialog(
         context: context,
         builder: (_) => AlertDialog(
-          title: Text('Error'),
+          title: const Text('Error'),
           content: Text(result["message"] ?? "Unknown error"),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: Text("OK"),
+              child: const Text("OK"),
             ),
           ],
         ),
@@ -69,7 +69,7 @@ class _LoadingScreenState extends ConsumerState<LoadingScreen> {
                 width: 64,
               ),
               tinySpace(),
-              Text(
+              const Text(
                 'Loading...',
                 style: TextStyle(color: Colors.white),
               )

@@ -427,7 +427,12 @@ class _CaregiversPageState extends ConsumerState<CaregiversPage> {
             Expanded(
               child: InkWell(
                 onTap: () {
-                  context.push(Routes.ENGAGEPAGE, extra: "Prescription Log");
+                  if (widget.type == "Pharmacy") {
+                    context.push(Routes.PRESCRIPTIONLOGPAGE);
+                  } else {
+                    context.push(Routes.ENGAGEPAGE,
+                        extra: "${widget.type} Request Log");
+                  }
                 },
                 child: Container(
                   alignment: Alignment.center,

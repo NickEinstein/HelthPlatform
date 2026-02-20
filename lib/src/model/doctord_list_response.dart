@@ -101,9 +101,9 @@ class DoctorListResponse {
     placeOfBirth = json['placeOfBirth'];
     maritalStatus = json['maritalStatus'];
     religion = json['religion'];
-    state = json['state'] != null ? new State.fromJson(json['state']) : null;
+    state = json['state'] != null ? State.fromJson(json['state']) : null;
     nationality = json['nationality'] != null
-        ? new State.fromJson(json['nationality'])
+        ? State.fromJson(json['nationality'])
         : null;
     motherMaidenName = json['motherMaidenName'];
     weddingAnniversary = json['weddingAnniversary'];
@@ -112,7 +112,7 @@ class DoctorListResponse {
     if (json['userRoles'] != null) {
       userRoles = <UserRoles>[];
       json['userRoles'].forEach((v) {
-        userRoles!.add(new UserRoles.fromJson(v));
+        userRoles!.add(UserRoles.fromJson(v));
       });
     }
     workGrade = json['workGrade'];
@@ -122,7 +122,7 @@ class DoctorListResponse {
     department = json['department'];
     accountStatus = json['accountStatus'];
     healthCareProvider = json['healthCareProvider'] != null
-        ? new HealthCareProvider.fromJson(json['healthCareProvider'])
+        ? HealthCareProvider.fromJson(json['healthCareProvider'])
         : null;
     onboardingDate = json['onboardingDate'];
     createdAt = json['createdAt'];
@@ -138,56 +138,56 @@ class DoctorListResponse {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['email'] = this.email;
-    data['title'] = this.title;
-    data['firstName'] = this.firstName;
-    data['middleName'] = this.middleName;
-    data['lastName'] = this.lastName;
-    data['gender'] = this.gender;
-    data['salaryAccountNumber'] = this.salaryAccountNumber;
-    data['salaryDomiciledBank'] = this.salaryDomiciledBank;
-    data['nin'] = this.nin;
-    data['bvn'] = this.bvn;
-    data['staffId'] = this.staffId;
-    data['dateOfBirth'] = this.dateOfBirth;
-    data['placeOfBirth'] = this.placeOfBirth;
-    data['maritalStatus'] = this.maritalStatus;
-    data['religion'] = this.religion;
-    if (this.state != null) {
-      data['state'] = this.state!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['email'] = email;
+    data['title'] = title;
+    data['firstName'] = firstName;
+    data['middleName'] = middleName;
+    data['lastName'] = lastName;
+    data['gender'] = gender;
+    data['salaryAccountNumber'] = salaryAccountNumber;
+    data['salaryDomiciledBank'] = salaryDomiciledBank;
+    data['nin'] = nin;
+    data['bvn'] = bvn;
+    data['staffId'] = staffId;
+    data['dateOfBirth'] = dateOfBirth;
+    data['placeOfBirth'] = placeOfBirth;
+    data['maritalStatus'] = maritalStatus;
+    data['religion'] = religion;
+    if (state != null) {
+      data['state'] = state!.toJson();
     }
-    if (this.nationality != null) {
-      data['nationality'] = this.nationality!.toJson();
+    if (nationality != null) {
+      data['nationality'] = nationality!.toJson();
     }
-    data['motherMaidenName'] = this.motherMaidenName;
-    data['weddingAnniversary'] = this.weddingAnniversary;
-    data['phoneNumber'] = this.phoneNumber;
-    data['profilePicture'] = this.profilePicture;
-    if (this.userRoles != null) {
-      data['userRoles'] = this.userRoles!.map((v) => v.toJson()).toList();
+    data['motherMaidenName'] = motherMaidenName;
+    data['weddingAnniversary'] = weddingAnniversary;
+    data['phoneNumber'] = phoneNumber;
+    data['profilePicture'] = profilePicture;
+    if (userRoles != null) {
+      data['userRoles'] = userRoles!.map((v) => v.toJson()).toList();
     }
-    data['workGrade'] = this.workGrade;
-    data['resumptionDate'] = this.resumptionDate;
-    data['lastLoginTime'] = this.lastLoginTime;
-    data['signature'] = this.signature;
-    data['department'] = this.department;
-    data['accountStatus'] = this.accountStatus;
-    if (this.healthCareProvider != null) {
-      data['healthCareProvider'] = this.healthCareProvider!.toJson();
+    data['workGrade'] = workGrade;
+    data['resumptionDate'] = resumptionDate;
+    data['lastLoginTime'] = lastLoginTime;
+    data['signature'] = signature;
+    data['department'] = department;
+    data['accountStatus'] = accountStatus;
+    if (healthCareProvider != null) {
+      data['healthCareProvider'] = healthCareProvider!.toJson();
     }
-    data['onboardingDate'] = this.onboardingDate;
-    data['createdAt'] = this.createdAt;
-    data['createdBy'] = this.createdBy;
-    data['modifiedAt'] = this.modifiedAt;
-    data['modifiedBy'] = this.modifiedBy;
-    data['actionTaken'] = this.actionTaken;
-    data['workingHours'] = this.workingHours;
-    data['aboutCareGiver'] = this.aboutCareGiver;
-    data['rating'] = this.rating;
-    data['reviews'] = this.reviews;
-    data['usersType'] = this.usersType;
+    data['onboardingDate'] = onboardingDate;
+    data['createdAt'] = createdAt;
+    data['createdBy'] = createdBy;
+    data['modifiedAt'] = modifiedAt;
+    data['modifiedBy'] = modifiedBy;
+    data['actionTaken'] = actionTaken;
+    data['workingHours'] = workingHours;
+    data['aboutCareGiver'] = aboutCareGiver;
+    data['rating'] = rating;
+    data['reviews'] = reviews;
+    data['usersType'] = usersType;
     return data;
   }
 }
@@ -204,9 +204,9 @@ class State {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['name'] = name;
     return data;
   }
 }
@@ -221,26 +221,25 @@ class UserRoles {
 
   UserRoles.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    employee = json['employee'] != null
-        ? new Employee.fromJson(json['employee'])
-        : null;
-    role = json['role'] != null ? new State.fromJson(json['role']) : null;
+    employee =
+        json['employee'] != null ? Employee.fromJson(json['employee']) : null;
+    role = json['role'] != null ? State.fromJson(json['role']) : null;
     roleSpecialist = json['roleSpecialist'] != null
-        ? new RoleSpecialist.fromJson(json['roleSpecialist'])
+        ? RoleSpecialist.fromJson(json['roleSpecialist'])
         : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    if (this.employee != null) {
-      data['employee'] = this.employee!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    if (employee != null) {
+      data['employee'] = employee!.toJson();
     }
-    if (this.role != null) {
-      data['role'] = this.role!.toJson();
+    if (role != null) {
+      data['role'] = role!.toJson();
     }
-    if (this.roleSpecialist != null) {
-      data['roleSpecialist'] = this.roleSpecialist!.toJson();
+    if (roleSpecialist != null) {
+      data['roleSpecialist'] = roleSpecialist!.toJson();
     }
     return data;
   }
@@ -260,10 +259,10 @@ class Employee {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['firstName'] = this.firstName;
-    data['lastName'] = this.lastName;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['firstName'] = firstName;
+    data['lastName'] = lastName;
     return data;
   }
 }
@@ -277,17 +276,17 @@ class RoleSpecialist {
 
   RoleSpecialist.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    role = json['role'] != null ? new State.fromJson(json['role']) : null;
+    role = json['role'] != null ? State.fromJson(json['role']) : null;
     specialistName = json['specialistName'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    if (this.role != null) {
-      data['role'] = this.role!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    if (role != null) {
+      data['role'] = role!.toJson();
     }
-    data['specialistName'] = this.specialistName;
+    data['specialistName'] = specialistName;
     return data;
   }
 }
@@ -321,14 +320,14 @@ class HealthCareProvider {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['rcNumber'] = this.rcNumber;
-    data['brandName'] = this.brandName;
-    data['logoPath'] = this.logoPath;
-    data['location'] = this.location;
-    data['category'] = this.category;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['name'] = name;
+    data['rcNumber'] = rcNumber;
+    data['brandName'] = brandName;
+    data['logoPath'] = logoPath;
+    data['location'] = location;
+    data['category'] = category;
     return data;
   }
 }

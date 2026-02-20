@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:greenzone_medical/src/app_pkg.dart';
 
 class HealthGoalBottomSheet extends StatefulWidget {
+  const HealthGoalBottomSheet({super.key});
+
   @override
   _HealthGoalBottomSheetState createState() => _HealthGoalBottomSheetState();
 }
@@ -50,7 +52,7 @@ class _HealthGoalBottomSheetState extends State<HealthGoalBottomSheet> {
                   borderRadius: BorderRadius.circular(6),
                 ),
               ),
-              value: selectedGoal,
+              initialValue: selectedGoal,
               items: const [
                 DropdownMenuItem(
                     value: 'Low Sodium to improve heart conditions',
@@ -187,7 +189,7 @@ class _HealthGoalBottomSheetState extends State<HealthGoalBottomSheet> {
                       color: Color(0xff424045),
                       fontSize: 14,
                       fontWeight: FontWeight.w300)),
-              value: selectedMedicalConcern,
+              initialValue: selectedMedicalConcern,
               items: const [
                 DropdownMenuItem(
                     value: 'Diabetes',

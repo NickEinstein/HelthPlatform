@@ -670,7 +670,7 @@ class _AppInputState extends State<AppInput> {
           isEmpty = v!.isEmpty;
         });
       },
-      value: widget.initialItem,
+      initialValue: widget.initialItem,
       focusNode: _focusNode,
       icon: const Icon(
         Icons.keyboard_arrow_down,

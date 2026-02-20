@@ -65,7 +65,7 @@ class _EmergencyContactDetailsState
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               verticalSpace(context, 0.06),
-                              Center(
+                              const Center(
                                 child: Text(
                                   'No Emergency Contact Details found',
                                   textAlign: TextAlign.center,

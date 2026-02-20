@@ -13,10 +13,10 @@ class AllAlergyResponse {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['allergyOrIntolleranceSource'] = this.allergyOrIntolleranceSource;
-    data['description'] = this.description;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['allergyOrIntolleranceSource'] = allergyOrIntolleranceSource;
+    data['description'] = description;
     return data;
   }
 }
@@ -47,13 +47,13 @@ class UserAllegiesResponse {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['allergicTo'] = this.allergicTo;
-    data['userId'] = this.userId;
-    data['allergyId'] = this.allergyId;
-    data['createdAt'] = this.createdAt;
-    data['updatedAt'] = this.updatedAt;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['allergicTo'] = allergicTo;
+    data['userId'] = userId;
+    data['allergyId'] = allergyId;
+    data['createdAt'] = createdAt;
+    data['updatedAt'] = updatedAt;
     return data;
   }
 }

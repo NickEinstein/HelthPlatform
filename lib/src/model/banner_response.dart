@@ -14,11 +14,11 @@ class BannerResponse {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['imageUrl'] = this.imageUrl;
-    data['dateCreated'] = this.dateCreated;
-    data['status'] = this.status;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['imageUrl'] = imageUrl;
+    data['dateCreated'] = dateCreated;
+    data['status'] = status;
     return data;
   }
 }

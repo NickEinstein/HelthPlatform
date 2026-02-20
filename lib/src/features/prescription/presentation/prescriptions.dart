@@ -56,7 +56,7 @@ class PrescriptionPage extends ConsumerWidget {
           loading: () => const Center(
             child: CircularProgressIndicator.adaptive(),
           ),
-          error: (error, stackTrace) => Center(
+          error: (error, stackTrace) => const Center(
             child: Text('Error loading prescriptions:'),
           ),
           data: (prescriptionModel) {

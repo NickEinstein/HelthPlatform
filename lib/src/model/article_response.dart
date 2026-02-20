@@ -39,12 +39,12 @@ class ArticleResponse {
     isFeatured = json['isFeatured'];
     categoryId = json['categoryId'];
     category = json['category'] != null
-        ? new Category.fromJson(json['category'])
+        ? Category.fromJson(json['category'])
         : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
     data['title'] = title;
     data['shortDescription'] = shortDescription;
@@ -77,7 +77,7 @@ class Category {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
     data['name'] = name;
     data['description'] = description;

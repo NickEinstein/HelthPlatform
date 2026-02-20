@@ -83,7 +83,7 @@ class AllGroupInterestScreen extends ConsumerWidget {
                       },
                       loading: () =>
                           const Center(child: CircularProgressIndicator()),
-                      error: (error, stack) => SizedBox.shrink(),
+                      error: (error, stack) => const SizedBox.shrink(),
                     );
                   },
                   loading: () =>

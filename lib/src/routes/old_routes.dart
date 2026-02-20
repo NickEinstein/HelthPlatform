@@ -3,9 +3,10 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../routes/app_pages.dart';
+
 class NavigationService {
-  static final GlobalKey<NavigatorState> navigatorKey =
-      GlobalKey<NavigatorState>();
+  static GlobalKey<NavigatorState> get navigatorKey => rootNavigatorKey;
 }
 
 Future<T?> pushToWihRouteAndNavKey<T>(

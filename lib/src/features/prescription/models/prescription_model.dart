@@ -87,13 +87,13 @@ class PrescriptionByPatientResponse {
   PrescriptionByPatientResponse.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     patient =
-        json['patient'] != null ? new Patient.fromJson(json['patient']) : null;
+        json['patient'] != null ? Patient.fromJson(json['patient']) : null;
     hasHmo = json['hasHmo'];
     generalMedicine = json['generalMedicine'] != null
-        ? new GeneralMedicine.fromJson(json['generalMedicine'])
+        ? GeneralMedicine.fromJson(json['generalMedicine'])
         : null;
     pharmacyInventory = json['pharmacyInventory'] != null
-        ? new PharmacyInventory.fromJson(json['pharmacyInventory'])
+        ? PharmacyInventory.fromJson(json['pharmacyInventory'])
         : null;
     quantity = json['quantity'];
     frequency = json['frequency'];
@@ -117,20 +117,20 @@ class PrescriptionByPatientResponse {
     dispensedDate = json['dispensedDate'];
     paymentDate = json['paymentDate'];
     dispensedDoneBy = json['dispensedDoneBy'] != null
-        ? new DispensedDoneBy.fromJson(json['dispensedDoneBy'])
+        ? DispensedDoneBy.fromJson(json['dispensedDoneBy'])
         : null;
     isPaid = json['isPaid'];
     cashier = json['cashier'] != null
-        ? new DispensedDoneBy.fromJson(json['cashier'])
+        ? DispensedDoneBy.fromJson(json['cashier'])
         : null;
     recordQueuedInBy = json['recordQueuedInBy'] != null
-        ? new DispensedDoneBy.fromJson(json['recordQueuedInBy'])
+        ? DispensedDoneBy.fromJson(json['recordQueuedInBy'])
         : null;
     queuedInDate = json['queuedInDate'];
     pharmacistNote = json['pharmacistNote'];
     pharmacyHealthCareProviderId = json['pharmacyHealthCareProviderId'];
     treatment = json['treatment'] != null
-        ? new Treatment.fromJson(json['treatment'])
+        ? Treatment.fromJson(json['treatment'])
         : null;
     healthCareProviderId = json['healthCareProviderId'];
     createdAt = json['createdAt'];
@@ -142,62 +142,62 @@ class PrescriptionByPatientResponse {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    if (this.patient != null) {
-      data['patient'] = this.patient!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    if (patient != null) {
+      data['patient'] = patient!.toJson();
     }
-    data['hasHmo'] = this.hasHmo;
-    if (this.generalMedicine != null) {
-      data['generalMedicine'] = this.generalMedicine!.toJson();
+    data['hasHmo'] = hasHmo;
+    if (generalMedicine != null) {
+      data['generalMedicine'] = generalMedicine!.toJson();
     }
-    if (this.pharmacyInventory != null) {
-      data['pharmacyInventory'] = this.pharmacyInventory!.toJson();
+    if (pharmacyInventory != null) {
+      data['pharmacyInventory'] = pharmacyInventory!.toJson();
     }
-    data['quantity'] = this.quantity;
-    data['frequency'] = this.frequency;
-    data['duration'] = this.duration;
-    data['composite'] = this.composite;
-    data['totalToDispense'] = this.totalToDispense;
-    data['medId'] = this.medId;
-    data['hmoProviderId'] = this.hmoProviderId;
-    data['hmoPackageId'] = this.hmoPackageId;
-    data['packageBenefitId'] = this.packageBenefitId;
-    data['cost'] = this.cost;
-    data['hmoCover'] = this.hmoCover;
-    data['patientDuePay'] = this.patientDuePay;
-    data['hmoDuePay'] = this.hmoDuePay;
-    data['patientDeposit'] = this.patientDeposit;
-    data['hmoDeposit'] = this.hmoDeposit;
-    data['patientBalance'] = this.patientBalance;
-    data['hmoBalance'] = this.hmoBalance;
-    data['categoryId'] = this.categoryId;
-    data['isDispensed'] = this.isDispensed;
-    data['dispensedDate'] = this.dispensedDate;
-    data['paymentDate'] = this.paymentDate;
-    if (this.dispensedDoneBy != null) {
-      data['dispensedDoneBy'] = this.dispensedDoneBy!.toJson();
+    data['quantity'] = quantity;
+    data['frequency'] = frequency;
+    data['duration'] = duration;
+    data['composite'] = composite;
+    data['totalToDispense'] = totalToDispense;
+    data['medId'] = medId;
+    data['hmoProviderId'] = hmoProviderId;
+    data['hmoPackageId'] = hmoPackageId;
+    data['packageBenefitId'] = packageBenefitId;
+    data['cost'] = cost;
+    data['hmoCover'] = hmoCover;
+    data['patientDuePay'] = patientDuePay;
+    data['hmoDuePay'] = hmoDuePay;
+    data['patientDeposit'] = patientDeposit;
+    data['hmoDeposit'] = hmoDeposit;
+    data['patientBalance'] = patientBalance;
+    data['hmoBalance'] = hmoBalance;
+    data['categoryId'] = categoryId;
+    data['isDispensed'] = isDispensed;
+    data['dispensedDate'] = dispensedDate;
+    data['paymentDate'] = paymentDate;
+    if (dispensedDoneBy != null) {
+      data['dispensedDoneBy'] = dispensedDoneBy!.toJson();
     }
-    data['isPaid'] = this.isPaid;
-    if (this.cashier != null) {
-      data['cashier'] = this.cashier!.toJson();
+    data['isPaid'] = isPaid;
+    if (cashier != null) {
+      data['cashier'] = cashier!.toJson();
     }
-    if (this.recordQueuedInBy != null) {
-      data['recordQueuedInBy'] = this.recordQueuedInBy!.toJson();
+    if (recordQueuedInBy != null) {
+      data['recordQueuedInBy'] = recordQueuedInBy!.toJson();
     }
-    data['queuedInDate'] = this.queuedInDate;
-    data['pharmacistNote'] = this.pharmacistNote;
-    data['pharmacyHealthCareProviderId'] = this.pharmacyHealthCareProviderId;
-    if (this.treatment != null) {
-      data['treatment'] = this.treatment!.toJson();
+    data['queuedInDate'] = queuedInDate;
+    data['pharmacistNote'] = pharmacistNote;
+    data['pharmacyHealthCareProviderId'] = pharmacyHealthCareProviderId;
+    if (treatment != null) {
+      data['treatment'] = treatment!.toJson();
     }
-    data['healthCareProviderId'] = this.healthCareProviderId;
-    data['createdAt'] = this.createdAt;
-    data['updatedAt'] = this.updatedAt;
-    data['status'] = this.status;
-    data['createdBy'] = this.createdBy;
-    data['modifiedBy'] = this.modifiedBy;
-    data['actionTaken'] = this.actionTaken;
+    data['healthCareProviderId'] = healthCareProviderId;
+    data['createdAt'] = createdAt;
+    data['updatedAt'] = updatedAt;
+    data['status'] = status;
+    data['createdBy'] = createdBy;
+    data['modifiedBy'] = modifiedBy;
+    data['actionTaken'] = actionTaken;
     return data;
   }
 }
@@ -221,12 +221,12 @@ class Patient {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['pictureUrl'] = this.pictureUrl;
-    data['firstName'] = this.firstName;
-    data['lastName'] = this.lastName;
-    data['gender'] = this.gender;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['pictureUrl'] = pictureUrl;
+    data['firstName'] = firstName;
+    data['lastName'] = lastName;
+    data['gender'] = gender;
     return data;
   }
 }
@@ -243,9 +243,9 @@ class GeneralMedicine {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['name'] = name;
     return data;
   }
 }
@@ -267,11 +267,11 @@ class PharmacyInventory {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['categoryId'] = this.categoryId;
-    data['productName'] = this.productName;
-    data['sellingPrice'] = this.sellingPrice;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['categoryId'] = categoryId;
+    data['productName'] = productName;
+    data['sellingPrice'] = sellingPrice;
     return data;
   }
 }
@@ -290,10 +290,10 @@ class DispensedDoneBy {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['firstName'] = this.firstName;
-    data['lastName'] = this.lastName;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['firstName'] = firstName;
+    data['lastName'] = lastName;
     return data;
   }
 }
@@ -326,23 +326,23 @@ class Treatment {
     treatmentCategoryId = json['treatmentCategoryId'];
     isAdmitted = json['isAdmitted'];
     doctor = json['doctor'] != null
-        ? new DispensedDoneBy.fromJson(json['doctor'])
+        ? DispensedDoneBy.fromJson(json['doctor'])
         : null;
     carePlan = json['carePlan'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['diagnosis'] = this.diagnosis;
-    data['treatmentStatus'] = this.treatmentStatus;
-    data['additionalNote'] = this.additionalNote;
-    data['treatmentCategoryId'] = this.treatmentCategoryId;
-    data['isAdmitted'] = this.isAdmitted;
-    if (this.doctor != null) {
-      data['doctor'] = this.doctor!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['diagnosis'] = diagnosis;
+    data['treatmentStatus'] = treatmentStatus;
+    data['additionalNote'] = additionalNote;
+    data['treatmentCategoryId'] = treatmentCategoryId;
+    data['isAdmitted'] = isAdmitted;
+    if (doctor != null) {
+      data['doctor'] = doctor!.toJson();
     }
-    data['carePlan'] = this.carePlan;
+    data['carePlan'] = carePlan;
     return data;
   }
 }

@@ -1341,7 +1341,7 @@ class AllService {
 
   Future<List<GetPrescriptionModel>> getPrescriptions() async {
     try {
-      final String? loginData = _storageService.getString('loginData');
+      final String loginData = _storageService.getString('loginData');
 
       if (loginData == null || loginData.isEmpty) {
         debugPrint('⚠️ No login data found.');

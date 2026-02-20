@@ -16,6 +16,11 @@ import '../models/get_prescriptions_model.dart';
 import '../models/prescription_model.dart';
 import '../models/prescription_reminder_model.dart';
 
+final prescriptionLogProvider = FutureProvider<List<Prescription>>((ref) async {
+  final response = await PrescriptionRepo().getPrescriptions();
+  return response.data?.data ?? <Prescription>[];
+});
+
 final presctiptionProvider =
     NotifierProvider<PrescriptionProvider, PrescriptionRepo>(
         PrescriptionProvider.new);

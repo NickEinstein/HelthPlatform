@@ -251,27 +251,26 @@ class _CaregiverDetailsPageState extends State<CaregiverDetailsPage> {
               // ),
 
               mediumSpace(),
-              // ElevatedButton(
-              //   style: ElevatedButton.styleFrom(
-              //     backgroundColor: ColorConstant.primaryColor,
-              //     foregroundColor: ColorConstant.primaryColor,
-              //     minimumSize: const Size(double.infinity, 55),
-              //     shape: RoundedRectangleBorder(
-              //       borderRadius: BorderRadius.circular(8),
-              //     ),
-              //   ),
-              //   onPressed: () {
-              //     context.push(
-              //       Routes.DOCTORPAGE,
-              //     );
-              //   },
-              //   child: const Text(
-              //       style: TextStyle(
-              //           fontWeight: FontWeight.w700,
-              //           fontSize: 14,
-              //           color: Colors.white),
-              //       "Book Appointment"),
-              // ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: ColorConstant.primaryColor,
+                  foregroundColor: ColorConstant.primaryColor,
+                  minimumSize: const Size(double.infinity, 55),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                onPressed: () {
+                  context.push(Routes.BOOKAPPOINTMENTOTHERS, extra: widget.caregiver.brandName);
+                },
+                child: const Text(
+                    style: TextStyle(
+                        fontWeight: FontWeight.w700,
+                        fontSize: 14,
+                        color: Colors.white),
+                    "Book Appointment"),
+              ),
+              mediumSpace(),
             ],
           ),
         ),

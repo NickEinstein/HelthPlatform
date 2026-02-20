@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'package:greenzone_medical/src/features/lab/presentation/pages/lab_prescription_log.dart';
+
 import '../../../provider/all_providers.dart';
 import '../../../utils/packages.dart';
 import 'caregivers_detail_page.dart';
@@ -188,6 +190,20 @@ class _EngagePageState extends ConsumerState<EngagePage> {
                                         ],
                                       ),
                                       onTap: () {
+                                        if (widget.type
+                                                .split(' ')
+                                                .firstOrNull
+                                                ?.toLowerCase() ==
+                                            'lab') {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (_) =>
+                                                  const LabPrescriptionLogPage(),
+                                            ),
+                                          );
+                                          return;
+                                        }
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(

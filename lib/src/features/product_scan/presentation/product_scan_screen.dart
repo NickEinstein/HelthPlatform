@@ -31,8 +31,9 @@ class _ProductScanScreenState extends State<ProductScanScreen> {
   }
 
   Future<void> _takePicture() async {
-    if (_cameraController == null || !_cameraController!.value.isInitialized)
+    if (_cameraController == null || !_cameraController!.value.isInitialized) {
       return;
+    }
 
     final image = await _cameraController!.takePicture();
     _showLoadingAndUpload(image);

@@ -22,7 +22,7 @@ class Wallet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox.expand(
+    return const SizedBox.expand(
       child: Stack(
         clipBehavior: Clip.none,
         children: [
@@ -58,7 +58,7 @@ class _WalletStrapSide extends StatelessWidget {
       width: AppConstants.walletStrapWidth,
       height: AppConstants.walletStrapHeight,
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.onBackground,
+        color: Theme.of(context).colorScheme.onSurface,
         border: Border.all(color: Theme.of(context).dividerColor),
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(AppBorderRadius.sm),
@@ -96,7 +96,7 @@ class WalletSide extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.onBackground,
+        color: Theme.of(context).colorScheme.onSurface,
         border: Border.all(color: Theme.of(context).dividerColor),
         borderRadius: BorderRadius.circular(AppBorderRadius.xl),
         boxShadow: [

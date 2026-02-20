@@ -85,8 +85,8 @@ Widget buildGrayRecordTile({
       decoration: BoxDecoration(
           border: Border.all(
             color: isColor
-                ? Color(0xffCACACA)
-                : Color(0xffCACACA).withOpacity(0.4),
+                ? const Color(0xffCACACA)
+                : const Color(0xffCACACA).withOpacity(0.4),
           ),
           borderRadius: BorderRadius.circular(7)),
       padding: const EdgeInsets.all(10),
@@ -133,11 +133,11 @@ Widget buildGrayRecordTile({
             ),
           ),
           dropDown
-              ? Icon(
+              ? const Icon(
                   Icons.keyboard_arrow_right_outlined,
-                  color: const Color(0xffB3B3B3),
+                  color: Color(0xffB3B3B3),
                 )
-              : SizedBox.shrink(),
+              : const SizedBox.shrink(),
         ],
       ),
     ),
