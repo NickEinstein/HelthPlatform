@@ -19,11 +19,17 @@ class BookAppointment extends ConsumerStatefulWidget {
 
 class _BookAppointmentState extends ConsumerState<BookAppointment> {
   bool isLoading = true;
-  DateTime selectedDate = DateTime.now();
+  // DateTime selectedDate = DateTime.now();
+  DateTime selectedDate = DateTime(2026, 2, 27);
   String selectedTime = '';
   final TextEditingController descriptionController = TextEditingController();
-  List<DoctorAvailableResponse> availableTimes = [];
-  List<DateTime> availableDates = [];
+  List<DoctorAvailableResponse> availableTimes = [
+    DoctorAvailableResponse(
+      startTimeUtc: DateTime(2026, 2, 27, 9, 0),
+      endTimeUtc: DateTime(2026, 2, 27, 18, 0),
+    ),
+  ];
+  List<DateTime> availableDates = [DateTime(2026, 2, 27)];
 
   @override
   void initState() {
@@ -251,10 +257,11 @@ class _BookAppointmentState extends ConsumerState<BookAppointment> {
                 // mediumSpace(),
                 // const CustomDropdown(
                 //     label: "Gender", options: ["Male", "Female"]),
-                // mediumSpace(),
+                mediumSpace(),
                 CustomLongTextField(
-                  label: "Write your Problem",
-                  hint: "Write your problem",
+                  label:
+                      "Why would you like to see Dr. ${widget.doctor.lastName}",
+                  hint: "Share Details",
                   controller: descriptionController,
                 ),
                 verticalSpace(context, 0.08),

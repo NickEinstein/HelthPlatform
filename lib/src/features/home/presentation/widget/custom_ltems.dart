@@ -34,7 +34,7 @@ class CustomListTile extends StatelessWidget {
       title: Text(title),
       subtitle: Text(
         subtitle,
-        style: TextStyle(color: Color(0xff909090)),
+        style: const TextStyle(color: Color(0xff909090)),
       ),
       trailing: const Icon(Icons.arrow_forward_ios,
           color: Color(0xffCCCCCC), size: 16),

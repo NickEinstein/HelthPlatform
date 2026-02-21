@@ -70,12 +70,7 @@ class _HealthGoalWidgetState extends ConsumerState<HealthGoalWidget> {
           },
           loading: () => loadingWidget,
           error: (error, stackTrace) {
-            //  TODO: revert
-            print(error.toString());
-            print(stackTrace);
-            return SizedBox(
-              child: Text(error.toString()),
-            );
+            return const SizedBox.shrink();
           },
         ) ??
         const SizedBox.shrink();

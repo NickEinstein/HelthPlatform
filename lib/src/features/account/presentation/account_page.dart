@@ -107,7 +107,7 @@ class _AccountPageState extends ConsumerState<AccountPage> {
                           color: const Color(0xff109615),
                         )),
                     child: const Padding(
-                      padding: const EdgeInsets.symmetric(
+                      padding: EdgeInsets.symmetric(
                           horizontal: 40, vertical: 7),
                       child: Text(
                         'Account Active',
@@ -141,7 +141,7 @@ class _AccountPageState extends ConsumerState<AccountPage> {
                               width: 50,
                             ),
                             const Expanded(
-                              child: const Padding(
+                              child: Padding(
                                 padding: EdgeInsets.only(left: 30),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.start,
@@ -305,6 +305,8 @@ class _AccountPageState extends ConsumerState<AccountPage> {
 }
 
 class LastLoginText extends StatelessWidget {
+  const LastLoginText({super.key});
+
   @override
   Widget build(BuildContext context) {
     final now = DateTime.now();

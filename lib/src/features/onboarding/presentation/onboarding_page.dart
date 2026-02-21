@@ -151,7 +151,7 @@ class _OnBoardingPageState extends State<OnBoardingPage>
           width: double.infinity,
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: Color(0xff109815),
+              backgroundColor: const Color(0xff109815),
               padding: const EdgeInsets.symmetric(vertical: 14),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8)),

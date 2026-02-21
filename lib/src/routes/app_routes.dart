@@ -5,6 +5,9 @@ part of 'app_pages.dart';
 
 abstract class Routes {
   Routes._();
+  static const HEALTH_SUMMARY = _Paths.HEALTH_SUMMARY;
+  static const PRESCRIPTIONLOGPAGE = _Paths.PRESCRIPTIONLOGPAGE;
+  static const PRESCRIPTIONDETAILSPAGE = _Paths.PRESCRIPTIONDETAILSPAGE;
   static const HOME = _Paths.HOME;
   static const SIGNIN = _Paths.SIGNIN;
   static const SIGNUP = _Paths.SIGNUP;
@@ -28,6 +31,7 @@ abstract class Routes {
   static const DOCTORPAGE = _Paths.DOCTORPAGE;
   static const DOCTORLISTING = _Paths.DOCTORLISTING;
   static const BOOKAPPOINTMENT = _Paths.BOOKAPPOINTMENT;
+  static const BOOKAPPOINTMENTOTHERS = _Paths.BOOKAPPOINTMENTOTHERS;
   static const HEALTHGOAL = _Paths.HEALTHGOAL;
   static const ABOUTHEALTH = _Paths.ABOUTHEALTH;
   static const DOCTORSREPORTDETAILS = _Paths.DOCTORSREPORTDETAILS;
@@ -71,10 +75,18 @@ abstract class Routes {
   static const BILLING_REWARDS_PAGE = _Paths.BILLING_REWARDS_PAGE;
   static const REWARDS_PAGE = _Paths.REWARDS_PAGE;
   static const AUTHLANDINGPAGE = _Paths.AUTHLANDINGPAGE;
+  static const RESCHEDULEDOCTORAPPOINTMENT = _Paths.RESCHEDULEDOCTORAPPOINTMENT;
+  static const DOCTORRATINGPAGE = _Paths.DOCTORRATINGPAGE;
+  static const CONSULTATIONSUMMARYPAGE = _Paths.CONSULTATIONSUMMARYPAGE;
+  static const CONSULTEDDOCTORSPAGE = _Paths.CONSULTEDDOCTORSPAGE;
+  static const PAYMENTOPTIONSPAGE = _Paths.PAYMENTOPTIONSPAGE;
 }
 
 abstract class _Paths {
   _Paths._();
+  static const HEALTH_SUMMARY = '/health_summary';
+  static const PRESCRIPTIONDETAILSPAGE = '/prescription_details_page';
+  static const PRESCRIPTIONLOGPAGE = '/prescription_log_page';
   static const AUTHLANDINGPAGE = '/auth_landing_page';
   static const HOME = '/home';
   static const SIGNIN = '/sign-in';
@@ -98,6 +110,7 @@ abstract class _Paths {
 
   static const DOCTORLISTING = '/doctor_Listing';
   static const BOOKAPPOINTMENT = '/book_appointment';
+  static const BOOKAPPOINTMENTOTHERS = '/book_appointment_others';
   static const HEALTHGOAL = '/health_goal';
   static const ABOUTHEALTH = '/about_health';
   static const ARTICLEDETAILS = '/article_details';
@@ -141,4 +154,9 @@ abstract class _Paths {
   static const ACCOUNTACTIVITYPAGE = '/account_activity_page';
   static const BILLING_REWARDS_PAGE = '/billing_rewards_page';
   static const REWARDS_PAGE = '/rewards_page';
+  static const RESCHEDULEDOCTORAPPOINTMENT = '/reschedule_doctor_appointment';
+  static const DOCTORRATINGPAGE = '/doctor_rating_page';
+  static const CONSULTATIONSUMMARYPAGE = '/consultation_summary_page';
+  static const CONSULTEDDOCTORSPAGE = '/consulted_doctors_page';
+  static const PAYMENTOPTIONSPAGE = '/payment_options_page';
 }

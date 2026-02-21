@@ -67,7 +67,7 @@ class _SplashPageState extends ConsumerState<SplashPage> {
                         .animate()
                         .fadeIn(duration: 600.ms)
                         .scale(
-                            begin: Offset(0.5, 0.5),
+                            begin: const Offset(0.5, 0.5),
                             duration: 400.ms,
                             curve: Curves.easeOutBack)
                         .slideY(begin: 0.2, duration: 400.ms),

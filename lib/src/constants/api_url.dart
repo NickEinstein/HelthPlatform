@@ -305,4 +305,11 @@ class ApiUrl {
   // User HMO
   static String userHmo(String userId) =>
       '/medicals/api/HMO/get-patient-hmo/$userId';
+
+  static String getTestStatistics(String userId) =>
+      '/ConnectedHealthWebApi/api/PatientHealthMonitoring/$userId/test-statistics';
+  static String getVitalsHistory(String userId) =>
+      '/ConnectedHealthWebApi/api/PatientHealthMonitoring/$userId/vitals-history';
+  static String getCurrentMedications(String userId) =>
+      '/ConnectedHealthWebApi/api/PatientHealthMonitoring/$userId/current-medications';
 }

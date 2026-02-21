@@ -36,6 +36,7 @@ import '../model/article_response.dart';
 import '../model/banner_response.dart';
 import '../services/all_service.dart';
 import '../services/cloud_translate_service.dart';
+export '../features/rating/providers/rating_provider.dart';
 
 // Provider for ArticleService
 final isLoadingProvider = StateProvider<bool>((ref) => false);
@@ -56,7 +57,8 @@ final allServiceProvider = Provider<AllService>((ref) {
   return AllService(apiService, storageService);
 });
 
-final specialistListProvider = FutureProvider<List<SpecialistModel>>((ref) async {
+final specialistListProvider =
+    FutureProvider<List<SpecialistModel>>((ref) async {
   final specialistListService = ref.watch(allServiceProvider);
   return await specialistListService.fetchSpecialistList();
 });

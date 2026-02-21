@@ -10,18 +10,18 @@ class JoinCommunityResponse {
   JoinCommunityResponse.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
     statusCode = json['statusCode'];
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+    data = json['data'] != null ? Data.fromJson(json['data']) : null;
     error = json['error'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['isSuccess'] = this.isSuccess;
-    data['statusCode'] = this.statusCode;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['isSuccess'] = isSuccess;
+    data['statusCode'] = statusCode;
     if (this.data != null) {
       data['data'] = this.data!.toJson();
     }
-    data['error'] = this.error;
+    data['error'] = error;
     return data;
   }
 }
@@ -38,9 +38,9 @@ class Data {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['message'] = this.message;
-    data['communityId'] = this.communityId;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['message'] = message;
+    data['communityId'] = communityId;
     return data;
   }
 }

@@ -7,8 +7,10 @@ import 'package:greenzone_medical/src/features/auth/presentation/auth_landing_pa
 import 'package:greenzone_medical/src/features/caregivers/presentation/engage_page.dart';
 import 'package:greenzone_medical/src/features/chats/chats.dart';
 import 'package:greenzone_medical/src/features/chats/presentation/model/chatcontact_model.dart';
+import 'package:greenzone_medical/src/features/doctors/presentation/pages/book_appointment_others.dart';
 import 'package:greenzone_medical/src/features/ekiosk/data/model/drug_model.dart';
 import 'package:greenzone_medical/src/features/health_record/presentation/widget/main_health_record.dart';
+import 'package:greenzone_medical/src/features/health_summary/presentation/pages/health_summary.dart';
 import 'package:greenzone_medical/src/features/home/presentation/suspended_products.dart';
 import 'package:greenzone_medical/src/features/notifications/notifications.dart';
 import 'package:greenzone_medical/src/features/ekiosk/presentation/pages/delivery_details.dart';
@@ -17,6 +19,9 @@ import 'package:greenzone_medical/src/features/ekiosk/presentation/pages/drug_se
 import 'package:greenzone_medical/src/features/ekiosk/presentation/pages/pharmacy_search_screen.dart';
 import 'package:greenzone_medical/src/features/ekiosk/presentation/pages/single_drug_detail.dart';
 import 'package:greenzone_medical/src/features/plan/presentation/single_plan_dashboard.dart';
+import 'package:greenzone_medical/src/features/prescription/models/get_prescriptions_model.dart';
+import 'package:greenzone_medical/src/features/prescription/presentation/prescription_details.dart';
+import 'package:greenzone_medical/src/features/prescription/presentation/prescription_log.dart';
 import 'package:greenzone_medical/src/features/prescription/presentation/prescriptions.dart';
 import 'package:greenzone_medical/src/features/plan/presentation/all_goals_screen.dart';
 import 'package:greenzone_medical/src/features/profile/presentation/allergy_details.dart';
@@ -51,7 +56,7 @@ import '../features/home/model/friend_request_receiver.dart';
 import '../features/home/presentation/friend_request/all_friend_request.dart';
 import '../features/home/presentation/friend_request/view_patient.dart';
 import '../features/home/presentation/widget/all_group_interest.dart';
-import '../features/rating/rating_page.dart';
+import '../features/rating/presentation/rating_page.dart';
 import '../model/doctord_list_response.dart';
 import '../utils/packages.dart';
 
@@ -74,6 +79,23 @@ final routerProvider = Provider<GoRouter>((ref) {
     debugLogDiagnostics: true,
     initialLocation: _Paths.SPLASH,
     routes: [
+      GoRoute(
+        path: _Paths.HEALTH_SUMMARY,
+        name: _Paths.HEALTH_SUMMARY,
+        builder: (_, __) => const HealthSummaryPage(),
+      ),
+      GoRoute(
+        path: _Paths.PRESCRIPTIONDETAILSPAGE,
+        name: _Paths.PRESCRIPTIONDETAILSPAGE,
+        builder: (_, state) => PrescriptionDetailsPage(
+          prescription: state.extra as Prescription,
+        ),
+      ),
+      GoRoute(
+        path: _Paths.PRESCRIPTIONLOGPAGE,
+        name: _Paths.PRESCRIPTIONLOGPAGE,
+        builder: (_, __) => const PrescriptionLogPage(),
+      ),
       GoRoute(
         path: _Paths.AUTHLANDINGPAGE,
         builder: (context, state) => const AuthLandingPage(),
@@ -323,6 +345,16 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) {
           final doctor = state.extra as DoctorListResponse;
           return DoctorListing(doctor: doctor);
+        },
+      ),
+      GoRoute(
+        path: _Paths.BOOKAPPOINTMENTOTHERS,
+        name: _Paths.BOOKAPPOINTMENTOTHERS,
+        builder: (context, state) {
+          final from = state.extra as String?;
+          return BookAppointmentOthers(
+            from: from ?? 'This',
+          );
         },
       ),
       GoRoute(
@@ -687,6 +719,50 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) {
           return const RewardsPage();
         },
+      ),
+      GoRoute(
+        path: _Paths.RESCHEDULEDOCTORAPPOINTMENT,
+        name: _Paths.RESCHEDULEDOCTORAPPOINTMENT,
+        builder: (context, state) {
+          final appointmentData = state.extra as Map<String, dynamic>;
+          return RescheduleDoctorAppointmentPage(data: appointmentData);
+        },
+      ),
+      GoRoute(
+        path: _Paths.DOCTORRATINGPAGE,
+        name: _Paths.DOCTORRATINGPAGE,
+        builder: (context, state) {
+          final doctor = state.extra is Map<String, dynamic>
+              ? state.extra as Map<String, dynamic>
+              : state.extra as AppointmentResponse;
+          return DoctorRatingPage(
+            doctor: doctor is Map<String, dynamic>
+                ? null
+                : doctor as AppointmentResponse,
+            doctorId:
+                doctor is Map<String, dynamic> ? doctor['doctorId'] : null,
+            doctorName:
+                doctor is Map<String, dynamic> ? doctor['doctorName'] : null,
+          );
+        },
+      ),
+      GoRoute(
+        path: _Paths.CONSULTATIONSUMMARYPAGE,
+        name: _Paths.CONSULTATIONSUMMARYPAGE,
+        builder: (context, state) {
+          final appointment = state.extra as AppointmentResponse;
+          return ConsultationSummaryPage(appointment: appointment);
+        },
+      ),
+      GoRoute(
+        path: _Paths.CONSULTEDDOCTORSPAGE,
+        name: _Paths.CONSULTEDDOCTORSPAGE,
+        builder: (context, state) => const ConsultedDoctorsPage(),
+      ),
+      GoRoute(
+        path: _Paths.PAYMENTOPTIONSPAGE,
+        name: _Paths.PAYMENTOPTIONSPAGE,
+        builder: (context, state) => const PaymentOptionsPage(),
       ),
     ],
     // redirect: (context, state) {

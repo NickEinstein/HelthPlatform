@@ -66,27 +66,27 @@ class UserData {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['email'] = this.email;
-    data['pictureUrl'] = this.pictureUrl;
-    data['firstName'] = this.firstName;
-    data['middleName'] = this.middleName;
-    data['lastName'] = this.lastName;
-    data['gender'] = this.gender;
-    data['dateOfBirth'] = this.dateOfBirth;
-    data['phoneNumber'] = this.phoneNumber;
-    data['stateOfOrigin'] = this.stateOfOrigin;
-    data['lga'] = this.lga;
-    data['placeOfBirth'] = this.placeOfBirth;
-    data['maritalStatus'] = this.maritalStatus;
-    data['nationality'] = this.nationality;
-    data['fullName'] = this.fullName;
-    data['clinic'] = this.clinic;
-    data['clinicId'] = this.clinicId;
-    data['hasHmo'] = this.hasHmo;
-    data['isReferred'] = this.isReferred;
-    data['patientRef'] = this.patientRef;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['email'] = email;
+    data['pictureUrl'] = pictureUrl;
+    data['firstName'] = firstName;
+    data['middleName'] = middleName;
+    data['lastName'] = lastName;
+    data['gender'] = gender;
+    data['dateOfBirth'] = dateOfBirth;
+    data['phoneNumber'] = phoneNumber;
+    data['stateOfOrigin'] = stateOfOrigin;
+    data['lga'] = lga;
+    data['placeOfBirth'] = placeOfBirth;
+    data['maritalStatus'] = maritalStatus;
+    data['nationality'] = nationality;
+    data['fullName'] = fullName;
+    data['clinic'] = clinic;
+    data['clinicId'] = clinicId;
+    data['hasHmo'] = hasHmo;
+    data['isReferred'] = isReferred;
+    data['patientRef'] = patientRef;
     return data;
   }
 }

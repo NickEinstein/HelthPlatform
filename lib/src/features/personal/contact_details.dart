@@ -18,7 +18,7 @@ class _HealthContactDetailsState extends ConsumerState<HealthContactDetails> {
         loading: () => const Scaffold(
               body: Center(child: CircularProgressIndicator()),
             ),
-        error: (error, _) => Scaffold(
+        error: (error, _) => const Scaffold(
               body: Center(child: Text('Error loading contact details')),
             ),
         data: (user) {

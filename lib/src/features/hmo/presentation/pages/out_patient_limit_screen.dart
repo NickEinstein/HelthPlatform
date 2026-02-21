@@ -45,7 +45,7 @@ class OutPatientLimitScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Align(
+                  const Align(
                     alignment: Alignment.centerRight,
                     child: Text(
                       "N1,000,000.00",

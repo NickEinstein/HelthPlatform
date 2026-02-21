@@ -104,7 +104,7 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
                               borderRadius: BorderRadius.circular(
                                 8,
                               ),
-                              color: Color(0xffF3F9F3)),
+                              color: const Color(0xffF3F9F3)),
                           child: Padding(
                             padding: const EdgeInsets.symmetric(
                                 vertical: 10, horizontal: 8),

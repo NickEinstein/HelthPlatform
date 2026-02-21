@@ -17,12 +17,12 @@ class PostMediaResponse {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['groupId'] = this.groupId;
-    data['groupName'] = this.groupName;
-    data['mediaUrl'] = this.mediaUrl;
-    data['mediaType'] = this.mediaType;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['groupId'] = groupId;
+    data['groupName'] = groupName;
+    data['mediaUrl'] = mediaUrl;
+    data['mediaType'] = mediaType;
     return data;
   }
 }
