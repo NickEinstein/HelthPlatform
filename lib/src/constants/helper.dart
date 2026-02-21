@@ -163,12 +163,14 @@ class CustomLongTextField extends StatefulWidget {
   final String label;
   final String hint;
   final TextEditingController? controller; // External controller
+  final FormFieldValidator<String>? validator;
 
   const CustomLongTextField({
     Key? key,
     required this.label,
     required this.hint,
     this.controller, // Optional controller parameter
+    this.validator,
   }) : super(key: key);
 
   @override
@@ -219,9 +221,10 @@ class _CustomLongTextFieldState extends State<CustomLongTextField> {
           ),
         ),
         // Custom TextField with Dynamic Background
-        TextField(
+        TextFormField(
           controller: _controller,
           maxLines: 4,
+          validator: widget.validator,
           decoration: InputDecoration(
             hintText: widget.hint,
             hintStyle: const TextStyle(

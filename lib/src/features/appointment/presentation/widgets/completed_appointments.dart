@@ -52,15 +52,20 @@ class CompletedAppointments extends StatelessWidget {
                 date: DateFormat('EEEE, MMM d yyyy').format(dateTime),
                 time: DateFormat('hh:mm a').format(dateTime),
                 buttonText1: 'Reschedule',
-                buttonText2: 'View Doctor\'s Report',
+                buttonText2: 'Rate Doctor',
+                // buttonText2: 'View Doctor\'s Report',
                 showCancelButton: false,
                 showRating: true, // ✅ show rating only on last one
                 isDischargedNote:
                     appointment.dischargeNotes?.isNotEmpty ?? false,
                 onCancel: () {},
                 onReschedule: () {
-                  context.push(Routes.CONSULTATIONSUMMARYPAGE,
-                      extra: appointment);
+                  context.push(
+                    Routes.DOCTORRATINGPAGE,
+                    extra: appointment,
+                  );
+                  // context.push(Routes.CONSULTATIONSUMMARYPAGE,
+                  //     extra: appointment);
                 },
               ),
             );

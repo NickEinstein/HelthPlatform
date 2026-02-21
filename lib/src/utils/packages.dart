@@ -13,7 +13,7 @@ export 'package:greenzone_medical/src/features/appointment/presentation/doctors_
 export 'package:greenzone_medical/src/features/appointment/presentation/doctors_report_details.dart';
 export 'package:greenzone_medical/src/features/appointment/presentation/reschedule_appointments.dart';
 export 'package:greenzone_medical/src/features/appointment/presentation/reschedule_doctor_appointment.dart';
-export 'package:greenzone_medical/src/features/rating/doctor_rating_page.dart';
+export 'package:greenzone_medical/src/features/rating/presentation/doctor_rating_page.dart';
 export 'package:greenzone_medical/src/features/appointment/presentation/consultation_summary_page.dart';
 export 'package:greenzone_medical/src/features/appointment/presentation/consulted_doctors_page.dart';
 export 'package:greenzone_medical/src/features/payment/presentation/payment_options_page.dart';

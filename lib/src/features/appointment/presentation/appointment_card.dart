@@ -145,7 +145,7 @@ class _AppointmentCardState extends ConsumerState<AppointmentCard> {
                 ),
               ],
             ),
-            // mediumSpace(),
+            8.height,
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

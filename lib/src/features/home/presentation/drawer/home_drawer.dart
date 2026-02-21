@@ -39,8 +39,12 @@ class _HomeDrawerState extends ConsumerState<HomeDrawer> {
                 const Divider(color: Colors.white),
                 _tile(
                   onTap: () {
+                    // context.push(Routes.HEALTH_SUMMARY);
                     Navigator.pop(context);
-                    context.push(Routes.HEALTH_SUMMARY);
+                    showAuthBottomSheet(
+                      context,
+                      nextRoute: Routes.HEALTH_SUMMARY,
+                    );
                   },
                   title: 'Health Summary',
                 ),

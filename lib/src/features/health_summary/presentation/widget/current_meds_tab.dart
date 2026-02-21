@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:greenzone_medical/src/utils/extensions/extensions.dart';
 import 'package:greenzone_medical/src/utils/extensions/widget_extensions.dart';
 
 const _lightGreen = Color(0xFFE8F5E9);
@@ -47,27 +48,25 @@ const _medRecords = [
   ),
 ];
 
-// ─── Current Meds Tab ─────────────────────────────────────────────────────────
-/// Drop into your TabBarView as the third child:
-///   TabBarView(
-///     controller: _tabController,
-///     children: [
-///       TestStatisticsTab(),
-///       VitalHistoryTab(),
-///       CurrentMedsTab(),   // <-- here
-///     ],
-///   )
 class CurrentMedsTab extends StatelessWidget {
-  const CurrentMedsTab({super.key});
+  final List<String> currentMeds;
+  const CurrentMedsTab({super.key, required this.currentMeds});
 
   @override
   Widget build(BuildContext context) {
-    return ListView.separated(
-      padding: const EdgeInsets.symmetric(horizontal: 0),
-      itemCount: _medRecords.length,
-      separatorBuilder: (_, __) => 16.height,
-      itemBuilder: (context, i) => _MedCard(record: _medRecords[i]),
-    );
+    return currentMeds.isEmpty
+        ? Center(
+            child: Text(
+              'No records found',
+              style: context.textTheme.bodyLarge,
+            ),
+          )
+        : ListView.separated(
+            padding: const EdgeInsets.symmetric(horizontal: 0),
+            itemCount: _medRecords.length,
+            separatorBuilder: (_, __) => 16.height,
+            itemBuilder: (context, i) => _MedCard(record: _medRecords[i]),
+          );
   }
 }
 

@@ -56,7 +56,7 @@ import '../features/home/model/friend_request_receiver.dart';
 import '../features/home/presentation/friend_request/all_friend_request.dart';
 import '../features/home/presentation/friend_request/view_patient.dart';
 import '../features/home/presentation/widget/all_group_interest.dart';
-import '../features/rating/rating_page.dart';
+import '../features/rating/presentation/rating_page.dart';
 import '../model/doctord_list_response.dart';
 import '../utils/packages.dart';
 

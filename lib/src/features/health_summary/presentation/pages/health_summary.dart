@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:greenzone_medical/src/features/health_summary/presentation/widget/current_meds_tab.dart';
 import 'package:greenzone_medical/src/features/health_summary/presentation/widget/vital_tab.dart';
+import 'package:greenzone_medical/src/features/health_summary/providers/health_summary_provider.dart';
+import 'package:greenzone_medical/src/utils/extensions/extensions.dart';
 import 'package:greenzone_medical/src/utils/extensions/widget_extensions.dart';
 
 // ─── Constants ───────────────────────────────────────────────────────────────
@@ -31,14 +34,14 @@ const _vitals = [
 ];
 
 // ─── Page ────────────────────────────────────────────────────────────────────
-class HealthSummaryPage extends StatefulWidget {
+class HealthSummaryPage extends ConsumerStatefulWidget {
   const HealthSummaryPage({super.key});
 
   @override
-  State<HealthSummaryPage> createState() => _HealthSummaryPageState();
+  ConsumerState<HealthSummaryPage> createState() => _HealthSummaryPageState();
 }
 
-class _HealthSummaryPageState extends State<HealthSummaryPage>
+class _HealthSummaryPageState extends ConsumerState<HealthSummaryPage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   int _selectedVital = 0;
@@ -48,6 +51,9 @@ class _HealthSummaryPageState extends State<HealthSummaryPage>
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+    ref.read(healthSummaryProvider.notifier).getTestStatistics();
+    ref.read(healthSummaryProvider.notifier).getVitalsHistory();
+    ref.read(healthSummaryProvider.notifier).getCurrentMedications();
   }
 
   @override
@@ -58,6 +64,8 @@ class _HealthSummaryPageState extends State<HealthSummaryPage>
 
   @override
   Widget build(BuildContext context) {
+    final state = ref.watch(healthSummaryProvider);
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -136,8 +144,8 @@ class _HealthSummaryPageState extends State<HealthSummaryPage>
                         ),
                       ],
                     ),
-                    const VitalHistoryTab(),
-                    const CurrentMedsTab(),
+                    VitalHistoryTab(vitalHistory: state.vitalsHistory),
+                    CurrentMedsTab(currentMeds: state.currentMedications),
                   ],
                 ),
               ),
@@ -231,9 +239,32 @@ class _VitalChartCard extends StatelessWidget {
           20.height,
 
           // Chart
-          SizedBox(
-            height: 160,
-            child: _LineChart(),
+          Stack(
+            children: [
+              SizedBox(
+                height: 160,
+                child: _LineChart(),
+              ),
+              Positioned(
+                top: 0,
+                left: 0,
+                right: 0,
+                child: Container(
+                  height: 160,
+                  decoration: BoxDecoration(
+                    color: Colors.black.withValues(alpha: 0.4),
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  child: Center(
+                    child: Text(
+                      'No records found',
+                      style: context.textTheme.bodyLarge
+                          ?.copyWith(color: Colors.white),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -262,9 +293,9 @@ class _PeriodPicker extends StatelessWidget {
               fontWeight: FontWeight.w500,
             ),
           ),
-          const SizedBox(width: 2),
-          const Icon(Icons.keyboard_arrow_down,
-              size: 16, color: Colors.black54),
+          // const SizedBox(width: 2),
+          // const Icon(Icons.keyboard_arrow_down,
+          //     size: 16, color: Colors.black54),
         ],
       ),
     );

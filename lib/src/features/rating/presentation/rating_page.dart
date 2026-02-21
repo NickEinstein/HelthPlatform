@@ -1,6 +1,6 @@
-import '../../provider/all_providers.dart';
-import '../../utils/packages.dart';
-import '../appointment/model/appointment_model.dart';
+import '../../../provider/all_providers.dart';
+import '../../../utils/packages.dart';
+import '../../appointment/model/appointment_model.dart';
 
 class RatingPage extends ConsumerStatefulWidget {
   final AppointmentResponse doctor; // Accept doctor data

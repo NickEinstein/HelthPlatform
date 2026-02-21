@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:greenzone_medical/src/utils/extensions/extensions.dart';
 import 'package:greenzone_medical/src/utils/extensions/widget_extensions.dart';
 
 const _lightGreen = Color(0xFFE8F5E9);
@@ -60,16 +61,24 @@ const _vitalRecords = [
 ];
 
 class VitalHistoryTab extends StatelessWidget {
-  const VitalHistoryTab({super.key});
+  final List<String> vitalHistory;
+  const VitalHistoryTab({super.key, required this.vitalHistory});
 
   @override
   Widget build(BuildContext context) {
-    return ListView.separated(
-      // padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-      itemCount: _vitalRecords.length,
-      separatorBuilder: (_, __) => 16.height,
-      itemBuilder: (context, i) => _VitalCard(record: _vitalRecords[i]),
-    );
+    return vitalHistory.isEmpty
+        ? Center(
+            child: Text(
+              'No records found',
+              style: context.textTheme.bodyLarge,
+            ),
+          )
+        : ListView.separated(
+            // padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+            itemCount: _vitalRecords.length,
+            separatorBuilder: (_, __) => 16.height,
+            itemBuilder: (context, i) => _VitalCard(record: _vitalRecords[i]),
+          );
   }
 }
 

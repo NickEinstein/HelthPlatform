@@ -1343,7 +1343,7 @@ class AllService {
     try {
       final String loginData = _storageService.getString('loginData');
 
-      if (loginData == null || loginData.isEmpty) {
+      if (loginData.isEmpty) {
         debugPrint('⚠️ No login data found.');
         return [];
       }
